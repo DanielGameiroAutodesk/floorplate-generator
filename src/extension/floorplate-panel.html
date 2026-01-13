@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Floorplate Preview</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .panel-container {
+      display: flex;
+      height: 100%;
+      width: 100%;
+    }
+
+    .svg-container {
+      flex: 1;
+      padding: 16px;
+      overflow: hidden;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .svg-container svg {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .metrics-container {
+      width: 220px;
+      border-left: 1px solid #e2e8f0;
+      overflow-y: auto;
+      background: white;
+      flex-shrink: 0;
+    }
+
+    .metrics-container.collapsed {
+      width: 0;
+      border-left: none;
+      overflow: hidden;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #94a3b8;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state-text {
+      font-size: 14px;
+    }
+
+    /* Loading state */
+    .loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #64748b;
+    }
+
+    .loading.show {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #4f46e5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Toggle button for metrics */
+    .toggle-metrics-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: #f1f5f9;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 14px;
+      z-index: 10;
+    }
+
+    .toggle-metrics-btn:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    /* Option tabs */
+    .option-tabs {
+      display: flex;
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .option-tab {
+      flex: 1;
+      padding: 10px 12px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #64748b;
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .option-tab:hover {
+      color: #4f46e5;
+      background: #f8fafc;
+    }
+
+    .option-tab.active {
+      color: #4f46e5;
+      border-bottom-color: #4f46e5;
+      background: #f8fafc;
+    }
+
+    .option-tab .tab-icon {
+      font-size: 16px;
+    }
+
+    .option-tab .tab-label {
+      font-weight: 600;
+    }
+
+    .option-tab .tab-stats {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+
+    .option-tab.active .tab-stats {
+      color: #6366f1;
+    }
+
+    /* Action toolbar */
+    .action-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 8px 12px;
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      gap: 8px;
+    }
+
+    .save-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .save-btn:hover {
+      background: #4338ca;
+    }
+
+    .save-btn:active {
+      transform: scale(0.98);
+    }
+
+    .save-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .save-btn .save-icon {
+      font-size: 14px;
+    }
+
+    .save-btn.saving {
+      background: #6366f1;
+      pointer-events: none;
+    }
+
+    .bake-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #059669;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .bake-btn:hover {
+      background: #047857;
+    }
+
+    .bake-btn:active {
+      transform: scale(0.98);
+    }
+
+    .bake-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .bake-btn.baking {
+      background: #10b981;
+      pointer-events: none;
+    }
+
+    .bake-feedback {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #d1fae5;
+      color: #065f46;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .bake-feedback.show {
+      display: flex;
+    }
+
+    .bake-feedback.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .save-feedback {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .save-feedback.show {
+      display: flex;
+    }
+
+    /* Main content wrapper */
+    .main-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel-container" style="flex-direction: column;">
+    <!-- Option Tabs - Per feature spec Section 8.8 -->
+    <div class="option-tabs" id="option-tabs">
+      <button class="option-tab active" data-index="0" data-strategy="balanced">
+        <span class="tab-icon">1</span>
+        <span class="tab-label">Balanced</span>
+        <span class="tab-stats" id="tab-stats-0">--</span>
+      </button>
+      <button class="option-tab" data-index="1" data-strategy="mixOptimized">
+        <span class="tab-icon">2</span>
+        <span class="tab-label">Mix Optimized</span>
+        <span class="tab-stats" id="tab-stats-1">--</span>
+      </button>
+      <button class="option-tab" data-index="2" data-strategy="efficiencyOptimized">
+        <span class="tab-icon">3</span>
+        <span class="tab-label">Efficiency</span>
+        <span class="tab-stats" id="tab-stats-2">--</span>
+      </button>
+    </div>
+
+    <!-- Action Toolbar -->
+    <div class="action-toolbar" id="action-toolbar">
+      <div class="bake-feedback" id="bake-feedback">
+        <span id="bake-feedback-text">Baked!</span>
+      </div>
+      <div class="save-feedback" id="save-feedback">
+        <span>Saved!</span>
+      </div>
+      <button class="bake-btn" id="bake-btn" title="Bake to native Forma building" disabled>
+        <span class="bake-icon">&#127860;</span>
+        <span class="bake-text">Bake</span>
+      </button>
+      <button class="save-btn" id="save-btn" title="Save current floorplate" disabled>
+        <span class="save-icon">&#128190;</span>
+        <span class="save-text">Save</span>
+      </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="svg-container" id="svg-container">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-state-icon">📐</div>
+          <div class="empty-state-text">Select a building to generate floorplate</div>
+        </div>
+        <div class="loading" id="loading">
+          <div class="loading-spinner"></div>
+          <div>Generating floorplate...</div>
+        </div>
+      </div>
+      <div class="metrics-container" id="metrics-container">
+        <div style="padding: 16px; color: #94a3b8; text-align: center;">
+          No data available
+        </div>
+      </div>
+      <button class="toggle-metrics-btn" id="toggle-metrics" title="Toggle metrics panel">
+        ≡
+      </button>
+    </div>
+  </div>
+
+  <script type="module" src="./floorplate-panel.ts"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "name": "floorplate-generator",
+  "version": "0.1.0",
+  "description": "Floorplate Generator for Autodesk Forma - Automated apartment layout generation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "build:extension": "vite build --config vite.config.ts",
+    "dev": "vite --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts",
+    "watch": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts,.tsx",
+    "clean": "rm -rf dist dist-extension"
+  },
+  "keywords": [
+    "autodesk",
+    "forma",
+    "floorplate",
+    "architecture",
+    "apartment",
+    "generator"
+  ],
+  "author": "Daniel Gameiro <daniel.gameiro@autodesk.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielGameiroAutodesk/floorplate-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DanielGameiroAutodesk/floorplate-generator/issues"
+  },
+  "homepage": "https://github.com/DanielGameiroAutodesk/floorplate-generator#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "forma-embedded-view-sdk": "^0.87.0"
+  }
+}

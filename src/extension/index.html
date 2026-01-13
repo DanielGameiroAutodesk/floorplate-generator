@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bar Generator</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #333;
+        background: #f8f9fa;
+        min-height: 100vh;
+      }
+
+      /* Header */
+      .header {
+        padding: 20px 16px 16px;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .header-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+      }
+
+      .header-icon {
+        width: 32px;
+        height: 32px;
+        background: #4f46e5;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+      }
+
+      h1 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      .subtitle {
+        font-size: 13px;
+        color: #6b7280;
+        margin-left: 44px;
+      }
+
+      /* Tabs */
+      .tabs {
+        display: flex;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 0 8px;
+      }
+
+      .tab {
+        flex: 1;
+        padding: 12px 8px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 500;
+        color: #6b7280;
+        cursor: pointer;
+        border: none;
+        background: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s ease;
+      }
+
+      .tab:hover {
+        color: #4f46e5;
+      }
+
+      .tab.active {
+        color: #4f46e5;
+        border-bottom-color: #4f46e5;
+      }
+
+      .tab-icon {
+        font-size: 14px;
+      }
+
+      /* Tab Content */
+      .tab-content {
+        display: none;
+        padding: 16px;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      /* Form Elements */
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 8px;
+      }
+
+      .form-label-icon {
+        font-size: 14px;
+        color: #6b7280;
+      }
+
+      /* Slider with value */
+      .slider-group {
+        margin-bottom: 20px;
+      }
+
+      .slider-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .slider-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #374151;
+      }
+
+      .slider-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #4f46e5;
+      }
+
+      .slider {
+        width: 100%;
+        height: 6px;
+        -webkit-appearance: none;
+        background: #e5e7eb;
+        border-radius: 3px;
+        outline: none;
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #4f46e5;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
+      }
+
+      .slider-range {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #9ca3af;
+        margin-top: 4px;
+      }
+
+      /* Input with unit suffix */
+      .input-with-unit {
+        position: relative;
+      }
+
+      .input-with-unit input {
+        width: 100%;
+        padding: 10px 12px;
+        padding-right: 36px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #1f2937;
+        background: white;
+      }
+
+      .input-with-unit input:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      .input-unit {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px;
+        color: #9ca3af;
+      }
+
+      /* Unit Mix Section */
+      .column-headers {
+        display: flex;
+        gap: 6px;
+        padding-left: 118px; /* chevron(14) + gap(8) + label(88) + gap(8) */
+        margin-bottom: 8px;
+      }
+
+      .column-header {
+        font-size: 11px;
+        color: #9ca3af;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .column-header.pct {
+        width: 46px;
+      }
+
+      .column-header.area {
+        width: 56px;
+      }
+
+      .unit-row {
+        margin-bottom: 12px;
+        position: relative;
+        border-radius: 6px;
+        transition: background 0.15s ease;
+      }
+
+      .unit-row.expanded {
+        background: #f8fafc;
+        margin-bottom: 16px;
+      }
+
+      .unit-row-basic {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        cursor: pointer;
+      }
+
+      /* Expand chevron - uses unit color */
+      .expand-chevron {
+        font-size: 14px;
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+        width: 14px;
+        user-select: none;
+        font-weight: bold;
+      }
+
+      .unit-row.expanded .expand-chevron {
+        transform: rotate(90deg);
+      }
+
+      .unit-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #374151;
+        width: 88px;
+        flex-shrink: 0;
+        cursor: default;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .unit-label[contenteditable="true"] {
+        background: #f3f4f6;
+        outline: none;
+        border: 1px solid #4f46e5;
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+
+      .unit-inputs {
+        display: flex;
+        gap: 6px;
+      }
+
+      .unit-input {
+        position: relative;
+      }
+
+      .unit-input.pct {
+        width: 46px;
+      }
+
+      .unit-input.area {
+        width: 56px;
+      }
+
+      .unit-input input {
+        width: 100%;
+        padding: 8px 6px;
+        padding-right: 18px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #1f2937;
+        background: white;
+        box-sizing: border-box;
+      }
+
+      .unit-input input:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      /* Hide number input spinners */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+
+      .unit-input .suffix {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10px;
+        color: #9ca3af;
+        pointer-events: none;
+      }
+
+      .unit-row-basic .remove-btn {
+        width: 18px;
+        height: 18px;
+        border: none;
+        background: transparent;
+        color: #d1d5db;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .unit-row:hover .remove-btn {
+        display: flex;
+      }
+
+      .unit-row-basic .remove-btn:hover {
+        color: #ef4444;
+        background: #fee2e2;
+      }
+
+      /* Advanced panel */
+      .unit-advanced-panel {
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        padding: 12px 8px 12px 20px;
+        margin-top: 8px;
+        border-radius: 0 0 6px 6px;
+      }
+
+      .advanced-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #64748b;
+      }
+
+      .smart-defaults-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: normal;
+        cursor: pointer;
+        font-size: 11px;
+      }
+
+      .smart-defaults-toggle input {
+        margin: 0;
+      }
+
+      /* Color picker in advanced panel */
+      .color-picker-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .color-picker-row span {
+        font-size: 12px;
+        color: #475569;
+      }
+
+      .color-picker-swatch {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 2px solid #e2e8f0;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .color-picker-swatch input[type="color"] {
+        position: absolute;
+        width: 150%;
+        height: 150%;
+        top: -25%;
+        left: -25%;
+        cursor: pointer;
+        border: none;
+      }
+
+      .advanced-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .advanced-section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .section-label {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #94a3b8;
+        margin-bottom: 2px;
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #475569;
+        cursor: pointer;
+      }
+
+      .checkbox-row input {
+        margin: 0;
+      }
+
+      .input-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #475569;
+      }
+
+      .input-row span:first-child {
+        width: 70px;
+        flex-shrink: 0;
+      }
+
+      .input-row input[type="number"] {
+        width: 55px;
+        padding: 4px 6px;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      .input-row .suffix {
+        color: #94a3b8;
+        font-size: 11px;
+        width: 16px;
+      }
+
+      /* Two-column layout for checkboxes */
+      .checkbox-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+
+      /* Disabled state when using smart defaults */
+      .unit-advanced-panel.smart-defaults .advanced-grid input,
+      .unit-advanced-panel.smart-defaults .advanced-grid select {
+        background: #f1f5f9;
+        color: #94a3b8;
+        pointer-events: none;
+      }
+
+      .add-unit-btn {
+        width: 100%;
+        padding: 10px;
+        background: #f9fafb;
+        border: 1px dashed #d1d5db;
+        border-radius: 6px;
+        color: #6b7280;
+        cursor: pointer;
+        font-size: 13px;
+        margin-top: 12px;
+        transition: all 0.15s ease;
+      }
+
+      .add-unit-btn:hover {
+        background: #f3f4f6;
+        border-color: #4f46e5;
+        color: #4f46e5;
+      }
+
+      /* Total Mix Indicator */
+      .total-mix {
+        background: #d1fae5;
+        color: #065f46;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        margin-top: 16px;
+      }
+
+      .total-mix.error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      /* Toggle Group */
+      .toggle-group {
+        display: flex;
+        background: #f3f4f6;
+        border-radius: 6px;
+        padding: 3px;
+      }
+
+      .toggle-option {
+        flex: 1;
+        padding: 8px 16px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 500;
+        color: #6b7280;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.15s ease;
+      }
+
+      .toggle-option.active {
+        background: white;
+        color: #4f46e5;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Toggle Switch */
+      .toggle-switch-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .toggle-switch-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+      }
+
+      .toggle-switch-icon {
+        font-size: 16px;
+      }
+
+      .toggle-switch {
+        position: relative;
+        width: 48px;
+        height: 26px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #d1d5db;
+        border-radius: 26px;
+        transition: 0.3s;
+      }
+
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.3s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .toggle-switch input:checked + .toggle-slider {
+        background-color: #4f46e5;
+      }
+
+      .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(22px);
+      }
+
+      /* Section Divider */
+      .section-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        margin-top: 8px;
+      }
+
+      /* Two Column Layout */
+      .two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      /* Info Box */
+      .info-box {
+        background: #eff6ff;
+        border-left: 3px solid #3b82f6;
+        padding: 12px 14px;
+        border-radius: 0 6px 6px 0;
+        margin-top: 16px;
+      }
+
+      .info-box-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #1d4ed8;
+        margin-bottom: 4px;
+      }
+
+      .info-box-text {
+        font-size: 12px;
+        color: #3b82f6;
+        line-height: 1.5;
+      }
+
+      /* Note Text */
+      .note-text {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-top: 4px;
+      }
+
+      /* Generate Button */
+      .generate-section {
+        padding: 16px;
+        background: white;
+        border-top: 1px solid #e5e7eb;
+        position: sticky;
+        bottom: 0;
+      }
+
+      .generate-btn {
+        width: 100%;
+        padding: 14px 20px;
+        background: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.15s ease;
+      }
+
+      .generate-btn:hover {
+        background: #4338ca;
+      }
+
+      .generate-btn:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+      }
+
+      .generate-btn-icon {
+        font-size: 18px;
+      }
+
+      /* Status Bar */
+      .status-bar {
+        padding: 8px 16px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-bar.connected {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .status-bar.disconnected {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .status-bar.connecting {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      /* Debug Output */
+      .debug-section {
+        padding: 16px;
+        border-top: 1px solid #e5e7eb;
+        display: none;
+      }
+
+      .debug-section.show {
+        display: block;
+      }
+
+      .debug-toggle {
+        font-size: 12px;
+        color: #6b7280;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px 16px;
+        width: 100%;
+        text-align: left;
+      }
+
+      .debug-toggle:hover {
+        color: #4f46e5;
+      }
+
+      .debug-output {
+        background: #f8f9fa;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 12px;
+        font-family: 'Monaco', 'Menlo', monospace;
+        font-size: 11px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        max-height: 200px;
+        overflow-y: auto;
+        color: #374151;
+      }
+
+      /* Auto-Generate Toggle */
+      .auto-generate-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .auto-generate-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .auto-toggle-switch {
+        position: relative;
+        width: 36px;
+        height: 20px;
+      }
+
+      .auto-toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .auto-toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #d1d5db;
+        border-radius: 20px;
+        transition: 0.2s;
+      }
+
+      .auto-toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.2s;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      .auto-toggle-switch input:checked + .auto-toggle-slider {
+        background-color: #22c55e;
+      }
+
+      .auto-toggle-switch input:checked + .auto-toggle-slider:before {
+        transform: translateX(16px);
+      }
+
+      .auto-toggle-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #64748b;
+      }
+
+      .outdated-indicator {
+        display: none;
+        width: 8px;
+        height: 8px;
+        background: #f59e0b;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+      }
+
+      .outdated-indicator.show {
+        display: block;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      /* Window Toggle Button */
+      .window-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 10px 16px;
+        margin-bottom: 8px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .window-toggle-btn:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+      }
+
+      .window-toggle-btn.active {
+        background: #4f46e5;
+        border-color: #4f46e5;
+        color: white;
+      }
+
+      .window-toggle-btn .btn-icon {
+        font-size: 16px;
+      }
+
+      /* Saved Floorplates Section */
+      .saved-section {
+        padding: 16px;
+        background: white;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .saved-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .saved-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      .saved-count {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .saved-list {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .saved-empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: #9ca3af;
+        font-size: 13px;
+        background: #f9fafb;
+        border-radius: 8px;
+        border: 1px dashed #e5e7eb;
+      }
+
+      .saved-item {
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        border: 1px solid transparent;
+      }
+
+      .saved-item:hover {
+        background: #f1f5f9;
+        border-color: #e2e8f0;
+      }
+
+      .saved-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .saved-item-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+
+      .saved-item-name {
+        font-weight: 500;
+        color: #1a1a1a;
+        font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+      }
+
+      .saved-item-actions {
+        display: flex;
+        gap: 4px;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+      }
+
+      .saved-item:hover .saved-item-actions {
+        opacity: 1;
+      }
+
+      .saved-action-btn {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border: none;
+        background: #e2e8f0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+      }
+
+      .saved-action-btn:hover {
+        background: #cbd5e1;
+      }
+
+      .saved-action-btn.delete-btn:hover {
+        background: #fecaca;
+        color: #dc2626;
+      }
+
+      .saved-item-stats {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 4px;
+      }
+
+      .saved-stat {
+        font-size: 11px;
+        color: #6b7280;
+        background: #e5e7eb;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .saved-item-meta {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+
+      /* Inspector Styles */
+      .inspect-status {
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        font-size: 13px;
+      }
+
+      .inspect-status.loading {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .inspect-status.success {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .inspect-status.error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .inspect-results {
+        min-height: 100px;
+      }
+
+      .inspect-empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: #9ca3af;
+        font-size: 13px;
+        background: #f9fafb;
+        border-radius: 8px;
+        border: 1px dashed #e5e7eb;
+      }
+
+      .inspect-summary {
+        margin-bottom: 16px;
+      }
+
+      .inspect-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .inspect-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px;
+      }
+
+      .inspect-card-label {
+        font-size: 11px;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+
+      .inspect-card-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      .inspect-section {
+        margin-bottom: 8px;
+      }
+
+      .inspect-section-toggle {
+        width: 100%;
+        padding: 10px 12px;
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #374151;
+        cursor: pointer;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.15s ease;
+      }
+
+      .inspect-section-toggle:hover {
+        background: #e5e7eb;
+      }
+
+      .inspect-section-toggle.expanded {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: none;
+      }
+
+      .inspect-section-toggle.expanded span {
+        transform: rotate(90deg);
+      }
+
+      .inspect-section-toggle span {
+        transition: transform 0.15s ease;
+        font-size: 10px;
+      }
+
+      .inspect-section-content {
+        border: 1px solid #e5e7eb;
+        border-top: none;
+        border-radius: 0 0 6px 6px;
+        background: #f8f9fa;
+        max-height: 400px;
+        overflow: auto;
+      }
+
+      .inspect-json {
+        margin: 0;
+        padding: 12px;
+        font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+        font-size: 11px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: #374151;
+      }
+
+      .inspect-json .key {
+        color: #7c3aed;
+      }
+
+      .inspect-json .string {
+        color: #059669;
+      }
+
+      .inspect-json .number {
+        color: #2563eb;
+      }
+
+      .inspect-json .boolean {
+        color: #dc2626;
+      }
+
+      .inspect-json .null {
+        color: #6b7280;
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- Status Bar -->
+    <div id="status-bar" class="status-bar connecting">
+      <span class="status-dot"></span>
+      <span id="status-text">Connecting to Forma...</span>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-title">
+        <div class="header-icon">&#9632;</div>
+        <h1>Bar Generator</h1>
+      </div>
+      <div class="subtitle">Multifamily Floorplate Tool</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="mix">
+        <span class="tab-icon">&#9638;</span>
+        MIX
+      </button>
+      <button class="tab" data-tab="dim">
+        <span class="tab-icon">&#9881;</span>
+        DIM
+      </button>
+      <button class="tab" data-tab="egress">
+        <span class="tab-icon">&#9099;</span>
+        EGRESS
+      </button>
+      <button class="tab" data-tab="inspect">
+        <span class="tab-icon">&#128269;</span>
+        INSPECT
+      </button>
+    </div>
+
+    <!-- MIX Tab Content -->
+    <div id="tab-mix" class="tab-content active">
+      <!-- Partition Alignment -->
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">&#9776; Partition Alignment</span>
+          <span class="slider-value" id="alignment-value">Strict</span>
+        </div>
+        <input type="range" class="slider" id="alignment-slider" min="0" max="100" value="100">
+      </div>
+
+      <!-- Column Headers -->
+      <div class="column-headers">
+        <span class="column-header pct">Mix %</span>
+        <span class="column-header area">Area</span>
+      </div>
+
+      <!-- Dynamic Unit Rows Container -->
+      <div id="unit-rows-container">
+        <!-- Unit rows will be rendered dynamically by JS -->
+      </div>
+
+      <!-- Add Unit Button -->
+      <button class="add-unit-btn" id="add-unit-btn">+ Add Unit Type</button>
+
+      <!-- Total Mix -->
+      <div class="total-mix" id="total-mix">Total Mix: 100%</div>
+    </div>
+
+    <!-- DIM Tab Content -->
+    <div id="tab-dim" class="tab-content">
+      <!-- Length and Depth side by side -->
+      <div class="two-columns">
+        <div class="form-group">
+          <label class="form-label">
+            <span class="form-label-icon">&#8596;</span>
+            Length
+          </label>
+          <div class="input-with-unit">
+            <input type="number" id="building-length" value="300" min="50" max="1000" step="1">
+            <span class="input-unit">ft</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="form-label-icon">&#8597;</span>
+            Depth
+          </label>
+          <div class="input-with-unit">
+            <input type="number" id="building-depth" value="65" min="30" max="200" step="1">
+            <span class="input-unit">ft</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stories Slider -->
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">Stories</span>
+          <span class="slider-value" id="stories-value">1 Flr</span>
+        </div>
+        <input type="range" class="slider" id="stories-slider" min="1" max="20" value="1">
+        <div class="slider-range">
+          <span>1</span>
+          <span>20</span>
+        </div>
+      </div>
+
+      <!-- Corridor Width -->
+      <div class="form-group">
+        <label class="form-label">
+          <span class="form-label-icon">&#8596;</span>
+          Corridor Width
+        </label>
+        <div class="input-with-unit">
+          <input type="number" id="corridor-width" value="6" min="5" max="10" step="0.5">
+          <span class="input-unit">ft</span>
+        </div>
+      </div>
+
+      <!-- Core Placement -->
+      <div class="form-group">
+        <label class="form-label">
+          <span class="form-label-icon">&#9632;</span>
+          Core Placement
+        </label>
+        <div class="toggle-group">
+          <button class="toggle-option active" data-value="North" id="core-north">North</button>
+          <button class="toggle-option" data-value="South" id="core-south">South</button>
+        </div>
+      </div>
+
+      <!-- Core Dimensions -->
+      <div class="two-columns">
+        <div class="form-group">
+          <label class="form-label">Core Width</label>
+          <div class="input-with-unit">
+            <input type="number" id="core-width" value="12" min="10" max="20">
+            <span class="input-unit">ft</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Core Depth</label>
+          <div class="input-with-unit">
+            <input type="number" id="core-depth" value="29.5" min="20" max="40" step="0.5">
+            <span class="input-unit">ft</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EGRESS Tab Content -->
+    <div id="tab-egress" class="tab-content">
+      <!-- Sprinkler System Toggle -->
+      <div class="toggle-switch-row">
+        <span class="toggle-switch-label">
+          <span class="toggle-switch-icon">&#128167;</span>
+          Sprinkler System
+        </span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="sprinkler-toggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- NFPA Section Title -->
+      <div class="section-title">NFPA 101 / IBC LIMITS</div>
+
+      <!-- Common Path of Travel -->
+      <div class="form-group">
+        <label class="form-label">Common Path of Travel (Max)</label>
+        <div class="input-with-unit">
+          <input type="number" id="common-path" value="125" min="50" max="200">
+          <span class="input-unit">ft</span>
+        </div>
+      </div>
+
+      <!-- Exit Access Travel Distance -->
+      <div class="form-group">
+        <label class="form-label">Exit Access Travel Distance (Max)</label>
+        <div class="input-with-unit">
+          <input type="number" id="travel-distance" value="250" min="100" max="400">
+          <span class="input-unit">ft</span>
+        </div>
+      </div>
+
+      <!-- Dead-End Corridor -->
+      <div class="form-group">
+        <label class="form-label">Dead-End Corridor (Max)</label>
+        <div class="input-with-unit">
+          <input type="number" id="dead-end" value="50" min="20" max="100">
+          <span class="input-unit">ft</span>
+        </div>
+        <p class="note-text">Note: Segments shorter than 2.5x width are considered alcoves (exempt).</p>
+      </div>
+
+      <!-- Info Box -->
+      <div class="info-box">
+        <div class="info-box-title">Code Note:</div>
+        <div class="info-box-text">Dead-End Corridor is measured from the most remote point of the corridor to the point where occupants have a choice of two directions (Exit Stair).</div>
+      </div>
+    </div>
+
+    <!-- INSPECT Tab Content -->
+    <div id="tab-inspect" class="tab-content">
+      <div class="info-box" style="margin-top: 0; margin-bottom: 16px; background: #fef3c7; border-left-color: #f59e0b;">
+        <div class="info-box-title" style="color: #92400e;">Building Inspector</div>
+        <div class="info-box-text" style="color: #b45309;">Select a native Forma building and click "Inspect Building" to fetch all available metadata. This helps understand the data structure needed to create new buildings.</div>
+      </div>
+
+      <button class="generate-btn" id="inspect-btn" style="margin-bottom: 16px;">
+        <span class="generate-btn-icon">&#128269;</span>
+        Inspect Selected Building
+      </button>
+
+      <!-- Inspection Status -->
+      <div id="inspect-status" class="inspect-status" style="display: none;">
+        <span id="inspect-status-text"></span>
+      </div>
+
+      <!-- Inspection Results -->
+      <div id="inspect-results" class="inspect-results">
+        <div class="inspect-empty">
+          Select a building in Forma and click "Inspect Building" to see its metadata.
+        </div>
+      </div>
+
+      <!-- Quick Summary Cards -->
+      <div id="inspect-summary" class="inspect-summary" style="display: none;">
+        <div class="section-title">Quick Summary</div>
+        <div class="inspect-cards">
+          <div class="inspect-card">
+            <div class="inspect-card-label">Category</div>
+            <div class="inspect-card-value" id="summary-category">-</div>
+          </div>
+          <div class="inspect-card">
+            <div class="inspect-card-label">Units</div>
+            <div class="inspect-card-value" id="summary-units">-</div>
+          </div>
+          <div class="inspect-card">
+            <div class="inspect-card-label">Levels</div>
+            <div class="inspect-card-value" id="summary-levels">-</div>
+          </div>
+          <div class="inspect-card">
+            <div class="inspect-card-label">Has GFA</div>
+            <div class="inspect-card-value" id="summary-gfa">-</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Data Sections -->
+      <div id="inspect-data-sections" style="display: none;">
+        <!-- Element Properties -->
+        <div class="inspect-section">
+          <button class="inspect-section-toggle" data-section="element">
+            <span>&#9654;</span> Element Properties
+          </button>
+          <div class="inspect-section-content" id="section-element" style="display: none;">
+            <pre class="inspect-json" id="json-element"></pre>
+          </div>
+        </div>
+
+        <!-- Graph Building (Units) -->
+        <div class="inspect-section">
+          <button class="inspect-section-toggle" data-section="graphBuilding">
+            <span>&#9654;</span> Graph Building (Units & Spaces)
+          </button>
+          <div class="inspect-section-content" id="section-graphBuilding" style="display: none;">
+            <pre class="inspect-json" id="json-graphBuilding"></pre>
+          </div>
+        </div>
+
+        <!-- Gross Floor Area Polygons -->
+        <div class="inspect-section">
+          <button class="inspect-section-toggle" data-section="gfa">
+            <span>&#9654;</span> Gross Floor Area Polygons
+          </button>
+          <div class="inspect-section-content" id="section-gfa" style="display: none;">
+            <pre class="inspect-json" id="json-gfa"></pre>
+          </div>
+        </div>
+
+        <!-- Footprint -->
+        <div class="inspect-section">
+          <button class="inspect-section-toggle" data-section="footprint">
+            <span>&#9654;</span> Footprint
+          </button>
+          <div class="inspect-section-content" id="section-footprint" style="display: none;">
+            <pre class="inspect-json" id="json-footprint"></pre>
+          </div>
+        </div>
+
+        <!-- World Transform -->
+        <div class="inspect-section">
+          <button class="inspect-section-toggle" data-section="transform">
+            <span>&#9654;</span> World Transform
+          </button>
+          <div class="inspect-section-content" id="section-transform" style="display: none;">
+            <pre class="inspect-json" id="json-transform"></pre>
+          </div>
+        </div>
+
+        <!-- Raw Element JSON -->
+        <div class="inspect-section">
+          <button class="inspect-section-toggle" data-section="raw">
+            <span>&#9654;</span> Raw Element JSON (Full)
+          </button>
+          <div class="inspect-section-content" id="section-raw" style="display: none;">
+            <pre class="inspect-json" id="json-raw"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy All Button -->
+      <button class="add-unit-btn" id="copy-all-btn" style="display: none; margin-top: 16px;">
+        Copy All Data to Clipboard
+      </button>
+    </div>
+
+    <!-- Generate Button Section -->
+    <div class="generate-section">
+      <button class="generate-btn" id="generate-btn">
+        <span class="generate-btn-icon">&#9881;</span>
+        Select Building
+      </button>
+    </div>
+
+    <!-- Saved Floorplates Section -->
+    <div class="saved-section" id="saved-section">
+      <div class="saved-header">
+        <span class="saved-title">Saved Floorplates</span>
+        <span class="saved-count" id="saved-count">(0)</span>
+      </div>
+      <div class="saved-list" id="saved-list">
+        <div class="saved-empty" id="saved-empty">
+          No saved floorplates. Generate a layout and click Save to store it.
+        </div>
+      </div>
+    </div>
+
+    <!-- Debug Section -->
+    <button class="debug-toggle" id="debug-toggle">&#9660; Show Debug Output</button>
+    <div class="debug-section" id="debug-section">
+      <div class="debug-output" id="debug-output">Select a building and click Generate to see output...</div>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

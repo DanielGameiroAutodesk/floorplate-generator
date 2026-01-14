@@ -71,6 +71,45 @@ interface GrossFloorAreaPolygon {
 }
 
 // ============================================================================
+// BASIC BUILDING API TYPES (for graphBuilding with units)
+// ============================================================================
+
+interface BasicBuildingVertex {
+  id: string;  // pattern: [a-zA-Z0-9-]{2,20}
+  x: number;   // world X coordinate
+  y: number;   // world Y coordinate
+}
+
+type BasicBuildingProgram = 'CORE' | 'CORRIDOR' | 'LIVING_UNIT' | 'PARKING';
+
+interface BasicBuildingUnit {
+  polygon: string[];      // required - array of vertex IDs
+  holes: string[][];      // required - array of arrays of vertex IDs (empty [] if no holes)
+  program?: BasicBuildingProgram;
+  functionId?: string;
+}
+
+interface BasicBuildingFloorPlan {
+  id: string;
+  vertices: BasicBuildingVertex[];
+  units: BasicBuildingUnit[];
+}
+
+interface BasicBuildingFloorByPlan {
+  planId: string;
+  height: number;
+}
+
+interface CreateBasicBuildingRequest {
+  floors: BasicBuildingFloorByPlan[];
+  plans: BasicBuildingFloorPlan[];
+}
+
+interface BasicBuildingCreateResponse {
+  urn: string;
+}
+
+// ============================================================================
 // MESH GENERATION
 // ============================================================================
 
@@ -1507,9 +1546,468 @@ export async function bakeWithFloorStack(
   }
 }
 
+// ============================================================================
+// BASIC BUILDING API FUNCTIONS
+// ============================================================================
+
+// API endpoints:
+// - Direct API: requires Bearer token, but works from any origin including localhost
+// - Forma Proxy: uses session cookies, but gets blocked by CORS from localhost
+const FORMA_API_DIRECT = 'https://developer.api.autodesk.com';
+const FORMA_API_PROXY = 'https://app.autodeskforma.eu/api';
+
+// Detect if running from localhost (development mode)
+const isLocalhost = typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+// Token storage for localhost development
+const TOKEN_STORAGE_KEY = 'floorplate_access_token';
+
+/**
+ * Get access token for localhost development
+ * Prompts user if not cached
+ */
+function getAccessToken(): string {
+  let token = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+
+  if (!token) {
+    token = prompt(
+      'Paste your access token (from browser DevTools → Network tab → find any API request → copy Authorization header value after "Bearer "):'
+    );
+
+    if (!token || token.trim() === '') {
+      throw new Error('Access token is required for localhost development');
+    }
+
+    // Remove "Bearer " prefix if user copied the whole header
+    token = token.trim().replace(/^Bearer\s+/i, '');
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
+  }
+
+  return token;
+}
+
+/**
+ * Check if two axis-aligned rectangles overlap (excluding edge-touching)
+ */
+function rectanglesOverlap(
+  r1: { x: number; y: number; width: number; depth: number },
+  r2: { x: number; y: number; width: number; depth: number }
+): boolean {
+  const epsilon = 0.001; // Small tolerance for floating point
+  // No overlap if one is completely to the left, right, above, or below the other
+  return !(
+    r1.x + r1.width <= r2.x + epsilon ||  // r1 is left of r2
+    r2.x + r2.width <= r1.x + epsilon ||  // r2 is left of r1
+    r1.y + r1.depth <= r2.y + epsilon ||  // r1 is below r2
+    r2.y + r2.depth <= r1.y + epsilon     // r2 is below r1
+  );
+}
+
+/**
+ * Log any overlapping geometry in the floorplan before sending to API
+ */
+function logOverlaps(floorplan: FloorPlanData): void {
+  const allRects: Array<{ name: string; x: number; y: number; width: number; depth: number }> = [];
+
+  // Add units
+  for (const unit of floorplan.units) {
+    allRects.push({
+      name: `Unit ${unit.id} (${unit.typeName}, ${unit.side})`,
+      x: unit.x,
+      y: unit.y,
+      width: unit.width,
+      depth: unit.depth
+    });
+  }
+
+  // Add cores
+  for (const core of floorplan.cores) {
+    allRects.push({
+      name: `Core ${core.id}`,
+      x: core.x,
+      y: core.y,
+      width: core.width,
+      depth: core.depth
+    });
+  }
+
+  // Add corridor
+  allRects.push({
+    name: 'Corridor',
+    x: floorplan.corridor.x,
+    y: floorplan.corridor.y,
+    width: floorplan.corridor.width,
+    depth: floorplan.corridor.depth
+  });
+
+  // Check all pairs
+  const overlaps: string[] = [];
+  for (let i = 0; i < allRects.length; i++) {
+    for (let j = i + 1; j < allRects.length; j++) {
+      if (rectanglesOverlap(allRects[i], allRects[j])) {
+        overlaps.push(`${allRects[i].name} <-> ${allRects[j].name}`);
+      }
+    }
+  }
+
+  if (overlaps.length > 0) {
+    console.warn('[BasicBuilding] WARNING: Detected overlapping geometry:');
+    for (const overlap of overlaps) {
+      console.warn(`  - ${overlap}`);
+    }
+    console.warn('[BasicBuilding] This may cause API validation errors.');
+  } else {
+    console.log('[BasicBuilding] No overlapping geometry detected.');
+  }
+}
+
+/**
+ * Round coordinate to avoid floating point precision issues
+ * Uses 4 decimal places (0.1mm precision)
+ */
+function roundCoord(value: number): number {
+  return Math.round(value * 10000) / 10000;
+}
+
+/**
+ * Create a coordinate key for vertex deduplication
+ */
+function coordKey(x: number, y: number): string {
+  return `${roundCoord(x)},${roundCoord(y)}`;
+}
+
+/**
+ * Transform a point from local (building) coordinates to world coordinates
+ * Same formula as the renderer uses
+ */
+function localToWorld(
+  localX: number,
+  localY: number,
+  centerX: number,
+  centerY: number,
+  rotation: number
+): { x: number; y: number } {
+  const cos = Math.cos(rotation);
+  const sin = Math.sin(rotation);
+
+  // Rotate around origin, then translate
+  const rotatedX = localX * cos - localY * sin;
+  const rotatedY = localX * sin + localY * cos;
+
+  return {
+    x: rotatedX + centerX,
+    y: rotatedY + centerY
+  };
+}
+
+/**
+ * Convert FloorPlanData to BasicBuilding API format
+ * Transforms our internal representation to the format expected by basicbuilding/batch-create
+ *
+ * IMPORTANT: This function transforms vertices to WORLD coordinates before sending to API.
+ * The BasicBuilding API expects world coordinates, not local coordinates.
+ *
+ * IMPORTANT: This function deduplicates vertices by coordinate to avoid the
+ * "Vertex id is duplicated" validation error. Units that share corners will
+ * reference the same vertex ID.
+ */
+function convertFloorPlanToBasicBuilding(
+  floorplan: FloorPlanData,
+  numFloors: number
+): CreateBasicBuildingRequest {
+  const vertices: BasicBuildingVertex[] = [];
+  const units: BasicBuildingUnit[] = [];
+
+  // Get transform parameters
+  const { centerX, centerY, rotation } = floorplan.transform;
+
+  // IMPORTANT: Building local coordinates are ALREADY CENTERED around (0, 0)
+  // The generator applies offsetX = -length/2 and offsetY = -depth/2 to all coordinates
+  // This means the building center is at origin in local space
+  // So we just need to rotate around origin and translate to world center
+
+  console.log('[BasicBuilding] Using CENTERED local coordinates (already centered around 0):');
+  console.log(`  - Building dimensions: ${floorplan.buildingLength.toFixed(2)} x ${floorplan.buildingDepth.toFixed(2)}`);
+  console.log(`  - Transform will be applied when adding element:`);
+  console.log(`    - World center: (${centerX.toFixed(2)}, ${centerY.toFixed(2)})`);
+  console.log(`    - Rotation: ${(rotation * 180 / Math.PI).toFixed(2)} degrees`);
+
+  // Map from coordinate key to vertex ID for deduplication
+  const coordToVertexId = new Map<string, string>();
+  let vertexIndex = 0;
+
+  // Helper to add a vertex (or return existing ID if coordinates match)
+  // Takes raw building local coordinates (0 to length, 0 to depth)
+  // Uses them directly without centering - transform will handle positioning
+  const getOrAddVertex = (rawX: number, rawY: number): string => {
+    // Use raw local coordinates directly
+    const key = coordKey(rawX, rawY);
+
+    // Check if we already have a vertex at these coordinates
+    const existingId = coordToVertexId.get(key);
+    if (existingId !== undefined) {
+      return existingId;
+    }
+
+    // Create new vertex with raw local coordinates
+    const id = `v${vertexIndex++}`;
+    vertices.push({ id, x: rawX, y: rawY });
+    coordToVertexId.set(key, id);
+    return id;
+  };
+
+  // Process units (residential)
+  for (const unit of floorplan.units) {
+    if (unit.isLShaped && unit.polyPoints && unit.polyPoints.length >= 3) {
+      // L-shaped unit: use the polyPoints
+      const vertexIds = unit.polyPoints.map(pt => getOrAddVertex(pt.x, pt.y));
+      units.push({
+        polygon: vertexIds,
+        holes: [],
+        program: 'LIVING_UNIT',
+        functionId: 'residential'
+      });
+    } else {
+      // Rectangular unit: create 4 corners (counterclockwise winding)
+      const v1 = getOrAddVertex(unit.x, unit.y);
+      const v2 = getOrAddVertex(unit.x + unit.width, unit.y);
+      const v3 = getOrAddVertex(unit.x + unit.width, unit.y + unit.depth);
+      const v4 = getOrAddVertex(unit.x, unit.y + unit.depth);
+      units.push({
+        polygon: [v1, v2, v3, v4],
+        holes: [],
+        program: 'LIVING_UNIT',
+        functionId: 'residential'
+      });
+    }
+  }
+
+  // Process cores
+  for (const core of floorplan.cores) {
+    const v1 = getOrAddVertex(core.x, core.y);
+    const v2 = getOrAddVertex(core.x + core.width, core.y);
+    const v3 = getOrAddVertex(core.x + core.width, core.y + core.depth);
+    const v4 = getOrAddVertex(core.x, core.y + core.depth);
+    units.push({
+      polygon: [v1, v2, v3, v4],
+      holes: [],
+      program: 'CORE',
+      functionId: 'residential'
+    });
+  }
+
+  // Process corridor
+  const corridor = floorplan.corridor;
+  const cv1 = getOrAddVertex(corridor.x, corridor.y);
+  const cv2 = getOrAddVertex(corridor.x + corridor.width, corridor.y);
+  const cv3 = getOrAddVertex(corridor.x + corridor.width, corridor.y + corridor.depth);
+  const cv4 = getOrAddVertex(corridor.x, corridor.y + corridor.depth);
+  units.push({
+    polygon: [cv1, cv2, cv3, cv4],
+    holes: [],
+    program: 'CORRIDOR',
+    functionId: 'residential'
+  });
+
+  // Log deduplication stats
+  const originalVertexCount = floorplan.units.length * 4 + floorplan.cores.length * 4 + 4;
+  console.log(`[BasicBuilding] Vertex deduplication: ${originalVertexCount} original -> ${vertices.length} unique`);
+
+  // Debug: Log all unit geometries to help diagnose overlaps
+  console.log('[BasicBuilding] Unit geometries (for overlap debugging):');
+  for (let i = 0; i < units.length; i++) {
+    const unit = units[i];
+    const unitVertices = unit.polygon.map(vid => {
+      const v = vertices.find(v => v.id === vid);
+      return v ? `(${v.x.toFixed(2)}, ${v.y.toFixed(2)})` : `?${vid}`;
+    });
+    console.log(`  Unit ${i} [${unit.program}]: ${unitVertices.join(' -> ')}`);
+  }
+
+  // Create floor plan
+  const floorPlan: BasicBuildingFloorPlan = {
+    id: 'plan1',
+    vertices,
+    units
+  };
+
+  // Create floor entries (one per level, all referencing the same plan)
+  const floors: BasicBuildingFloorByPlan[] = Array.from({ length: numFloors }, () => ({
+    planId: 'plan1',
+    height: FLOOR_HEIGHT
+  }));
+
+  return {
+    floors,
+    plans: [floorPlan]
+  };
+}
+
+/**
+ * Call the BasicBuilding API to create a building with unit subdivisions
+ * - Localhost: Uses direct API with Bearer token (prompts user)
+ * - Production: Uses Forma proxy with session cookies
+ */
+async function createBasicBuildingAPI(
+  building: CreateBasicBuildingRequest
+): Promise<BasicBuildingCreateResponse[]> {
+  const projectId = await Forma.getProjectId();
+  const authContext = projectId;
+
+  // Determine region - default to EMEA, could be made configurable
+  const region = 'EMEA';
+
+  // Choose API endpoint based on environment
+  const apiBase = isLocalhost ? FORMA_API_DIRECT : FORMA_API_PROXY;
+  const url = `${apiBase}/forma/basicbuilding/v1alpha/basicbuilding/batch-create?authcontext=${encodeURIComponent(authContext)}`;
+
+  console.log('[BasicBuilding API] Environment:', isLocalhost ? 'localhost (using direct API)' : 'production (using proxy)');
+  console.log('[BasicBuilding API] Calling:', url);
+  console.log('[BasicBuilding API] Building data:', JSON.stringify(building, null, 2));
+
+  // Build fetch options based on environment
+  let response: Response;
+
+  if (isLocalhost) {
+    // Localhost: Use direct API with Bearer token
+    const accessToken = getAccessToken();
+    response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+        'X-Ads-Region': region
+      },
+      body: JSON.stringify([building])  // Array wrapper!
+    });
+  } else {
+    // Production: Use Forma proxy with session cookies
+    response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Ads-Region': region
+      },
+      credentials: 'include',  // Include session cookies for auth
+      body: JSON.stringify([building])  // Array wrapper!
+    });
+  }
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`BasicBuilding API failed: ${response.status} ${errorText}`);
+  }
+
+  const results: BasicBuildingCreateResponse[] = await response.json();
+  console.log('[BasicBuilding API] Response:', results);
+  return results;
+}
+
+/**
+ * Bake a floorplan using the BasicBuilding API
+ * Creates a native Forma building with unit subdivisions (graphBuilding representation)
+ * Uses Forma proxy which authenticates via session cookies (no token needed)
+ */
+export async function bakeWithBasicBuildingAPI(
+  floorplan: FloorPlanData,
+  options: BakeOptions
+): Promise<BakeResult> {
+  try {
+    console.log('='.repeat(60));
+    console.log('BAKE WITH BASIC BUILDING API STARTING');
+    console.log('='.repeat(60));
+
+    const { numFloors, originalBuildingPath } = options;
+
+    // 0. Check for overlapping geometry (pre-validation)
+    logOverlaps(floorplan);
+
+    // 1. Convert FloorPlanData to BasicBuilding format
+    console.log('Converting floorplan to BasicBuilding format...');
+    const buildingData = convertFloorPlanToBasicBuilding(floorplan, numFloors);
+    console.log(`Converted: ${buildingData.plans[0].vertices.length} vertices, ${buildingData.plans[0].units.length} units, ${buildingData.floors.length} floors`);
+
+    // 2. Call BasicBuilding API (uses session cookies via Forma proxy)
+    console.log('Calling BasicBuilding API...');
+    const results = await createBasicBuildingAPI(buildingData);
+
+    if (!results || results.length === 0) {
+      throw new Error('BasicBuilding API returned empty response');
+    }
+
+    const urn = results[0].urn;
+    console.log('Building created with URN:', urn);
+
+    // 3. Get terrain elevation for positioning
+    const elevation = await Forma.terrain.getElevationAt({
+      x: floorplan.transform.centerX,
+      y: floorplan.transform.centerY
+    });
+    console.log('Terrain elevation at center:', elevation);
+
+    // 4. Calculate transform
+    // IMPORTANT: Vertices are in CENTERED local coordinates (origin at building center)
+    // The generator already applies offsetX = -length/2 and offsetY = -depth/2
+    // So we just rotate around origin and translate to world center
+    const { centerX, centerY, rotation } = floorplan.transform;
+    const cos = Math.cos(rotation);
+    const sin = Math.sin(rotation);
+
+    console.log('[DEBUG TRANSFORM BasicBuilding] Applying transform:');
+    console.log(`  - Rotation: ${(rotation * 180 / Math.PI).toFixed(2)} degrees`);
+    console.log(`  - Local coords are centered at (0, 0) - building center is at origin`);
+    console.log(`  - World center target: (${centerX.toFixed(2)}, ${centerY.toFixed(2)})`);
+    console.log(`  - Translation: (${centerX.toFixed(2)}, ${centerY.toFixed(2)}, ${elevation.toFixed(2)})`);
+
+    // 4x4 column-major transform matrix:
+    // [ cos  -sin  0   centerX ]
+    // [ sin   cos  0   centerY ]
+    // [  0     0   1   elevation ]
+    // [  0     0   0    1 ]
+    // Column-major: [col0, col1, col2, col3]
+    const transform: [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number] = [
+      cos, sin, 0, 0,           // Column 0: X axis after rotation
+      -sin, cos, 0, 0,          // Column 1: Y axis after rotation
+      0, 0, 1, 0,               // Column 2: Z axis (unchanged)
+      centerX, centerY, elevation, 1  // Column 3: Direct translation to world center
+    ];
+
+    console.log('[DEBUG TRANSFORM] Adding to proposal with rotation + translation to world center');
+
+    // 5. Add to proposal
+    await Forma.proposal.addElement({ urn, transform });
+    console.log('Element added to proposal');
+
+    // 6. Remove original building if specified
+    if (originalBuildingPath) {
+      console.log('Removing original building:', originalBuildingPath);
+      try {
+        await Forma.proposal.removeElement({ path: originalBuildingPath });
+        console.log('Original building removed');
+      } catch (removeError) {
+        console.warn('Could not remove original building:', removeError);
+      }
+    }
+
+    console.log('='.repeat(60));
+    console.log('BAKE WITH BASIC BUILDING API COMPLETE');
+    console.log('='.repeat(60));
+
+    return { success: true, urn };
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Bake with BasicBuilding API failed:', error);
+    return { success: false, error: errorMessage };
+  }
+}
+
 // Export reserved functions for future use
 export const _reserved = {
   generateBuildingMesh: _generateBuildingMesh,
   generateFootprint: _generateFootprint,
-  generateFloorsFromFloorplan: _generateFloorsFromFloorplan
+  generateFloorsFromFloorplan: _generateFloorsFromFloorplan,
+  convertFloorPlanToBasicBuilding,
+  createBasicBuildingAPI
 };

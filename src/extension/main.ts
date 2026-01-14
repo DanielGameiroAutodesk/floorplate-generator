@@ -21,7 +21,7 @@ import { UnitConfiguration, EgressConfig, LayoutOption, SavedFloorplateSummary, 
 import { FEET_TO_METERS, SQ_FEET_TO_SQ_METERS, EGRESS_SPRINKLERED, EGRESS_UNSPRINKLERED } from '../algorithm/constants';
 import * as storage from './storage-service';
 import { initInspectTab } from './building-inspector';
-import { bakeBuilding } from './bake-building';
+import { bakeWithBasicBuildingAPI } from './bake-building';
 
 // Note: FloorplateWindow replaced with Forma.openFloatingPanel()
 
@@ -259,10 +259,13 @@ async function openFloorplatePanel(): Promise<void> {
     floatingPanelPort = await Forma.createMessagePort({
       embeddedViewId: 'floorplate-preview'
     });
+    console.log('[DEBUG MAIN] Message port created:', !!floatingPanelPort);
 
     // Listen for messages from floating panel
     floatingPanelPort.onmessage = async (event: MessageEvent) => {
+      console.log('[DEBUG MAIN] Raw message received:', event.data);
       const { type, data } = event.data;
+      console.log('[DEBUG MAIN] Message type:', type, 'data:', data);
       switch (type) {
         case 'PANEL_READY':
           console.log('Floating panel ready');
@@ -284,6 +287,7 @@ async function openFloorplatePanel(): Promise<void> {
 
         case 'BAKE_FLOORPLATE':
           // Bake the current floorplate to a native Forma building
+          console.log('[DEBUG] Received BAKE_FLOORPLATE message', data);
           await handleBakeFloorplate(data.layoutOption);
           break;
       }
@@ -397,11 +401,14 @@ async function handleSaveFloorplate(layoutOption: LayoutOption): Promise<void> {
  * Creates a native Forma building from the generated floorplate
  */
 async function handleBakeFloorplate(layoutOption: LayoutOption): Promise<void> {
+  console.log('[DEBUG MAIN] handleBakeFloorplate called');
+  console.log('[DEBUG MAIN] layoutOption:', layoutOption?.id, layoutOption?.strategy);
   try {
     console.log('Starting bake process...');
 
-    // Bake the floorplate
-    const result = await bakeBuilding(layoutOption.floorplan, {
+    // Bake the floorplate using BasicBuilding API (creates graphBuilding with units)
+    // Uses Forma proxy with session cookies - no token needed
+    const result = await bakeWithBasicBuildingAPI(layoutOption.floorplan, {
       numFloors: state.stories,
       originalBuildingPath: currentSelection[0], // Remove the original building
       name: `Generated Building - ${layoutOption.strategy}`

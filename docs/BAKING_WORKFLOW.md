@@ -2,6 +2,54 @@
 
 This document describes the "bake" feature that converts generated floorplates into native Forma building elements, including the technical challenges encountered and solutions attempted.
 
+> **For Vibecoding Reference**: This extension serves as a working example of Forma extension development with AI assistance. Key learnings are documented in the [Issues Solved](#issues-solved) and [Key Learnings](#key-learnings) sections.
+
+## Quick Reference (TL;DR)
+
+### BasicBuilding API - The Working Solution
+
+```typescript
+// 1. Convert floorplan to BasicBuilding format (vertices + units)
+const buildingData = convertFloorPlanToBasicBuilding(floorplan, numFloors);
+
+// 2. Call BasicBuilding API
+const url = `https://app.autodeskforma.eu/api/forma/basicbuilding/v1alpha/basicbuilding/batch-create?authcontext=${projectId}`;
+const response = await fetch(url, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'X-Ads-Region': 'EMEA' },
+  credentials: 'include',  // Uses session cookies
+  body: JSON.stringify([buildingData])  // MUST be array!
+});
+const results = await response.json();
+
+// 3. Add to proposal with transform
+// IMPORTANT: If your coordinates are CENTERED (origin at building center),
+// just rotate and translate directly:
+const { centerX, centerY, rotation } = floorplan.transform;
+const cos = Math.cos(rotation);
+const sin = Math.sin(rotation);
+const elevation = await Forma.terrain.getElevationAt({ x: centerX, y: centerY });
+
+const transform = [
+  cos, sin, 0, 0,
+  -sin, cos, 0, 0,
+  0, 0, 1, 0,
+  centerX, centerY, elevation, 1  // Direct translation - no offset compensation!
+];
+
+await Forma.proposal.addElement({ urn: results[0].urn, transform });
+```
+
+### Common Pitfalls
+
+| Problem | Cause | Solution |
+|---------|-------|----------|
+| Building offset | Assumed raw coords (0 to length) but they're centered | Check if coords have negative values; if so, they're centered |
+| 401 Unauthorized | Missing auth on direct API | Use Forma proxy with `credentials: 'include'` |
+| CORS from localhost | Forma proxy blocks localhost | Use direct API + Bearer token for localhost |
+| "units intersects" error | Overlapping polygons | Check vertex deduplication and polygon winding |
+| Request body format | Sent single object | Wrap in array: `[buildingData]` |
+
 ## Overview
 
 The bake feature takes a generated floorplate (with units, cores, corridors) and converts it into a native Forma building element with:
@@ -315,6 +363,78 @@ function triangulatePolygon(points: { x: number; y: number }[]): number[] {
 
 **Result**: L-shaped units now render with correct triangulation - triangles stay within the polygon boundary and don't cut across concave regions.
 
+### Issue 7: BasicBuilding API Position Offset (SOLVED)
+
+**Symptom**: When using the BasicBuilding API (instead of GLB mesh upload), the baked building appeared at the wrong horizontal position - offset from the original building footprint.
+
+**Root Cause**: The code incorrectly assumed that floorplan coordinates were in "raw" local space (0 to length, 0 to depth), but they were actually **already centered** around the origin.
+
+**Where Coordinates Get Centered** (in `generator.ts:2170-2171`):
+```typescript
+const offsetX = -length / 2;
+const offsetY = -buildingDepth / 2;
+
+// All units, cores, corridors have this offset applied:
+const outputUnits: UnitBlock[] = units.map(u => ({
+  ...u,
+  x: u.x + offsetX,  // Results in range: -halfLength to +halfLength
+  y: u.y + offsetY,  // Results in range: -halfDepth to +halfDepth
+}));
+```
+
+**Broken Code** (assumed raw 0-based coordinates):
+```typescript
+// WRONG: Assumed coordinates ranged from 0 to length
+const halfLength = floorplan.buildingLength / 2;
+const halfDepth = floorplan.buildingDepth / 2;
+
+// After rotation around origin, where does (halfLength, halfDepth) end up?
+const rotatedCenterX = cos * halfLength - sin * halfDepth;
+const rotatedCenterY = sin * halfLength + cos * halfDepth;
+
+// Translation to compensate for non-centered origin
+const tx = centerX - rotatedCenterX;  // WRONG!
+const ty = centerY - rotatedCenterY;  // WRONG!
+```
+
+**Fixed Code** (recognizes centered coordinates):
+```typescript
+// CORRECT: Coordinates are already centered at (0, 0)
+// The building center is at the origin in local space
+// Just rotate around origin and translate to world center
+
+const { centerX, centerY, rotation } = floorplan.transform;
+const cos = Math.cos(rotation);
+const sin = Math.sin(rotation);
+
+// 4x4 column-major transform matrix
+const transform = [
+  cos, sin, 0, 0,           // Column 0: X axis after rotation
+  -sin, cos, 0, 0,          // Column 1: Y axis after rotation
+  0, 0, 1, 0,               // Column 2: Z axis (unchanged)
+  centerX, centerY, elevation, 1  // Column 3: Direct translation to world center
+];
+
+await Forma.proposal.addElement({ urn, transform });
+```
+
+**Key Insight**: When local coordinates are centered (origin = building center), the transform is simple:
+1. Rotate around origin (which is already the center)
+2. Translate directly to world center
+
+No need to compensate for center position because the center is already at (0, 0).
+
+**Debugging Tip**: Always verify the coordinate system of your input data by logging sample coordinates:
+```typescript
+console.log('Sample unit coordinates:');
+floorplan.units.slice(0, 3).forEach(u => {
+  console.log(`  ${u.id}: (${u.x.toFixed(2)}, ${u.y.toFixed(2)})`);
+});
+// If you see negative values, coordinates are centered!
+```
+
+**Result**: Building now appears at the correct position, aligned with the original footprint.
+
 ## Key Learnings
 
 ### 1. Forma's Coordinate Conversion Formula (CRITICAL)
@@ -364,6 +484,62 @@ When mesh is generated centered at origin, rotation causes corner offset. Compen
 - graphBuilding requires the `POST /public-api/v1alpha/basicbuilding/batch-create` API instead
 - The building works as a solid volume, but requires the basicbuilding API for room subdivisions
 
+### 6. Understand Your Coordinate System BEFORE Writing Transforms (CRITICAL)
+
+The most common source of position bugs is misunderstanding the coordinate system of your input data. Before writing any transform code:
+
+**Step 1: Verify coordinate origin**
+```typescript
+// Log sample coordinates to understand the system
+console.log('Coordinate check:');
+console.log(`  Building dimensions: ${length} x ${depth}`);
+console.log(`  Sample unit at: (${units[0].x}, ${units[0].y})`);
+// If x is negative → centered coordinates
+// If x starts at 0 → raw coordinates
+```
+
+**Step 2: Trace coordinate transformations**
+Follow the data flow from source to output:
+1. Where is the original data created?
+2. Are any offsets applied? (Search for `offsetX`, `offset`, `center`)
+3. What coordinate system does the API expect?
+
+**Step 3: Match transform to coordinate system**
+
+| Coordinate System | Origin | Transform Strategy |
+|-------------------|--------|-------------------|
+| Raw (0 to length) | Corner | Translate center to world, then rotate |
+| Centered (-half to +half) | Center | Rotate around origin, then translate to world |
+| World coordinates | World origin | Identity or direct use |
+
+**Common Mistakes**:
+- Assuming coordinates start at 0 when they're actually centered
+- Applying center compensation when coordinates are already centered (causes double offset)
+- Forgetting that rotation happens around the origin (wherever that is in your coordinate system)
+
+### 7. BasicBuilding API vs GLB Mesh Upload
+
+Two approaches for creating buildings in Forma, each with different coordinate handling:
+
+| Aspect | GLB Mesh Upload | BasicBuilding API |
+|--------|-----------------|-------------------|
+| Coordinates in file | Y-up (GLB standard) | Z-up (world coords) |
+| Transform applied | After Forma's (x,y,z)→(x,-z,y) conversion | Directly in world space |
+| Unit subdivisions | No (volumeMesh only) | Yes (graphBuilding) |
+| Authentication | Via SDK file upload | Bearer token or session cookies |
+
+**GLB Mesh Workflow**:
+1. Generate mesh in local Z-up space (centered at origin)
+2. Convert to GLB: `(x, y, z) → (x, -z, y)` with negated Z
+3. Upload via `Forma.elements.createFromGlb()`
+4. Add to proposal with transform (rotation + translation + elevation)
+
+**BasicBuilding API Workflow**:
+1. Define vertices in local 2D space (X, Y only)
+2. Send to BasicBuilding API (creates URN)
+3. Add to proposal with full 4x4 transform matrix
+4. Transform converts local coords to world position
+
 ## Mesh Generation Details
 
 ### generateBuildingMeshLocal()
@@ -406,9 +582,10 @@ Converts mesh to GLB format:
 - **Building position**: Correct position with offset compensation
 - **Building elevation**: Correct Z translation = floorElevation + totalHeight
 - **L-shaped unit triangulation**: Ear clipping algorithm for concave polygons
+- **BasicBuilding API integration**: Creates native Forma buildings with unit subdivisions (graphBuilding)
+- **BasicBuilding position**: Correct position using centered coordinates + world transform
 
 ### Not Working (Pending)
-- graphBuilding representation (requires basicbuilding/batch-create API)
 - grossFloorAreaPolygons representation (API returns 400)
 - Non-watertight mesh warning (cosmetic - doesn't affect volumeMesh)
 
@@ -439,26 +616,225 @@ Converts mesh to GLB format:
 
 **Key insight**: Fan triangulation connects all vertices to vertex 0, which fails when the line from vertex 0 to another vertex passes outside the polygon (concave case). Ear clipping removes triangles from the polygon perimeter, ensuring all triangles stay within bounds.
 
-## Next Steps
+## BasicBuilding API (DOCUMENTED)
 
-### For graphBuilding Support (requires API documentation)
-1. **Obtain basicbuilding API documentation**: Request schema for `POST /public-api/v1alpha/basicbuilding/batch-create`
-2. **Implement OAuth flow**: Configure `Forma.auth` with APS app credentials
-3. **Make authenticated HTTP calls**: Use `fetch()` with access token to call the basicbuilding API
-4. **Map FloorPlanData to BasicBuilding format**: The generated `graphBuilding` data structure is already correct
+The basicbuilding API creates native Forma buildings with unit subdivisions. Unlike `integrateElements.createElementV2`, this API automatically generates both `volumeMesh` and `graphBuilding` representations.
 
-### Alternative Approach (simpler, works now)
-1. **Use floorStack API**: `Forma.elements.floorStack.createFromFloors()` for simple buildings
-2. **Add bakeWithFloorStack option**: Create buildings without unit subdivisions but with proper floor representation
-3. **Test GFA generation**: Check if floorStack automatically generates `grossFloorAreaPolygons`
+### API Endpoint
+
+**Via Forma Proxy (Recommended for Extensions):**
+```
+POST https://app.autodeskforma.eu/api/basicbuilding/v1alpha/basicbuilding/batch-create
+```
+
+This routes through Forma's internal proxy which uses session cookies for authentication - no Bearer token needed when running inside a Forma extension.
+
+**Direct API (Requires Bearer Token):**
+```
+POST https://developer.api.autodesk.com/forma/basicbuilding/v1alpha/basicbuilding/batch-create
+```
+
+**Query Parameters:**
+- `authcontext`: Project ID (from `Forma.getProjectId()`)
+
+**Headers (Proxy):**
+- `Content-Type: application/json`
+- `X-Ads-Region`: `EMEA` or `US` (based on project region)
+- `credentials: 'include'` (fetch option to send session cookies)
+
+**Headers (Direct API):**
+- `Authorization: Bearer {accessToken}`
+- `Content-Type: application/json`
+- `X-Ads-Region`: `EMEA` or `US` (based on project region)
+
+### Request Body Schema
+
+**IMPORTANT**: The request body must be an **array** of building objects (even for a single building).
+
+```typescript
+// Top-level: array of buildings
+[
+  {
+    floors: BasicBuildingFloor[];  // required
+    plans?: BasicBuildingFloorPlan[];  // optional, for unit subdivisions
+  }
+]
+```
+
+### Data Types
+
+```typescript
+// Vertex definition - vertices are defined once and referenced by ID
+interface BasicBuildingVertex {
+  id: string;  // pattern: [a-zA-Z0-9-]{2,20}
+  x: number;   // world X coordinate
+  y: number;   // world Y coordinate
+}
+
+// Unit programs - defines the space type for area calculations
+type UnitProgram = "CORE" | "CORRIDOR" | "LIVING_UNIT" | "PARKING";
+
+// Unit definition - references vertices by ID
+interface BasicBuildingUnit {
+  polygon: string[];    // required - array of vertex IDs (e.g., ["v1", "v2", "v3"])
+  holes: string[][];    // required - array of arrays of vertex IDs (empty [] if no holes)
+  program?: UnitProgram;  // optional - space type for area breakdown
+  functionId?: string;    // optional - building function (e.g., "residential", "office")
+}
+
+// NOTE: functionId determines the building function shown in Forma's analysis.
+// All units (LIVING_UNIT, CORE, CORRIDOR) should have the same functionId
+// for consistent building function reporting. Example: functionId: "residential"
+
+// Floor plan with unit subdivisions
+interface BasicBuildingFloorPlan {
+  id: string;                      // required - plan identifier
+  vertices: BasicBuildingVertex[]; // required - all vertices for this plan
+  units: BasicBuildingUnit[];      // required - unit definitions
+}
+
+// Floor by polygon (simple, no units)
+interface BasicBuildingFloorByPolygon {
+  polygon: number[][];  // required - array of [x, y] coordinate pairs
+  height: number;       // required - floor height in meters
+  functionId?: string;  // optional
+}
+
+// Floor by plan reference (with units)
+interface BasicBuildingFloorByPlan {
+  planId: string;   // required - references a plan ID
+  height: number;   // required - floor height in meters
+}
+```
+
+### Example: Building with 2 Units
+
+```typescript
+const building = {
+  floors: [
+    { planId: "plan1", height: 3 }  // Reference the plan
+  ],
+  plans: [
+    {
+      id: "plan1",
+      vertices: [
+        { id: "v1", x: 0, y: 0 },
+        { id: "v2", x: 20, y: 0 },
+        { id: "v3", x: 20, y: 10 },
+        { id: "v4", x: 0, y: 10 },
+        { id: "v5", x: 10, y: 0 },   // Middle vertices for split
+        { id: "v6", x: 10, y: 10 },
+      ],
+      units: [
+        { polygon: ["v1", "v5", "v6", "v4"], holes: [], program: "LIVING_UNIT", functionId: "residential" },
+        { polygon: ["v5", "v2", "v3", "v6"], holes: [], program: "LIVING_UNIT", functionId: "residential" },
+      ]
+    }
+  ]
+};
+
+// Send as array!
+const response = await fetch(url, {
+  method: "POST",
+  headers: { ... },
+  body: JSON.stringify([building])  // <-- Array wrapper!
+});
+```
+
+### Response
+
+```typescript
+// Array of created element URNs
+[
+  { urn: "urn:adsk-forma-elements:basicbuilding:..." }
+]
+```
+
+### Placing the Building
+
+After creation, add to proposal with terrain elevation:
+
+```typescript
+const elevation = await Forma.terrain.getElevationAt({ x: centerX, y: centerY });
+
+await Forma.proposal.addElement({
+  urn: results[0].urn,
+  transform: [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    centerX, centerY, elevation, 1  // Position with terrain elevation
+  ]
+});
+```
+
+### Authentication
+
+**Recommended: Forma Proxy (No Token Needed)**
+
+When routing through `app.autodeskforma.eu/api/`, the request uses session cookies automatically. No explicit authentication setup required:
+
+```typescript
+const response = await fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Ads-Region': 'EMEA'
+  },
+  credentials: 'include',  // Include session cookies
+  body: JSON.stringify([building])
+});
+```
+
+**Alternative: Direct API with Bearer Token**
+
+If calling `developer.api.autodesk.com` directly, you need a token:
+
+1. **SDK Token** (requires APS app configuration):
+   ```typescript
+   Forma.auth.configure({
+     clientId: "YOUR_CLIENT_ID",
+     callbackUrl: `${window.location.origin}/`,
+     scopes: ["data:read", "data:write"],
+   });
+   const accessToken = await Forma.auth.acquireTokenOverlay();
+   ```
+
+2. **Manual Token** (for development/testing):
+   - Copy token from browser dev tools (look for Bearer token in API requests)
+
+## Implementation Status
+
+### Completed ✓
+1. **Add basicbuilding types** to `bake-building.ts` ✓
+2. **Convert FloorPlanData to BasicBuilding format**: Map unit polygons to vertex references ✓
+3. **Implement API call**: Uses Forma proxy with session cookies ✓
+4. **Handle multi-floor buildings**: Create floor entries referencing same plan ✓
+5. **Add terrain elevation lookup**: Use `Forma.terrain.getElevationAt()` for positioning ✓
+6. **Fix position offset**: Recognize centered coordinates, apply simple rotate + translate ✓
+7. **Dual auth support**: Localhost uses direct API + Bearer token, production uses Forma proxy + cookies ✓
+8. **Corridor inclusion**: Re-enabled corridor in BasicBuilding output ✓
+9. **Building function**: All units set `functionId: "residential"` for proper function reporting ✓
+
+### Tested & Verified ✓
+- `bakeWithBasicBuildingAPI()` creates buildings at correct position
+- Session cookie authentication works through Forma proxy in production
+- Bearer token authentication works via direct API from localhost
+- Building aligns with original footprint after bake
+- Building function shows as "Residential" in Forma analysis (via `functionId`)
+
+### Two Baking Approaches Available
+
+| Approach | Function | Output | Use Case |
+|----------|----------|--------|----------|
+| GLB Mesh | `bakeBuilding()` | volumeMesh only | Quick preview, simple buildings |
+| BasicBuilding API | `bakeWithBasicBuildingAPI()` | graphBuilding + volumeMesh | Unit subdivisions, area reports |
 
 ## Future Improvements
 
 1. **Unified mesh**: Generate a single watertight mesh instead of overlapping boxes
-2. **Alternative representation API**: Investigate other APIs for building metadata
-3. **Position verification**: Add logging to verify mesh bounds and transform application
-4. **Coordinate system abstraction**: Create utility functions for consistent conversions
-5. **Bake world coordinates**: Consider baking world position directly into mesh vertices to avoid transform complexity
+2. **Coordinate system abstraction**: Create utility functions for consistent conversions
+3. **Region auto-detection**: Automatically detect EMEA vs US from project metadata
 
 ---
 

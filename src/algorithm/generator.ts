@@ -371,7 +371,6 @@ const calculateBuildingUnitCounts = (
 
   // Now split between North and South, respecting total counts
   const northRatio = totalLength > 0 ? northLength / totalLength : 0.5;
-  const southRatio = 1 - northRatio;
 
   const northCounts: Record<UnitType, number> = {
     [UnitType.Studio]: 0,
@@ -387,35 +386,69 @@ const calculateBuildingUnitCounts = (
     [UnitType.ThreeBed]: 0
   };
 
-  // Split each type proportionally, with remainders going to the side with more capacity
+  // CORNER-AWARE SPLIT: Each side has 2 corners, so needs at least 2 corner-eligible units
+  // First, count total corner-eligible units and distribute them to ensure both sides have corners
   const allTypes = [UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as const;
+  const cornerEligibleTypes = allTypes.filter(t => totalCounts[t] > 0 && isCornerEligible(t, config));
+  const totalCornerEligible = cornerEligibleTypes.reduce((sum, t) => sum + totalCounts[t], 0);
 
-  for (const type of allTypes) {
+  console.log(`[DEBUG] Total corner-eligible units: ${totalCornerEligible} (types: ${cornerEligibleTypes.join(',')})`);
+
+  // Target: each side needs 2 corner-eligible units (for left and right corners)
+  // Distribute corner-eligible units first to ensure both sides have coverage
+  let northCornerEligible = 0;
+  let southCornerEligible = 0;
+
+  // PHASE 1: Distribute corner-eligible types to ensure both sides have at least 2
+  for (const type of cornerEligibleTypes) {
     const total = totalCounts[type];
-    if (total === 0) continue;
 
-    // For corner-eligible types, try to ensure each side gets at least one if total >= 2
-    const isCorner = isCornerEligible(type, config);
-
-    if (isCorner && total >= 2) {
-      // Split evenly - each side gets at least 1, remainder to larger side
-      northCounts[type] = Math.floor(total / 2);
+    if (total >= 4) {
+      // Plenty of this type - give each side at least 2
+      northCounts[type] = Math.max(2, Math.floor(total / 2));
       southCounts[type] = total - northCounts[type];
-    } else if (total === 1) {
-      // Only 1 unit of this type - put it on the larger side
-      // For corner-eligible with only 1, it will go to one side only (no mirroring)
-      if (northRatio >= southRatio) {
-        northCounts[type] = 1;
+    } else if (total >= 2) {
+      // Give each side at least 1, prioritize the side that needs more corner units
+      if (northCornerEligible < 2 && southCornerEligible < 2) {
+        // Both need - split evenly
+        northCounts[type] = Math.floor(total / 2);
+        southCounts[type] = total - northCounts[type];
+      } else if (northCornerEligible < 2) {
+        // North needs more
+        northCounts[type] = Math.min(total, 2 - northCornerEligible);
+        southCounts[type] = total - northCounts[type];
+      } else if (southCornerEligible < 2) {
+        // South needs more
+        southCounts[type] = Math.min(total, 2 - southCornerEligible);
+        northCounts[type] = total - southCounts[type];
       } else {
+        // Both have enough - split evenly
+        northCounts[type] = Math.floor(total / 2);
+        southCounts[type] = total - northCounts[type];
+      }
+    } else if (total === 1) {
+      // Only 1 - give to the side with fewer corner units
+      if (northCornerEligible <= southCornerEligible) {
+        northCounts[type] = 1;
+        southCounts[type] = 0;
+      } else {
+        northCounts[type] = 0;
         southCounts[type] = 1;
       }
-      console.log(`[DEBUG] Single ${type} - placed on ${northRatio >= southRatio ? 'North' : 'South'} (no mirroring possible)`);
-    } else {
-      // Standard split by ratio
-      const northShare = Math.round(total * northRatio);
-      northCounts[type] = Math.min(northShare, total);
-      southCounts[type] = total - northCounts[type];
     }
+
+    northCornerEligible += northCounts[type];
+    southCornerEligible += southCounts[type];
+    console.log(`[DEBUG] ${type}: ${northCounts[type]} North, ${southCounts[type]} South (corner totals: N=${northCornerEligible}, S=${southCornerEligible})`);
+  }
+
+  // PHASE 2: Distribute non-corner-eligible types proportionally
+  const nonCornerTypes = allTypes.filter(t => totalCounts[t] > 0 && !isCornerEligible(t, config));
+  for (const type of nonCornerTypes) {
+    const total = totalCounts[type];
+    const northShare = Math.round(total * northRatio);
+    northCounts[type] = Math.min(northShare, total);
+    southCounts[type] = total - northCounts[type];
   }
 
   console.log(`[DEBUG] SPLIT - North: S=${northCounts[UnitType.Studio]}, 1BR=${northCounts[UnitType.OneBed]}, 2BR=${northCounts[UnitType.TwoBed]}, 3BR=${northCounts[UnitType.ThreeBed]}`);
@@ -1367,13 +1400,9 @@ const findOptimalGeometry = (
 
   let minC = 20 * FEET_TO_METERS;
 
-  // SHORT BUILDING PROTECTION: Cap corner length based on building length
-  // For short buildings, corners should not exceed 25% of building length each (50% combined)
-  // This prevents the situation where corners take up most of the building
-  const maxCornerFromBuildingLength = availableRentableLength * 0.25;
-  // A building is "short" if 2 corner-eligible units would take >50% of length
-  // Typical 3BR = ~15m, so threshold = 15m * 2 / 0.5 = 60m (~200 feet)
-  const isShortBuilding = availableRentableLength < 200 * FEET_TO_METERS; // ~61m threshold
+  // SOFT CONSTRAINT: Only cap corners if they would take >70% of building
+  // This allows short buildings to have proper corners with large units
+  const maxCornerFromBuildingLength = availableRentableLength * 0.35;
 
   if (prioritizeCorners) {
     // Find the LARGEST corner-eligible unit type in inventory
@@ -1397,23 +1426,22 @@ const findOptimalGeometry = (
 
     // If we found a corner-eligible unit, set minimum corner length to fit it
     if (largestCornerEligibleWidth > 0) {
-      // For SHORT buildings: use the SMALLER corner-eligible unit (2BR) to allow more mid-space
-      // For NORMAL buildings: use the LARGEST corner-eligible unit (3BR)
-      if (isShortBuilding && secondLargestCornerEligibleWidth > 0) {
-        // Short building: size corners for smaller corner-eligible (2BR), not 3BR
-        // This gives more room for other units in the middle
-        minC = Math.max(minC, secondLargestCornerEligibleWidth);
-        console.log(`[DEBUG] findOptimalGeometry: SHORT BUILDING - using 2nd largest corner-eligible width=${secondLargestCornerEligibleWidth.toFixed(2)}m (not ${largestCornerEligibleWidth.toFixed(2)}m)`);
-      } else {
-        // Normal building: fit the largest corner-eligible unit
-        minC = Math.max(minC, largestCornerEligibleWidth);
-        console.log(`[DEBUG] findOptimalGeometry: largest corner-eligible width=${largestCornerEligibleWidth.toFixed(2)}m, minCornerLen=${minC.toFixed(2)}m`);
-      }
+      // Always size corners to fit the largest corner-eligible unit
+      minC = Math.max(minC, largestCornerEligibleWidth);
+      console.log(`[DEBUG] findOptimalGeometry: largest corner-eligible width=${largestCornerEligibleWidth.toFixed(2)}m`);
 
-      // FINAL CAP: Never let corners exceed 25% of building length each
-      // This is a hard limit to prevent corners dominating short buildings
+      // ENSURE corners can fit at least 2 units (not just 1)
+      // This prevents corners with a single oversized unit - we want both ends to have large units
+      const secondWidth = secondLargestCornerEligibleWidth > 0
+        ? secondLargestCornerEligibleWidth
+        : largestCornerEligibleWidth * 0.8;
+      const minCornerFor2Units = largestCornerEligibleWidth + secondWidth;
+      minC = Math.max(minC, minCornerFor2Units * 0.9); // 90% to allow some flex
+      console.log(`[DEBUG] findOptimalGeometry: ensuring 2+ units fit, minC=${minC.toFixed(2)}m`);
+
+      // SOFT CAP: Only limit if corners would take >70% of building
       if (minC > maxCornerFromBuildingLength) {
-        console.log(`[DEBUG] findOptimalGeometry: Capping corner from ${minC.toFixed(2)}m to ${maxCornerFromBuildingLength.toFixed(2)}m (25% of ${availableRentableLength.toFixed(2)}m building)`);
+        console.log(`[DEBUG] findOptimalGeometry: Soft-capping corner from ${minC.toFixed(2)}m to ${maxCornerFromBuildingLength.toFixed(2)}m (35% of ${availableRentableLength.toFixed(2)}m building)`);
         minC = maxCornerFromBuildingLength;
       }
     } else {

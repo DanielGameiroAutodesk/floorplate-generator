@@ -1677,29 +1677,8 @@ function coordKey(x: number, y: number): string {
   return `${roundCoord(x)},${roundCoord(y)}`;
 }
 
-/**
- * Transform a point from local (building) coordinates to world coordinates
- * Same formula as the renderer uses
- */
-function localToWorld(
-  localX: number,
-  localY: number,
-  centerX: number,
-  centerY: number,
-  rotation: number
-): { x: number; y: number } {
-  const cos = Math.cos(rotation);
-  const sin = Math.sin(rotation);
-
-  // Rotate around origin, then translate
-  const rotatedX = localX * cos - localY * sin;
-  const rotatedY = localX * sin + localY * cos;
-
-  return {
-    x: rotatedX + centerX,
-    y: rotatedY + centerY
-  };
-}
+// NOTE: localToWorld function removed - was unused. Can be restored from git if needed.
+// Transforms local (building) coordinates to world coordinates using rotation + translation.
 
 /**
  * Convert FloorPlanData to BasicBuilding API format

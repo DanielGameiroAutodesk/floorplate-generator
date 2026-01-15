@@ -72,6 +72,14 @@ const getUnitWidth = (type: UnitType, config: UnitConfiguration, rentableDepth: 
   return config[type].area / rentableDepth;
 };
 
+// Smallest “real” unit type in the active mix (used for conservative caps / feasibility checks).
+const getSmallestActiveUnitType = (config: UnitConfiguration): UnitType => {
+  const allTypes = [UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed];
+  const active = allTypes.filter(t => config[t].percentage > 0);
+  if (active.length === 0) return UnitType.Studio;
+  return active.sort((a, b) => config[a].area - config[b].area)[0];
+};
+
 const getUnitColor = (type: UnitType): string => {
   // Check for custom color first (hex string)
   if (customUnitColors[type]) {
@@ -136,9 +144,13 @@ const getMaxUnitWidth = (type: UnitType, config: UnitConfiguration, rentableDept
   const largestType = sortedByArea[0];
   const largestArea = largestType ? config[largestType].area : thisArea;
 
-  // If this IS the largest type, allow 25% expansion
+  // If this IS the largest type, cap it to avoid “huge units”.
+  // Mental model: if the largest unit exceeds (target + smallest unit), you likely can pack more units.
+  // So we cap largest to target + smallest-type target width (typically studio).
   if (thisArea >= largestArea) {
-    return targetWidth * 1.25;
+    const smallestType = getSmallestActiveUnitType(config);
+    const smallestWidth = getUnitWidth(smallestType, config, rentableDepth);
+    return targetWidth + smallestWidth;
   }
 
   // Find the next larger type
@@ -160,7 +172,6 @@ const getLargestUnitType = (config: UnitConfiguration): UnitType => {
   let largestArea = 0;
 
   allTypes.forEach(t => {
-    // Consider all types with area > 0 (even if percentage is 0, they define the hierarchy)
     if (config[t].area > largestArea) {
       largestArea = config[t].area;
       largestType = t;
@@ -237,7 +248,7 @@ const calculateGlobalUnitCounts = (
   totalBonusArea: number = 0,
   strategy: OptimizationStrategy = 'balanced'
 ): Record<UnitType, number> => {
-  const counts = {
+  const emptyCounts: Record<UnitType, number> = {
     [UnitType.Studio]: 0,
     [UnitType.OneBed]: 0,
     [UnitType.TwoBed]: 0,
@@ -249,7 +260,7 @@ const calculateGlobalUnitCounts = (
                    config[UnitType.TwoBed].percentage +
                    config[UnitType.ThreeBed].percentage;
 
-  if (totalMix === 0 || totalLength < MIN_UNIT_WIDTH) return counts;
+  if (totalMix === 0 || totalLength < MIN_UNIT_WIDTH) return emptyCounts;
 
   // Calculate weighted average width
   const weightedAvgWidth = (
@@ -265,34 +276,62 @@ const calculateGlobalUnitCounts = (
   // SAFETY FACTOR: Strategy-dependent to balance compression vs efficiency
   const safetyFactor = getStrategySafetyFactor(strategy);
   const usableLength = effectiveLength * safetyFactor;
-  let targetTotalUnits = Math.floor(usableLength / weightedAvgWidth);
 
   // Cap target to physical maximum
   const maxPhysUnits = Math.floor(totalLength / MIN_UNIT_WIDTH);
-  targetTotalUnits = Math.min(targetTotalUnits, maxPhysUnits);
-  targetTotalUnits = Math.max(targetTotalUnits, minSegmentsToFill);
+  const baseUnits = Math.floor(usableLength / weightedAvgWidth);
+  const startUnits = Math.max(Math.min(baseUnits, maxPhysUnits), minSegmentsToFill);
+  if (startUnits === 0) return emptyCounts;
 
-  if (targetTotalUnits === 0) return counts;
+  // Largest Remainder Method helper for a given N
+  const countsForN = (targetTotalUnits: number): Record<UnitType, number> => {
+    const counts: Record<UnitType, number> = { ...emptyCounts };
+    const remainders: { type: UnitType; value: number }[] = [];
+    let currentSum = 0;
 
-  // Largest Remainder Method
-  const remainders: { type: UnitType; value: number }[] = [];
-  let currentSum = 0;
+    ([UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed] as const).forEach(type => {
+      const rawCount = targetTotalUnits * (config[type].percentage / totalMix);
+      const intCount = Math.floor(rawCount);
+      counts[type] = intCount;
+      currentSum += intCount;
+      remainders.push({ type, value: rawCount - intCount });
+    });
 
-  ([UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed] as const).forEach(type => {
-    const rawCount = targetTotalUnits * (config[type].percentage / totalMix);
-    const intCount = Math.floor(rawCount);
-    counts[type] = intCount;
-    currentSum += intCount;
-    remainders.push({ type, value: rawCount - intCount });
-  });
+    const deficit = targetTotalUnits - currentSum;
+    remainders.sort((a, b) => b.value - a.value);
+    for (let i = 0; i < deficit; i++) {
+      counts[remainders[i].type]++;
+    }
+    return counts;
+  };
 
-  // Distribute remainder
-  const deficit = targetTotalUnits - currentSum;
-  remainders.sort((a, b) => b.value - a.value);
+  // Feasibility check: can we fit at MIN target widths (no shrinking allowed)?
+  const minWidthSum = (counts: Record<UnitType, number>): number => {
+    return (
+      counts[UnitType.Studio] * getUnitWidth(UnitType.Studio, config, rentableDepth) +
+      counts[UnitType.OneBed] * getUnitWidth(UnitType.OneBed, config, rentableDepth) +
+      counts[UnitType.TwoBed] * getUnitWidth(UnitType.TwoBed, config, rentableDepth) +
+      counts[UnitType.ThreeBed] * getUnitWidth(UnitType.ThreeBed, config, rentableDepth)
+    );
+  };
 
-  for (let i = 0; i < deficit; i++) {
-    counts[remainders[i].type]++;
+  // “No huge units” policy: maximize unit count while still fitting at minimum widths.
+  // This reduces leftover width that the old algorithm would dump into a single large unit.
+  let bestN = startUnits;
+  let bestCounts = countsForN(bestN);
+
+  for (let n = startUnits; n <= maxPhysUnits; n++) {
+    const c = countsForN(n);
+    const w = minWidthSum(c);
+    if (w <= usableLength + 0.05) { // 5cm tolerance for rounding
+      bestN = n;
+      bestCounts = c;
+    } else {
+      break;
+    }
   }
+
+  const counts = bestCounts;
 
   // GUARANTEE MINIMUM: Ensure at least 1 unit of each type with >0% in mix
   // This is critical for corner placement - we need corner-eligible units available
@@ -326,6 +365,28 @@ const calculateGlobalUnitCounts = (
   // DO NOT STEAL from other types - respect the unit mix!
 
   console.log(`[DEBUG] Final counts for side: Studio=${counts[UnitType.Studio]}, 1BR=${counts[UnitType.OneBed]}, 2BR=${counts[UnitType.TwoBed]}, 3BR=${counts[UnitType.ThreeBed]}`);
+
+  return counts;
+};
+
+// Bias mix between sides when one side has cores: core side tends to accept more small units
+// (studios) and fewer mid units (1BR) to compensate for core footprint & preserve alignment.
+const applyCoreSideMixBias = (
+  counts: { north: Record<UnitType, number>; south: Record<UnitType, number> },
+  coreSide: 'North' | 'South',
+  numCores: number
+): { north: Record<UnitType, number>; south: Record<UnitType, number> } => {
+  const core = coreSide === 'North' ? counts.north : counts.south;
+  const clear = coreSide === 'North' ? counts.south : counts.north;
+
+  // Heuristic: up to 1 studio per core, swapped against 1BR to preserve totals.
+  const maxShifts = Math.max(0, Math.min(numCores, clear[UnitType.Studio], core[UnitType.OneBed]));
+  for (let i = 0; i < maxShifts; i++) {
+    clear[UnitType.Studio]--;
+    core[UnitType.Studio]++;
+    core[UnitType.OneBed]--;
+    clear[UnitType.OneBed]++;
+  }
 
   return counts;
 };
@@ -494,12 +555,12 @@ const pickBestUnitForSegment = (
 
     for (const t of cornerEligibleTypes) {
       const w = getUnitWidth(t, config, rentableDepth);
-      // CORNERS ARE PREMIUM: Allow very aggressive fitting (up to 15% flexibility)
-      // Width constraints should not prevent large units from being placed at corners
-      const cornerFlexibility = 0.15; // 15% aggressive flexibility for corners
-      const minReq = w * (1.0 - cornerFlexibility);
+      // IMPORTANT: Do NOT “pretend fit” corner units with aggressive squeeze here.
+      // `generateUnitSegment()` enforces hard minimum widths (target = minimum) so
+      // aggressive fitting causes later overflow trimming that can break corner eligibility.
+      const minReq = w; // target width is the true minimum requirement
       const fits = remainingSpace >= minReq - 0.1;
-      console.log(`[DEBUG]   Trying ${t}: width=${w.toFixed(2)}m, minReq=${minReq.toFixed(2)}m (15% corner flex), fits=${fits}`);
+      console.log(`[DEBUG]   Trying ${t}: width=${w.toFixed(2)}m, minReq=${minReq.toFixed(2)}m, fits=${fits}`);
       if (fits) {
         console.log(`[DEBUG]   → Selected ${t} for corner segment`);
         return t;
@@ -515,7 +576,7 @@ const pickBestUnitForSegment = (
     }
 
     for (const t of types) {
-      if (canFit(t, true)) {
+      if (canFit(t, false)) {
         console.log(`[DEBUG]   → Fallback to ${t} for corner segment (not corner-eligible)`);
         return t;
       }
@@ -594,9 +655,10 @@ const distributeUnitsToSegments = (
         continue;
       }
 
-      // AGGRESSIVE CORNER PLACEMENT: Force place a corner-eligible unit regardless of fit
-      // Corners are premium - we'll make room by adjusting geometry later
-      // Try largest first (best fit for corners), but ALWAYS place something
+      // Corner reservation must be *physically feasible* at target widths.
+      // If we reserve a unit that doesn't truly fit, `generateUnitSegment()` will later
+      // trim units to resolve overflow, which can break corner eligibility.
+      // Try largest first (best for corners), but only if it fits at MIN target width.
       let placed = false;
       for (const t of cornerEligibleTypes) {
         if (inventory[t] <= 0) continue;
@@ -604,10 +666,8 @@ const distributeUnitsToSegments = (
         const w = getUnitWidth(t, config, rentableDepth);
         const remainingSpace = seg.capacity - seg.fill;
 
-        // Check if it fits with 30% tolerance (more aggressive than before)
-        const minReq = w * 0.70;
-
-        if (remainingSpace >= minReq - 0.1) {
+        // Hard-min requirement: target width is the minimum (no compression here).
+        if (remainingSpace >= w - 0.1) {
           segmentCounts[idx][t]++;
           inventory[t]--;
           seg.fill += w;
@@ -618,18 +678,44 @@ const distributeUnitsToSegments = (
       }
 
       // FORCE PLACEMENT: If nothing fit with tolerance, place the smallest corner-eligible anyway
-      // This ensures corners ALWAYS have appropriate units
+      // This ensures corners ALWAYS have appropriate units - MANDATORY for all strategies
       if (!placed && cornerEligibleTypes.length > 0) {
         // Sort by area ascending (smallest first) for forced placement
         const smallestCornerType = cornerEligibleTypes
           .sort((a, b) => config[a].area - config[b].area)[0];
 
-        if (inventory[smallestCornerType] > 0) {
-          const w = getUnitWidth(smallestCornerType, config, rentableDepth);
+        const w = getUnitWidth(smallestCornerType, config, rentableDepth);
+        const remainingSpace = seg.capacity - seg.fill;
+        if (inventory[smallestCornerType] > 0 && remainingSpace >= w - 0.1) {
           segmentCounts[idx][smallestCornerType]++;
           inventory[smallestCornerType]--;
           seg.fill += w;
-          console.log(`[DEBUG] PASS 0: FORCE-PLACED ${smallestCornerType} for corner segment ${idx} (corner MUST have eligible unit)`);
+          console.log(`[DEBUG] PASS 0: FORCE-PLACED ${smallestCornerType} for corner segment ${idx} (corner MUST have eligible unit - MANDATORY)`);
+        } else {
+          // CRITICAL: If we have no corner-eligible units in inventory, we MUST get them from elsewhere
+          // This is a hard requirement - corners MUST have corner-eligible units
+          console.log(`[DEBUG] PASS 0: CRITICAL - No corner-eligible units available for corner ${idx}, attempting to reallocate`);
+          
+          // Try to find a corner-eligible unit in non-corner segments and move it
+          for (let otherIdx = 0; otherIdx < segmentCounts.length; otherIdx++) {
+            if (otherIdx === idx || segmentState[otherIdx].isCorner) continue;
+            
+            for (const t of cornerEligibleTypes) {
+              if (segmentCounts[otherIdx][t] > 0) {
+                // Move this unit from non-corner to corner
+                const tw = getUnitWidth(t, config, rentableDepth);
+                const remaining = seg.capacity - seg.fill;
+                if (remaining < tw - 0.1) continue;
+                segmentCounts[otherIdx][t]--;
+                segmentCounts[idx][t]++;
+                seg.fill += tw;
+                console.log(`[DEBUG] PASS 0: REALLOCATED ${t} from segment ${otherIdx} to corner segment ${idx} (MANDATORY)`);
+                placed = true;
+                break;
+              }
+            }
+            if (placed) break;
+          }
         }
       }
     }
@@ -895,6 +981,26 @@ const generateUnitSegment = (
     console.log(`[DEBUG] After corner swap:`, unitsToPlace);
   }
 
+  // If this is a facade corner segment and we STILL don't have a corner-eligible unit
+  // at the facade edge, force-upgrade that edge unit to a corner-eligible type.
+  // This should be rare after distribution + swap, but it prevents “Studio at the corner”
+  // regressions across strategies.
+  if (isLeftCorner && unitsToPlace.length > 0 && !isCornerEligible(unitsToPlace[0], config)) {
+    // Prefer 2BR then 3BR (or whichever is configured as corner-eligible)
+    const candidates = ([UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as UnitType[])
+      .filter(t => isCornerEligible(t, config));
+    if (candidates.length > 0) {
+      unitsToPlace[0] = candidates[0];
+    }
+  }
+  if (isRightCorner && unitsToPlace.length > 0 && !isCornerEligible(unitsToPlace[unitsToPlace.length - 1], config)) {
+    const candidates = ([UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as UnitType[])
+      .filter(t => isCornerEligible(t, config));
+    if (candidates.length > 0) {
+      unitsToPlace[unitsToPlace.length - 1] = candidates[0];
+    }
+  }
+
   // --- WEIGHTED GEOMETRY GENERATION ---
   const endBonusWidth = endBonusArea / rentableDepth;
 
@@ -968,21 +1074,9 @@ const generateUnitSegment = (
     });
   }
 
-  // If there's still remaining space after all units capped, give it to the LARGEST unit type
-  // (better to have a huge 3BR than a huge 2BR)
-  if (remainingDiff > 0.1) {
-    // Find the largest unit type in this segment
-    let largestIdx = 0;
-    let largestArea = 0;
-    unitData.forEach((u, idx) => {
-      const area = config[u.type].area;
-      if (area > largestArea) {
-        largestArea = area;
-        largestIdx = idx;
-      }
-    });
-    unitData[largestIdx].width += remainingDiff;
-  }
+  // If there's still remaining space after all units hit their max, we DO NOT force “huge units”.
+  // Leaving a small gap is preferable; the global count solver is responsible for adding units
+  // when there is enough width for another unit at target size.
 
   const calculatedWidths = unitData.map(u => u.width);
 
@@ -1009,16 +1103,35 @@ const generateUnitSegment = (
 
   if (totalMinWidth > totalAvailableWidth + 0.1) {
     console.log(`[WARN] Segment overflow detected! Total min width (${totalMinWidth.toFixed(2)}m) > available (${totalAvailableWidth.toFixed(2)}m). Removing ${unitsToPlace.length > 1 ? 'last unit' : 'no units'}.`);
-    // Remove units from the end until they fit
+    // Remove units until they fit, but NEVER drop the facade-corner unit:
+    // - left corner: protect index 0
+    // - right corner: protect last index
+    const protectedIdx = (isRightCorner && !isLeftCorner) ? (unitsToPlace.length - 1)
+                      : (isLeftCorner && !isRightCorner) ? 0
+                      : -1;
+
+    const minSum = (arr: UnitType[]) => arr.reduce((sum, t) => sum + getUnitWidth(t, config, rentableDepth), 0);
+
     while (unitsToPlace.length > 1) {
-      const newTotalMin = unitsToPlace.slice(0, -1).reduce((sum, type) => sum + getUnitWidth(type, config, rentableDepth), 0);
-      if (newTotalMin <= totalAvailableWidth + 0.1) {
-        // Removing last unit makes it fit
-        const removed = unitsToPlace.pop();
-        console.log(`[DEBUG] Removed ${removed} to prevent overflow. New total: ${newTotalMin.toFixed(2)}m`);
-        break;
+      const currentMin = minSum(unitsToPlace);
+      if (currentMin <= totalAvailableWidth + 0.1) break;
+
+      // Choose a removal index that isn't protected. Prefer removing non-corner-eligible units first.
+      let removeIdx = -1;
+      for (let i = unitsToPlace.length - 1; i >= 0; i--) {
+        if (i === protectedIdx) continue;
+        if (!isCornerEligible(unitsToPlace[i], config)) { removeIdx = i; break; }
       }
-      unitsToPlace.pop();
+      if (removeIdx === -1) {
+        // Fallback: remove the last non-protected index
+        for (let i = unitsToPlace.length - 1; i >= 0; i--) {
+          if (i !== protectedIdx) { removeIdx = i; break; }
+        }
+      }
+      if (removeIdx === -1) break;
+
+      const removed = unitsToPlace.splice(removeIdx, 1)[0];
+      console.log(`[DEBUG] Removed ${removed} (idx=${removeIdx}${removeIdx === protectedIdx ? ',PROTECTED' : ''}) to prevent overflow.`);
     }
   }
 
@@ -1063,290 +1176,48 @@ const generateUnitSegment = (
       width = targetW;
     }
 
-    // Enforce max width - ONLY the globally largest unit type can exceed its max
-    // All other types MUST stay within their max width
-    const globallyLargestType = getLargestUnitType(config);
-    const isGloballyLargestType = (type === globallyLargestType);
-
-    // Cap width if not the globally largest type
-    if (!isGloballyLargestType && width > maxW) {
-      width = maxW;
-    }
+    // Enforce max width for ALL types (including the largest).
+    // This implements the “no huge units” rule: large units should not absorb unbounded excess.
+    if (width > maxW) width = maxW;
 
     finalWidths.push(width);
     totalAssigned += width;
   });
 
-  // If we capped some units, redistribute the excess
-  const totalFinalWidth = finalWidths.reduce((a, b) => a + b, 0);
-  const targetTotal = effectiveLength + extraWidth;
-  const excess = targetTotal - totalFinalWidth;
-
-  if (Math.abs(excess) > 0.01) {
-    // PRIORITY: Give excess ONLY to the largest unit type if present
-    const globallyLargestType = getLargestUnitType(config);
-    const largestTypeIdx = unitsToPlace.findIndex(t => t === globallyLargestType);
-
-    if (largestTypeIdx !== -1) {
-      // Has the largest type - give all excess to it (it's allowed to grow)
-      finalWidths[largestTypeIdx] += excess;
-    } else {
-      // NO largest type in segment - distribute excess using FLEXIBILITY WEIGHTS
-      // Studios get almost nothing, larger units absorb most of the excess
-      let remainingExcess = excess;
-
-      // Build a list of units with their individual max widths and flex weights
-      const unitMaxWidths = unitsToPlace.map(type => getMaxUnitWidth(type, config, rentableDepth));
-      const unitFlexWeights = unitsToPlace.map(type => getFlexibilityWeight(type));
-
-      // Distribute using weighted allocation (respecting max widths)
-      while (remainingExcess > 0.01) {
-        const growableIndices = finalWidths
-          .map((w, idx) => w < unitMaxWidths[idx] - 0.01 ? idx : -1)
-          .filter(idx => idx !== -1);
-
-        if (growableIndices.length === 0) break; // All at their type-specific max, stop
-
-        // Calculate total weight of growable units
-        const totalWeight = growableIndices.reduce((sum, idx) => sum + unitFlexWeights[idx], 0);
-        if (totalWeight <= 0) break;
-
-        // Distribute proportionally by flexibility weight
-        let distributed = 0;
-        growableIndices.forEach(idx => {
-          const weightShare = unitFlexWeights[idx] / totalWeight;
-          const targetGrowth = remainingExcess * weightShare;
-          const canGrow = unitMaxWidths[idx] - finalWidths[idx];
-          const actualGrowth = Math.min(targetGrowth, canGrow);
-          finalWidths[idx] += actualGrowth;
-          distributed += actualGrowth;
-        });
-        remainingExcess -= distributed;
-
-        // Safety: if we didn't distribute anything, break to avoid infinite loop
-        if (distributed < 0.01) break;
-      }
-
-      // If there's STILL excess after all units hit their max:
-      // Priority: Give to globally largest type first, then largest-in-segment as fallback
-      // This prevents white spaces - better to have one oversized unit than gaps
-      if (remainingExcess > 0.01) {
-        const globallyLargest = getLargestUnitType(config);
-        const globallyLargestIdx = unitsToPlace.findIndex(t => t === globallyLargest);
-
-        if (globallyLargestIdx !== -1) {
-          // Give excess to globally largest type (e.g., 3BR) - it's allowed to grow
-          console.log(`[DEBUG] Giving ${remainingExcess.toFixed(2)}m excess to ${globallyLargest} (globally largest)`);
-          finalWidths[globallyLargestIdx] += remainingExcess;
-        } else {
-          // NO globally largest type in segment - TIERED FALLBACK to prevent gaps
-          // Priority: 1) Corner-eligible (2BR/3BR), 2) 1BR with limit, 3) Tiny gap only
-
-          // TIER 1: Find corner-eligible type (can absorb unlimited excess)
-          let segmentLargestIdx = -1;
-          let segmentLargestArea = 0;
-          unitsToPlace.forEach((t, idx) => {
-            if (!isCornerEligible(t, config)) return;
-            const area = config[t].area;
-            if (area > segmentLargestArea) {
-              segmentLargestArea = area;
-              segmentLargestIdx = idx;
-            }
-          });
-
-          if (segmentLargestIdx !== -1) {
-            console.log(`[DEBUG] Giving ${remainingExcess.toFixed(2)}m excess to ${unitsToPlace[segmentLargestIdx]} (corner-eligible in segment)`);
-            finalWidths[segmentLargestIdx] += remainingExcess;
-          } else {
-            // TIER 2: Find 1BR - can absorb LIMITED excess (up to 25% over target)
-            const oneBedIdx = unitsToPlace.findIndex(t => t === UnitType.OneBed);
-            if (oneBedIdx !== -1) {
-              const oneBedTarget = getUnitWidth(UnitType.OneBed, config, rentableDepth);
-              const maxOneBed = oneBedTarget * 1.25; // 25% stretch allowed
-              const currentWidth = finalWidths[oneBedIdx];
-              const canAbsorb = Math.max(0, maxOneBed - currentWidth);
-
-              if (canAbsorb > 0.01) {
-                const toAbsorb = Math.min(remainingExcess, canAbsorb);
-                finalWidths[oneBedIdx] += toAbsorb;
-                remainingExcess -= toAbsorb;
-                console.log(`[DEBUG] 1BR absorbed ${toAbsorb.toFixed(2)}m of excess (limited to 25% stretch)`);
-              }
-            }
-
-            // TIER 3: If still excess and > 1m, distribute proportionally to all non-Studios
-            if (remainingExcess > 1.0) {
-              const nonStudioIndices = unitsToPlace
-                .map((t, idx) => t !== UnitType.Studio ? idx : -1)
-                .filter(idx => idx !== -1);
-
-              if (nonStudioIndices.length > 0) {
-                const perUnit = remainingExcess / nonStudioIndices.length;
-                nonStudioIndices.forEach(idx => {
-                  finalWidths[idx] += perUnit;
-                });
-                console.log(`[DEBUG] Distributed ${remainingExcess.toFixed(2)}m excess across ${nonStudioIndices.length} non-Studio units`);
-                remainingExcess = 0;
-              }
-            }
-
-            // Only leave gap if it's small (< 1m) or only Studios remain
-            if (remainingExcess > 0.01) {
-              console.log(`[DEBUG] Leaving ${remainingExcess.toFixed(2)}m as gap (no suitable absorption target)`);
-            }
-          }
-        }
+  // FILL LEFTOVER SPACE: Distribute any remaining gap to units (prioritize space utilization)
+  const totalFinalWidthDbg = finalWidths.reduce((a, b) => a + b, 0);
+  const remainingGap = totalAvailableWidthDbg - totalFinalWidthDbg;
+  
+  if (remainingGap > 0.1) {
+    // Distribute leftover space to units, prioritizing larger/more flexible units
+    const sortedByFlexibility = unitsToPlace.map((type, idx) => ({
+      idx,
+      type,
+      flex: getFlexibilityWeight(type),
+      currentWidth: finalWidths[idx]
+    })).sort((a, b) => b.flex - a.flex);
+    
+    let gapToDistribute = remainingGap;
+    for (const { idx, type, currentWidth } of sortedByFlexibility) {
+      if (gapToDistribute <= 0.01) break;
+      const maxW = getMaxUnitWidth(type, config, rentableDepth);
+      const canTake = Math.min(gapToDistribute, maxW - currentWidth);
+      if (canTake > 0.01) {
+        finalWidths[idx] += canTake;
+        gapToDistribute -= canTake;
       }
     }
-  }
-
-  // FINAL ENFORCEMENT: TIERED SIZE CAPS
-  // Different unit types have different maximum stretch limits:
-  // - Studios: 15% max (virtually rigid)
-  // - 1BR: 25% max
-  // - 2BR: 50% max (generous but NOT unlimited)
-  // - 3BR (globally largest): Unlimited (absorbs all remaining excess)
-  const globallyLargestType = getLargestUnitType(config);
-  const isGloballyLargestInSegment = unitsToPlace.includes(globallyLargestType);
-
-  let cappedExcess = 0;
-
-  // PASS 1: Apply caps to all units except globally largest type
-  unitsToPlace.forEach((type, idx) => {
-    const targetWidth = getUnitWidth(type, config, rentableDepth);
-    let maxAllowedWidth: number;
-
-    if (type === globallyLargestType) {
-      // Globally largest (3BR) can grow without limit
-      return; // Skip for now, handle in Pass 2
-    } else if (type === UnitType.Studio) {
-      maxAllowedWidth = targetWidth * 1.15; // Studios: 15% max
-    } else if (type === UnitType.OneBed) {
-      maxAllowedWidth = targetWidth * 1.25; // 1BR: 25% max
-    } else if (type === UnitType.TwoBed) {
-      // 2BR: Max is either 30% over target OR the 3BR target, whichever is smaller
-      // This ensures 2BR never exceeds 3BR in size (visually confusing otherwise)
-      const thirtyPercentMax = targetWidth * 1.30;
-      const threeBedTarget = getUnitWidth(UnitType.ThreeBed, config, rentableDepth);
-      maxAllowedWidth = Math.min(thirtyPercentMax, threeBedTarget);
-    } else {
-      maxAllowedWidth = targetWidth * 1.25; // Fallback: 25%
+    
+    // If there's still gap left, give it to the last unit (even if it exceeds max slightly)
+    if (gapToDistribute > 0.01 && unitsToPlace.length > 0) {
+      const lastIdx = unitsToPlace.length - 1;
+      finalWidths[lastIdx] += gapToDistribute;
     }
-
-    if (finalWidths[idx] > maxAllowedWidth) {
-      const excess = finalWidths[idx] - maxAllowedWidth;
-      console.log(`[DEBUG] TIERED CAP: ${type} width ${finalWidths[idx].toFixed(2)}m exceeds max ${maxAllowedWidth.toFixed(2)}m, capping (excess: ${excess.toFixed(2)}m)`);
-      finalWidths[idx] = maxAllowedWidth;
-      cappedExcess += excess;
-    }
-  });
-
-  // PASS 2: Redistribute capped excess
-  if (cappedExcess > 0.01) {
-    if (isGloballyLargestInSegment) {
-      // Give all excess to globally largest type (usually 3BR) - the only type without limits
-      const globalIdx = unitsToPlace.findIndex(t => t === globallyLargestType);
-      console.log(`[DEBUG] Redistributing ${cappedExcess.toFixed(2)}m capped excess to ${globallyLargestType} (globally largest)`);
-      finalWidths[globalIdx] += cappedExcess;
-      cappedExcess = 0;
-    } else {
-      // No globally largest in segment - try to fill gap by allowing units to stretch to their HARD caps
-      // This is a second pass that uses the remaining headroom in each unit
-      const getCap = (type: UnitType): number => {
-        const tw = getUnitWidth(type, config, rentableDepth);
-        if (type === UnitType.Studio) return tw * 1.15;
-        if (type === UnitType.OneBed) return tw * 1.25;
-        if (type === UnitType.TwoBed) {
-          return Math.min(tw * 1.30, getUnitWidth(UnitType.ThreeBed, config, rentableDepth));
-        }
-        return tw * 1.25;
-      };
-
-      // Calculate remaining headroom for each unit
-      let totalHeadroom = 0;
-      const headrooms: number[] = unitsToPlace.map((type, idx) => {
-        if (type === UnitType.Studio) return 0; // Studios never absorb
-        const cap = getCap(type);
-        const headroom = Math.max(0, cap - finalWidths[idx]);
-        totalHeadroom += headroom;
-        return headroom;
-      });
-
-      if (totalHeadroom > 0.01) {
-        // Distribute proportionally based on available headroom
-        const toDistribute = Math.min(cappedExcess, totalHeadroom);
-        unitsToPlace.forEach((_, idx) => {
-          if (headrooms[idx] > 0) {
-            const share = (headrooms[idx] / totalHeadroom) * toDistribute;
-            finalWidths[idx] += share;
-          }
-        });
-        cappedExcess -= toDistribute;
-        console.log(`[DEBUG] Distributed ${toDistribute.toFixed(2)}m to fill gap using available headroom`);
-      }
-
-      if (cappedExcess > 0.01) {
-        // CRITICAL FIX: NEVER leave gaps - force excess onto largest NON-STUDIO unit in segment
-        // An oversized unit is ALWAYS better than white space
-        // BUT: Studios should NEVER absorb excess - they must stay close to target size
-        console.log(`[WARN] Remaining ${cappedExcess.toFixed(2)}m would create gap - FORCING onto largest non-Studio unit in segment`);
-
-        // Find the largest NON-STUDIO unit in this segment (by target area)
-        // Priority: 3BR > 2BR > 1BR > (Studios only as absolute last resort)
-        let segmentLargestIdx = -1;
-        let segmentLargestArea = 0;
-        unitsToPlace.forEach((t, idx) => {
-          if (t === UnitType.Studio) return; // NEVER force onto Studios
-          const area = config[t].area;
-          if (area > segmentLargestArea) {
-            segmentLargestArea = area;
-            segmentLargestIdx = idx;
-          }
-        });
-
-        // If no non-Studio found, use Studio as absolute last resort
-        if (segmentLargestIdx === -1) {
-          console.log(`[WARN] Segment has ONLY Studios - forcing excess onto Studio as last resort`);
-          segmentLargestIdx = 0;
-        }
-
-        // Force the remaining excess onto this unit (exceeding its normal cap)
-        finalWidths[segmentLargestIdx] += cappedExcess;
-        console.log(`[DEBUG] Forced ${cappedExcess.toFixed(2)}m excess onto ${unitsToPlace[segmentLargestIdx]} (now ${finalWidths[segmentLargestIdx].toFixed(2)}m)`);
-        cappedExcess = 0;
-      }
-    }
-  }
-
-  // FINAL SAFEGUARD: Ensure NO GAPS - give any remaining space to largest NON-STUDIO unit
-  const totalFinalWidthCheck = finalWidths.reduce((a, b) => a + b, 0);
-  const finalGap = segmentLength - totalFinalWidthCheck;
-  if (finalGap > 0.05) {
-    // Find largest NON-STUDIO unit and force the gap onto it
-    let segmentLargestIdx = -1;
-    let segmentLargestArea = 0;
-    unitsToPlace.forEach((t, idx) => {
-      if (t === UnitType.Studio) return; // NEVER force onto Studios
-      const area = config[t].area;
-      if (area > segmentLargestArea) {
-        segmentLargestArea = area;
-        segmentLargestIdx = idx;
-      }
-    });
-
-    // If no non-Studio found, use Studio as absolute last resort
-    if (segmentLargestIdx === -1) {
-      console.log(`[WARN] FINAL SAFEGUARD: Segment has ONLY Studios - forcing gap onto Studio as last resort`);
-      segmentLargestIdx = 0;
-    }
-
-    finalWidths[segmentLargestIdx] += finalGap;
-    console.log(`[WARN] FINAL SAFEGUARD: Added ${finalGap.toFixed(2)}m gap to ${unitsToPlace[segmentLargestIdx]} (now ${finalWidths[segmentLargestIdx].toFixed(2)}m)`);
   }
 
   // Debug: Final widths before creating units
-  const totalFinalWidthDbg = finalWidths.reduce((a, b) => a + b, 0);
-  console.log(`[DEBUG] generateUnitSegment FINAL: totalFinalWidth=${totalFinalWidthDbg.toFixed(2)}m, segmentLength=${segmentLength.toFixed(2)}m, gap=${(segmentLength - totalFinalWidthDbg).toFixed(2)}m`);
+  const finalTotalWidth = finalWidths.reduce((a, b) => a + b, 0);
+  console.log(`[DEBUG] generateUnitSegment FINAL: totalFinalWidth=${finalTotalWidth.toFixed(2)}m, segmentLength=${segmentLength.toFixed(2)}m, gap=${(segmentLength - finalTotalWidth).toFixed(2)}m`);
   finalWidths.forEach((w, i) => {
     console.log(`[DEBUG]   Unit ${i} (${unitsToPlace[i]}): width=${w.toFixed(2)}m`);
   });
@@ -1658,7 +1529,7 @@ export function generateFloorplate(
   strategy: OptimizationStrategy = 'balanced'
 ): FloorPlanData {
   // VERSION MARKER - if you see this, new code is loaded!
-  console.log('✨✨✨ GENERATOR v2025.01.13.E - UNIFIED BUILDING COUNTS ✨✨✨');
+  console.log('✨✨✨ GENERATOR v2025.01.13.F - CORNER ENFORCEMENT + SPACE UTILIZATION + ALIGNMENT FIXES ✨✨✨');
 
   const cores: CoreBlock[] = [];
   const length = footprint.width;
@@ -1693,10 +1564,14 @@ export function generateFloorplate(
 
   const coreSideTotalBonusArea = (1 + numMidSpans) * singleCoreBonusArea;
 
+  // STRICT ALIGNMENT: When alignment is strict (>0.6), we mirror the core side.
+  // We define this early to condition the mix bias.
+  const snapToCore = alignment > 0.6;
+
   // --- 2. Calculate BUILDING-WIDE unit counts first ---
   // This ensures consistent unit counts are used for BOTH geometry optimization AND unit placement
   // Prevents the issue where geometry is optimized for 2 3BRs but only 1 is placed
-  const earlyBuildingCounts = calculateBuildingUnitCounts(
+  const earlyBuildingCountsRaw = calculateBuildingUnitCounts(
     availableRentableLengthCoreSide,  // Core side (North or South depending on coreSide)
     availableRentableLengthClearSide, // Clear side
     coreSideTotalBonusArea,
@@ -1707,6 +1582,16 @@ export function generateFloorplate(
     rentableDepth,
     strategy
   );
+
+  // Apply a core-side bias (studios vs 1BR) to compensate for the core footprint.
+  // This preserves building-wide totals while nudging the side with cores toward smaller units.
+  // CRITICAL: Only apply bias if NOT using strict alignment (mirroring).
+  // If strict alignment is ON, we mirror the core side to the clear side.
+  // If we bias the core side (more studios) and then mirror it, we DOUBLE the bias (too many studios globally).
+  // const snapToCore = alignment > 0.6; // Defined above
+  const earlyBuildingCounts = snapToCore 
+    ? earlyBuildingCountsRaw 
+    : applyCoreSideMixBias(earlyBuildingCountsRaw, coreSide, numCores);
 
   // Use the split counts for each side's geometry optimization
   const coreSideCounts = coreSide === 'North' ? earlyBuildingCounts.north : earlyBuildingCounts.south;
@@ -1738,8 +1623,16 @@ export function generateFloorplate(
     true
   );
 
-  const snapToCore = alignment > 0.6;
+  // STRICT ALIGNMENT: When alignment is strict (>0.6), use the same geometry as core side
+  // This ensures partition walls align between clear side and core side
+  // (snapToCore defined at top of function)
   const finalClearSideCornerLen = snapToCore ? coreSideCornerLen : clearSideCornerLenIndependent;
+  
+  // When alignment is strict, also ensure the clear side uses the same segment structure
+  // This means the clear side should have the same corner lengths and mid segment structure
+  if (snapToCore) {
+    console.log(`[DEBUG] STRICT ALIGNMENT: Clear side using core side geometry (cornerLen=${coreSideCornerLen.toFixed(2)}m)`);
+  }
 
   // --- 4. Geometry Construction ---
   const totalMidLen = availableRentableLengthCoreSide - (2 * coreSideCornerLen);
@@ -1842,12 +1735,27 @@ export function generateFloorplate(
 
   const generateClearSideSegments = (isSouth: boolean): SegmentDef[] => {
     const segs: SegmentDef[] = [];
-    const midLen = length - (2 * finalClearSideCornerLen);
-    const midPat = alignment < 0.2 ? 'random' : 'valley-inverted';
+    
+    // When alignment is strict, use the same segment structure as core side for better alignment
+    if (snapToCore && hasMidCore) {
+      // Match core side structure: left corner, mid span 1, mid span 2, right corner
+      const totalMidLen = length - (2 * finalClearSideCornerLen);
+      const midSpan1 = (totalMidLen / 2) + midCoreOffset;
+      const midSpan2 = (totalMidLen / 2) - midCoreOffset;
+      
+      segs.push({ x: 0, len: finalClearSideCornerLen, isSouth, pattern: leftCornerPattern, isCorner: true, extraWidth: 0, bonusArea: 0 });
+      segs.push({ x: finalClearSideCornerLen, len: midSpan1, isSouth, pattern: midPattern, isCorner: false, extraWidth: 0, bonusArea: 0 });
+      segs.push({ x: finalClearSideCornerLen + midSpan1, len: midSpan2, isSouth, pattern: midPattern, isCorner: false, extraWidth: 0, bonusArea: 0 });
+      segs.push({ x: length - finalClearSideCornerLen, len: finalClearSideCornerLen, isSouth, pattern: rightCornerPattern, isCorner: true, extraWidth: 0, bonusArea: 0 });
+    } else {
+      // Standard 3-segment structure for clear side
+      const midLen = length - (2 * finalClearSideCornerLen);
+      const midPat = alignment < 0.2 ? 'random' : 'valley-inverted';
 
-    segs.push({ x: 0, len: finalClearSideCornerLen, isSouth, pattern: leftCornerPattern, isCorner: true, extraWidth: 0, bonusArea: 0 });
-    segs.push({ x: finalClearSideCornerLen, len: midLen, isSouth, pattern: midPat, isCorner: false, extraWidth: 0, bonusArea: 0 });
-    segs.push({ x: length - finalClearSideCornerLen, len: finalClearSideCornerLen, isSouth, pattern: rightCornerPattern, isCorner: true, extraWidth: 0, bonusArea: 0 });
+      segs.push({ x: 0, len: finalClearSideCornerLen, isSouth, pattern: leftCornerPattern, isCorner: true, extraWidth: 0, bonusArea: 0 });
+      segs.push({ x: finalClearSideCornerLen, len: midLen, isSouth, pattern: midPat, isCorner: false, extraWidth: 0, bonusArea: 0 });
+      segs.push({ x: length - finalClearSideCornerLen, len: finalClearSideCornerLen, isSouth, pattern: rightCornerPattern, isCorner: true, extraWidth: 0, bonusArea: 0 });
+    }
     return segs;
   };
 
@@ -2015,13 +1923,87 @@ export function generateFloorplate(
     units.push(...newUnits);
   });
 
-  // --- 9. Apply Alignment ---
-  if (alignment > 0) {
+  // --- 9. Alignment / Mirroring ---
+  // For strict alignment, follow the mental model:
+  // - Core side first (already generated)
+  // - Mirror its partitions to the clear side (copy unit x/width pattern)
+  // - Compensate for cores by absorbing core-width gaps into adjacent clear-side units
+  const strictAlignment = alignment > 0.6;
+  if (strictAlignment) {
+    const coreSideIsNorth = coreSide === 'North';
+    const coreUnits = units.filter(u => coreSideIsNorth ? u.y === 0 : u.y > 0);
+    const clearY = coreSideIsNorth ? (rentableDepth + corridorWidth) : 0;
+    const tol = 0.12; // ~4in tolerance for edge matching
+
+    // Clone core-side units to the clear side (mirrors partition positions exactly).
+    const mirroredClear: InternalUnitBlock[] = coreUnits.map((u, i) => ({
+      ...u,
+      id: `mirrored-clear-${i}-${u.id}`,
+      y: clearY,
+      // Ensure polygon data doesn't carry over accidentally (clear side is rectangular unless wrapped later)
+      rects: undefined,
+      polyPoints: undefined
+    }));
+
+    // Helper to find unit by edge
+    const findByRightEdge = (x: number) =>
+      mirroredClear.find(u => Math.abs((u.x + u.width) - x) < tol);
+    const findByLeftEdge = (x: number) =>
+      mirroredClear.find(u => Math.abs(u.x - x) < tol);
+
+    // Compensate for each core: absorb the core-width “gap” into an adjacent unit on the clear side.
+    // This keeps the majority of partitions aligned, while resolving the missing strip.
+    cores.forEach(core => {
+      const left = findByRightEdge(core.x);
+      const right = findByLeftEdge(core.x + core.width);
+
+      let expandedUnit: InternalUnitBlock | undefined;
+
+      if (left) {
+        left.width += core.width;
+        left.area = left.width * rentableDepth;
+        expandedUnit = left;
+      } else if (right) {
+        right.x = right.x - core.width;
+        right.width += core.width;
+        right.area = right.width * rentableDepth;
+        expandedUnit = right;
+      } else {
+        // If we can't find neighbors (should be rare), skip—better than creating a tiny sliver unit.
+        console.log(`[WARN] STRICT ALIGNMENT: Could not find adjacent units to absorb core gap at x=${core.x.toFixed(2)}`);
+      }
+
+      // RE-CLASSIFY: Expanding a unit (e.g. Studio + Core) often changes its type (e.g. to 1BR).
+      // We must update the type definition so stats match the geometry.
+      if (expandedUnit) {
+        // Find best fit type based on new area
+        const allTypes = [UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as UnitType[];
+        const bestType = allTypes.find(t => {
+          // Allow some tolerance (e.g. 90% of target area) to upgrade
+          return expandedUnit!.area >= config[t].area * 0.9;
+        }) || UnitType.Studio;
+
+        if (bestType !== expandedUnit.type) {
+          console.log(`[DEBUG] STRICT ALIGNMENT: Upgraded expanded unit from ${expandedUnit.type} to ${bestType} (area ${expandedUnit.area.toFixed(0)}sf)`);
+          expandedUnit.type = bestType;
+          expandedUnit.typeId = bestType;
+          expandedUnit.typeName = bestType;
+          expandedUnit.color = getUnitColor(bestType);
+        }
+      }
+    });
+
+    const coreY = coreSideIsNorth ? 0 : (rentableDepth + corridorWidth);
+    const coreSideUnitsFinal = units.filter(u => u.y === coreY);
+    units = [...coreSideUnitsFinal, ...mirroredClear];
+
+    console.log(`[DEBUG] STRICT ALIGNMENT: Clear side mirrored from core side partitions and compensated for ${cores.length} cores`);
+  } else if (alignment > 0) {
+    // Non-strict: keep the existing “snap walls” behavior.
     const northUnits = units.filter(u => u.y === 0);
     const southUnits = units.filter(u => u.y > 0);
 
     let alignedUnits: InternalUnitBlock[] = [];
-
     if (coreSide === 'North') {
       const alignedSouth = applyWallAlignment(southUnits, northUnits, alignment, config, rentableDepth);
       alignedUnits = [...northUnits, ...alignedSouth];

@@ -6,36 +6,10 @@
 <body>
   <p>Authenticating...</p>
   <script>
-    // OAuth callback handler for Forma SDK
-    // This page receives the authorization code and posts it back to the opener
-
-    // Get URL parameters
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    const state = params.get('state');
-    const error = params.get('error');
-
-    if (error) {
-      console.error('OAuth error:', error);
-      if (window.opener) {
-        window.opener.postMessage({ type: 'oauth-error', error }, '*');
-      }
-    } else if (code) {
-      console.log('OAuth callback received code');
-      // Post the code back to the opener window
-      if (window.opener) {
-        window.opener.postMessage({
-          type: 'oauth-callback',
-          code,
-          state
-        }, '*');
-      }
-    }
-
     // Close this window after a short delay
     setTimeout(() => {
       window.close();
-    }, 1000);
+    }, 100);
   </script>
 </body>
 </html>

@@ -1446,7 +1446,8 @@ async function handleGenerate() {
       coreWidth,
       coreDepth,
       state.corePlacement,
-      unitColors
+      unitColors,
+      state.alignment / 100  // Convert 0-100 to 0.0-1.0
     );
 
     console.log('Generated options:', generatedOptions.map(o => ({

@@ -1538,7 +1538,13 @@ const findOptimalGeometry = (
 
 // ============================================================================
 // WALL ALIGNMENT
-// Respects flexibility constraints
+// Aligns partition walls between north and south sides of the building.
+// alignmentStrength (0.0-1.0) controls the maximum snap distance:
+//   - 0.0 = no snapping (partitions remain independent)
+//   - 0.5 = moderate snapping (up to 1.2m / 4ft)
+//   - 1.0 = aggressive snapping (up to 2.4m / 8ft)
+// Respects unit minimum width constraints - snaps are rejected if they would
+// compress units below their allowed minimum widths.
 // ============================================================================
 
 const applyWallAlignment = (
@@ -1561,8 +1567,8 @@ const applyWallAlignment = (
 
   const newUnits = targetUnits.map(u => ({ ...u }));
 
-  // Search radius: 1.2m to 2.4m (4ft to 8ft) based on alignment strength
-  const MAX_PULL = 1.2 + (alignmentStrength * 1.2);
+  // Search radius: 0m to 4m (0ft to 13ft) based on alignment strength
+  const MAX_PULL = alignmentStrength * 4.0;
   const MIN_EPSILON = 0.01; // Ignore very small differences (already aligned)
   const TOLERANCE = 0.06;   // ~0.2ft tolerance for min width check
 
@@ -1608,9 +1614,11 @@ const applyWallAlignment = (
     const nextUnitRightEdge = nextUnit.x + nextUnit.width;
     const proposedNextWidth = nextUnitRightEdge - proposedRightEdge;
 
-    // --- STRICT CONSTRAINTS CHECK ---
-    const unitFlex = getFlexibilityFactor(unit.type);
-    const nextUnitFlex = getFlexibilityFactor(nextUnit.type);
+    // --- CONSTRAINTS CHECK ---
+    // At higher alignment, allow more unit compression to achieve alignment
+    const alignmentBoost = alignmentStrength * 0.15; // Extra 15% flex at strict alignment
+    const unitFlex = getFlexibilityFactor(unit.type) + alignmentBoost;
+    const nextUnitFlex = getFlexibilityFactor(nextUnit.type) + alignmentBoost;
 
     const unitMinW = getUnitWidth(unit.type, config, rentableDepth) * (1.0 - unitFlex);
     const nextUnitMinW = getUnitWidth(nextUnit.type, config, rentableDepth) * (1.0 - nextUnitFlex);
@@ -2272,7 +2280,13 @@ export function generateFloorplate(
 
 // ============================================================================
 // 3-OPTION GENERATION
-// Generates 3 layout variants per feature spec Section 8.8
+// Generates 3 layout variants (balanced, mixOptimized, efficiencyOptimized)
+// per feature spec Section 8.8.
+//
+// Parameters:
+//   - alignment (0.0-1.0): Controls partition wall alignment between north/south
+//     sides. Higher values allow walls to snap further to align with the
+//     opposite side's partition walls.
 // ============================================================================
 
 export function generateFloorplateVariants(
@@ -2283,18 +2297,13 @@ export function generateFloorplateVariants(
   coreWidth: number = DEFAULT_CORE_WIDTH,
   coreDepth: number = DEFAULT_CORE_DEPTH,
   coreSide: 'North' | 'South' = 'North',
-  unitColors?: UnitColorMap
+  unitColors?: UnitColorMap,
+  alignment: number = 1.0
 ): LayoutOption[] {
   // Set custom colors if provided
   customUnitColors = unitColors || {};
 
   const strategies: OptimizationStrategy[] = ['balanced', 'mixOptimized', 'efficiencyOptimized'];
-
-  // Strategy-specific alignments for additional variety:
-  // - balanced: 0.8 (strong alignment for clean geometry)
-  // - mixOptimized: 0.6 (moderate alignment, allows unit distribution flexibility)
-  // - efficiencyOptimized: 1.0 (maximum alignment for cleanest structural grid)
-  const alignments = [0.8, 0.6, 1.0];
 
   return strategies.map((strategy, idx) => {
     const floorplan = generateFloorplate(
@@ -2305,8 +2314,8 @@ export function generateFloorplateVariants(
       coreWidth,
       coreDepth,
       coreSide,
-      alignments[idx],
-      strategy  // NOW ACTUALLY PASSES THE STRATEGY!
+      alignment,  // Use user-controlled alignment
+      strategy
     );
 
     return {

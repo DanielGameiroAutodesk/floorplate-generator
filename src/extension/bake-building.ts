@@ -1564,27 +1564,56 @@ const isLocalhost = typeof window !== 'undefined' &&
 const TOKEN_STORAGE_KEY = 'floorplate_access_token';
 
 /**
- * Get access token for localhost development
- * Prompts user if not cached
+ * Get access token for localhost development using Forma SDK OAuth flow.
+ *
+ * ## Authentication Flow
+ *
+ * 1. **Check cache**: First checks sessionStorage for a previously acquired token
+ *
+ * 2. **Configure OAuth**: If no cached token, configures the Forma SDK with:
+ *    - `clientId`: APS (Autodesk Platform Services) application client ID
+ *    - `callbackUrl`: OAuth redirect URI pointing to /callback.html
+ *    - `scopes`: Permissions needed (data:read, data:write for BasicBuilding API)
+ *
+ * 3. **Acquire token**: `Forma.auth.acquireTokenOverlay()` opens an iframe overlay
+ *    within the Forma UI that:
+ *    - Redirects to Autodesk login if not already authenticated
+ *    - Requests user consent for the specified scopes
+ *    - Redirects to callbackUrl with authorization code
+ *    - SDK exchanges code for access token automatically
+ *
+ * 4. **Cache token**: Stores token in sessionStorage for reuse during session
+ *
+ * ## Requirements
+ *
+ * - APS app must have callback URL registered (e.g., http://localhost:8081/callback.html)
+ * - callback.html must exist at the callbackUrl path (can be minimal, just closes the window)
+ * - Extension must be loaded in Forma (SDK auth only works in Forma context)
+ *
+ * @returns Access token string for Bearer authentication
  */
-function getAccessToken(): string {
-  let token = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+async function getAccessToken(): Promise<string> {
+  const cachedToken = sessionStorage.getItem(TOKEN_STORAGE_KEY);
 
-  if (!token) {
-    token = prompt(
-      'Paste your access token (from browser DevTools → Network tab → find any API request → copy Authorization header value after "Bearer "):'
-    );
-
-    if (!token || token.trim() === '') {
-      throw new Error('Access token is required for localhost development');
-    }
-
-    // Remove "Bearer " prefix if user copied the whole header
-    token = token.trim().replace(/^Bearer\s+/i, '');
-    sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
+  if (cachedToken) {
+    return cachedToken;
   }
 
-  return token;
+  // Configure OAuth with APS app credentials
+  // Callback URL must match what's registered in the APS app settings
+  Forma.auth.configure({
+    clientId: "Pc8oPvsUEhKrRPKkx6sKcFdctXQhDeErjmIfKE5clqF6tt7N",
+    callbackUrl: `${window.location.origin}/callback.html`,
+    scopes: ["data:read", "data:write"],
+  });
+
+  // Opens an overlay for user to authenticate via Autodesk login
+  // Returns { accessToken } after successful OAuth flow
+  const { accessToken } = await Forma.auth.acquireTokenOverlay();
+
+  sessionStorage.setItem(TOKEN_STORAGE_KEY, accessToken);
+
+  return accessToken;
 }
 
 /**
@@ -1850,7 +1879,7 @@ async function createBasicBuildingAPI(
 
   if (isLocalhost) {
     // Localhost: Use direct API with Bearer token
-    const accessToken = getAccessToken();
+    const accessToken = await getAccessToken();
     response = await fetch(url, {
       method: 'POST',
       headers: {

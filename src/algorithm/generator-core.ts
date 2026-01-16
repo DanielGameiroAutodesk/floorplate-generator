@@ -395,8 +395,28 @@ const calculateBuildingUnitCounts = (
   southSegmentCount: number,
   config: UnitConfiguration,
   rentableDepth: number,
-  strategy: OptimizationStrategy = 'balanced'
+  strategy: OptimizationStrategy = 'balanced',
+  isMirrored: boolean = false
 ): SideCounts => {
+  // STRICT MIRRORING: If the building is mirrored (strict alignment), we calculate
+  // the mix for ONE side (the core side) and mirror it.
+  // We cannot calculate globally and split, because the split logic might push
+  // extra units to the North side (e.g. for corners) which then get doubled
+  // when mirrored, ruining the global mix.
+  if (isMirrored) {
+    console.log('[DEBUG] calculateBuildingUnitCounts: MIRRORED MODE - Calculating for Core Side only');
+    const coreSideCounts = calculateGlobalUnitCounts(
+      northLength,
+      config,
+      rentableDepth,
+      northSegmentCount,
+      northBonus,
+      strategy
+    );
+    // Return same counts for both (though South is technically ignored/overwritten later)
+    return { north: coreSideCounts, south: { ...coreSideCounts } };
+  }
+
   // Calculate TOTAL building capacity
   const totalLength = northLength + southLength;
   const totalBonus = northBonus + southBonus;
@@ -947,18 +967,65 @@ const generateUnitSegment = (
   // This should be rare after distribution + swap, but it prevents “Studio at the corner”
   // regressions across strategies.
   if (isLeftCorner && unitsToPlace.length > 0 && !isCornerEligible(unitsToPlace[0], config)) {
-    // Prefer 2BR then 3BR (or whichever is configured as corner-eligible)
+    // Sort candidates by size (Smallest -> Largest) to minimize mix impact
     const candidates = ([UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as UnitType[])
-      .filter(t => isCornerEligible(t, config));
-    if (candidates.length > 0) {
-      unitsToPlace[0] = candidates[0];
+      .filter(t => isCornerEligible(t, config))
+      .sort((a, b) => config[a].area - config[b].area);
+
+    // Try to find a candidate that fits the available space (roughly)
+    // We check the FIRST unit's width (calculatedWidths[0] or target)
+    const currentW = calculatedWidths[0] || getUnitWidth(unitsToPlace[0], config, rentableDepth);
+    
+    let bestCandidate: UnitType | null = null;
+
+    for (const cand of candidates) {
+        const candW = getUnitWidth(cand, config, rentableDepth);
+        // Allow it if it fits or is within 10% of the space
+        if (candW <= currentW * 1.1) {
+            bestCandidate = cand;
+            // If we found the smallest one that fits, take it
+            break; 
+        }
+    }
+
+    // If nothing fit well, just take the smallest corner-eligible unit (better than taking the largest!)
+    if (!bestCandidate && candidates.length > 0) {
+        bestCandidate = candidates[0]; 
+    }
+
+    if (bestCandidate) {
+      console.log(`[DEBUG] Force-upgrading corner unit from ${unitsToPlace[0]} to ${bestCandidate}`);
+      unitsToPlace[0] = bestCandidate;
     }
   }
+
   if (isRightCorner && unitsToPlace.length > 0 && !isCornerEligible(unitsToPlace[unitsToPlace.length - 1], config)) {
+    const lastIdx = unitsToPlace.length - 1;
+    
+    // Sort candidates by size (Smallest -> Largest)
     const candidates = ([UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as UnitType[])
-      .filter(t => isCornerEligible(t, config));
-    if (candidates.length > 0) {
-      unitsToPlace[unitsToPlace.length - 1] = candidates[0];
+      .filter(t => isCornerEligible(t, config))
+      .sort((a, b) => config[a].area - config[b].area);
+
+    const currentW = calculatedWidths[lastIdx] || getUnitWidth(unitsToPlace[lastIdx], config, rentableDepth);
+    
+    let bestCandidate: UnitType | null = null;
+    
+    for (const cand of candidates) {
+        const candW = getUnitWidth(cand, config, rentableDepth);
+        if (candW <= currentW * 1.1) {
+            bestCandidate = cand;
+            break;
+        }
+    }
+
+    if (!bestCandidate && candidates.length > 0) {
+        bestCandidate = candidates[0];
+    }
+
+    if (bestCandidate) {
+      console.log(`[DEBUG] Force-upgrading corner unit from ${unitsToPlace[lastIdx]} to ${bestCandidate}`);
+      unitsToPlace[lastIdx] = bestCandidate;
     }
   }
 
@@ -1288,14 +1355,12 @@ const findOptimalGeometry = (
       minC = Math.max(minC, largestCornerEligibleWidth);
       console.log(`[DEBUG] findOptimalGeometry: largest corner-eligible width=${largestCornerEligibleWidth.toFixed(2)}m`);
 
-      // ENSURE corners can fit at least 2 units (not just 1)
+      // ENSURE corners can fit at least 1 unit
       // This prevents corners with a single oversized unit - we want both ends to have large units
-      const secondWidth = secondLargestCornerEligibleWidth > 0
-        ? secondLargestCornerEligibleWidth
-        : largestCornerEligibleWidth * 0.8;
-      const minCornerFor2Units = largestCornerEligibleWidth + secondWidth;
-      minC = Math.max(minC, minCornerFor2Units * 0.9); // 90% to allow some flex
-      console.log(`[DEBUG] findOptimalGeometry: ensuring 2+ units fit, minC=${minC.toFixed(2)}m`);
+      // RELAXED: Removed the "at least 2 units" requirement which was forcing large corners and starving the middle.
+      // Now we just ensure the corner fits the largest eligible unit.
+      minC = Math.max(minC, largestCornerEligibleWidth); 
+      console.log(`[DEBUG] findOptimalGeometry: ensuring 1+ units fit, minC=${minC.toFixed(2)}m`);
 
       // SOFT CAP: Only limit if corners would take >70% of building
       if (minC > maxCornerFromBuildingLength) {
@@ -1315,7 +1380,8 @@ const findOptimalGeometry = (
     }
   }
 
-  let maxC = Math.min(42 * FEET_TO_METERS, availableRentableLength / 2 - 15 * FEET_TO_METERS);
+  let maxC = Math.min(65 * FEET_TO_METERS, availableRentableLength / 2 - 15 * FEET_TO_METERS);
+  if (maxC < minC) maxC = minC;
   const step = 2 * FEET_TO_METERS;
 
   for (let c = minC; c <= maxC; c += step > 0 ? step : 1) {
@@ -1376,19 +1442,29 @@ const findOptimalGeometry = (
         const absDiff = Math.abs(diff);
 
         const isCompressionLocal = diff < -0.1;
-        const penaltyMultiplier = isCompressionLocal ? 500 : 100;
+        const penaltyMultiplier = isCompressionLocal ? 500 : 200; // Increased expansion penalty from 100 to 200 to reduce white space
 
         const capacity = Math.max(segmentFlexWeightSum, 0.1);
         const weightedPenalty = absDiff * (penaltyMultiplier / capacity);
-        totalScore += weightedPenalty;
+        if (!isNaN(weightedPenalty)) {
+            totalScore += weightedPenalty;
+        } else {
+            totalScore = Number.MAX_VALUE; // Treat NaN as infinite badness
+        }
       });
 
-      if (totalScore < minWeightedError) {
+      if (totalScore < minWeightedError && !isNaN(totalScore)) {
         minWeightedError = totalScore;
         bestCornerLen = cornerLen;
         bestOffset = offset;
       }
     }
+  }
+
+  // Fallback: if optimization failed (e.g. all scores NaN or MAX), use minC
+  if (bestCornerLen === 40 * FEET_TO_METERS && minWeightedError === Number.MAX_VALUE) {
+     console.warn(`[WARN] findOptimalGeometry: Optimization loop failed to find valid score. Defaulting to minC=${minC.toFixed(2)}m`);
+     bestCornerLen = minC;
   }
 
   return { cornerLen: bestCornerLen, midCoreOffset: bestOffset };
@@ -1482,7 +1558,9 @@ const applyWallAlignment = (
     const nextUnitMinW = getUnitWidth(nextUnit.type, config, rentableDepth) * (1.0 - nextUnitFlex);
 
     // Both units must maintain minimum widths
-    if (proposedWidth >= unitMinW - TOLERANCE && proposedNextWidth >= nextUnitMinW - TOLERANCE) {
+    // Ensure math doesn't produce NaNs
+    if (!isNaN(proposedWidth) && !isNaN(proposedNextWidth) && 
+        proposedWidth >= unitMinW - TOLERANCE && proposedNextWidth >= nextUnitMinW - TOLERANCE) {
       // Apply alignment
       unit.width = proposedWidth;
       unit.area = unit.width * unit.depth;
@@ -1494,6 +1572,8 @@ const applyWallAlignment = (
       // Mark both units as modified
       modifiedUnits.add(unitIdx);
       modifiedUnits.add(unitIdx + 1);
+    } else if (isNaN(proposedWidth) || isNaN(proposedNextWidth)) {
+        console.warn(`[WARN] applyWallAlignment: NaN detected! targetX=${targetX}, unit.x=${unit.x}, nextUnit.width=${nextUnit.width}`);
     }
   }
 
@@ -1567,7 +1647,8 @@ export function generateFloorplate(
     3, // Clear side always has 3 segments (left corner, mid, right corner)
     config,
     rentableDepth,
-    strategy
+    strategy,
+    snapToCore // isMirrored
   );
 
   // Apply a core-side bias (studios vs 1BR) to compensate for the core footprint.

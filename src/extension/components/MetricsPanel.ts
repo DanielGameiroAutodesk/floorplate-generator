@@ -6,12 +6,12 @@
 import { FloorPlanData, UnitType, DynamicUnitType } from '../../algorithm/types';
 import { FEET_TO_METERS } from '../../algorithm/constants';
 
-// Default colors for legacy unit types (used when unitTypes not provided)
+// Default colors for legacy unit types (using Forma Data Labels palette)
 const DEFAULT_UNIT_COLORS: Record<UnitType, string> = {
-  [UnitType.Studio]: '#3b82f6',   // Blue
-  [UnitType.OneBed]: '#22c55e',   // Green
-  [UnitType.TwoBed]: '#f97316',   // Orange
-  [UnitType.ThreeBed]: '#a855f7'  // Purple
+  [UnitType.Studio]: '#A0D4DC',   // data-blue
+  [UnitType.OneBed]: '#D0E1A4',   // data-green
+  [UnitType.TwoBed]: '#F5C297',   // data-orange
+  [UnitType.ThreeBed]: '#D9DDFC'  // data-purple
 };
 
 // Default labels for legacy unit types
@@ -63,54 +63,50 @@ export function renderMetricsPanel(floorplan: FloorPlanData, unitTypes?: Dynamic
   const travelDistFeet = Math.round(metersToFeet(egress.maxTravelDistance));
 
   return `
-    <div class="metrics-panel" style="padding: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px;">
+    <div class="metrics-panel" style="padding: 16px; font-family: var(--forma-font-family, 'Artifakt Element', -apple-system, sans-serif); font-size: 11px;">
 
       <!-- Summary Section -->
-      <div class="metrics-section" style="margin-bottom: 20px;">
+      <div class="metrics-section" style="margin-bottom: 16px;">
         <div class="section-header" style="
           font-size: 11px;
           font-weight: 600;
-          color: #64748b;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+          color: #747474;
           margin-bottom: 12px;
           padding-bottom: 8px;
-          border-bottom: 1px solid #e2e8f0;
+          border-bottom: 1px solid #D9D9D9;
         ">Summary</div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #64748b;">Total Units</span>
-          <span style="font-weight: 600; color: #1e293b;">${stats.totalUnits}</span>
+          <span style="color: #747474;">Total units</span>
+          <span style="font-weight: 600; color: #3C3C3C;">${stats.totalUnits}</span>
         </div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #64748b;">Efficiency</span>
-          <span style="font-weight: 600; color: ${stats.efficiency >= 0.75 ? '#22c55e' : '#f97316'};">${(stats.efficiency * 100).toFixed(1)}%</span>
+          <span style="color: #747474;">Efficiency</span>
+          <span style="font-weight: 600; color: ${stats.efficiency >= 0.75 ? '#87B340' : '#FAA21B'};">${(stats.efficiency * 100).toFixed(1)}%</span>
         </div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #64748b;">GSF</span>
-          <span style="font-weight: 600; color: #1e293b;">${formatNumber(gsfFeet)} sf</span>
+          <span style="color: #747474;">GSF</span>
+          <span style="font-weight: 600; color: #3C3C3C;">${formatNumber(gsfFeet)} sf</span>
         </div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #64748b;">NRSF</span>
-          <span style="font-weight: 600; color: #1e293b;">${formatNumber(nrsfFeet)} sf</span>
+          <span style="color: #747474;">NRSF</span>
+          <span style="font-weight: 600; color: #3C3C3C;">${formatNumber(nrsfFeet)} sf</span>
         </div>
       </div>
 
       <!-- Unit Mix Section -->
-      <div class="metrics-section" style="margin-bottom: 20px;">
+      <div class="metrics-section" style="margin-bottom: 16px;">
         <div class="section-header" style="
           font-size: 11px;
           font-weight: 600;
-          color: #64748b;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+          color: #747474;
           margin-bottom: 12px;
           padding-bottom: 8px;
-          border-bottom: 1px solid #e2e8f0;
-        ">Unit Mix</div>
+          border-bottom: 1px solid #D9D9D9;
+        ">Unit mix</div>
 
         ${renderUnitMixRows(stats.unitCounts, unitPercentages, unitTypes)}
       </div>
@@ -120,33 +116,31 @@ export function renderMetricsPanel(floorplan: FloorPlanData, unitTypes?: Dynamic
         <div class="section-header" style="
           font-size: 11px;
           font-weight: 600;
-          color: #64748b;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+          color: #747474;
           margin-bottom: 12px;
           padding-bottom: 8px;
-          border-bottom: 1px solid #e2e8f0;
+          border-bottom: 1px solid #D9D9D9;
         ">Egress</div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span style="color: #64748b;">Dead-End</span>
+          <span style="color: #747474;">Dead-end</span>
           <span style="display: flex; align-items: center; gap: 6px;">
-            <span style="font-weight: 500; color: #1e293b;">${deadEndFeet}'</span>
+            <span style="font-weight: 500; color: #3C3C3C;">${deadEndFeet}'</span>
             ${renderStatusBadge(egress.deadEndStatus)}
           </span>
         </div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span style="color: #64748b;">Travel Dist</span>
+          <span style="color: #747474;">Travel dist</span>
           <span style="display: flex; align-items: center; gap: 6px;">
-            <span style="font-weight: 500; color: #1e293b;">${travelDistFeet}'</span>
+            <span style="font-weight: 500; color: #3C3C3C;">${travelDistFeet}'</span>
             ${renderStatusBadge(egress.travelDistanceStatus)}
           </span>
         </div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span style="color: #64748b;">Sprinklered</span>
-          <span style="font-weight: 500; color: #1e293b;">Yes</span>
+          <span style="color: #747474;">Sprinklered</span>
+          <span style="font-weight: 500; color: #3C3C3C;">Yes</span>
         </div>
       </div>
     </div>
@@ -185,7 +179,7 @@ function renderUnitMixRows(
 function renderUnitMixRow(color: string, label: string, count: number, percentage: number): string {
   return `
     <div class="metric-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-      <span style="display: flex; align-items: center; gap: 8px; color: #64748b;">
+      <span style="display: flex; align-items: center; gap: 8px; color: #747474;">
         <span style="
           width: 10px;
           height: 10px;
@@ -194,8 +188,8 @@ function renderUnitMixRow(color: string, label: string, count: number, percentag
         "></span>
         ${label}
       </span>
-      <span style="font-weight: 500; color: #1e293b;">
-        ${count} <span style="color: #94a3b8; font-weight: 400;">(${percentage}%)</span>
+      <span style="font-weight: 500; color: #3C3C3C;">
+        ${count} <span style="color: #ABABAB; font-weight: 400;">(${percentage}%)</span>
       </span>
     </div>
   `;
@@ -216,8 +210,8 @@ function renderStatusBadge(status: 'Pass' | 'Fail'): string {
       border-radius: 4px;
       font-size: 11px;
       font-weight: 500;
-      background: ${isPass ? '#dcfce7' : '#fee2e2'};
-      color: ${isPass ? '#16a34a' : '#dc2626'};
+      background: ${isPass ? '#e8f5e1' : '#fdeaea'};
+      color: ${isPass ? '#87B340' : '#EB5555'};
     ">
       ${isPass ? '✓' : '✗'} ${status}
     </span>
@@ -229,10 +223,9 @@ function renderStatusBadge(status: 'Pass' | 'Fail'): string {
  */
 export function renderEmptyMetricsPanel(): string {
   return `
-    <div class="metrics-panel" style="padding: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-      <div style="color: #94a3b8; text-align: center; padding: 40px 20px;">
-        <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
-        <div>Generate a floorplate to see metrics</div>
+    <div class="metrics-panel" style="padding: 16px; font-family: var(--forma-font-family, 'Artifakt Element', -apple-system, sans-serif);">
+      <div style="color: #ABABAB; text-align: center; padding: 40px 20px;">
+        <div style="font-size: 11px;">Generate a floorplate to see metrics</div>
       </div>
     </div>
   `;

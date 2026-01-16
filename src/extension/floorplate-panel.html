@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Floorplate Preview</title>
+  <!-- Forma Design System -->
+  <link rel="stylesheet" href="https://app.autodeskforma.eu/design-system/v2/forma/styles/base.css"/>
+  <link rel="stylesheet" href="./styles/forma-theme.css"/>
+  <!-- Weave Web Components -->
+  <script type="module" src="https://app.autodeskforma.eu/design-system/v2/weave/components/button/weave-button.js"></script>
   <style>
     * {
       margin: 0;
@@ -12,8 +17,8 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #ffffff;
+      font-family: var(--forma-font-family);
+      background: var(--forma-surface-100);
       overflow: hidden;
       height: 100vh;
       width: 100vw;
@@ -27,9 +32,9 @@
 
     .svg-container {
       flex: 1;
-      padding: 16px;
+      padding: var(--forma-space-4);
       overflow: hidden;
-      background: #fafafa;
+      background: var(--forma-surface-200);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -42,9 +47,9 @@
 
     .metrics-container {
       width: 220px;
-      border-left: 1px solid #e2e8f0;
+      border-left: 1px solid var(--forma-surface-300);
       overflow-y: auto;
-      background: white;
+      background: var(--forma-surface-100);
       flex-shrink: 0;
     }
 
@@ -61,18 +66,13 @@
       align-items: center;
       justify-content: center;
       height: 100%;
-      color: #94a3b8;
+      color: var(--forma-text-placeholder);
       text-align: center;
-      padding: 20px;
-    }
-
-    .empty-state-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
+      padding: var(--forma-space-4);
     }
 
     .empty-state-text {
-      font-size: 14px;
+      font-size: var(--forma-body-size);
     }
 
     /* Loading state */
@@ -82,7 +82,8 @@
       align-items: center;
       justify-content: center;
       height: 100%;
-      color: #64748b;
+      color: var(--forma-text-dim);
+      font-size: var(--forma-body-size);
     }
 
     .loading.show {
@@ -92,11 +93,11 @@
     .loading-spinner {
       width: 32px;
       height: 32px;
-      border: 3px solid #e2e8f0;
-      border-top-color: #4f46e5;
+      border: 3px solid var(--forma-surface-300);
+      border-top-color: var(--forma-icon-on-default);
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin-bottom: 12px;
+      margin-bottom: var(--forma-space-3);
     }
 
     @keyframes spin {
@@ -106,43 +107,44 @@
     /* Toggle button for metrics */
     .toggle-metrics-btn {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: var(--forma-space-2);
+      right: var(--forma-space-2);
       width: 28px;
       height: 28px;
       border: none;
-      background: #f1f5f9;
-      border-radius: 4px;
+      background: var(--forma-surface-250);
+      border-radius: var(--forma-border-radius);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #64748b;
-      font-size: 14px;
+      color: var(--forma-text-dim);
+      font-size: var(--forma-body-size);
       z-index: 10;
     }
 
     .toggle-metrics-btn:hover {
-      background: #e2e8f0;
-      color: #1e293b;
+      background: var(--forma-surface-300);
+      color: var(--forma-text-default);
     }
 
     /* Option tabs */
     .option-tabs {
       display: flex;
-      background: white;
-      border-bottom: 1px solid #e2e8f0;
+      background: var(--forma-surface-100);
+      border-bottom: 1px solid var(--forma-surface-300);
       padding: 0;
       flex-shrink: 0;
     }
 
     .option-tab {
       flex: 1;
-      padding: 10px 12px;
+      padding: 10px var(--forma-space-3);
       text-align: center;
-      font-size: 12px;
-      font-weight: 500;
-      color: #64748b;
+      font-size: var(--forma-body-size);
+      font-weight: var(--forma-subheader-weight);
+      font-family: var(--forma-font-family);
+      color: var(--forma-text-dim);
       cursor: pointer;
       border: none;
       background: none;
@@ -155,31 +157,43 @@
     }
 
     .option-tab:hover {
-      color: #4f46e5;
-      background: #f8fafc;
+      color: var(--forma-text-default);
+      background: var(--forma-surface-200);
     }
 
     .option-tab.active {
-      color: #4f46e5;
-      border-bottom-color: #4f46e5;
-      background: #f8fafc;
+      color: var(--forma-icon-on-default);
+      border-bottom-color: var(--forma-icon-on-default);
+      background: var(--forma-surface-200);
     }
 
     .option-tab .tab-icon {
-      font-size: 16px;
+      font-size: var(--forma-body-size);
+      width: 20px;
+      height: 20px;
+      background: var(--forma-surface-300);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .option-tab.active .tab-icon {
+      background: var(--forma-icon-on-default);
+      color: var(--forma-surface-100);
     }
 
     .option-tab .tab-label {
-      font-weight: 600;
+      font-weight: var(--forma-subheader-weight);
     }
 
     .option-tab .tab-stats {
-      font-size: 10px;
-      color: #9ca3af;
+      font-size: var(--forma-body-size);
+      color: var(--forma-text-placeholder);
     }
 
     .option-tab.active .tab-stats {
-      color: #6366f1;
+      color: var(--forma-icon-on-default);
     }
 
     /* Action toolbar */
@@ -187,29 +201,30 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      padding: 8px 12px;
-      background: white;
-      border-bottom: 1px solid #e2e8f0;
-      gap: 8px;
+      padding: var(--forma-space-2) var(--forma-space-3);
+      background: var(--forma-surface-100);
+      border-bottom: 1px solid var(--forma-surface-300);
+      gap: var(--forma-space-2);
     }
 
     .save-btn {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      background: #4f46e5;
-      color: white;
+      padding: 6px var(--forma-space-3);
+      background: var(--forma-icon-on-default);
+      color: var(--forma-surface-100);
       border: none;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
+      border-radius: var(--forma-border-radius);
+      font-size: var(--forma-body-size);
+      font-weight: var(--forma-subheader-weight);
+      font-family: var(--forma-font-family);
       cursor: pointer;
       transition: all 0.15s ease;
     }
 
     .save-btn:hover {
-      background: #4338ca;
+      background: var(--forma-icon-on-hover);
     }
 
     .save-btn:active {
@@ -217,16 +232,17 @@
     }
 
     .save-btn:disabled {
-      background: #94a3b8;
+      background: var(--forma-surface-350);
       cursor: not-allowed;
     }
 
     .save-btn .save-icon {
-      font-size: 14px;
+      font-size: var(--forma-body-size);
+      display: none;
     }
 
     .save-btn.saving {
-      background: #6366f1;
+      background: var(--forma-icon-on-default);
       pointer-events: none;
     }
 
@@ -234,19 +250,20 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      background: #059669;
-      color: white;
+      padding: 6px var(--forma-space-3);
+      background: var(--forma-green);
+      color: var(--forma-surface-100);
       border: none;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
+      border-radius: var(--forma-border-radius);
+      font-size: var(--forma-body-size);
+      font-weight: var(--forma-subheader-weight);
+      font-family: var(--forma-font-family);
       cursor: pointer;
       transition: all 0.15s ease;
     }
 
     .bake-btn:hover {
-      background: #047857;
+      filter: brightness(0.9);
     }
 
     .bake-btn:active {
@@ -254,25 +271,29 @@
     }
 
     .bake-btn:disabled {
-      background: #94a3b8;
+      background: var(--forma-surface-350);
       cursor: not-allowed;
     }
 
     .bake-btn.baking {
-      background: #10b981;
+      background: var(--forma-green);
       pointer-events: none;
+    }
+
+    .bake-btn .bake-icon {
+      display: none;
     }
 
     .bake-feedback {
       display: none;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      background: #d1fae5;
-      color: #065f46;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
+      padding: 6px var(--forma-space-3);
+      background: #e8f5e1;
+      color: var(--forma-green);
+      border-radius: var(--forma-border-radius);
+      font-size: var(--forma-body-size);
+      font-weight: var(--forma-subheader-weight);
     }
 
     .bake-feedback.show {
@@ -280,20 +301,20 @@
     }
 
     .bake-feedback.error {
-      background: #fee2e2;
-      color: #991b1b;
+      background: #fdeaea;
+      color: var(--forma-red);
     }
 
     .save-feedback {
       display: none;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      background: #dcfce7;
-      color: #166534;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
+      padding: 6px var(--forma-space-3);
+      background: #e8f5e1;
+      color: var(--forma-green);
+      border-radius: var(--forma-border-radius);
+      font-size: var(--forma-body-size);
+      font-weight: var(--forma-subheader-weight);
     }
 
     .save-feedback.show {
@@ -319,7 +340,7 @@
       </button>
       <button class="option-tab" data-index="1" data-strategy="mixOptimized">
         <span class="tab-icon">2</span>
-        <span class="tab-label">Mix Optimized</span>
+        <span class="tab-label">Mix optimized</span>
         <span class="tab-stats" id="tab-stats-1">--</span>
       </button>
       <button class="option-tab" data-index="2" data-strategy="efficiencyOptimized">
@@ -338,11 +359,9 @@
         <span>Saved!</span>
       </div>
       <button class="bake-btn" id="bake-btn" title="Bake to native Forma building" disabled>
-        <span class="bake-icon">&#127860;</span>
         <span class="bake-text">Bake</span>
       </button>
       <button class="save-btn" id="save-btn" title="Save current floorplate" disabled>
-        <span class="save-icon">&#128190;</span>
         <span class="save-text">Save</span>
       </button>
     </div>
@@ -351,8 +370,7 @@
     <div class="main-content">
       <div class="svg-container" id="svg-container">
         <div class="empty-state" id="empty-state">
-          <div class="empty-state-icon">📐</div>
-          <div class="empty-state-text">Select a building to generate floorplate</div>
+          <div class="empty-state-text">Select a building to generate a floorplate</div>
         </div>
         <div class="loading" id="loading">
           <div class="loading-spinner"></div>
@@ -360,7 +378,7 @@
         </div>
       </div>
       <div class="metrics-container" id="metrics-container">
-        <div style="padding: 16px; color: #94a3b8; text-align: center;">
+        <div style="padding: 16px; color: var(--forma-text-placeholder); text-align: center;">
           No data available
         </div>
       </div>

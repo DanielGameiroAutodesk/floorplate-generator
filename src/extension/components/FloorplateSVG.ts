@@ -14,14 +14,14 @@ const UNIT_ABBREVIATIONS: Record<UnitType, string> = {
   [UnitType.ThreeBed]: '3B'
 };
 
-// Colors for SVG (CSS hex format) - must match DEFAULT_UNIT_TYPES in main.ts
+// Colors for SVG (CSS hex format) - using Forma Data Labels palette
 const SVG_COLORS: Record<UnitType | 'Core' | 'Corridor', string> = {
-  [UnitType.Studio]: '#3b82f6',   // Blue
-  [UnitType.OneBed]: '#22c55e',   // Green
-  [UnitType.TwoBed]: '#f97316',   // Orange
-  [UnitType.ThreeBed]: '#a855f7', // Purple
-  Core: '#374151',                 // Dark Gray
-  Corridor: '#e9d5ff'              // Light Purple
+  [UnitType.Studio]: '#A0D4DC',   // data-blue
+  [UnitType.OneBed]: '#D0E1A4',   // data-green
+  [UnitType.TwoBed]: '#F5C297',   // data-orange
+  [UnitType.ThreeBed]: '#D9DDFC', // data-purple
+  Core: '#3C3C3C',                 // forma-text-default
+  Corridor: '#EEEEEE'              // forma-surface-250
 };
 
 // Convert meters to feet for display
@@ -105,7 +105,7 @@ export function renderFloorplateSVG(
       width="${buildingLength * scale}"
       height="${buildingDepth * scale}"
       fill="none"
-      stroke="#1f2937"
+      stroke="#3C3C3C"
       stroke-width="2"
     />
   `);
@@ -119,10 +119,10 @@ export function renderFloorplateSVG(
         x="${lengthLabelPos.x}"
         y="${lengthLabelPos.y + 30}"
         text-anchor="middle"
-        font-family="Arial, sans-serif"
-        font-size="14"
+        font-family="Artifakt Element, Arial, sans-serif"
+        font-size="12"
         font-weight="bold"
-        fill="#374151"
+        fill="#3C3C3C"
       >${formatDimension(buildingLength)}</text>
     `);
 
@@ -133,10 +133,10 @@ export function renderFloorplateSVG(
         x="${depthLabelPos.x - 20}"
         y="${depthLabelPos.y}"
         text-anchor="middle"
-        font-family="Arial, sans-serif"
-        font-size="14"
+        font-family="Artifakt Element, Arial, sans-serif"
+        font-size="12"
         font-weight="bold"
-        fill="#374151"
+        fill="#3C3C3C"
         transform="rotate(-90, ${depthLabelPos.x - 20}, ${depthLabelPos.y})"
       >${formatDimension(buildingDepth)}</text>
     `);
@@ -166,10 +166,10 @@ export function renderFloorplateSVG(
     >
       <defs>
         <style>
-          .unit-label { font-family: Arial, sans-serif; font-weight: bold; fill: white; }
-          .unit-area { font-family: Arial, sans-serif; fill: white; opacity: 0.9; }
-          .core-label { font-family: Arial, sans-serif; font-weight: bold; fill: white; }
-          .corridor-label { font-family: Arial, sans-serif; font-weight: 500; fill: #6b21a8; }
+          .unit-label { font-family: Artifakt Element, Arial, sans-serif; font-weight: bold; fill: #3C3C3C; }
+          .unit-area { font-family: Artifakt Element, Arial, sans-serif; fill: #3C3C3C; opacity: 0.9; }
+          .core-label { font-family: Artifakt Element, Arial, sans-serif; font-weight: bold; fill: #FFFFFF; }
+          .corridor-label { font-family: Artifakt Element, Arial, sans-serif; font-weight: 500; fill: #3C3C3C; }
         </style>
       </defs>
       ${elements.join('\n')}
@@ -204,7 +204,7 @@ function renderCorridor(
         width="${width}"
         height="${height}"
         fill="${SVG_COLORS.Corridor}"
-        stroke="#9333ea"
+        stroke="#D9D9D9"
         stroke-width="1"
       />
       <text
@@ -213,7 +213,7 @@ function renderCorridor(
         text-anchor="middle"
         class="corridor-label"
         font-size="11"
-      >CORRIDOR (${corridorWidthFeet}')</text>
+      >Corridor (${corridorWidthFeet}')</text>
     </g>
   `;
 }
@@ -247,7 +247,7 @@ function renderCore(
         width="${width}"
         height="${height}"
         fill="${SVG_COLORS.Core}"
-        stroke="#1f2937"
+        stroke="#3C3C3C"
         stroke-width="1"
       />
       <text
@@ -324,7 +324,7 @@ function renderRectUnit(
         width="${width}"
         height="${height}"
         fill="${color}"
-        stroke="#1f2937"
+        stroke="#3C3C3C"
         stroke-width="1"
       />
       ${showLabel ? `
@@ -398,7 +398,7 @@ function renderPolygonUnit(
       <polygon
         points="${pointsString}"
         fill="${color}"
-        stroke="#1f2937"
+        stroke="#3C3C3C"
         stroke-width="1"
       />
       ${showLabel ? `
@@ -437,16 +437,16 @@ export function renderEmptyFloorplate(width: number, height: number): string {
       preserveAspectRatio="xMidYMid meet"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect x="0" y="0" width="${width}" height="${height}" fill="#f8fafc" />
+      <rect x="0" y="0" width="${width}" height="${height}" fill="#F5F5F5" />
       <text
         x="${width / 2}"
         y="${height / 2}"
         text-anchor="middle"
         dominant-baseline="middle"
-        font-family="Arial, sans-serif"
-        font-size="16"
-        fill="#94a3b8"
-      >Select a building to generate floorplate</text>
+        font-family="Artifakt Element, Arial, sans-serif"
+        font-size="11"
+        fill="#ABABAB"
+      >Select a building to generate a floorplate</text>
     </svg>
   `;
 }

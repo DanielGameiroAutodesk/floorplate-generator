@@ -123,12 +123,12 @@ function createUnitTypeWithDefaults(
   };
 }
 
-// Default unit types with smart defaults applied
+// Default unit types with smart defaults applied (using Forma Data Labels palette)
 const DEFAULT_UNIT_TYPES: UnitTypeConfig[] = [
-  createUnitTypeWithDefaults('studio', 'Studios', '#3b82f6', 20, 590),
-  createUnitTypeWithDefaults('onebed', '1-Bedroom', '#22c55e', 40, 885),
-  createUnitTypeWithDefaults('twobed', '2-Bedroom', '#f97316', 30, 1180),
-  createUnitTypeWithDefaults('threebed', '3-Bedroom', '#a855f7', 10, 1475)
+  createUnitTypeWithDefaults('studio', 'Studios', '#A0D4DC', 20, 590),       // data-blue
+  createUnitTypeWithDefaults('onebed', '1-Bedroom', '#D0E1A4', 40, 885),     // data-green
+  createUnitTypeWithDefaults('twobed', '2-Bedroom', '#F5C297', 30, 1180),    // data-orange
+  createUnitTypeWithDefaults('threebed', '3-Bedroom', '#D9DDFC', 10, 1475)   // data-purple
 ];
 
 const state: UIState = {
@@ -1070,8 +1070,8 @@ function initMixTab() {
 
   // Add unit button
   addUnitBtn.addEventListener('click', () => {
-    // Generate a random color
-    const colors = ['#ef4444', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6', '#ec4899', '#6366f1'];
+    // Use Forma Data Labels palette colors
+    const colors = ['#A0D4DC', '#D0E1A4', '#F5C297', '#D9DDFC', '#F1A394', '#A7D2A6', '#A3CCF1', '#EBD5F6', '#F7CAD8', '#FCEAAE'];
     const usedColors = state.unitTypes.map(u => u.color);
     const availableColors = colors.filter(c => !usedColors.includes(c));
     const newColor = availableColors.length > 0

@@ -74,7 +74,7 @@ The user interface layer responsible for:
 
 The core business logic:
 
-- **generator.ts**: Main floorplate generation algorithm with 3 optimization strategies
+- **generator-core.ts**: Main floorplate generation algorithm with 3 optimization strategies
 - **types.ts**: TypeScript interfaces and type definitions
 - **constants.ts**: Default values, colors, and configuration
 - **renderer.ts**: Transforms FloorPlanData into Forma-compatible mesh data
@@ -167,14 +167,18 @@ A critical design decision: **units cannot shrink below their target size**.
 
 ```
 main.ts
-  ├── generator.ts
-  │     ├── types.ts
-  │     └── constants.ts
-  ├── renderer.ts
-  │     └── types.ts
+  ├── algorithm/
+  │     ├── index.ts (public API)
+  │     ├── generator-core.ts
+  │     │     ├── types.ts
+  │     │     └── constants.ts
+  │     └── renderer.ts
+  │           └── types.ts
   ├── storage-service.ts
   │     └── (Forma SDK)
   ├── bake-building.ts
+  │     └── (Forma SDK)
+  ├── building-inspector.ts
   │     └── (Forma SDK)
   └── components/
         ├── FloorplateSVG.ts
@@ -185,6 +189,10 @@ geometry/
   ├── line.ts → point.ts
   ├── polygon.ts → point.ts
   └── rectangle.ts → point.ts
+
+types/
+  ├── geometry.ts (no deps)
+  └── index.ts (re-exports)
 ```
 
 ## State Management

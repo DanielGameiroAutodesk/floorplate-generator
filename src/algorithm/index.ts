@@ -41,9 +41,9 @@ export {
   generateFloorplate,
   generateFloorplateVariants,
   extractFootprintFromTriangles
-} from './generator';
+} from './generator-core';
 
-export type { UnitColorMap } from './generator';
+export type { UnitColorMap } from './generator-core';
 
 // Renderer
 export {

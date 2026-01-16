@@ -98,29 +98,36 @@ After your first generation, toggle "Auto-Generate" to automatically regenerate 
 floorplate-generator/
 ├── src/
 │   ├── algorithm/           # Core generation algorithm
-│   │   ├── generator.ts     # Main floorplate generation logic
-│   │   ├── types.ts         # Type definitions
-│   │   ├── constants.ts     # Default values and configurations
-│   │   └── renderer.ts      # Converts layouts to Forma mesh data
+│   │   ├── generator-core.ts  # Main floorplate generation logic
+│   │   ├── index.ts         # Public API exports
+│   │   ├── types.ts         # Type definitions (UnitBlock, CoreBlock, etc.)
+│   │   ├── constants.ts     # Default values, colors, and configurations
+│   │   └── renderer.ts      # Converts FloorPlanData to Forma mesh data
 │   │
 │   ├── extension/           # Forma extension UI & integration
-│   │   ├── main.ts          # Main UI controller
+│   │   ├── main.ts          # Main UI controller with dynamic unit types
 │   │   ├── floorplate-panel.ts    # Floating preview panel
 │   │   ├── storage-service.ts     # Cloud storage API wrapper
 │   │   ├── bake-building.ts       # Native Forma building conversion
+│   │   ├── building-inspector.ts  # Building inspection utilities
 │   │   └── components/      # UI components (SVG renderer, metrics)
 │   │
 │   ├── geometry/            # Geometric utilities
-│   │   ├── point.ts         # Point operations
-│   │   ├── line.ts          # Line segment utilities
-│   │   ├── polygon.ts       # Polygon analysis
-│   │   └── rectangle.ts     # Rectangle operations
+│   │   ├── point.ts         # Point class with transforms
+│   │   ├── line.ts          # Line segment operations
+│   │   ├── polygon.ts       # Polygon area and analysis
+│   │   └── rectangle.ts     # Rectangle collision detection
+│   │
+│   ├── types/               # Shared type definitions
+│   │   ├── geometry.ts      # Geometry-related types
+│   │   └── index.ts         # Type exports
 │   │
 │   └── index.ts             # Main library entry point
 │
 ├── docs/                    # Documentation
-│   ├── ARCHITECTURE.md      # System architecture
+│   ├── ARCHITECTURE.md      # System architecture overview
 │   ├── ALGORITHM.md         # Algorithm deep-dive
+│   ├── BAKING_WORKFLOW.md   # Guide to baking layouts to Forma buildings
 │   └── FORMA_EXTENSION_GUIDE.md  # Guide for building Forma extensions
 │
 ├── dist/                    # Compiled TypeScript (library)

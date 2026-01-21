@@ -27,6 +27,8 @@ This Floorplate Generator was built by an Autodesk employee without an engineeri
 8. [Multi-Panel Extensions](#multi-panel-extensions)
 9. [Debugging Tips](#debugging-tips)
 10. [Best Practices](#best-practices)
+11. [Framework Choices](#framework-choices)
+12. [Deploying Your Extension](#deploying-your-extension)
 
 ## What is a Forma Extension?
 
@@ -713,6 +715,153 @@ function showStatus(message: string, type: "info" | "error" | "success") {
   }
 }
 ```
+
+## Framework Choices
+
+### Why This Project Uses Vanilla TypeScript
+
+This reference implementation uses vanilla TypeScript (no framework) for specific reasons:
+
+1. **Transparency**: Every line of code is visible - no magic happens behind framework abstractions
+2. **Portability**: Concepts transfer to any framework (React, Vue, Svelte, etc.)
+3. **Smaller bundle**: No framework overhead for a relatively simple UI
+4. **Learning focus**: Understanding the Forma SDK is the goal, not learning React
+
+For vibecoders who want to use familiar frameworks, here are quick examples:
+
+### React Example
+
+```tsx
+// App.tsx - React with Forma SDK
+import { useState, useEffect } from 'react';
+import { Forma } from 'forma-embedded-view-sdk';
+
+function App() {
+  const [selection, setSelection] = useState<string[]>([]);
+
+  useEffect(() => {
+    const checkSelection = async () => {
+      const sel = await Forma.selection.getSelection();
+      setSelection(sel);
+    };
+    const interval = setInterval(checkSelection, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div>
+      <h1>My Forma Extension</h1>
+      <p>Selected: {selection.length ? selection.join(', ') : 'Nothing'}</p>
+    </div>
+  );
+}
+```
+
+### Vue Example
+
+```vue
+<!-- App.vue - Vue 3 with Forma SDK -->
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue';
+import { Forma } from 'forma-embedded-view-sdk';
+
+const selection = ref<string[]>([]);
+let intervalId: number;
+
+onMounted(() => {
+  intervalId = setInterval(async () => {
+    selection.value = await Forma.selection.getSelection();
+  }, 500);
+});
+
+onUnmounted(() => clearInterval(intervalId));
+</script>
+
+<template>
+  <h1>My Forma Extension</h1>
+  <p>Selected: {{ selection.length ? selection.join(', ') : 'Nothing' }}</p>
+</template>
+```
+
+### Key Adaptation Points
+
+When converting this project to a framework:
+
+1. **State management**: Replace `state` object with React state, Vue refs, or Svelte stores
+2. **DOM manipulation**: Replace `document.getElementById` with component refs/bindings
+3. **Event handlers**: Convert `addEventListener` to framework-native handlers
+4. **Component structure**: Split `main.ts` modules into framework components
+
+The algorithm (`src/algorithm/`) works with any framework - it's pure TypeScript with no DOM dependencies.
+
+---
+
+## Deploying Your Extension
+
+### Hosting Requirements
+
+Forma extensions must be served from:
+- **HTTPS** - Required for production (localhost is allowed for development)
+- **CORS enabled** - Must allow Forma's domain to load your extension in an iframe
+- **Publicly accessible** - Forma needs to reach your extension URL
+
+### Recommended Hosting Options
+
+| Platform | Pros | Setup Effort |
+|----------|------|--------------|
+| Vercel | Free, automatic HTTPS, GitHub integration | Very Low |
+| Netlify | Free, drag-and-drop deploy option | Very Low |
+| GitHub Pages | Free, works with GitHub repos | Low |
+| Azure Static Web Apps | Enterprise features, SSO | Medium |
+| AWS S3 + CloudFront | Scalable, enterprise-ready | Higher |
+
+### Deployment Steps
+
+1. **Build your extension**:
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy the `dist/` folder** to your hosting platform
+
+3. **Configure CORS** (usually automatic for static hosts)
+
+4. **Register in Forma**:
+   - Go to Forma → Extensions → Add Extension
+   - Enter your deployed URL (e.g., `https://my-extension.vercel.app`)
+   - Set display name and icon
+
+### Vercel Deployment Example
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy (first time - follow prompts)
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+### Environment Variables
+
+For extensions that need API keys or configuration:
+
+```typescript
+// Use environment variables (set in your hosting platform)
+const API_KEY = import.meta.env.VITE_API_KEY;
+```
+
+Set these in your hosting platform's dashboard (Vercel, Netlify, etc.) - never commit secrets to git.
+
+### Official Documentation
+
+For the most up-to-date deployment instructions, see:
+- [Forma Extension Deployment Guide](https://aps.autodesk.com/en/docs/forma/v1/tutorials/deploy-extension/)
+- [Forma Extension Security Requirements](https://aps.autodesk.com/en/docs/forma/v1/overview/security/)
+
+---
 
 ## Resources
 

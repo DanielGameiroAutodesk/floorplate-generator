@@ -20,7 +20,12 @@ import {
   CorridorBlock,
   BuildingFootprint,
   LayoutOption,
-  OptimizationStrategy
+  OptimizationStrategy,
+  GeneratorOptions,
+  SegmentGenerationContext,
+  OptimizationSearchContext,
+  SegmentDefinition,
+  WallAlignmentInput
 } from './types';
 
 import {
@@ -31,8 +36,33 @@ import {
   DEFAULT_CORE_DEPTH,
   FEET_TO_METERS,
   STRATEGY_LABELS,
-  STRATEGY_DESCRIPTIONS
+  STRATEGY_DESCRIPTIONS,
+  FLEXIBILITY,
+  GEOMETRY_SEARCH
 } from './constants';
+
+// Re-export footprint extraction from dedicated module
+export { extractFootprintFromTriangles, FootprintExtractionError } from './footprint';
+
+// Import flexibility model functions
+import {
+  getUnitWidth,
+  getFlexibilityFactor,
+  getFlexibilityWeight,
+  getMaxUnitWidth,
+  isCornerEligible,
+  isLShapeEligible
+} from './flexibility-model';
+
+// Import unit count calculation functions
+import {
+  getTotal,
+  applyCoreSideMixBias,
+  calculateBuildingUnitCounts
+} from './unit-counts';
+
+// Import logging utility
+import { Logger } from './utils/logger';
 
 // ============================================================================
 // TYPES
@@ -58,32 +88,23 @@ interface InternalUnitBlock {
   polyPoints?: string;
 }
 
-// Module-level custom colors (set before generation)
-let customUnitColors: UnitColorMap = {};
-
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
 
-const getTotal = (counts: Record<UnitType, number>) =>
-  counts[UnitType.Studio] + counts[UnitType.OneBed] + counts[UnitType.TwoBed] + counts[UnitType.ThreeBed];
+// Note: getTotal, getUnitWidth moved to unit-counts.ts and flexibility-model.ts
 
-const getUnitWidth = (type: UnitType, config: UnitConfiguration, rentableDepth: number) => {
-  return config[type].area / rentableDepth;
-};
-
-// Smallest “real” unit type in the active mix (used for conservative caps / feasibility checks).
-const getSmallestActiveUnitType = (config: UnitConfiguration): UnitType => {
-  const allTypes = [UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed];
-  const active = allTypes.filter(t => config[t].percentage > 0);
-  if (active.length === 0) return UnitType.Studio;
-  return active.sort((a, b) => config[a].area - config[b].area)[0];
-};
-
-const getUnitColor = (type: UnitType): string => {
+/**
+ * Get the color for a unit type, with optional custom color override.
+ * This is a pure function - no module-level state.
+ *
+ * @param type - Unit type to get color for
+ * @param customColors - Optional custom color map to override defaults
+ */
+const getUnitColor = (type: UnitType, customColors?: UnitColorMap): string => {
   // Check for custom color first (hex string)
-  if (customUnitColors[type]) {
-    return customUnitColors[type]!;
+  if (customColors?.[type]) {
+    return customColors[type]!;
   }
   // Fallback to default UNIT_COLORS
   const c = UNIT_COLORS[type];
@@ -92,435 +113,13 @@ const getUnitColor = (type: UnitType): string => {
 
 // ============================================================================
 // FLEXIBILITY MODEL
-//
-// TARGET SIZE = ABSOLUTE MINIMUM: Units can only expand, never shrink.
-// Larger units absorb more expansion to fill space.
+// Moved to ./flexibility-model.ts
 // ============================================================================
-
-// 1. Flexibility Factor: Max percentage SHRINKAGE allowed (0.0 = no shrinking)
-// TARGET SIZE IS THE MINIMUM - all types return 0 (no shrinking allowed)
-const getFlexibilityFactor = (_type: UnitType): number => {
-  // All unit types are rigid on the minimum side - they cannot shrink below target
-  return 0.0;
-};
-
-// 2. Flexibility Weight: Relative capacity to absorb EXPANSION (filling gaps).
-// Larger units absorb more expansion - this is the only direction units can flex.
-// Studios are VERY RIGID - they should barely expand at all.
-const getFlexibilityWeight = (type: UnitType): number => {
-  switch (type) {
-    case UnitType.Studio: return 0.1;   // Almost no expansion - Studios stay at target size
-    case UnitType.OneBed: return 3;     // Minimal expansion
-    case UnitType.TwoBed: return 15;    // Moderate expansion
-    case UnitType.ThreeBed: return 50;  // Most expansion - absorbs most gaps
-    default: return 10;
-  }
-};
-
-// 3. Compression Weight: REMOVED - no compression allowed
-// Target size is the ABSOLUTE MINIMUM - units can only expand, never shrink
-
-// 4. Maximum Width: Prevents units from growing beyond reasonable bounds.
-// - Studios: VERY RIGID - max 15% expansion (they should stay close to target size)
-// - Other types: Can expand up to next larger type's target, but NEVER exceed it
-// DYNAMIC: Works with any unit configuration, finding the largest type automatically.
-const getMaxUnitWidth = (type: UnitType, config: UnitConfiguration, rentableDepth: number): number => {
-  const targetWidth = getUnitWidth(type, config, rentableDepth);
-  const thisArea = config[type].area;
-
-  // STUDIOS ARE SPECIAL: Very rigid, max 15% expansion
-  // Studios should be exactly target size or just slightly bigger
-  if (type === UnitType.Studio) {
-    return targetWidth * 1.15;
-  }
-
-  // Find all unit types sorted by area (largest first)
-  const allTypes = [UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed];
-  const sortedByArea = allTypes
-    .filter(t => config[t].percentage > 0) // Only consider types in the mix
-    .sort((a, b) => config[b].area - config[a].area);
-
-  // Find the largest type in the current mix
-  const largestType = sortedByArea[0];
-  const largestArea = largestType ? config[largestType].area : thisArea;
-
-  // If this IS the largest type, cap it to avoid “huge units”.
-  // Mental model: if the largest unit exceeds (target + smallest unit), you likely can pack more units.
-  // So we cap largest to target + smallest-type target width (typically studio).
-  if (thisArea >= largestArea) {
-    const smallestType = getSmallestActiveUnitType(config);
-    const smallestWidth = getUnitWidth(smallestType, config, rentableDepth);
-    return targetWidth + smallestWidth;
-  }
-
-  // Find the next larger type
-  const nextLargerType = sortedByArea.find(t => config[t].area > thisArea);
-
-  if (nextLargerType) {
-    // Max = next larger type's target width (NEVER exceed the next typology)
-    return getUnitWidth(nextLargerType, config, rentableDepth);
-  }
-
-  // Fallback: allow 25% expansion
-  return targetWidth * 1.25;
-};
-
-// 6. Corner Eligibility: Which unit types can be placed at building corners
-// Respects the cornerEligible setting from the UI configuration
-// Falls back to area-based logic if setting is not provided
-const isCornerEligible = (type: UnitType, config: UnitConfiguration): boolean => {
-  // First, check if cornerEligible is explicitly set in config
-  const unitConfig = config[type];
-  if (unitConfig.cornerEligible !== undefined) {
-    console.log(`[DEBUG] isCornerEligible(${type}): using config value = ${unitConfig.cornerEligible}`);
-    return unitConfig.cornerEligible;
-  }
-
-  // Fallback: Only the top 2 largest types by area are corner-eligible
-  const allTypes = [UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed];
-  const sortedByArea = allTypes
-    .filter(t => config[t].percentage > 0)
-    .sort((a, b) => config[b].area - config[a].area);
-
-  const cornerEligibleTypes = sortedByArea.slice(0, 2);
-  const result = cornerEligibleTypes.includes(type);
-  console.log(`[DEBUG] isCornerEligible(${type}): using fallback = ${result}`);
-  return result;
-};
-
-// 7. L-Shape Eligibility: Which unit types can wrap around cores to form L-shapes
-// Studios and small units should NOT be L-shaped - they're too small to benefit
-const isLShapeEligible = (type: UnitType, config: UnitConfiguration): boolean => {
-  // Studios are NEVER L-shape eligible - they should be simple rectangles
-  if (type === UnitType.Studio) {
-    return false;
-  }
-
-  // 1BR: Only if larger than 850 sq ft (they're borderline)
-  if (type === UnitType.OneBed) {
-    const area = config[type].area;
-    return area > 850 * 0.0929; // Convert sq ft to sq m
-  }
-
-  // 2BR and 3BR are always L-shape eligible
-  return true;
-};
 
 // ============================================================================
 // UNIT COUNT CALCULATION
-// Uses Largest Remainder Method for accurate mix distribution
+// Moved to ./unit-counts.ts
 // ============================================================================
-
-// Strategy-specific safety factors:
-// - balanced: 0.99 (conservative, prevents compression issues)
-// - mixOptimized: 0.97 (pack tighter to hit mix percentages exactly)
-// - efficiencyOptimized: 1.0 (use all available space for max efficiency)
-const getStrategySafetyFactor = (strategy: OptimizationStrategy): number => {
-  switch (strategy) {
-    case 'mixOptimized': return 0.97;      // Tighter packing for exact mix
-    case 'efficiencyOptimized': return 1.0; // Use all space
-    case 'balanced':
-    default: return 0.99;                   // Conservative default
-  }
-};
-
-const calculateGlobalUnitCounts = (
-  totalLength: number,
-  config: UnitConfiguration,
-  rentableDepth: number,
-  minSegmentsToFill: number = 1,
-  totalBonusArea: number = 0,
-  strategy: OptimizationStrategy = 'balanced'
-): Record<UnitType, number> => {
-  const emptyCounts: Record<UnitType, number> = {
-    [UnitType.Studio]: 0,
-    [UnitType.OneBed]: 0,
-    [UnitType.TwoBed]: 0,
-    [UnitType.ThreeBed]: 0
-  };
-
-  const totalMix = config[UnitType.Studio].percentage +
-                   config[UnitType.OneBed].percentage +
-                   config[UnitType.TwoBed].percentage +
-                   config[UnitType.ThreeBed].percentage;
-
-  if (totalMix === 0 || totalLength < MIN_UNIT_WIDTH) return emptyCounts;
-
-  // Calculate weighted average width
-  const weightedAvgWidth = (
-    (config[UnitType.Studio].percentage * getUnitWidth(UnitType.Studio, config, rentableDepth)) +
-    (config[UnitType.OneBed].percentage * getUnitWidth(UnitType.OneBed, config, rentableDepth)) +
-    (config[UnitType.TwoBed].percentage * getUnitWidth(UnitType.TwoBed, config, rentableDepth)) +
-    (config[UnitType.ThreeBed].percentage * getUnitWidth(UnitType.ThreeBed, config, rentableDepth))
-  ) / totalMix;
-
-  // Account for Bonus Area by converting it to effective length
-  const effectiveLength = totalLength + (totalBonusArea / rentableDepth);
-
-  // SAFETY FACTOR: Strategy-dependent to balance compression vs efficiency
-  const safetyFactor = getStrategySafetyFactor(strategy);
-  const usableLength = effectiveLength * safetyFactor;
-
-  // Cap target to physical maximum
-  const maxPhysUnits = Math.floor(totalLength / MIN_UNIT_WIDTH);
-  const baseUnits = Math.floor(usableLength / weightedAvgWidth);
-  const startUnits = Math.max(Math.min(baseUnits, maxPhysUnits), minSegmentsToFill);
-  if (startUnits === 0) return emptyCounts;
-
-  // Largest Remainder Method helper for a given N
-  const countsForN = (targetTotalUnits: number): Record<UnitType, number> => {
-    const counts: Record<UnitType, number> = { ...emptyCounts };
-    const remainders: { type: UnitType; value: number }[] = [];
-    let currentSum = 0;
-
-    ([UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed] as const).forEach(type => {
-      const rawCount = targetTotalUnits * (config[type].percentage / totalMix);
-      const intCount = Math.floor(rawCount);
-      counts[type] = intCount;
-      currentSum += intCount;
-      remainders.push({ type, value: rawCount - intCount });
-    });
-
-    const deficit = targetTotalUnits - currentSum;
-    remainders.sort((a, b) => b.value - a.value);
-    for (let i = 0; i < deficit; i++) {
-      counts[remainders[i].type]++;
-    }
-    return counts;
-  };
-
-  // Feasibility check: can we fit at MIN target widths (no shrinking allowed)?
-  const minWidthSum = (counts: Record<UnitType, number>): number => {
-    return (
-      counts[UnitType.Studio] * getUnitWidth(UnitType.Studio, config, rentableDepth) +
-      counts[UnitType.OneBed] * getUnitWidth(UnitType.OneBed, config, rentableDepth) +
-      counts[UnitType.TwoBed] * getUnitWidth(UnitType.TwoBed, config, rentableDepth) +
-      counts[UnitType.ThreeBed] * getUnitWidth(UnitType.ThreeBed, config, rentableDepth)
-    );
-  };
-
-  // “No huge units” policy: maximize unit count while still fitting at minimum widths.
-  // This reduces leftover width that the old algorithm would dump into a single large unit.
-  let bestN = startUnits;
-  let bestCounts = countsForN(bestN);
-
-  for (let n = startUnits; n <= maxPhysUnits; n++) {
-    const c = countsForN(n);
-    const w = minWidthSum(c);
-    if (w <= usableLength + 0.05) { // 5cm tolerance for rounding
-      bestN = n;
-      bestCounts = c;
-    } else {
-      break;
-    }
-  }
-
-  const counts = bestCounts;
-
-  // GUARANTEE MINIMUM: Ensure at least 1 unit of each type with >0% in mix
-  // This is critical for corner placement - we need corner-eligible units available
-  const typesWithMix = ([UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as const)
-    .filter(t => config[t].percentage > 0);
-
-  for (const type of typesWithMix) {
-    if (counts[type] === 0) {
-      // Need to add 1 of this type - steal from the most abundant type
-      const mostAbundant = typesWithMix
-        .filter(t => counts[t] > 1)
-        .sort((a, b) => counts[b] - counts[a])[0];
-
-      if (mostAbundant) {
-        counts[mostAbundant]--;
-        counts[type] = 1;
-        console.log(`[DEBUG] Guaranteed min: Added 1 ${type} by taking from ${mostAbundant}`);
-      }
-    }
-  }
-
-  // NOTE: We NO LONGER steal from non-corner types to guarantee corners.
-  // The unit mix should be RESPECTED - if the mix only allows 1 3BR, we should NOT create more.
-  // Corner placement will use whatever corner-eligible units are available from the mix.
-  // If there aren't enough corner-eligible units, some corners will get 2BR instead of 3BR.
-  const cornerEligibleTypes = typesWithMix.filter(t => isCornerEligible(t, config));
-  const totalCornerEligible = cornerEligibleTypes.reduce((sum, t) => sum + counts[t], 0);
-  console.log(`[DEBUG] Corner-eligible units from mix: ${totalCornerEligible} (types: ${cornerEligibleTypes.join(',')})`);
-  console.log(`[DEBUG] Available: 3BR=${counts[UnitType.ThreeBed]}, 2BR=${counts[UnitType.TwoBed]}`);
-
-  // DO NOT STEAL from other types - respect the unit mix!
-
-  console.log(`[DEBUG] Final counts for side: Studio=${counts[UnitType.Studio]}, 1BR=${counts[UnitType.OneBed]}, 2BR=${counts[UnitType.TwoBed]}, 3BR=${counts[UnitType.ThreeBed]}`);
-
-  return counts;
-};
-
-// Bias mix between sides when one side has cores: core side tends to accept more small units
-// (studios) and fewer mid units (1BR) to compensate for core footprint & preserve alignment.
-const applyCoreSideMixBias = (
-  counts: { north: Record<UnitType, number>; south: Record<UnitType, number> },
-  coreSide: 'North' | 'South',
-  numCores: number
-): { north: Record<UnitType, number>; south: Record<UnitType, number> } => {
-  const core = coreSide === 'North' ? counts.north : counts.south;
-  const clear = coreSide === 'North' ? counts.south : counts.north;
-
-  // Heuristic: up to 1 studio per core, swapped against 1BR to preserve totals.
-  const maxShifts = Math.max(0, Math.min(numCores, clear[UnitType.Studio], core[UnitType.OneBed]));
-  for (let i = 0; i < maxShifts; i++) {
-    clear[UnitType.Studio]--;
-    core[UnitType.Studio]++;
-    core[UnitType.OneBed]--;
-    clear[UnitType.OneBed]++;
-  }
-
-  return counts;
-};
-
-// ============================================================================
-// BUILDING-WIDE UNIT COUNT CALCULATION
-// Calculates units for ENTIRE building, then splits between North and South
-// This prevents rounding errors that double small percentages (e.g., 10% 3BR)
-// ============================================================================
-
-interface SideCounts {
-  north: Record<UnitType, number>;
-  south: Record<UnitType, number>;
-}
-
-const calculateBuildingUnitCounts = (
-  northLength: number,
-  southLength: number,
-  northBonus: number,
-  southBonus: number,
-  northSegmentCount: number,
-  southSegmentCount: number,
-  config: UnitConfiguration,
-  rentableDepth: number,
-  strategy: OptimizationStrategy = 'balanced',
-  isMirrored: boolean = false
-): SideCounts => {
-  // STRICT MIRRORING: If the building is mirrored (strict alignment), we calculate
-  // the mix for ONE side (the core side) and mirror it.
-  // We cannot calculate globally and split, because the split logic might push
-  // extra units to the North side (e.g. for corners) which then get doubled
-  // when mirrored, ruining the global mix.
-  if (isMirrored) {
-    console.log('[DEBUG] calculateBuildingUnitCounts: MIRRORED MODE - Calculating for Core Side only');
-    const coreSideCounts = calculateGlobalUnitCounts(
-      northLength,
-      config,
-      rentableDepth,
-      northSegmentCount,
-      northBonus,
-      strategy
-    );
-    // Return same counts for both (though South is technically ignored/overwritten later)
-    return { north: coreSideCounts, south: { ...coreSideCounts } };
-  }
-
-  // Calculate TOTAL building capacity
-  const totalLength = northLength + southLength;
-  const totalBonus = northBonus + southBonus;
-  const totalSegments = northSegmentCount + southSegmentCount;
-
-  // Get building-wide unit counts (respects unit mix exactly)
-  const totalCounts = calculateGlobalUnitCounts(
-    totalLength,
-    config,
-    rentableDepth,
-    totalSegments,
-    totalBonus,
-    strategy
-  );
-
-  console.log(`[DEBUG] BUILDING-WIDE counts: S=${totalCounts[UnitType.Studio]}, 1BR=${totalCounts[UnitType.OneBed]}, 2BR=${totalCounts[UnitType.TwoBed]}, 3BR=${totalCounts[UnitType.ThreeBed]}`);
-
-  // Now split between North and South, respecting total counts
-  const northRatio = totalLength > 0 ? northLength / totalLength : 0.5;
-
-  const northCounts: Record<UnitType, number> = {
-    [UnitType.Studio]: 0,
-    [UnitType.OneBed]: 0,
-    [UnitType.TwoBed]: 0,
-    [UnitType.ThreeBed]: 0
-  };
-
-  const southCounts: Record<UnitType, number> = {
-    [UnitType.Studio]: 0,
-    [UnitType.OneBed]: 0,
-    [UnitType.TwoBed]: 0,
-    [UnitType.ThreeBed]: 0
-  };
-
-  // CORNER-AWARE SPLIT: Each side has 2 corners, so needs at least 2 corner-eligible units
-  // First, count total corner-eligible units and distribute them to ensure both sides have corners
-  const allTypes = [UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as const;
-  const cornerEligibleTypes = allTypes.filter(t => totalCounts[t] > 0 && isCornerEligible(t, config));
-  const totalCornerEligible = cornerEligibleTypes.reduce((sum, t) => sum + totalCounts[t], 0);
-
-  console.log(`[DEBUG] Total corner-eligible units: ${totalCornerEligible} (types: ${cornerEligibleTypes.join(',')})`);
-
-  // Target: each side needs 2 corner-eligible units (for left and right corners)
-  // Distribute corner-eligible units first to ensure both sides have coverage
-  let northCornerEligible = 0;
-  let southCornerEligible = 0;
-
-  // PHASE 1: Distribute corner-eligible types to ensure both sides have at least 2
-  for (const type of cornerEligibleTypes) {
-    const total = totalCounts[type];
-
-    if (total >= 4) {
-      // Plenty of this type - give each side at least 2
-      northCounts[type] = Math.max(2, Math.floor(total / 2));
-      southCounts[type] = total - northCounts[type];
-    } else if (total >= 2) {
-      // Give each side at least 1, prioritize the side that needs more corner units
-      if (northCornerEligible < 2 && southCornerEligible < 2) {
-        // Both need - split evenly
-        northCounts[type] = Math.floor(total / 2);
-        southCounts[type] = total - northCounts[type];
-      } else if (northCornerEligible < 2) {
-        // North needs more
-        northCounts[type] = Math.min(total, 2 - northCornerEligible);
-        southCounts[type] = total - northCounts[type];
-      } else if (southCornerEligible < 2) {
-        // South needs more
-        southCounts[type] = Math.min(total, 2 - southCornerEligible);
-        northCounts[type] = total - southCounts[type];
-      } else {
-        // Both have enough - split evenly
-        northCounts[type] = Math.floor(total / 2);
-        southCounts[type] = total - northCounts[type];
-      }
-    } else if (total === 1) {
-      // Only 1 - give to the side with fewer corner units
-      if (northCornerEligible <= southCornerEligible) {
-        northCounts[type] = 1;
-        southCounts[type] = 0;
-      } else {
-        northCounts[type] = 0;
-        southCounts[type] = 1;
-      }
-    }
-
-    northCornerEligible += northCounts[type];
-    southCornerEligible += southCounts[type];
-    console.log(`[DEBUG] ${type}: ${northCounts[type]} North, ${southCounts[type]} South (corner totals: N=${northCornerEligible}, S=${southCornerEligible})`);
-  }
-
-  // PHASE 2: Distribute non-corner-eligible types proportionally
-  const nonCornerTypes = allTypes.filter(t => totalCounts[t] > 0 && !isCornerEligible(t, config));
-  for (const type of nonCornerTypes) {
-    const total = totalCounts[type];
-    const northShare = Math.round(total * northRatio);
-    northCounts[type] = Math.min(northShare, total);
-    southCounts[type] = total - northCounts[type];
-  }
-
-  console.log(`[DEBUG] SPLIT - North: S=${northCounts[UnitType.Studio]}, 1BR=${northCounts[UnitType.OneBed]}, 2BR=${northCounts[UnitType.TwoBed]}, 3BR=${northCounts[UnitType.ThreeBed]}`);
-  console.log(`[DEBUG] SPLIT - South: S=${southCounts[UnitType.Studio]}, 1BR=${southCounts[UnitType.OneBed]}, 2BR=${southCounts[UnitType.TwoBed]}, 3BR=${southCounts[UnitType.ThreeBed]}`);
-
-  return { north: northCounts, south: southCounts };
-};
 
 // ============================================================================
 // UNIT PLACEMENT LOGIC
@@ -545,9 +144,11 @@ const pickBestUnitForSegment = (
     const w = getUnitWidth(t, config, rentableDepth);
     const flexibility = getFlexibilityFactor(t);
     // For aggressive (corner) fitting, allow more squeeze
-    const effectiveFlex = aggressive ? Math.min(flexibility * 1.5 + 0.05, 0.35) : flexibility;
+    const effectiveFlex = aggressive
+      ? Math.min(flexibility * FLEXIBILITY.AGGRESSIVE_MULTIPLIER + FLEXIBILITY.AGGRESSIVE_BASE, FLEXIBILITY.AGGRESSIVE_MAX)
+      : flexibility;
     const minReq = w * (1.0 - effectiveFlex);
-    return remainingSpace >= minReq - 0.1;
+    return remainingSpace >= minReq - FLEXIBILITY.NAN_PREVENTION_TOLERANCE;
   };
 
   // CORNER PRIORITIZATION: When filling corners, ONLY place corner-eligible units
@@ -555,7 +156,7 @@ const pickBestUnitForSegment = (
   if (prioritizeCorners && isCorner) {
     // Try to place a CORNER-ELIGIBLE unit that fits (prefer larger units first - types already sorted)
     const cornerEligibleTypes = types.filter(t => isCornerEligible(t, config));
-    console.log(`[DEBUG] pickBestUnitForSegment: corner segment, space=${remainingSpace.toFixed(2)}m, available types=${types.join(',')}, corner-eligible=${cornerEligibleTypes.join(',')}`);
+    Logger.debug(` pickBestUnitForSegment: corner segment, space=${remainingSpace.toFixed(2)}m, available types=${types.join(',')}, corner-eligible=${cornerEligibleTypes.join(',')}`);
 
     for (const t of cornerEligibleTypes) {
       const w = getUnitWidth(t, config, rentableDepth);
@@ -563,10 +164,10 @@ const pickBestUnitForSegment = (
       // `generateUnitSegment()` enforces hard minimum widths (target = minimum) so
       // aggressive fitting causes later overflow trimming that can break corner eligibility.
       const minReq = w; // target width is the true minimum requirement
-      const fits = remainingSpace >= minReq - 0.1;
-      console.log(`[DEBUG]   Trying ${t}: width=${w.toFixed(2)}m, minReq=${minReq.toFixed(2)}m, fits=${fits}`);
+      const fits = remainingSpace >= minReq - FLEXIBILITY.UNIT_FIT_TOLERANCE;
+      Logger.debug(`   Trying ${t}: width=${w.toFixed(2)}m, minReq=${minReq.toFixed(2)}m, fits=${fits}`);
       if (fits) {
-        console.log(`[DEBUG]   → Selected ${t} for corner segment`);
+        Logger.debug(`   → Selected ${t} for corner segment`);
         return t;
       }
     }
@@ -574,14 +175,14 @@ const pickBestUnitForSegment = (
     // No corner-eligible unit available in inventory or none fit
     // Last resort: pick the largest unit that fits (warning logged)
     if (cornerEligibleTypes.length === 0) {
-      console.log(`[WARN] No corner-eligible units in inventory for corner segment`);
+      Logger.warn(` No corner-eligible units in inventory for corner segment`);
     } else {
-      console.log(`[WARN] No corner-eligible unit fits in corner segment with ${remainingSpace.toFixed(2)}m space`);
+      Logger.warn(` No corner-eligible unit fits in corner segment with ${remainingSpace.toFixed(2)}m space`);
     }
 
     for (const t of types) {
       if (canFit(t, false)) {
-        console.log(`[DEBUG]   → Fallback to ${t} for corner segment (not corner-eligible)`);
+        Logger.debug(`   → Fallback to ${t} for corner segment (not corner-eligible)`);
         return t;
       }
     }
@@ -604,7 +205,7 @@ const pickBestUnitForSegment = (
 
 const distributeUnitsToSegments = (
   globalCounts: Record<UnitType, number>,
-  segments: { len: number, isCorner: boolean, bonusArea: number }[],
+  segments: SegmentDefinition[],
   config: UnitConfiguration,
   rentableDepth: number,
   prioritizeCorners: boolean
@@ -642,7 +243,7 @@ const distributeUnitsToSegments = (
   if (prioritizeCorners) {
     const cornerSegIndices = sortedSegIndices.filter(idx => segmentState[idx].isCorner);
 
-    console.log(`[DEBUG] PASS 0: Reserving corner-eligible units. Corners: ${cornerSegIndices.length}`);
+    Logger.debug(` PASS 0: Reserving corner-eligible units. Corners: ${cornerSegIndices.length}`);
 
     // Try to place one corner-eligible unit in each corner segment
     // PRIORITY: 3BR > 2BR > 1BR > Studio
@@ -662,11 +263,11 @@ const distributeUnitsToSegments = (
           const remainingSpace = seg.capacity - seg.fill;
           
           // Hard-min requirement: target width is the minimum
-          if (remainingSpace >= w - 0.1) {
+          if (remainingSpace >= w - FLEXIBILITY.UNIT_FIT_TOLERANCE) {
             segmentCounts[idx][t]++;
             inventory[t]--;
             seg.fill += w;
-            console.log(`[DEBUG] PASS 0: Reserved PRIORITY ${t} for corner segment ${idx} (w=${w.toFixed(2)}m)`);
+            Logger.debug(` PASS 0: Reserved PRIORITY ${t} for corner segment ${idx} (w=${w.toFixed(2)}m)`);
           }
         }
       }
@@ -686,18 +287,18 @@ const distributeUnitsToSegments = (
       let placed = false;
       for (const t of cornerEligibleTypes) {
         const w = getUnitWidth(t, config, rentableDepth);
-        if (remainingSpace >= w - 0.1) {
+        if (remainingSpace >= w - FLEXIBILITY.UNIT_FIT_TOLERANCE) {
           segmentCounts[idx][t]++;
           inventory[t]--;
           seg.fill += w;
           placed = true;
-          console.log(`[DEBUG] PASS 0 (fallback): Forced ${t} into corner segment ${idx} (w=${w.toFixed(2)}m)`);
+          Logger.debug(` PASS 0 (fallback): Forced ${t} into corner segment ${idx} (w=${w.toFixed(2)}m)`);
           break;
         }
       }
 
       if (!placed) {
-        console.warn(`[WARN] PASS 0 (fallback): Could not fit any corner-eligible unit in corner segment ${idx} (remaining=${remainingSpace.toFixed(2)}m)`);
+        Logger.warn(` PASS 0 (fallback): Could not fit any corner-eligible unit in corner segment ${idx} (remaining=${remainingSpace.toFixed(2)}m)`);
       }
     }
   }
@@ -764,7 +365,7 @@ const distributeUnitsToSegments = (
     const totalInSegment = getTotal(segmentCounts[idx]);
 
     if (totalInSegment === 0) {
-      console.log(`[DEBUG] PASS 3: Segment ${idx} has 0 units - attempting to redistribute`);
+      Logger.debug(` PASS 3: Segment ${idx} has 0 units - attempting to redistribute`);
 
       // Find segment with most units to steal from
       let donorIdx = -1;
@@ -794,22 +395,22 @@ const distributeUnitsToSegments = (
             // Steal one unit
             segmentCounts[donorIdx][t]--;
             segmentCounts[idx][t]++;
-            console.log(`[DEBUG] PASS 3: Moved 1x ${t} from segment ${donorIdx} to segment ${idx} to fill gap`);
+            Logger.debug(` PASS 3: Moved 1x ${t} from segment ${donorIdx} to segment ${idx} to fill gap`);
             break;
           }
         }
       } else {
-        console.log(`[DEBUG] PASS 3: WARNING - Cannot fill segment ${idx}, no donor segments available!`);
+        Logger.debug(` PASS 3: WARNING - Cannot fill segment ${idx}, no donor segments available!`);
       }
     }
   }
 
   // Final debug output
-  console.log(`[DEBUG] Final segment distribution:`);
+  Logger.debug(` Final segment distribution:`);
   segmentCounts.forEach((counts, idx) => {
     const total = getTotal(counts);
     const isCorner = segmentState[idx].isCorner;
-    console.log(`[DEBUG]   Segment ${idx} (${isCorner ? 'CORNER' : 'mid'}): ${total} units - S=${counts[UnitType.Studio]}, 1BR=${counts[UnitType.OneBed]}, 2BR=${counts[UnitType.TwoBed]}, 3BR=${counts[UnitType.ThreeBed]}`);
+    Logger.debug(`   Segment ${idx} (${isCorner ? 'CORNER' : 'mid'}): ${total} units - S=${counts[UnitType.Studio]}, 1BR=${counts[UnitType.OneBed]}, 2BR=${counts[UnitType.TwoBed]}, 3BR=${counts[UnitType.ThreeBed]}`);
   });
 
   return segmentCounts;
@@ -821,28 +422,24 @@ const distributeUnitsToSegments = (
 // ============================================================================
 
 const generateUnitSegment = (
-  startX: number,
-  y: number,
-  segmentLength: number,
-  counts: Record<UnitType, number>,
-  pattern: PatternStrategy,
+  ctx: SegmentGenerationContext,
   config: UnitConfiguration,
-  rentableDepth: number,
-  extraWidth: number = 0,
-  endBonusArea: number = 0,
-  isCorner: boolean = false,
-  isLeftCorner: boolean = false,
-  isRightCorner: boolean = false
+  rentableDepth: number
 ): InternalUnitBlock[] => {
+  // Destructure context
+  const { geometry, classification, unitCounts: counts, pattern, endBonusArea = 0, customColors } = ctx;
+  const { startX, y, length: segmentLength, extraWidth = 0 } = geometry;
+  const { isCorner = false, isLeftCorner = false, isRightCorner = false } = classification;
+
   if (segmentLength <= 0) {
-    console.warn(`[WARN] generateUnitSegment: segment has zero/negative length (${segmentLength.toFixed(2)}m) - returning empty!`);
+    Logger.warn(` generateUnitSegment: segment has zero/negative length (${segmentLength.toFixed(2)}m) - returning empty!`);
     return [];
   }
 
   const totalUnits = getTotal(counts);
   if (totalUnits === 0) {
-    console.warn(`[WARN] generateUnitSegment: received 0 units for segment of length ${segmentLength.toFixed(2)}m - WHITE SPACE WILL RESULT!`);
-    console.warn(`[WARN]   isCorner=${isCorner}, isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}`);
+    Logger.warn(` generateUnitSegment: received 0 units for segment of length ${segmentLength.toFixed(2)}m - WHITE SPACE WILL RESULT!`);
+    Logger.warn(`   isCorner=${isCorner}, isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}`);
     return [];
   }
 
@@ -910,56 +507,56 @@ const generateUnitSegment = (
   // --- CONSTRAINT: CORNER-ELIGIBLE UNITS AT BUILDING CORNERS ---
   // Only corner-eligible unit types (top 2 largest by area) can be placed at facade corners
   // This uses the isCornerEligible() function which respects configuration
-  console.log(`[DEBUG] generateUnitSegment: startX=${startX.toFixed(2)}, isCorner=${isCorner}, isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}, units=${unitsToPlace.length}`);
+  Logger.debug(` generateUnitSegment: startX=${startX.toFixed(2)}, isCorner=${isCorner}, isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}, units=${unitsToPlace.length}`);
 
   if (isCorner && unitsToPlace.length > 1) {
-    console.log(`[DEBUG] Corner segment at x=${startX}: isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}`);
-    console.log(`[DEBUG] Units in segment:`, unitsToPlace.map(t => `${t}(corner:${isCornerEligible(t, config)})`));
+    Logger.debug(` Corner segment at x=${startX}: isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}`);
+    Logger.debug(` Units in segment:`, unitsToPlace.map(t => `${t}(corner:${isCornerEligible(t, config)})`));
 
     // LEFT CORNER: Ensure first unit is corner-eligible
     if (isLeftCorner && !isCornerEligible(unitsToPlace[0], config)) {
-      console.log(`[DEBUG] LEFT CORNER: First unit ${unitsToPlace[0]} is NOT corner-eligible, looking for swap...`);
+      Logger.debug(` LEFT CORNER: First unit ${unitsToPlace[0]} is NOT corner-eligible, looking for swap...`);
       // Find a corner-eligible unit to swap to position 0
       let swapped = false;
       for (let i = 1; i < unitsToPlace.length; i++) {
         if (isCornerEligible(unitsToPlace[i], config)) {
-          console.log(`[DEBUG] LEFT CORNER: Swapping ${unitsToPlace[0]} with ${unitsToPlace[i]} at index ${i}`);
+          Logger.debug(` LEFT CORNER: Swapping ${unitsToPlace[0]} with ${unitsToPlace[i]} at index ${i}`);
           [unitsToPlace[0], unitsToPlace[i]] = [unitsToPlace[i], unitsToPlace[0]];
           swapped = true;
           break;
         }
       }
       if (!swapped) {
-        console.log(`[DEBUG] LEFT CORNER: NO corner-eligible unit found to swap!`);
+        Logger.debug(` LEFT CORNER: NO corner-eligible unit found to swap!`);
       }
     }
 
     // RIGHT CORNER: Ensure last unit is corner-eligible
     if (isRightCorner) {
       const lastIdx = unitsToPlace.length - 1;
-      console.log(`[DEBUG] RIGHT CORNER: Checking last unit ${unitsToPlace[lastIdx]}, corner-eligible=${isCornerEligible(unitsToPlace[lastIdx], config)}`);
+      Logger.debug(` RIGHT CORNER: Checking last unit ${unitsToPlace[lastIdx]}, corner-eligible=${isCornerEligible(unitsToPlace[lastIdx], config)}`);
       if (!isCornerEligible(unitsToPlace[lastIdx], config)) {
-        console.log(`[DEBUG] RIGHT CORNER: Last unit ${unitsToPlace[lastIdx]} is NOT corner-eligible, looking for swap...`);
+        Logger.debug(` RIGHT CORNER: Last unit ${unitsToPlace[lastIdx]} is NOT corner-eligible, looking for swap...`);
         // Find a corner-eligible unit to swap to last position (avoid swapping with position 0 if it's also a facade corner)
         const startSearch = isLeftCorner ? 1 : 0;
         let swapped = false;
         for (let i = lastIdx - 1; i >= startSearch; i--) {
           if (isCornerEligible(unitsToPlace[i], config)) {
-            console.log(`[DEBUG] RIGHT CORNER: Swapping ${unitsToPlace[lastIdx]} with ${unitsToPlace[i]} at index ${i}`);
+            Logger.debug(` RIGHT CORNER: Swapping ${unitsToPlace[lastIdx]} with ${unitsToPlace[i]} at index ${i}`);
             [unitsToPlace[lastIdx], unitsToPlace[i]] = [unitsToPlace[i], unitsToPlace[lastIdx]];
             swapped = true;
             break;
           }
         }
         if (!swapped) {
-          console.log(`[DEBUG] RIGHT CORNER: NO corner-eligible unit found to swap!`);
+          Logger.debug(` RIGHT CORNER: NO corner-eligible unit found to swap!`);
         }
       } else {
-        console.log(`[DEBUG] RIGHT CORNER: Last unit ${unitsToPlace[lastIdx]} is ALREADY corner-eligible, no swap needed`);
+        Logger.debug(` RIGHT CORNER: Last unit ${unitsToPlace[lastIdx]} is ALREADY corner-eligible, no swap needed`);
       }
     }
 
-    console.log(`[DEBUG] After corner swap:`, unitsToPlace);
+    Logger.debug(` After corner swap:`, unitsToPlace);
   }
 
   // If this is a facade corner segment and we STILL don't have a corner-eligible unit
@@ -973,8 +570,8 @@ const generateUnitSegment = (
       .sort((a, b) => config[a].area - config[b].area);
 
     // Try to find a candidate that fits the available space (roughly)
-    // We check the FIRST unit's width (calculatedWidths[0] or target)
-    const currentW = calculatedWidths[0] || getUnitWidth(unitsToPlace[0], config, rentableDepth);
+    // Use target width for the first unit since calculatedWidths isn't computed yet
+    const currentW = getUnitWidth(unitsToPlace[0], config, rentableDepth);
     
     let bestCandidate: UnitType | null = null;
 
@@ -994,7 +591,7 @@ const generateUnitSegment = (
     }
 
     if (bestCandidate) {
-      console.log(`[DEBUG] Force-upgrading corner unit from ${unitsToPlace[0]} to ${bestCandidate}`);
+      Logger.debug(` Force-upgrading corner unit from ${unitsToPlace[0]} to ${bestCandidate}`);
       unitsToPlace[0] = bestCandidate;
     }
   }
@@ -1007,7 +604,8 @@ const generateUnitSegment = (
       .filter(t => isCornerEligible(t, config))
       .sort((a, b) => config[a].area - config[b].area);
 
-    const currentW = calculatedWidths[lastIdx] || getUnitWidth(unitsToPlace[lastIdx], config, rentableDepth);
+    // Use target width since calculatedWidths isn't computed yet
+    const currentW = getUnitWidth(unitsToPlace[lastIdx], config, rentableDepth);
     
     let bestCandidate: UnitType | null = null;
     
@@ -1024,7 +622,7 @@ const generateUnitSegment = (
     }
 
     if (bestCandidate) {
-      console.log(`[DEBUG] Force-upgrading corner unit from ${unitsToPlace[lastIdx]} to ${bestCandidate}`);
+      Logger.debug(` Force-upgrading corner unit from ${unitsToPlace[lastIdx]} to ${bestCandidate}`);
       unitsToPlace[lastIdx] = bestCandidate;
     }
   }
@@ -1067,7 +665,7 @@ const generateUnitSegment = (
   const capped = new Set<number>(); // Track units that have hit their max
 
   if (isCompression) {
-    console.log(`[DEBUG] Segment has ${Math.abs(totalDiff).toFixed(2)}m COMPRESSION needed - leaving as gap (target sizes are MINIMUM)`);
+    Logger.debug(` Segment has ${Math.abs(totalDiff).toFixed(2)}m COMPRESSION needed - leaving as gap (target sizes are MINIMUM)`);
   }
 
   // Multiple passes to handle capping and redistribution (expansion only)
@@ -1130,7 +728,7 @@ const generateUnitSegment = (
   const totalAvailableWidth = effectiveLength + extraWidth;
 
   if (totalMinWidth > totalAvailableWidth + 0.1) {
-    console.log(`[WARN] Segment overflow detected! Total min width (${totalMinWidth.toFixed(2)}m) > available (${totalAvailableWidth.toFixed(2)}m). Removing ${unitsToPlace.length > 1 ? 'last unit' : 'no units'}.`);
+    Logger.warn(` Segment overflow detected! Total min width (${totalMinWidth.toFixed(2)}m) > available (${totalAvailableWidth.toFixed(2)}m). Removing ${unitsToPlace.length > 1 ? 'last unit' : 'no units'}.`);
     // Remove units until they fit, but NEVER drop the facade-corner unit:
     // - left corner: protect index 0
     // - right corner: protect last index
@@ -1159,7 +757,7 @@ const generateUnitSegment = (
       if (removeIdx === -1) break;
 
       const removed = unitsToPlace.splice(removeIdx, 1)[0];
-      console.log(`[DEBUG] Removed ${removed} (idx=${removeIdx}${removeIdx === protectedIdx ? ',PROTECTED' : ''}) to prevent overflow.`);
+      Logger.debug(` Removed ${removed} (idx=${removeIdx}${removeIdx === protectedIdx ? ',PROTECTED' : ''}) to prevent overflow.`);
     }
   }
 
@@ -1174,10 +772,10 @@ const generateUnitSegment = (
 
   // Debug: Log segment geometry info
   const totalAvailableWidthDbg = effectiveLength + extraWidth;
-  console.log(`[DEBUG] generateUnitSegment: segmentLength=${segmentLength.toFixed(2)}m, effectiveLength=${effectiveLength.toFixed(2)}m, extraWidth=${extraWidth.toFixed(2)}m, totalAvailable=${totalAvailableWidthDbg.toFixed(2)}m`);
-  console.log(`[DEBUG] generateUnitSegment: ${totalUnits} units to place: ${unitsToPlace.join(', ')}`);
-  console.log(`[DEBUG] generateUnitSegment: calculatedWidths: ${calculatedWidths.map(w => w.toFixed(2)).join(', ')}`);
-  console.log(`[DEBUG] generateUnitSegment: isCorner=${isCorner}, isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}`);
+  Logger.debug(` generateUnitSegment: segmentLength=${segmentLength.toFixed(2)}m, effectiveLength=${effectiveLength.toFixed(2)}m, extraWidth=${extraWidth.toFixed(2)}m, totalAvailable=${totalAvailableWidthDbg.toFixed(2)}m`);
+  Logger.debug(` generateUnitSegment: ${totalUnits} units to place: ${unitsToPlace.join(', ')}`);
+  Logger.debug(` generateUnitSegment: calculatedWidths: ${calculatedWidths.map(w => w.toFixed(2)).join(', ')}`);
+  Logger.debug(` generateUnitSegment: isCorner=${isCorner}, isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}`);
 
   unitsToPlace.forEach((type, index) => {
     const targetW = getUnitWidth(type, config, rentableDepth); // MINIMUM width
@@ -1200,7 +798,7 @@ const generateUnitSegment = (
         
         // Only split if the excess is useful (at least a small studio)
         if (excess >= studioW * 0.85) {
-          console.log(`[DEBUG] Auto-splitting huge unit ${type} (w=${width.toFixed(2)}m). Inserting Studio to absorb ${excess.toFixed(2)}m.`);
+          Logger.debug(` Auto-splitting huge unit ${type} (w=${width.toFixed(2)}m). Inserting Studio to absorb ${excess.toFixed(2)}m.`);
           
           // Shrink current unit to target
           width = targetW;
@@ -1219,14 +817,14 @@ const generateUnitSegment = (
       if (width < targetW * 0.9) {
         // Remaining space is way too small - just use what we have
         width = Math.max(MIN_UNIT_WIDTH, remainingSpace);
-        console.log(`[WARN] Last unit ${type} truncated to ${width.toFixed(2)}m (target: ${targetW.toFixed(2)}m)`);
+        Logger.warn(` Last unit ${type} truncated to ${width.toFixed(2)}m (target: ${targetW.toFixed(2)}m)`);
       }
     }
 
     // ENFORCE MINIMUM WIDTH - target size is the ABSOLUTE FLOOR (unless overflow case)
     // No unit can ever be smaller than its target width in normal operation
     if (width < targetW && index < unitsToPlace.length - 1) {
-      console.log(`[DEBUG] Enforcing MIN width for ${type}: ${width.toFixed(2)}m -> ${targetW.toFixed(2)}m`);
+      Logger.debug(` Enforcing MIN width for ${type}: ${width.toFixed(2)}m -> ${targetW.toFixed(2)}m`);
       width = targetW;
     }
 
@@ -1271,9 +869,9 @@ const generateUnitSegment = (
 
   // Debug: Final widths before creating units
   const finalTotalWidth = finalWidths.reduce((a, b) => a + b, 0);
-  console.log(`[DEBUG] generateUnitSegment FINAL: totalFinalWidth=${finalTotalWidth.toFixed(2)}m, segmentLength=${segmentLength.toFixed(2)}m, gap=${(segmentLength - finalTotalWidth).toFixed(2)}m`);
+  Logger.debug(` generateUnitSegment FINAL: totalFinalWidth=${finalTotalWidth.toFixed(2)}m, segmentLength=${segmentLength.toFixed(2)}m, gap=${(segmentLength - finalTotalWidth).toFixed(2)}m`);
   finalWidths.forEach((w, i) => {
-    console.log(`[DEBUG]   Unit ${i} (${unitsToPlace[i]}): width=${w.toFixed(2)}m`);
+    Logger.debug(`   Unit ${i} (${unitsToPlace[i]}): width=${w.toFixed(2)}m`);
   });
 
   // Now create the unit blocks
@@ -1295,7 +893,7 @@ const generateUnitSegment = (
       width: finalWidth,
       depth: rentableDepth,
       area: (finalWidth * rentableDepth) + areaBonus,
-      color: getUnitColor(type)
+      color: getUnitColor(type, customColors)
     });
     currentX += finalWidth;
   });
@@ -1309,16 +907,14 @@ const generateUnitSegment = (
 // ============================================================================
 
 const findOptimalGeometry = (
-  availableRentableLength: number,
-  numMidSpans: number,
-  globalCounts: Record<UnitType, number>,
+  ctx: OptimizationSearchContext,
   config: UnitConfiguration,
-  rentableDepth: number,
-  prioritizeCorners: boolean,
-  _deadEndLimit: number, // Reserved for future egress-constrained optimization
-  singleCoreBonusArea: number,
-  isContinuousSide: boolean = false
+  rentableDepth: number
 ): { cornerLen: number, midCoreOffset: number } => {
+  // Destructure context
+  const { buildingGeometry, unitInventory: globalCounts, prioritizeCorners, deadEndLimit: _deadEndLimit } = ctx;
+  const { availableRentableLength, numMidSpans, singleCoreBonusArea, isContinuousSide = false } = buildingGeometry;
+
   let bestCornerLen = 40 * FEET_TO_METERS; // ~12.2m default
   let bestOffset = 0;
   let minWeightedError = Number.MAX_VALUE;
@@ -1327,7 +923,7 @@ const findOptimalGeometry = (
 
   // SOFT CONSTRAINT: Only cap corners if they would take >70% of building
   // This allows short buildings to have proper corners with large units
-  const maxCornerFromBuildingLength = availableRentableLength * 0.35;
+  const maxCornerFromBuildingLength = availableRentableLength * GEOMETRY_SEARCH.MAX_CORNER_FRACTION;
 
   if (prioritizeCorners) {
     // Find the LARGEST corner-eligible unit type in inventory
@@ -1353,18 +949,18 @@ const findOptimalGeometry = (
     if (largestCornerEligibleWidth > 0) {
       // Always size corners to fit the largest corner-eligible unit
       minC = Math.max(minC, largestCornerEligibleWidth);
-      console.log(`[DEBUG] findOptimalGeometry: largest corner-eligible width=${largestCornerEligibleWidth.toFixed(2)}m`);
+      Logger.debug(` findOptimalGeometry: largest corner-eligible width=${largestCornerEligibleWidth.toFixed(2)}m`);
 
       // ENSURE corners can fit at least 1 unit
       // This prevents corners with a single oversized unit - we want both ends to have large units
       // RELAXED: Removed the "at least 2 units" requirement which was forcing large corners and starving the middle.
       // Now we just ensure the corner fits the largest eligible unit.
       minC = Math.max(minC, largestCornerEligibleWidth); 
-      console.log(`[DEBUG] findOptimalGeometry: ensuring 1+ units fit, minC=${minC.toFixed(2)}m`);
+      Logger.debug(` findOptimalGeometry: ensuring 1+ units fit, minC=${minC.toFixed(2)}m`);
 
       // SOFT CAP: Only limit if corners would take >70% of building
       if (minC > maxCornerFromBuildingLength) {
-        console.log(`[DEBUG] findOptimalGeometry: Soft-capping corner from ${minC.toFixed(2)}m to ${maxCornerFromBuildingLength.toFixed(2)}m (35% of ${availableRentableLength.toFixed(2)}m building)`);
+        Logger.debug(` findOptimalGeometry: Soft-capping corner from ${minC.toFixed(2)}m to ${maxCornerFromBuildingLength.toFixed(2)}m (35% of ${availableRentableLength.toFixed(2)}m building)`);
         minC = maxCornerFromBuildingLength;
       }
     } else {
@@ -1376,7 +972,7 @@ const findOptimalGeometry = (
           break;
         }
       }
-      console.log(`[DEBUG] findOptimalGeometry: no corner-eligible units in inventory, using fallback minC=${minC.toFixed(2)}m`);
+      Logger.debug(` findOptimalGeometry: no corner-eligible units in inventory, using fallback minC=${minC.toFixed(2)}m`);
     }
   }
 
@@ -1389,7 +985,7 @@ const findOptimalGeometry = (
 
     const cornerLen = c;
 
-    let offsets = [0];
+    const offsets = [0];
     const totalMidLen = availableRentableLength - (2 * cornerLen);
 
     if (!isContinuousSide && numMidSpans === 2) {
@@ -1438,7 +1034,7 @@ const findOptimalGeometry = (
           }
         });
 
-        let diff = (segLen + bonusW) - idealWidthSum;
+        const diff = (segLen + bonusW) - idealWidthSum;
         const absDiff = Math.abs(diff);
 
         const isCompressionLocal = diff < -0.1;
@@ -1463,7 +1059,7 @@ const findOptimalGeometry = (
 
   // Fallback: if optimization failed (e.g. all scores NaN or MAX), use minC
   if (bestCornerLen === 40 * FEET_TO_METERS && minWeightedError === Number.MAX_VALUE) {
-     console.warn(`[WARN] findOptimalGeometry: Optimization loop failed to find valid score. Defaulting to minC=${minC.toFixed(2)}m`);
+     Logger.warn(` findOptimalGeometry: Optimization loop failed to find valid score. Defaulting to minC=${minC.toFixed(2)}m`);
      bestCornerLen = minC;
   }
 
@@ -1482,12 +1078,13 @@ const findOptimalGeometry = (
 // ============================================================================
 
 const applyWallAlignment = (
-  targetUnits: InternalUnitBlock[],
-  refUnits: InternalUnitBlock[],
-  alignmentStrength: number,
+  input: WallAlignmentInput,
   config: UnitConfiguration,
   rentableDepth: number
 ): InternalUnitBlock[] => {
+  // Destructure input
+  const { targetUnits, refUnits, alignmentStrength } = input;
+
   if (targetUnits.length === 0 || alignmentStrength <= 0) return targetUnits;
 
   // Collect ALL wall positions from reference units (both left and right edges)
@@ -1573,7 +1170,7 @@ const applyWallAlignment = (
       modifiedUnits.add(unitIdx);
       modifiedUnits.add(unitIdx + 1);
     } else if (isNaN(proposedWidth) || isNaN(proposedNextWidth)) {
-        console.warn(`[WARN] applyWallAlignment: NaN detected! targetX=${targetX}, unit.x=${unit.x}, nextUnit.width=${nextUnit.width}`);
+        Logger.warn(` applyWallAlignment: NaN detected! targetX=${targetX}, unit.x=${unit.x}, nextUnit.width=${nextUnit.width}`);
     }
   }
 
@@ -1584,6 +1181,62 @@ const applyWallAlignment = (
 // MAIN GENERATION FUNCTION
 // ============================================================================
 
+/**
+ * Generates a single floorplate layout for a building footprint.
+ *
+ * The algorithm places units along both sides of a central corridor,
+ * automatically adding cores (elevator/stair cores) to meet egress requirements.
+ * Units are sized and positioned to match the target unit mix while respecting
+ * minimum and maximum width constraints.
+ *
+ * **Algorithm overview:**
+ * 1. Determines core count based on building length and travel distance limits
+ * 2. Calculates global unit counts to hit target percentages
+ * 3. Distributes units across segments (spaces between cores)
+ * 4. Applies wall alignment constraints between north and south sides
+ * 5. Ensures corner-eligible units are placed at building corners
+ *
+ * @param footprint - Building footprint extracted from Forma geometry. Contains
+ *                    dimensions (width, depth), rotation angle, and world position.
+ * @param config - Unit configuration specifying percentage and area for each type.
+ *                 Areas are in square meters. Percentages should sum to 100.
+ * @param egressConfig - Fire code requirements including dead-end limits,
+ *                       travel distance maximums, and common path limits.
+ * @param corridorWidth - Central corridor width in meters. Default ~1.83m (6 ft).
+ * @param coreWidth - Width of stair/elevator cores in meters. Default ~3.66m (12 ft).
+ * @param coreDepth - Depth of cores perpendicular to corridor. Default ~9m (29.5 ft).
+ * @param coreSide - Which side of corridor to place cores: 'North' or 'South'.
+ * @param alignment - Wall alignment strength from 0.0 to 1.0:
+ *                    - 0.0 = flexible (walls can offset freely between sides)
+ *                    - 1.0 = strict (walls must align across corridor)
+ * @param strategy - Optimization strategy affecting unit sizing priorities:
+ *                   - 'balanced': Equal priority to mix accuracy and efficiency
+ *                   - 'mixOptimized': Prioritizes hitting exact mix percentages
+ *                   - 'efficiencyOptimized': Maximizes NRSF/GSF ratio
+ * @returns Complete floorplan data including units, cores, corridor, transform
+ *          data for rendering, and statistics (GSF, NRSF, efficiency).
+ *
+ * @example
+ * ```typescript
+ * const footprint = extractFootprintFromTriangles(triangles);
+ * const floorplan = generateFloorplate(
+ *   footprint,
+ *   {
+ *     [UnitType.Studio]: { percentage: 20, area: 51, cornerEligible: false },
+ *     [UnitType.OneBed]: { percentage: 40, area: 82, cornerEligible: false },
+ *     [UnitType.TwoBed]: { percentage: 30, area: 110, cornerEligible: true },
+ *     [UnitType.ThreeBed]: { percentage: 10, area: 137, cornerEligible: true }
+ *   },
+ *   EGRESS_SPRINKLERED,
+ *   1.83,  // corridor width
+ *   3.66,  // core width
+ *   9.0,   // core depth
+ *   'North',
+ *   0.5,   // moderate alignment
+ *   'balanced'
+ * );
+ * ```
+ */
 export function generateFloorplate(
   footprint: BuildingFootprint,
   config: UnitConfiguration,
@@ -1593,10 +1246,11 @@ export function generateFloorplate(
   coreDepth: number = DEFAULT_CORE_DEPTH,
   coreSide: 'North' | 'South' = 'North',
   alignment: number = 0.5,
-  strategy: OptimizationStrategy = 'balanced'
+  strategy: OptimizationStrategy = 'balanced',
+  customColors?: UnitColorMap
 ): FloorPlanData {
   // VERSION MARKER - if you see this, new code is loaded!
-  console.log('✨✨✨ GENERATOR v2025.01.13.F - CORNER ENFORCEMENT + SPACE UTILIZATION + ALIGNMENT FIXES ✨✨✨');
+  Logger.info('GENERATOR v2025.01.13.F - CORNER ENFORCEMENT + SPACE UTILIZATION + ALIGNMENT FIXES');
 
   const cores: CoreBlock[] = [];
   const length = footprint.width;
@@ -1666,30 +1320,30 @@ export function generateFloorplate(
   const clearSideCounts = coreSide === 'North' ? earlyBuildingCounts.south : earlyBuildingCounts.north;
 
   // --- 3. Optimization for Core Side ---
-  const { cornerLen: coreSideCornerLen, midCoreOffset } = findOptimalGeometry(
-    availableRentableLengthCoreSide,
-    numMidSpans,
-    coreSideCounts,
-    config,
-    rentableDepth,
-    true,
-    egressConfig.deadEndLimit,
-    singleCoreBonusArea,
-    false
-  );
+  const { cornerLen: coreSideCornerLen, midCoreOffset } = findOptimalGeometry({
+    buildingGeometry: {
+      availableRentableLength: availableRentableLengthCoreSide,
+      numMidSpans,
+      singleCoreBonusArea,
+      isContinuousSide: false
+    },
+    unitInventory: coreSideCounts,
+    prioritizeCorners: true,
+    deadEndLimit: egressConfig.deadEndLimit
+  }, config, rentableDepth);
 
   // --- 4. Optimization for Clear Side ---
-  const { cornerLen: clearSideCornerLenIndependent } = findOptimalGeometry(
-    availableRentableLengthClearSide,
-    1,
-    clearSideCounts,
-    config,
-    rentableDepth,
-    true,
-    egressConfig.deadEndLimit,
-    0,
-    true
-  );
+  const { cornerLen: clearSideCornerLenIndependent } = findOptimalGeometry({
+    buildingGeometry: {
+      availableRentableLength: availableRentableLengthClearSide,
+      numMidSpans: 1,
+      singleCoreBonusArea: 0,
+      isContinuousSide: true
+    },
+    unitInventory: clearSideCounts,
+    prioritizeCorners: true,
+    deadEndLimit: egressConfig.deadEndLimit
+  }, config, rentableDepth);
 
   // STRICT ALIGNMENT: When alignment is strict (>0.6), use the same geometry as core side
   // This ensures partition walls align between clear side and core side
@@ -1699,7 +1353,7 @@ export function generateFloorplate(
   // When alignment is strict, also ensure the clear side uses the same segment structure
   // This means the clear side should have the same corner lengths and mid segment structure
   if (snapToCore) {
-    console.log(`[DEBUG] STRICT ALIGNMENT: Clear side using core side geometry (cornerLen=${coreSideCornerLen.toFixed(2)}m)`);
+    Logger.debug(` STRICT ALIGNMENT: Clear side using core side geometry (cornerLen=${coreSideCornerLen.toFixed(2)}m)`);
   }
 
   // --- 4. Geometry Construction ---
@@ -1841,8 +1495,8 @@ export function generateFloorplate(
   const northGlobal = earlyBuildingCounts.north;
   const southGlobal = earlyBuildingCounts.south;
 
-  console.log(`[DEBUG] Using pre-calculated building counts - North: S=${northGlobal[UnitType.Studio]}, 1BR=${northGlobal[UnitType.OneBed]}, 2BR=${northGlobal[UnitType.TwoBed]}, 3BR=${northGlobal[UnitType.ThreeBed]}`);
-  console.log(`[DEBUG] Using pre-calculated building counts - South: S=${southGlobal[UnitType.Studio]}, 1BR=${southGlobal[UnitType.OneBed]}, 2BR=${southGlobal[UnitType.TwoBed]}, 3BR=${southGlobal[UnitType.ThreeBed]}`);
+  Logger.debug(` Using pre-calculated building counts - North: S=${northGlobal[UnitType.Studio]}, 1BR=${northGlobal[UnitType.OneBed]}, 2BR=${northGlobal[UnitType.TwoBed]}, 3BR=${northGlobal[UnitType.ThreeBed]}`);
+  Logger.debug(` Using pre-calculated building counts - South: S=${southGlobal[UnitType.Studio]}, 1BR=${southGlobal[UnitType.OneBed]}, 2BR=${southGlobal[UnitType.TwoBed]}, 3BR=${southGlobal[UnitType.ThreeBed]}`);
 
   const northCounts = distributeUnitsToSegments(
     northGlobal,
@@ -1887,11 +1541,11 @@ export function generateFloorplate(
           if (segB[swapType] > 0) {
              segB[swapType]--;
              sideB[donorIdx][swapType]++;
-             console.log(`[DEBUG] STACKING: Moved 3BR from Side B segment ${donorIdx} to corner ${cornerIdx} to stack with Side A (swapped ${swapType})`);
+             Logger.debug(` STACKING: Moved 3BR from Side B segment ${donorIdx} to corner ${cornerIdx} to stack with Side A (swapped ${swapType})`);
           } else {
              // Corner was empty? Just added 3BR. donor has -1 unit count?
              // Should not happen if segments are filled, but safe to just move 3BR.
-             console.log(`[DEBUG] STACKING: Moved 3BR from Side B segment ${donorIdx} to corner ${cornerIdx} (no swap back needed?)`);
+             Logger.debug(` STACKING: Moved 3BR from Side B segment ${donorIdx} to corner ${cornerIdx} (no swap back needed?)`);
           }
         }
       }
@@ -1914,7 +1568,7 @@ export function generateFloorplate(
   // --- 8. Generate Units ---
   let units: InternalUnitBlock[] = [];
 
-  console.log(`[DEBUG] Building length=${length.toFixed(2)}`);
+  Logger.debug(` Building length=${length.toFixed(2)}`);
 
   allSegments.forEach((seg, idx) => {
     const counts = segmentCountsList[idx];
@@ -1924,19 +1578,23 @@ export function generateFloorplate(
     const isLeftCorner = seg.isCorner && seg.x === 0;
     const isRightCorner = seg.isCorner && (seg.x + seg.len) >= (length - 0.5);
 
-    console.log(`[DEBUG] Segment ${idx}: x=${seg.x.toFixed(2)}, len=${seg.len.toFixed(2)}, isCorner=${seg.isCorner}, isLeft=${isLeftCorner}, isRight=${isRightCorner}, side=${seg.isSouth ? 'South' : 'North'}`);
+    Logger.debug(` Segment ${idx}: x=${seg.x.toFixed(2)}, len=${seg.len.toFixed(2)}, isCorner=${seg.isCorner}, isLeft=${isLeftCorner}, isRight=${isRightCorner}, side=${seg.isSouth ? 'South' : 'North'}`);
 
-    const newUnits = generateUnitSegment(
-      seg.x, y, seg.len, counts, seg.pattern, config, rentableDepth,
-      seg.extraWidth, seg.bonusArea, seg.isCorner, isLeftCorner, isRightCorner
-    );
+    const newUnits = generateUnitSegment({
+      geometry: { startX: seg.x, y, length: seg.len, extraWidth: seg.extraWidth },
+      classification: { isCorner: seg.isCorner, isLeftCorner, isRightCorner },
+      unitCounts: counts,
+      pattern: seg.pattern,
+      endBonusArea: seg.bonusArea,
+      customColors
+    }, config, rentableDepth);
 
     // Debug: Show what units were created and their positions
     if (isLeftCorner || isRightCorner) {
-      console.log(`[DEBUG] Units created in ${isLeftCorner ? 'LEFT' : 'RIGHT'} corner segment:`);
+      Logger.debug(` Units created in ${isLeftCorner ? 'LEFT' : 'RIGHT'} corner segment:`);
       newUnits.forEach(u => {
         const endX = u.x + u.width;
-        console.log(`  - ${u.type} at x=${u.x.toFixed(2)} to ${endX.toFixed(2)}`);
+        Logger.debug(`  - ${u.type} at x=${u.x.toFixed(2)} to ${endX.toFixed(2)}`);
       });
     }
 
@@ -1990,7 +1648,7 @@ export function generateFloorplate(
         expandedUnit = right;
       } else {
         // If we can't find neighbors (should be rare), skip—better than creating a tiny sliver unit.
-        console.log(`[WARN] STRICT ALIGNMENT: Could not find adjacent units to absorb core gap at x=${core.x.toFixed(2)}`);
+        Logger.warn(` STRICT ALIGNMENT: Could not find adjacent units to absorb core gap at x=${core.x.toFixed(2)}`);
       }
 
       // RE-CLASSIFY: Expanding a unit (e.g. Studio + Core) often changes its type (e.g. to 1BR).
@@ -2004,11 +1662,11 @@ export function generateFloorplate(
         }) || UnitType.Studio;
 
         if (bestType !== expandedUnit.type) {
-          console.log(`[DEBUG] STRICT ALIGNMENT: Upgraded expanded unit from ${expandedUnit.type} to ${bestType} (area ${expandedUnit.area.toFixed(0)}sf)`);
+          Logger.debug(` STRICT ALIGNMENT: Upgraded expanded unit from ${expandedUnit.type} to ${bestType} (area ${expandedUnit.area.toFixed(0)}sf)`);
           expandedUnit.type = bestType;
           expandedUnit.typeId = bestType;
           expandedUnit.typeName = bestType;
-          expandedUnit.color = getUnitColor(bestType);
+          expandedUnit.color = getUnitColor(bestType, customColors);
         }
       }
     });
@@ -2017,7 +1675,7 @@ export function generateFloorplate(
     const coreSideUnitsFinal = units.filter(u => u.y === coreY);
     units = [...coreSideUnitsFinal, ...mirroredClear];
 
-    console.log(`[DEBUG] STRICT ALIGNMENT: Clear side mirrored from core side partitions and compensated for ${cores.length} cores`);
+    Logger.debug(` STRICT ALIGNMENT: Clear side mirrored from core side partitions and compensated for ${cores.length} cores`);
   } else if (alignment > 0) {
     // Non-strict: keep the existing “snap walls” behavior.
     const northUnits = units.filter(u => u.y === 0);
@@ -2025,10 +1683,18 @@ export function generateFloorplate(
 
     let alignedUnits: InternalUnitBlock[] = [];
     if (coreSide === 'North') {
-      const alignedSouth = applyWallAlignment(southUnits, northUnits, alignment, config, rentableDepth);
+      const alignedSouth = applyWallAlignment({
+        targetUnits: southUnits,
+        refUnits: northUnits,
+        alignmentStrength: alignment
+      }, config, rentableDepth);
       alignedUnits = [...northUnits, ...alignedSouth];
     } else {
-      const alignedNorth = applyWallAlignment(northUnits, southUnits, alignment, config, rentableDepth);
+      const alignedNorth = applyWallAlignment({
+        targetUnits: northUnits,
+        refUnits: southUnits,
+        alignmentStrength: alignment
+      }, config, rentableDepth);
       alignedUnits = [...alignedNorth, ...southUnits];
     }
     units = alignedUnits;
@@ -2045,7 +1711,7 @@ export function generateFloorplate(
         if (leftUnit) {
           // CHECK L-SHAPE ELIGIBILITY: Studios and small units should NOT wrap
           if (!isLShapeEligible(leftUnit.type, config)) {
-            console.log(`[DEBUG] Skipping L-shape wrap for ${leftUnit.type} - not L-shape eligible`);
+            Logger.debug(` Skipping L-shape wrap for ${leftUnit.type} - not L-shape eligible`);
             return; // Skip this unit, don't make it L-shaped
           }
 
@@ -2107,7 +1773,7 @@ export function generateFloorplate(
       }
     }
   } else if (northFirst && southFirst) {
-    console.log(`[DEBUG] Left corner void skipped: northEligible=${leftNorthEligible}, southEligible=${leftSouthEligible}`);
+    Logger.debug(` Left corner void skipped: northEligible=${leftNorthEligible}, southEligible=${leftSouthEligible}`);
   }
 
   const northLast = units.find(u => Math.abs((u.x + u.width) - length) < 0.1 && u.y === 0);
@@ -2140,7 +1806,7 @@ export function generateFloorplate(
       }
     }
   } else if (northLast && southLast) {
-    console.log(`[DEBUG] Right corner void skipped: northEligible=${rightNorthEligible}, southEligible=${rightSouthEligible}`);
+    Logger.debug(` Right corner void skipped: northEligible=${rightNorthEligible}, southEligible=${rightSouthEligible}`);
   }
 
   // --- 12. Calculate Stats ---
@@ -2185,23 +1851,23 @@ export function generateFloorplate(
   const travelDistStatus = maxTravelDistance <= limit ? 'Pass' : 'Fail';
 
   // --- Debug: Show units at building corners BEFORE coordinate transform ---
-  console.log(`[DEBUG] === FINAL CORNER UNITS (before transform) ===`);
+  Logger.debug(` === FINAL CORNER UNITS (before transform) ===`);
   const northUnitsPreTransform = units.filter(u => u.y === 0).sort((a, b) => a.x - b.x);
   const southUnitsPreTransform = units.filter(u => u.y > 0).sort((a, b) => a.x - b.x);
 
   if (northUnitsPreTransform.length > 0) {
     const leftmost = northUnitsPreTransform[0];
     const rightmost = northUnitsPreTransform[northUnitsPreTransform.length - 1];
-    console.log(`[DEBUG] North LEFT corner: ${leftmost.type} at x=${leftmost.x.toFixed(2)}`);
-    console.log(`[DEBUG] North RIGHT corner: ${rightmost.type} at x=${rightmost.x.toFixed(2)} (ends at ${(rightmost.x + rightmost.width).toFixed(2)})`);
+    Logger.debug(` North LEFT corner: ${leftmost.type} at x=${leftmost.x.toFixed(2)}`);
+    Logger.debug(` North RIGHT corner: ${rightmost.type} at x=${rightmost.x.toFixed(2)} (ends at ${(rightmost.x + rightmost.width).toFixed(2)})`);
   }
   if (southUnitsPreTransform.length > 0) {
     const leftmost = southUnitsPreTransform[0];
     const rightmost = southUnitsPreTransform[southUnitsPreTransform.length - 1];
-    console.log(`[DEBUG] South LEFT corner: ${leftmost.type} at x=${leftmost.x.toFixed(2)}`);
-    console.log(`[DEBUG] South RIGHT corner: ${rightmost.type} at x=${rightmost.x.toFixed(2)} (ends at ${(rightmost.x + rightmost.width).toFixed(2)})`);
+    Logger.debug(` South LEFT corner: ${leftmost.type} at x=${leftmost.x.toFixed(2)}`);
+    Logger.debug(` South RIGHT corner: ${rightmost.type} at x=${rightmost.x.toFixed(2)} (ends at ${(rightmost.x + rightmost.width).toFixed(2)})`);
   }
-  console.log(`[DEBUG] === END CORNER UNITS ===`);
+  Logger.debug(` === END CORNER UNITS ===`);
 
   // --- 14. Convert to Output Format ---
   // Apply coordinate centering: shift from (0,0)-(length,depth) to centered around (0,0)
@@ -2282,28 +1948,72 @@ export function generateFloorplate(
 
 // ============================================================================
 // 3-OPTION GENERATION
-// Generates 3 layout variants (balanced, mixOptimized, efficiencyOptimized)
-// per feature spec Section 8.8.
-//
-// Parameters:
-//   - alignment (0.0-1.0): Controls partition wall alignment between north/south
-//     sides. Higher values allow walls to snap further to align with the
-//     opposite side's partition walls.
 // ============================================================================
 
+/**
+ * Generates three layout variants using different optimization strategies.
+ *
+ * This is the primary entry point for the floorplate generator. It creates
+ * three design options that users can compare:
+ *
+ * 1. **Balanced** - Equal priority to mix accuracy, unit sizing, and efficiency.
+ *    Good default choice for most situations.
+ *
+ * 2. **Mix Optimized** - Prioritizes hitting exact unit mix percentages over
+ *    other factors. Best when you have strict pro forma requirements.
+ *
+ * 3. **Efficiency Optimized** - Maximizes building efficiency (NRSF/GSF ratio).
+ *    Best when you want to maximize rentable area.
+ *
+ * Each option is a complete, valid floorplan that can be rendered independently.
+ *
+ * @param footprint - Building footprint from `extractFootprintFromTriangles()`.
+ * @param config - Target unit mix configuration with percentages and areas.
+ * @param egressConfig - Fire code egress requirements.
+ * @param options - Optional generation parameters:
+ *   - `corridorWidth`: Corridor width in meters (default: ~1.83m / 6ft)
+ *   - `coreWidth`: Core width in meters (default: ~3.66m / 12ft)
+ *   - `coreDepth`: Core depth in meters (default: ~9m / 29.5ft)
+ *   - `coreSide`: Side for core placement: 'North' or 'South' (default: 'North')
+ *   - `alignment`: Wall alignment strength 0-1 (default: 1.0)
+ *   - `customColors`: Optional custom hex colors for each unit type
+ * @returns Array of 3 LayoutOption objects, one per strategy. Each contains:
+ *          - `id`: Unique identifier for the option
+ *          - `strategy`: The optimization strategy used
+ *          - `floorplan`: Complete FloorPlanData for rendering
+ *          - `label`: Human-readable strategy name
+ *          - `description`: Explanation of the strategy
+ *
+ * @example
+ * ```typescript
+ * const options = generateFloorplateVariants(
+ *   footprint,
+ *   unitConfig,
+ *   EGRESS_SPRINKLERED
+ * );
+ *
+ * // options[0] = Balanced strategy
+ * // options[1] = Mix Optimized strategy
+ * // options[2] = Efficiency Optimized strategy
+ *
+ * // Render the balanced option
+ * const meshData = renderFloorplate(options[0].floorplan);
+ * ```
+ */
 export function generateFloorplateVariants(
   footprint: BuildingFootprint,
   config: UnitConfiguration,
   egressConfig: EgressConfig,
-  corridorWidth: number = DEFAULT_CORRIDOR_WIDTH,
-  coreWidth: number = DEFAULT_CORE_WIDTH,
-  coreDepth: number = DEFAULT_CORE_DEPTH,
-  coreSide: 'North' | 'South' = 'North',
-  unitColors?: UnitColorMap,
-  alignment: number = 1.0
+  options: GeneratorOptions = {}
 ): LayoutOption[] {
-  // Set custom colors if provided
-  customUnitColors = unitColors || {};
+  const {
+    corridorWidth = DEFAULT_CORRIDOR_WIDTH,
+    coreWidth = DEFAULT_CORE_WIDTH,
+    coreDepth = DEFAULT_CORE_DEPTH,
+    coreSide = 'North',
+    alignment = 1.0,
+    customColors
+  } = options;
 
   const strategies: OptimizationStrategy[] = ['balanced', 'mixOptimized', 'efficiencyOptimized'];
 
@@ -2316,8 +2026,9 @@ export function generateFloorplateVariants(
       coreWidth,
       coreDepth,
       coreSide,
-      alignment,  // Use user-controlled alignment
-      strategy
+      alignment,
+      strategy,
+      customColors
     );
 
     return {
@@ -2331,144 +2042,6 @@ export function generateFloorplateVariants(
 }
 
 // ============================================================================
-// FOOTPRINT EXTRACTION (preserved from original)
+// FOOTPRINT EXTRACTION
+// Moved to ./footprint.ts - re-exported at top of file
 // ============================================================================
-
-function distance2D(x1: number, y1: number, x2: number, y2: number): number {
-  return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-}
-
-function cross(o: { x: number; y: number }, a: { x: number; y: number }, b: { x: number; y: number }): number {
-  return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
-}
-
-function convexHull(points: { x: number; y: number }[]): { x: number; y: number }[] {
-  if (points.length < 3) return [...points];
-
-  const sorted = [...points].sort((a, b) => a.x === b.x ? a.y - b.y : a.x - b.x);
-
-  const hull: { x: number; y: number }[] = [];
-
-  // Lower hull
-  for (const p of sorted) {
-    while (hull.length >= 2 && cross(hull[hull.length - 2], hull[hull.length - 1], p) <= 0) {
-      hull.pop();
-    }
-    hull.push(p);
-  }
-
-  // Upper hull
-  const lowerLen = hull.length;
-  for (let i = sorted.length - 2; i >= 0; i--) {
-    const p = sorted[i];
-    while (hull.length > lowerLen && cross(hull[hull.length - 2], hull[hull.length - 1], p) <= 0) {
-      hull.pop();
-    }
-    hull.push(p);
-  }
-
-  hull.pop();
-  return hull;
-}
-
-function findLongestEdge(hull: { x: number; y: number }[]): {
-  p1: { x: number; y: number };
-  p2: { x: number; y: number };
-  length: number;
-} {
-  let maxLen = 0;
-  let p1 = hull[0];
-  let p2 = hull[0];
-
-  for (let i = 0; i < hull.length; i++) {
-    const j = (i + 1) % hull.length;
-    const len = distance2D(hull[i].x, hull[i].y, hull[j].x, hull[j].y);
-    if (len > maxLen) {
-      maxLen = len;
-      p1 = hull[i];
-      p2 = hull[j];
-    }
-  }
-
-  return { p1, p2, length: maxLen };
-}
-
-export function extractFootprintFromTriangles(triangles: Float32Array): BuildingFootprint {
-  let minX = Infinity, maxX = -Infinity;
-  let minY = Infinity, maxY = -Infinity;
-  let minZ = Infinity, maxZ = -Infinity;
-
-  for (let i = 0; i < triangles.length; i += 3) {
-    minX = Math.min(minX, triangles[i]);
-    maxX = Math.max(maxX, triangles[i]);
-    minY = Math.min(minY, triangles[i + 1]);
-    maxY = Math.max(maxY, triangles[i + 1]);
-    minZ = Math.min(minZ, triangles[i + 2]);
-    maxZ = Math.max(maxZ, triangles[i + 2]);
-  }
-
-  const floorZ = minZ;
-  const groundTolerance = (maxZ - minZ) * 0.1;
-
-  const groundPoints: { x: number; y: number }[] = [];
-  const seenPoints = new Set<string>();
-
-  for (let i = 0; i < triangles.length; i += 3) {
-    const z = triangles[i + 2];
-    if (z <= floorZ + groundTolerance) {
-      const key = `${triangles[i].toFixed(2)},${triangles[i + 1].toFixed(2)}`;
-      if (!seenPoints.has(key)) {
-        seenPoints.add(key);
-        groundPoints.push({ x: triangles[i], y: triangles[i + 1] });
-      }
-    }
-  }
-
-  if (groundPoints.length < 2) {
-    for (let i = 0; i < triangles.length; i += 3) {
-      const key = `${triangles[i].toFixed(2)},${triangles[i + 1].toFixed(2)}`;
-      if (!seenPoints.has(key)) {
-        seenPoints.add(key);
-        groundPoints.push({ x: triangles[i], y: triangles[i + 1] });
-      }
-    }
-  }
-
-  const hull = convexHull(groundPoints);
-  const { p1, p2 } = findLongestEdge(hull);
-
-  const dx = p2.x - p1.x;
-  const dy = p2.y - p1.y;
-  const rotation = Math.atan2(dy, dx);
-
-  const centerX = (minX + maxX) / 2;
-  const centerY = (minY + maxY) / 2;
-
-  const cosR = Math.cos(-rotation);
-  const sinR = Math.sin(-rotation);
-
-  let localMinX = Infinity, localMaxX = -Infinity;
-  let localMinY = Infinity, localMaxY = -Infinity;
-
-  groundPoints.forEach(p => {
-    const tx = p.x - centerX;
-    const ty = p.y - centerY;
-    const localX = tx * cosR - ty * sinR;
-    const localY = tx * sinR + ty * cosR;
-    localMinX = Math.min(localMinX, localX);
-    localMaxX = Math.max(localMaxX, localX);
-    localMinY = Math.min(localMinY, localY);
-    localMaxY = Math.max(localMaxY, localY);
-  });
-
-  const width = localMaxX - localMinX;
-  const depth = localMaxY - localMinY;
-  const height = maxZ - minZ;
-
-  return {
-    minX, maxX, minY, maxY,
-    width, depth, height,
-    centerX, centerY,
-    floorZ, rotation
-  };
-}

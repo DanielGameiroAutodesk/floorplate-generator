@@ -50,6 +50,76 @@ await Forma.proposal.addElement({ urn: results[0].urn, transform });
 | "units intersects" error | Overlapping polygons | Check vertex deduplication and polygon winding |
 | Request body format | Sent single object | Wrap in array: `[buildingData]` |
 
+## Why Direct API Calls Are Required
+
+### SDK Limitations for Graph Buildings
+
+The Forma SDK (`forma-embedded-view-sdk`) provides high-level wrappers for common operations like reading geometry, managing proposals, and rendering meshes. However, **`graphBuilding` representations and the BasicBuilding API are NOT exposed** through the SDK.
+
+To create native Forma buildings with unit subdivisions (rooms, cores, corridors), you must make direct HTTP calls to the BasicBuilding API:
+
+```
+POST /forma/basicbuilding/v1alpha/basicbuilding/batch-create
+```
+
+This is an architectural constraint—graph buildings require server-side processing that isn't wrapped by the embedded view SDK.
+
+### Authentication Architecture
+
+| Environment | API Endpoint | Auth Method |
+|-------------|--------------|-------------|
+| **Production** (hosted extension) | `app.autodeskforma.eu/api/` | Session cookies (`credentials: 'include'`) |
+| **Localhost** (development) | `developer.api.autodesk.com/` | Bearer token (OAuth) |
+
+**Production**: When your extension is deployed and hosted, requests can go through Forma's proxy at `app.autodeskforma.eu/api/`. This proxy automatically forwards session cookies, so no explicit token is needed.
+
+**Localhost**: The Forma proxy blocks requests from localhost origins (CORS policy). To call APIs during local development, you must:
+1. Use the direct Autodesk API endpoint
+2. Obtain a Bearer token via OAuth
+
+### Localhost Authentication Setup
+
+When developing locally, follow these steps to authenticate API calls:
+
+1. **Run your local server on port 5173**:
+   - The local development server **must** be deployed on port `5173`
+   - This is required for the OAuth callback to work correctly
+   - Example: `vite --port 5173` or configure your bundler accordingly
+
+2. **Install the Auth Helper Extension** in your Forma project:
+   - Extension ID: `86e838c8-3b4d-452e-8496-67565e86cfa9`
+   - This is an unpublished Forma extension available to any user
+   - Install by navigating to the extension in Forma using its ID
+   - This extension enables the OAuth flow for localhost development
+
+3. **Use OAuth flow** to acquire a Bearer token:
+   ```typescript
+   Forma.auth.configure({
+     clientId: "YOUR_APS_CLIENT_ID",
+     callbackUrl: `${window.location.origin}/callback.html`,
+     scopes: ["data:read", "data:write"],
+   });
+   const { accessToken } = await Forma.auth.acquireTokenOverlay();
+   ```
+
+4. **Call API directly** with the Bearer token:
+   ```typescript
+   const response = await fetch(
+     'https://developer.api.autodesk.com/forma/basicbuilding/v1alpha/basicbuilding/batch-create?authcontext=' + projectId,
+     {
+       method: 'POST',
+       headers: {
+         'Authorization': `Bearer ${accessToken}`,
+         'Content-Type': 'application/json',
+         'X-Ads-Region': 'EMEA'  // or 'US' depending on project region
+       },
+       body: JSON.stringify([buildingData])
+     }
+   );
+   ```
+
+> **Note**: The `callback.html` file must exist at your callback URL path. It can be minimal—just a page that closes the authentication overlay window after the OAuth exchange completes.
+
 ## Overview
 
 The bake feature takes a generated floorplate (with units, cores, corridors) and converts it into a native Forma building element with:

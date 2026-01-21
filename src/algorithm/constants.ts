@@ -439,3 +439,193 @@ export const CORRIDOR_VOID = {
   // Maximum void a unit can absorb
   maxVoidAbsorption: 15 * FEET_TO_METERS    // ~4.6m
 };
+
+// ============================================================================
+// ALGORITHM MAGIC NUMBERS
+// Extracted from generator-core.ts for maintainability and documentation
+// ============================================================================
+
+/**
+ * Unit sizing thresholds and factors
+ */
+export const UNIT_SIZING = {
+  /**
+   * Maximum expansion factor for Studios (1.15 = 15% max expansion).
+   * Studios should stay close to their target size to maintain market consistency.
+   * A "large studio" creates pricing confusion and comp problems.
+   */
+  STUDIO_MAX_EXPANSION_FACTOR: 1.15,
+
+  /**
+   * Fallback expansion factor when no larger unit type exists (1.25 = 25% expansion).
+   * Used when a unit type has no larger type to cap it.
+   */
+  FALLBACK_EXPANSION_FACTOR: 1.25,
+
+  /**
+   * Threshold factor for auto-splitting huge units (1.3 = 30% above target).
+   * If a unit exceeds this threshold, it triggers auto-split logic to prevent
+   * unreasonably large units (e.g., "2000sf 3BR" monsters).
+   */
+  HUGE_UNIT_THRESHOLD: 1.3,
+
+  /**
+   * Minimum factor for inserting a studio during auto-split (0.85 = 85% of studio width).
+   * Only split if the excess space is large enough to be useful.
+   */
+  STUDIO_SPLIT_MIN_FACTOR: 0.85,
+
+  /**
+   * Minimum factor for last unit truncation warning (0.9 = 90% of target).
+   * If the remaining space forces a unit below this, log a warning.
+   */
+  TRUNCATION_WARNING_FACTOR: 0.9,
+
+  /**
+   * Tolerance factor for corner candidate selection (1.1 = 10% tolerance).
+   * Used when selecting units that can fit in corner positions.
+   */
+  CORNER_CANDIDATE_TOLERANCE: 1.1,
+
+  /**
+   * Area threshold for 1BR L-shape eligibility in square feet.
+   * 1BR units smaller than this should not be L-shaped.
+   */
+  ONE_BR_LSHAPE_MIN_AREA_SQFT: 850
+};
+
+/**
+ * Geometry search parameters
+ */
+export const GEOMETRY_SEARCH = {
+  /**
+   * Step size for corner length search (in feet).
+   * The algorithm iterates in 2-foot increments to find optimal corner lengths.
+   */
+  CORNER_STEP_FEET: 2,
+
+  /**
+   * Maximum corner length as fraction of building length (0.35 = 35%).
+   * Prevents corners from consuming too much of the building.
+   */
+  MAX_CORNER_FRACTION: 0.35,
+
+  /**
+   * Factor for minimum corner length from unit width (0.9 = 90% of width).
+   * Ensures corners can accommodate at least one unit.
+   */
+  MIN_CORNER_FROM_WIDTH_FACTOR: 0.9,
+
+  /**
+   * Maximum mid-core offset deviation as fraction of total mid length (0.15 = 15%).
+   * Limits how far off-center the mid-core can be placed.
+   */
+  MAX_MID_OFFSET_FRACTION: 0.15,
+
+  /**
+   * Step size for mid-core offset search (in feet).
+   */
+  OFFSET_STEP_FEET: 4
+};
+
+/**
+ * Wall alignment parameters
+ */
+export const WALL_ALIGNMENT = {
+  /**
+   * Extra flexibility boost at strict alignment (0.15 = 15%).
+   * Allows more unit compression to achieve partition alignment across corridor.
+   */
+  ALIGNMENT_BOOST_FACTOR: 0.15,
+
+  /**
+   * Tolerance for edge matching during strict alignment (~4 inches in meters).
+   * Used to determine if unit edges align with core edges.
+   */
+  EDGE_MATCHING_TOLERANCE: 0.12,
+
+  /**
+   * Threshold for triggering strict alignment mode (> 0.6 = 60%+ alignment).
+   */
+  STRICT_ALIGNMENT_THRESHOLD: 0.6,
+
+  /**
+   * Precision for wall snap target positions (3 decimal places).
+   */
+  WALL_POSITION_PRECISION: 3
+};
+
+/**
+ * Footprint extraction parameters
+ */
+export const FOOTPRINT_EXTRACTION = {
+  /**
+   * Ground tolerance as fraction of building height (0.1 = 10%).
+   * Points within this tolerance of the minimum Z are considered "ground level".
+   */
+  GROUND_TOLERANCE_RATIO: 0.1,
+
+  /**
+   * Precision for deduplicating ground points (2 decimal places).
+   * Prevents near-duplicate points from cluttering the convex hull.
+   */
+  GROUND_POINT_PRECISION: 2
+};
+
+/**
+ * Strategy-specific safety factors
+ * Controls how much of available space to use for unit placement
+ */
+export const STRATEGY_SAFETY_FACTORS = {
+  /**
+   * Balanced strategy: conservative packing (0.99 = use 99% of space).
+   * Leaves small buffer to prevent compression issues.
+   */
+  balanced: 0.99,
+
+  /**
+   * Mix-optimized strategy: tighter packing (0.97 = use 97% of space).
+   * Packs units more tightly to hit exact mix percentages.
+   */
+  mixOptimized: 0.97,
+
+  /**
+   * Efficiency-optimized strategy: use all space (1.0 = use 100%).
+   * Maximizes building efficiency (NRSF/GSF).
+   */
+  efficiencyOptimized: 1.0
+};
+
+/**
+ * Flexibility calculation parameters
+ */
+export const FLEXIBILITY = {
+  /**
+   * Aggressive flexibility multiplier (1.5x normal + 0.05 base).
+   * Used in certain placement scenarios to allow more unit adjustment.
+   */
+  AGGRESSIVE_MULTIPLIER: 1.5,
+  AGGRESSIVE_BASE: 0.05,
+  AGGRESSIVE_MAX: 0.35,
+
+  /**
+   * Rigidity ratio contribution to effective density (0.5 = 50% contribution).
+   */
+  RIGIDITY_DENSITY_FACTOR: 0.5,
+
+  /**
+   * Tolerance for NaN prevention in wall alignment calculations.
+   */
+  NAN_PREVENTION_TOLERANCE: 0.05,
+
+  /**
+   * Minimum area factor for valid unit expansion check (0.9 = 90% of target).
+   */
+  MIN_AREA_FACTOR: 0.9,
+
+  /**
+   * Tolerance for unit fitting checks (~10cm / 4 inches).
+   * Used when checking if a unit can physically fit in remaining space.
+   */
+  UNIT_FIT_TOLERANCE: 0.1
+};

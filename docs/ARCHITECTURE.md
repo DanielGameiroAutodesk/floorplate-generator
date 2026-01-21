@@ -126,42 +126,79 @@ User Selection → Footprint Extraction → Generation → Visualization → Exp
 └─────────────────────────────────────────────────────────────┘
 ```
 
+## Design Philosophy
+
+Guiding principles for this extension:
+
+1. **Vibecoding-Friendly** - Clear naming, extensive comments, simple patterns over clever abstractions. Code should be understandable to non-engineers using AI assistance.
+
+2. **Forma-Native Feel** - Follow Forma's design system and UX patterns so the extension feels like a natural part of the product.
+
+3. **Algorithm First** - Core generation logic should be testable and reusable independent of any UI framework or Forma SDK.
+
+4. **Progressive Disclosure** - Simple options first, advanced settings available but not overwhelming. Users shouldn't need to understand everything to get started.
+
 ## Key Design Decisions
 
 ### 1. Separation of Concerns
 
-- **UI** is completely separated from **algorithm**
-- **Geometry** utilities are independent and reusable
-- This allows testing the algorithm without Forma
+**What**: UI is completely separated from algorithm; geometry utilities are independent.
+
+**Why**:
+- Enables unit testing the generation algorithm without mocking Forma SDK
+- Allows the algorithm to run outside Forma (Node.js scripts, other platforms)
+- Reduces coupling so contributors can understand isolated parts
+- Geometry utilities can be reused in other projects
+
+**Trade-off**: Requires more explicit data passing between layers; slightly more boilerplate.
 
 ### 2. Multiple Entry Points
 
-- `index.html`: Main extension panel (always visible in sidebar)
-- `floorplate-panel.html`: Optional floating panel for preview
-- Both can run independently but communicate via MessagePort
+**What**: Two HTML entry points - main panel (`index.html`) and floating preview (`floorplate-panel.html`).
+
+**Why**:
+- Forma supports floating panels for large visualizations without crowding the sidebar
+- MessagePort communication keeps panels synchronized
+- Users can position the preview wherever convenient on their screen
+- Follows Forma's established UX patterns for extension panels
+
+**Trade-off**: Added complexity of cross-frame messaging; need to handle panel lifecycle.
 
 ### 3. Three Generation Strategies
 
-Instead of one algorithm, we generate three layout options simultaneously:
-1. **Balanced**: Best overall compromise
-2. **Mix Optimized**: Prioritizes hitting target unit percentages
-3. **Efficiency Optimized**: Maximizes rentable square footage
+**What**: Generate three layout options simultaneously instead of one "optimal" solution.
 
-This gives users meaningful choices without overwhelming them.
+**Why**:
+- Real-world design involves trade-offs - there's no single "best" layout
+- Users have different priorities (efficiency vs. unit mix vs. balance)
+- Giving choices empowers users without overwhelming them (3 is a sweet spot)
+- Enables comparative analysis and informed decision-making
+
+**Trade-off**: 3x computation cost; more complex UI to display options.
 
 ### 4. Dynamic Unit Type System
 
-Rather than hardcoding 4 unit types, the system supports:
-- Any number of custom unit types
-- Configurable properties per type
-- Automatic smart defaults based on area
+**What**: Support any number of custom unit types rather than hardcoding 4 types.
+
+**Why**:
+- Different markets have different unit type requirements
+- Users may want unusual configurations (micro-units, large penthouses)
+- Smart defaults reduce configuration burden while allowing customization
+- Future-proofs against changing market needs
+
+**Trade-off**: More complex state management; harder to optimize algorithm for fixed types.
 
 ### 5. Immutable Minimum Sizes
 
-A critical design decision: **units cannot shrink below their target size**.
-- Units can only expand to fill available space
-- Larger units absorb more expansion (weighted flexibility)
-- This prevents undersized apartments that wouldn't meet market expectations
+**What**: Units cannot shrink below their target size - they can only expand.
+
+**Why**:
+- Undersized apartments don't meet market expectations and won't rent well
+- Expansion is acceptable (more space is good); shrinkage is not
+- Weighted flexibility means larger units absorb proportionally more expansion
+- Maintains realistic unit sizes that match what users specified
+
+**Trade-off**: May result in unused corridor space when units can't fit; algorithm must handle this gracefully.
 
 ## Module Dependencies
 

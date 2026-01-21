@@ -1,9 +1,48 @@
 /**
  * Floorplate Generator - Algorithm Types
  * Types for the unit layout algorithm
+ *
+ * ## Type System Architecture
+ *
+ * This module contains two unit type systems that coexist:
+ *
+ * ### 1. Legacy System (`UnitType` enum + `UnitConfiguration`)
+ * - Fixed 4-type system: Studio, 1BR, 2BR, 3BR
+ * - Used throughout the core algorithm (generator-core.ts)
+ * - Stable, well-tested, production-ready
+ * - Simple to use for standard multifamily projects
+ *
+ * ### 2. Dynamic System (`DynamicUnitType` + `DynamicUnitConfiguration`)
+ * - Supports arbitrary unit types (penthouses, ADUs, micro-units, etc.)
+ * - Per-unit behavioral configuration (flexibility, placement rules)
+ * - Designed for future extensibility
+ * - Not yet fully integrated into the core algorithm
+ *
+ * ### Migration Strategy
+ * Both systems will coexist for the foreseeable future:
+ * - Legacy system is the "stable API" for existing integrations
+ * - Dynamic system is for new features requiring custom unit types
+ * - Use `type-compat.ts` for conversions between systems:
+ *   - `toDynamicConfig()` - convert legacy → dynamic
+ *   - `toLegacyConfig()` - convert dynamic → legacy
+ *
+ * ### When to Use Which
+ * - **Standard 4-type projects**: Use legacy `UnitConfiguration`
+ * - **Custom unit types**: Use `DynamicUnitConfiguration` + conversion
+ * - **Algorithm internals**: Legacy system (no changes planned)
  */
 
-// Legacy enum - kept for backwards compatibility, will be removed
+// ============================================================================
+// LEGACY UNIT TYPE SYSTEM
+// Stable, production API for standard multifamily unit types
+// ============================================================================
+
+/**
+ * Legacy unit type enum - fixed 4-type system.
+ *
+ * This enum is deeply integrated into the core algorithm and provides
+ * a simple, stable API for standard multifamily projects.
+ */
 export enum UnitType {
   Studio = 'Studio',
   OneBed = '1BR',
@@ -11,7 +50,12 @@ export enum UnitType {
   ThreeBed = '3BR'
 }
 
-// Legacy configuration format - kept for backwards compatibility
+/**
+ * Legacy unit configuration format.
+ *
+ * Maps each unit type to its target percentage and area.
+ * Areas are in square meters for internal calculations.
+ */
 export interface UnitConfiguration {
   [UnitType.Studio]: { percentage: number; area: number; cornerEligible?: boolean };
   [UnitType.OneBed]: { percentage: number; area: number; cornerEligible?: boolean };
@@ -21,7 +65,7 @@ export interface UnitConfiguration {
 
 // ============================================================================
 // DYNAMIC UNIT TYPE SYSTEM
-// Supports arbitrary unit typologies with per-unit behavioral configuration
+// Extensible system for arbitrary unit typologies
 // ============================================================================
 
 /**
@@ -416,6 +460,25 @@ export interface GeneratorConfig {
 }
 
 /**
+ * Optional generation parameters with sensible defaults.
+ * Used by generateFloorplate and generateFloorplateVariants to reduce parameter count.
+ */
+export interface GeneratorOptions {
+  /** Corridor width in meters (default: ~1.83m / 6ft) */
+  corridorWidth?: number;
+  /** Core width in meters (default: ~3.66m / 12ft) */
+  coreWidth?: number;
+  /** Core depth in meters (default: ~9m / 29.5ft) */
+  coreDepth?: number;
+  /** Which side of corridor to place cores (default: 'North') */
+  coreSide?: 'North' | 'South';
+  /** Wall alignment strength 0-1 (default: 0.5 for single, 1.0 for variants) */
+  alignment?: number;
+  /** Custom colors for unit types (hex strings) */
+  customColors?: Partial<Record<UnitType, string>>;
+}
+
+/**
  * Statistics about the optimization process
  */
 export interface OptimizationStats {
@@ -427,6 +490,130 @@ export interface OptimizationStats {
   timeMs: number;
   /** Optimal geometry found */
   optimalGeometry: GeometrySearchResult;
+}
+
+// ============================================================================
+// FUNCTION CONTEXT TYPES
+// Context objects for functions with many parameters (reduces parameter count)
+// ============================================================================
+
+/**
+ * Geometry context for a segment being generated
+ */
+export interface SegmentGeometry {
+  /** X coordinate of segment start */
+  startX: number;
+  /** Y coordinate (0 for North side, positive for South) */
+  y: number;
+  /** Length of the segment (horizontal) */
+  length: number;
+  /** Extra width from core wrapping (default 0) */
+  extraWidth?: number;
+}
+
+/**
+ * Classification of segment position relative to building corners
+ */
+export interface SegmentClassification {
+  /** Is this a corner segment? */
+  isCorner: boolean;
+  /** Is this the left building corner (x=0)? */
+  isLeftCorner: boolean;
+  /** Is this the right building corner (x+len ≈ buildingLength)? */
+  isRightCorner: boolean;
+}
+
+/**
+ * Context for generating units within a segment
+ * Used by generateUnitSegment() to reduce parameter count from 13 to 3
+ */
+export interface SegmentGenerationContext {
+  /** Position and size */
+  geometry: SegmentGeometry;
+  /** Corner classification */
+  classification: SegmentClassification;
+  /** Unit counts to place in this segment */
+  unitCounts: Record<UnitType, number>;
+  /** Pattern for unit ordering */
+  pattern: 'desc' | 'asc' | 'valley' | 'valley-inverted' | 'random';
+  /** Bonus area for L-shaped wrapping (default 0) */
+  endBonusArea?: number;
+  /** Custom colors for unit types */
+  customColors?: Partial<Record<UnitType, string>>;
+}
+
+/**
+ * Building geometry input for optimization search
+ */
+export interface BuildingGeometryInput {
+  /** Available rentable corridor length (meters) */
+  availableRentableLength: number;
+  /** Number of mid-corridor core spans */
+  numMidSpans: number;
+  /** Bonus area per core from L-shaped wrapping (sq meters) */
+  singleCoreBonusArea: number;
+  /** Is this a continuous side with no core breaks? */
+  isContinuousSide?: boolean;
+}
+
+/**
+ * Context for the geometry optimization search
+ * Used by findOptimalGeometry() to reduce parameter count from 9 to 3
+ */
+export interface OptimizationSearchContext {
+  /** Building geometry inputs */
+  buildingGeometry: BuildingGeometryInput;
+  /** Unit types available for placement */
+  unitInventory: Record<UnitType, number>;
+  /** Reserve large units for corners? */
+  prioritizeCorners: boolean;
+  /** Max dead-end corridor length (reserved for egress constraints) */
+  deadEndLimit?: number;
+}
+
+/**
+ * Segment definition for distribution algorithm
+ * Extracted from inline type definition for clarity
+ */
+export interface SegmentDefinition {
+  /** Segment length (meters) */
+  len: number;
+  /** Is this a corner segment? */
+  isCorner: boolean;
+  /** Bonus area from L-shaped wrapping (sq meters) */
+  bonusArea: number;
+}
+
+/**
+ * Input for wall alignment algorithm
+ * Used by applyWallAlignment() to reduce parameter count from 5 to 3
+ */
+export interface WallAlignmentInput {
+  /** Units to align (will be modified) */
+  targetUnits: InternalUnitBlock[];
+  /** Reference units to snap to */
+  refUnits: InternalUnitBlock[];
+  /** Alignment strength 0-1 (0=loose, 1=strict) */
+  alignmentStrength: number;
+}
+
+/**
+ * Internal unit block representation during generation
+ * (Exported for use in WallAlignmentInput)
+ */
+export interface InternalUnitBlock {
+  id: string;
+  type: UnitType;
+  typeId: string;
+  typeName: string;
+  x: number;
+  y: number;
+  width: number;
+  depth: number;
+  area: number;
+  color: string;
+  rects?: { x: number; y: number; width: number; depth: number }[];
+  polyPoints?: string;
 }
 
 // ============================================================================

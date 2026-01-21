@@ -1,5 +1,9 @@
 # Forma Design System Documentation
 
+> **Why this exists**: Extracted from Autodesk's internal Forma design system materials
+> for quick reference. For authoritative/up-to-date information, see the
+> [official Storybook](https://app.autodeskforma.eu/design-system/v2/docs/).
+
 This documentation provides a comprehensive guide for adopting the Autodesk Forma Design System in Forma extensions.
 
 ## Quick Start

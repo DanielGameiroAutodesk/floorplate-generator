@@ -32,8 +32,21 @@ function generateId(): string {
 }
 
 /**
- * Generate a building ID from dimensions (for grouping saves)
- * Uses a simple hash of width + depth to identify "same" building
+ * Generates a building ID from dimensions for grouping saves.
+ *
+ * Buildings with the same dimensions get the same ID, allowing users
+ * to filter saved floorplates by building. This is useful when working
+ * with multiple buildings in a project.
+ *
+ * @param width - Building width in feet
+ * @param depth - Building depth in feet
+ * @returns A 12-character alphanumeric ID string
+ *
+ * @example
+ * ```typescript
+ * const id = generateBuildingId(300, 65);
+ * // Returns something like "MzAwLjAtNjUu"
+ * ```
  */
 export function generateBuildingId(width: number, depth: number): string {
   const signature = `${width.toFixed(1)}-${depth.toFixed(1)}`;
@@ -42,8 +55,19 @@ export function generateBuildingId(width: number, depth: number): string {
 }
 
 /**
- * Generate a default name for a saved floorplate
- * Format: "{Strategy} - {Month} {Day}, {Time}"
+ * Generates a default name for a saved floorplate.
+ *
+ * Creates a human-readable name including the optimization strategy
+ * and timestamp. Users can rename saves later via `updateFloorplateName()`.
+ *
+ * @param strategy - The optimization strategy used ('balanced', 'mixOptimized', 'efficiencyOptimized')
+ * @returns A formatted string like "Balanced - Jan 15, 2:30 PM"
+ *
+ * @example
+ * ```typescript
+ * const name = generateDefaultName('mixOptimized');
+ * // Returns "Mix Optimized - Jan 15, 2:30 PM"
+ * ```
  */
 export function generateDefaultName(strategy: OptimizationStrategy): string {
   const strategyNames: Record<OptimizationStrategy, string> = {
@@ -108,7 +132,23 @@ function createSummary(floorplate: SavedFloorplate): SavedFloorplateSummary {
 }
 
 /**
- * Save a floorplate to storage
+ * Saves a floorplate to Forma's cloud storage.
+ *
+ * Stores the complete floorplate data (layout, UI state, statistics) and
+ * updates the index for fast listing. Data is persisted to Forma's
+ * project-scoped cloud storage (S3-backed).
+ *
+ * @param floorplate - Complete SavedFloorplate object to persist.
+ *                     Must include id, name, layoutOption, uiState, and buildingId.
+ * @returns Promise that resolves when save is complete
+ * @throws Error if storage operation fails
+ *
+ * @example
+ * ```typescript
+ * const saved = createSavedFloorplate(layoutOption, uiState, buildingId);
+ * await saveFloorplate(saved);
+ * console.log('Saved:', saved.name);
+ * ```
  */
 export async function saveFloorplate(floorplate: SavedFloorplate): Promise<void> {
   // Save the full floorplate data
@@ -139,7 +179,22 @@ export async function saveFloorplate(floorplate: SavedFloorplate): Promise<void>
 }
 
 /**
- * Load a full floorplate from storage
+ * Loads a complete floorplate from storage by ID.
+ *
+ * Retrieves the full SavedFloorplate object including the complete
+ * FloorPlanData that can be rendered directly.
+ *
+ * @param id - The unique identifier of the saved floorplate
+ * @returns The complete SavedFloorplate if found, null otherwise
+ *
+ * @example
+ * ```typescript
+ * const saved = await loadFloorplate('abc-123');
+ * if (saved) {
+ *   const meshData = renderFloorplate(saved.layoutOption.floorplan);
+ *   // Render to Forma...
+ * }
+ * ```
  */
 export async function loadFloorplate(id: string): Promise<SavedFloorplate | null> {
   try {
@@ -155,7 +210,20 @@ export async function loadFloorplate(id: string): Promise<SavedFloorplate | null
 }
 
 /**
- * List all saved floorplates (returns summaries only)
+ * Lists all saved floorplates (summaries only, not full data).
+ *
+ * Returns lightweight summary objects for displaying in a list UI.
+ * To get full floorplate data for rendering, use `loadFloorplate(id)`.
+ *
+ * @returns Array of SavedFloorplateSummary objects, newest first
+ *
+ * @example
+ * ```typescript
+ * const saves = await listFloorplates();
+ * saves.forEach(save => {
+ *   console.log(`${save.name}: ${save.previewStats.totalUnits} units`);
+ * });
+ * ```
  */
 export async function listFloorplates(): Promise<SavedFloorplateSummary[]> {
   const index = await loadIndex();
@@ -163,7 +231,21 @@ export async function listFloorplates(): Promise<SavedFloorplateSummary[]> {
 }
 
 /**
- * Delete a saved floorplate
+ * Deletes a saved floorplate from storage.
+ *
+ * Removes both the floorplate data and its index entry. This operation
+ * is permanent and cannot be undone.
+ *
+ * @param id - The unique identifier of the floorplate to delete
+ * @returns Promise that resolves when deletion is complete
+ *
+ * @example
+ * ```typescript
+ * if (confirm('Delete this saved floorplate?')) {
+ *   await deleteFloorplate(saveId);
+ *   await refreshSavedList();
+ * }
+ * ```
  */
 export async function deleteFloorplate(id: string): Promise<void> {
   // Delete the floorplate data
@@ -181,7 +263,20 @@ export async function deleteFloorplate(id: string): Promise<void> {
 }
 
 /**
- * Update the name of a saved floorplate
+ * Renames a saved floorplate.
+ *
+ * Updates the name and sets the updatedAt timestamp. The name change
+ * is reflected both in the full data and in the index.
+ *
+ * @param id - The unique identifier of the floorplate to rename
+ * @param newName - The new display name
+ * @returns Promise that resolves when rename is complete
+ * @throws Error if floorplate with given ID is not found
+ *
+ * @example
+ * ```typescript
+ * await updateFloorplateName(saveId, 'Final Design v2');
+ * ```
  */
 export async function updateFloorplateName(id: string, newName: string): Promise<void> {
   // Load the full floorplate
@@ -199,7 +294,20 @@ export async function updateFloorplateName(id: string, newName: string): Promise
 }
 
 /**
- * Duplicate a saved floorplate
+ * Creates a copy of an existing saved floorplate.
+ *
+ * The duplicate gets a new ID and a name with "(Copy)" appended.
+ * Useful for creating variations from a base design.
+ *
+ * @param id - The unique identifier of the floorplate to duplicate
+ * @returns The newly created SavedFloorplate copy
+ * @throws Error if floorplate with given ID is not found
+ *
+ * @example
+ * ```typescript
+ * const copy = await duplicateFloorplate(originalId);
+ * console.log('Created copy:', copy.name); // "Original Name (Copy)"
+ * ```
  */
 export async function duplicateFloorplate(id: string): Promise<SavedFloorplate> {
   // Load the original
@@ -225,7 +333,25 @@ export async function duplicateFloorplate(id: string): Promise<SavedFloorplate> 
 }
 
 /**
- * Create a new SavedFloorplate object (helper for main.ts)
+ * Creates a new SavedFloorplate object ready for storage.
+ *
+ * Factory function that assembles all required data for a saved floorplate,
+ * including auto-generated ID, name, and timestamps.
+ *
+ * @param layoutOption - The LayoutOption containing the floorplan and strategy
+ * @param uiState - The serialized UI state for restoring settings on load
+ * @param buildingId - Building identifier for grouping saves
+ * @returns A complete SavedFloorplate object ready to pass to `saveFloorplate()`
+ *
+ * @example
+ * ```typescript
+ * const saved = createSavedFloorplate(
+ *   generatedOptions[selectedIndex],
+ *   getSerializableUIState(),
+ *   currentBuildingId
+ * );
+ * await saveFloorplate(saved);
+ * ```
  */
 export function createSavedFloorplate(
   layoutOption: SavedFloorplate['layoutOption'],

@@ -104,8 +104,15 @@ function createRectangleMesh(
 }
 
 /**
- * Decompose an L-shaped polygon into triangles
- * L-shapes are concave, so we decompose into two rectangles (4 triangles)
+ * Decompose an L-shaped polygon into triangles.
+ *
+ * WHY NOT USE SIMPLE FAN TRIANGULATION?
+ * L-shapes are concave polygons. Simple fan triangulation (connecting all vertices
+ * to a center point) creates triangles that extend OUTSIDE the polygon boundary,
+ * causing visual artifacts where neighboring units appear to overlap.
+ *
+ * Instead, we decompose the L into two convex quads (rectangles) which can each
+ * be safely triangulated. This produces clean, non-overlapping geometry.
  */
 function triangulateLShape(
   points: { x: number; y: number }[],
@@ -419,7 +426,43 @@ function renderCorridor(corridor: CorridorBlock, elevation: number, transform: T
 }
 
 /**
- * Render complete floorplate to combined mesh data
+ * Converts a FloorPlanData object into Forma-compatible mesh data for 3D rendering.
+ *
+ * Transforms all floorplate elements (corridor, cores, units) from local building
+ * coordinates to world coordinates using the floorplan's transform data. Creates
+ * triangle meshes with per-vertex colors that can be rendered directly in Forma.
+ *
+ * **Rendering layers (bottom to top):**
+ * 1. Corridor (gray) - base layer
+ * 2. Cores (dark gray) - +0.1m elevation
+ * 3. Unit fills (colored by type) - +0.2m elevation
+ * 4. Unit borders (dark outlines) - +0.3m elevation
+ *
+ * WHY elevation offsets? Without them, overlapping surfaces cause z-fighting
+ * (flickering) as WebGL can't determine which surface is "on top". The 0.1m
+ * gaps are imperceptible but eliminate z-fighting completely.
+ *
+ * @param floorplan - Generated floorplan data from `generateFloorplate()`.
+ *                    Must include transform data for coordinate conversion.
+ * @param elevationOffset - Height above floor to render the floorplate.
+ *                          Default 0.5m prevents z-fighting with the building floor.
+ * @returns FormaMeshData containing:
+ *          - `positions`: Float32Array of vertex positions [x,y,z, x,y,z, ...]
+ *          - `colors`: Uint8Array of vertex colors [r,g,b,a, r,g,b,a, ...]
+ *
+ * @example
+ * ```typescript
+ * const floorplan = generateFloorplate(footprint, config, egressConfig);
+ * const meshData = renderFloorplate(floorplan);
+ *
+ * // Add to Forma's 3D view
+ * await Forma.render.addMesh({
+ *   geometryData: {
+ *     position: meshData.positions,
+ *     color: meshData.colors
+ *   }
+ * });
+ * ```
  */
 export function renderFloorplate(floorplan: FloorPlanData, elevationOffset: number = 0.5): FormaMeshData {
   const elevation = floorplan.floorElevation + elevationOffset;
@@ -479,7 +522,30 @@ export function renderFloorplate(floorplan: FloorPlanData, elevationOffset: numb
 }
 
 /**
- * Render individual layer meshes (for debugging/selective rendering)
+ * Renders floorplate elements as separate mesh layers.
+ *
+ * Useful for debugging or when you need selective rendering control.
+ * Returns each layer (corridor, cores, units, borders) as independent
+ * mesh data that can be rendered, hidden, or styled separately.
+ *
+ * @param floorplan - Generated floorplan data from `generateFloorplate()`.
+ * @param elevationOffset - Height above floor (default 0.5m).
+ * @returns Object containing separate FormaMeshData for each layer:
+ *          - `corridor`: Central hallway mesh
+ *          - `cores`: Elevator/stair core meshes
+ *          - `units`: Unit fill meshes (colored by type)
+ *          - `borders`: Unit outline meshes (dark borders)
+ *
+ * @example
+ * ```typescript
+ * const layers = renderFloorplateLayers(floorplan);
+ *
+ * // Render only units and borders (hide corridor/cores)
+ * await Forma.render.addMesh({ geometryData: {
+ *   position: layers.units.positions,
+ *   color: layers.units.colors
+ * }});
+ * ```
  */
 export function renderFloorplateLayers(
   floorplan: FloorPlanData,
@@ -502,7 +568,19 @@ export function renderFloorplateLayers(
 }
 
 /**
- * Get unit color by type
+ * Gets the default RGBA color for a unit type.
+ *
+ * Returns colors from the UNIT_COLORS constant map. These are the
+ * standard colors used when no custom colors are specified.
+ *
+ * @param type - The UnitType enum value (Studio, OneBed, TwoBed, ThreeBed).
+ * @returns RGBA color object with r, g, b values (0-255) and a (alpha, 0-255).
+ *
+ * @example
+ * ```typescript
+ * const studioColor = getUnitColor(UnitType.Studio);
+ * // Returns { r: 160, g: 212, b: 220, a: 200 } (light blue)
+ * ```
  */
 export function getUnitColor(type: UnitType): { r: number; g: number; b: number; a: number } {
   return UNIT_COLORS[type];

@@ -5,6 +5,7 @@ An automated apartment layout generation tool for **US multifamily residential b
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)
 ![Forma SDK](https://img.shields.io/badge/Forma%20SDK-0.87.0-orange.svg)
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)
 
 > **About This Project**
 >
@@ -31,7 +32,15 @@ This extension automatically generates optimized apartment layouts for **US mult
 
 ## Screenshots
 
-_TODO: Add screenshots of the extension in action_
+### Unit Mix Configuration
+![Unit mix configuration panel](docs/images/left-sidepanel_input-unit-mix_partition-alignment.png)
+
+Configure unit types with target percentages and areas. Adjust partition alignment for strict or flexible unit sizing.
+
+### Generated Floorplate
+![Generated floorplate with metrics](docs/images/floating-menu_output-generation.png)
+
+Compare three layout strategies (Balanced, Mix Optimized, Efficiency) with real-time metrics including unit counts, efficiency ratios, and egress compliance.
 
 ## Quick Start
 
@@ -99,36 +108,54 @@ floorplate-generator/
 ├── src/
 │   ├── algorithm/           # Core generation algorithm
 │   │   ├── generator-core.ts  # Main floorplate generation logic
-│   │   ├── index.ts         # Public API exports
-│   │   ├── types.ts         # Type definitions (UnitBlock, CoreBlock, etc.)
-│   │   ├── constants.ts     # Default values, colors, and configurations
-│   │   └── renderer.ts      # Converts FloorPlanData to Forma mesh data
+│   │   ├── flexibility-model.ts  # Unit stretch/shrink rules
+│   │   ├── footprint.ts      # Building footprint extraction
+│   │   ├── unit-counts.ts    # Unit distribution calculation
+│   │   ├── type-compat.ts    # Legacy/dynamic type bridging
+│   │   ├── renderer.ts       # Converts FloorPlanData to Forma mesh
+│   │   ├── types.ts          # Type definitions
+│   │   ├── constants.ts      # Default values and configurations
+│   │   ├── index.ts          # Public API exports
+│   │   └── utils/            # Algorithm utilities
 │   │
 │   ├── extension/           # Forma extension UI & integration
-│   │   ├── main.ts          # Main UI controller with dynamic unit types
-│   │   ├── floorplate-panel.ts    # Floating preview panel
-│   │   ├── storage-service.ts     # Cloud storage API wrapper
-│   │   ├── bake-building.ts       # Native Forma building conversion
-│   │   ├── building-inspector.ts  # Building inspection utilities
-│   │   └── components/      # UI components (SVG renderer, metrics)
+│   │   ├── main.ts          # Extension entry point
+│   │   ├── managers/        # Core functionality managers
+│   │   │   ├── generation-manager.ts   # Generation orchestration
+│   │   │   ├── floating-panel-manager.ts  # Floating panel UI
+│   │   │   └── saved-manager.ts        # Saved floorplates
+│   │   ├── state/           # UI state management
+│   │   │   ├── ui-state.ts     # Central UI state store
+│   │   │   └── unit-config.ts  # Config converters
+│   │   ├── tabs/            # Tab-specific handlers
+│   │   │   ├── mix-tab.ts      # Unit mix configuration
+│   │   │   ├── dim-tab.ts      # Building dimensions
+│   │   │   └── egress-tab.ts   # Egress settings
+│   │   ├── utils/           # Extension utilities
+│   │   ├── components/      # UI components
+│   │   ├── storage-service.ts   # Cloud storage API wrapper
+│   │   ├── bake-building.ts     # Native Forma building conversion
+│   │   └── building-inspector.ts  # Building inspection utilities
 │   │
 │   ├── geometry/            # Geometric utilities
-│   │   ├── point.ts         # Point class with transforms
+│   │   ├── point.ts         # Point operations
 │   │   ├── line.ts          # Line segment operations
 │   │   ├── polygon.ts       # Polygon area and analysis
 │   │   └── rectangle.ts     # Rectangle collision detection
 │   │
-│   ├── types/               # Shared type definitions
-│   │   ├── geometry.ts      # Geometry-related types
-│   │   └── index.ts         # Type exports
-│   │
-│   └── index.ts             # Main library entry point
+│   └── types/               # Shared type definitions
 │
 ├── docs/                    # Documentation
 │   ├── ARCHITECTURE.md      # System architecture overview
 │   ├── ALGORITHM.md         # Algorithm deep-dive
-│   ├── BAKING_WORKFLOW.md   # Guide to baking layouts to Forma buildings
-│   └── FORMA_EXTENSION_GUIDE.md  # Guide for building Forma extensions
+│   ├── BAKING_WORKFLOW.md   # Baking layouts guide
+│   ├── FORMA_EXTENSION_GUIDE.md  # Building Forma extensions
+│   ├── design-system/       # Forma UI design reference
+│   ├── images/              # Screenshots
+│   └── planning/            # Historical planning docs
+│
+├── examples/                # Example code
+│   └── minimal/             # Minimal ~100 line example
 │
 ├── dist/                    # Compiled TypeScript (library)
 └── dist-extension/          # Built extension for deployment
@@ -160,8 +187,14 @@ The production build will be in `dist-extension/`.
 ### Running Tests
 
 ```bash
-npm test
+npm test              # Run all tests
+npm run test:watch    # Watch mode during development
+npm run test:coverage # Generate coverage report
 ```
+
+After running coverage, view the HTML report at `coverage/lcov-report/index.html`.
+
+> **Note**: 170 tests cover geometry, algorithm, renderer, and storage modules. Run `npm run test:coverage` for detailed coverage report.
 
 ## Algorithm Overview
 
@@ -234,6 +267,10 @@ async function renderFloorplate(meshData: Float32Array) {
 ```
 
 For a complete guide on building Forma extensions, see [docs/FORMA_EXTENSION_GUIDE.md](docs/FORMA_EXTENSION_GUIDE.md).
+
+### Minimal Example
+
+For a quick-start ~100 line example demonstrating the 5 core Forma extension concepts (Connect, Select, Read, Process, Display), see [examples/minimal/](examples/minimal/).
 
 ## Contributing
 

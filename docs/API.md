@@ -8,6 +8,7 @@ This document provides a comprehensive reference for the Floorplate Generator's 
 - [Types](#types)
 - [Constants](#constants)
 - [Renderer Functions](#renderer-functions)
+- [Baking Functions](#baking-functions)
 
 ---
 
@@ -445,4 +446,169 @@ All internal calculations use meters. Use these constants for conversion:
 ```typescript
 export const FEET_TO_METERS = 0.3048;
 export const SQ_FEET_TO_SQ_METERS = 0.0929;  // FEET_TO_METERS^2
+```
+
+---
+
+## Baking Functions
+
+These functions convert generated floorplates into native Forma building elements.
+
+### `bakeWithFloorStack` (Recommended)
+
+Creates a native Forma building using the FloorStack SDK API (v0.90.0) with plan-based floors.
+This is the recommended method as it:
+- Creates buildings with unit subdivisions (CORE, CORRIDOR, LIVING_UNIT programs)
+- Uses SDK authentication (no manual token management)
+- Supports L-shaped units via polyPoints
+
+```typescript
+async function bakeWithFloorStack(
+  floorplan: FloorPlanData,
+  options: BakeOptions
+): Promise<BakeResult>
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `floorplan` | `FloorPlanData` | The generated floor plan to bake |
+| `options` | `BakeOptions` | Baking configuration options |
+
+**BakeOptions:**
+
+```typescript
+interface BakeOptions {
+  numFloors: number;           // Number of floors to create
+  originalBuildingPath?: string; // Path of building to remove after bake
+  name?: string;               // Name for the new building element
+}
+```
+
+**Returns:** `BakeResult` - Result of the baking operation.
+
+```typescript
+interface BakeResult {
+  success: boolean;
+  urn?: string;     // URN of created element (on success)
+  error?: string;   // Error message (on failure)
+}
+```
+
+**Example:**
+
+```typescript
+import { bakeWithFloorStack } from './extension/bake-building';
+
+const result = await bakeWithFloorStack(layoutOption.floorplan, {
+  numFloors: 5,
+  originalBuildingPath: selectedBuildingPath,
+  name: 'My Generated Building'
+});
+
+if (result.success) {
+  console.log('Building created:', result.urn);
+}
+```
+
+---
+
+### `bakeWithFloorStackBatch`
+
+Creates multiple buildings in a single API call for better performance.
+
+```typescript
+async function bakeWithFloorStackBatch(
+  buildings: Array<{
+    floorplan: FloorPlanData;
+    options: BakeOptions;
+  }>
+): Promise<Array<BakeResult>>
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `buildings` | `Array<{floorplan, options}>` | Array of floorplans with their options |
+
+**Returns:** `Array<BakeResult>` - Results for each building in the batch.
+
+---
+
+### `bakeWithBasicBuildingAPI`
+
+Creates a native Forma building using direct BasicBuilding API calls.
+Use this as a fallback when FloorStack API is unavailable.
+
+```typescript
+async function bakeWithBasicBuildingAPI(
+  floorplan: FloorPlanData,
+  options: BakeOptions
+): Promise<BakeResult>
+```
+
+**Note:** This method requires authentication setup:
+- **Production:** Uses session cookies via Forma proxy
+- **Localhost:** Requires Bearer token via OAuth flow
+
+See [BAKING_WORKFLOW.md](./BAKING_WORKFLOW.md) for authentication details.
+
+---
+
+### FloorStack SDK Types
+
+The FloorStack API (SDK v0.90.0) uses these types for plan-based building creation:
+
+```typescript
+// Plan with unit subdivisions
+interface FloorStackPlan {
+  id: string;
+  vertices: FloorStackVertex[];
+  units: FloorStackUnit[];
+}
+
+// Vertex definition
+interface FloorStackVertex {
+  id: string;   // Pattern: [a-zA-Z0-9-]{2,20}
+  x: number;    // Local X coordinate
+  y: number;    // Local Y coordinate
+}
+
+// Unit with program type
+interface FloorStackUnit {
+  polygon: string[];           // Vertex IDs (counterclockwise)
+  holes: string[][];           // Interior holes (each hole is array of vertex IDs)
+  program?: 'CORE' | 'CORRIDOR' | 'LIVING_UNIT' | 'PARKING';
+  functionId?: string;
+}
+
+// Important: Coordinates must be CENTERED at origin (building center at 0,0)
+// Transform handles rotation and translation to world position
+
+// Floor referencing a plan
+interface FloorByPlan {
+  height: number;
+  planId: string;
+}
+```
+
+**SDK Method:**
+
+```typescript
+// Create building with unit subdivisions
+const { urn } = await Forma.elements.floorStack.createFromFloors({
+  floors: [
+    { planId: 'plan1', height: 3.2 },
+    { planId: 'plan1', height: 3.2 }
+  ],
+  plans: [plan]
+});
+
+// Batch creation
+const { urns } = await Forma.elements.floorStack.createFromFloorsBatch([
+  { floors: [...], plans: [...] },
+  { floors: [...], plans: [...] }
+]);
 ```

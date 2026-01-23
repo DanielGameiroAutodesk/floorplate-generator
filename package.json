@@ -46,6 +46,6 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
-    "forma-embedded-view-sdk": "^0.87.0"
+    "forma-embedded-view-sdk": "^0.90.0"
   }
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Baking Example</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 16px; max-width: 600px; }
+    .step { border: 1px solid #e0e0e0; padding: 16px; margin: 12px 0; border-radius: 8px; }
+    .step h3 { margin-top: 0; color: #1976d2; }
+    .step.complete { border-color: #4caf50; background: #f1f8f1; }
+    .step.active { border-color: #1976d2; background: #e3f2fd; }
+    .step.error { border-color: #f44336; background: #ffebee; }
+    button { padding: 10px 20px; margin: 4px; font-size: 14px; cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .primary { background: #1976d2; color: white; border: none; border-radius: 4px; }
+    .secondary { background: #fff; color: #1976d2; border: 1px solid #1976d2; border-radius: 4px; }
+    #status { font-size: 13px; color: #666; padding: 8px; background: #f5f5f5; border-radius: 4px; }
+    #output { font-family: monospace; font-size: 12px; background: #263238; color: #aed581; padding: 12px; border-radius: 4px; max-height: 200px; overflow-y: auto; }
+    .result { margin-top: 8px; padding: 8px; border-radius: 4px; }
+    .result.success { background: #c8e6c9; color: #2e7d32; }
+    .result.error { background: #ffcdd2; color: #c62828; }
+  </style>
+</head>
+<body>
+  <h2>Baking Workflow Example</h2>
+  <p>Demonstrates how to convert a generated floorplate into a native Forma building element.</p>
+
+  <div class="step" id="step1">
+    <h3>Step 1: Select Building</h3>
+    <p>Select a building footprint in Forma to generate a floorplate for.</p>
+    <button class="primary" onclick="selectBuilding()">Get Selection</button>
+    <div id="step1-result"></div>
+  </div>
+
+  <div class="step" id="step2">
+    <h3>Step 2: Generate Floorplate</h3>
+    <p>Generate a floorplate layout for the selected building.</p>
+    <label>Number of floors: <input type="number" id="numFloors" value="5" min="1" max="50" style="width:60px;"></label>
+    <br><br>
+    <button class="primary" onclick="generateFloorplate()" disabled id="generateBtn">Generate</button>
+    <div id="step2-result"></div>
+  </div>
+
+  <div class="step" id="step3">
+    <h3>Step 3: Bake to Building</h3>
+    <p>Convert the floorplate into a native Forma building with unit subdivisions.</p>
+    <button class="primary" onclick="bakeBuilding()" disabled id="bakeBtn">Bake Building</button>
+    <button class="secondary" onclick="bakeBuilding(true)" disabled id="bakeReplaceBtn">Bake & Replace Original</button>
+    <div id="step3-result"></div>
+  </div>
+
+  <hr>
+  <h3>Console Output</h3>
+  <pre id="output">Ready. Select a building to begin.</pre>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

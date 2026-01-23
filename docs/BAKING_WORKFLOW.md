@@ -6,7 +6,89 @@ This document describes the "bake" feature that converts generated floorplates i
 
 ## Quick Reference (TL;DR)
 
-### BasicBuilding API - The Working Solution
+### FloorStack SDK API - Recommended (SDK v0.90.0)
+
+The FloorStack SDK API is the recommended approach for creating buildings with unit subdivisions. It handles authentication automatically and supports plan-based floors with programs.
+
+```typescript
+import { bakeWithFloorStack } from './extension/bake-building';
+
+// Single building
+const result = await bakeWithFloorStack(floorplan, {
+  numFloors: 5,
+  originalBuildingPath: selectedPath,
+  name: 'Generated Building'
+});
+
+// The function internally:
+// 1. Converts FloorPlanData to FloorStack Plan format
+// 2. Creates floors referencing the plan
+// 3. Calls Forma.elements.floorStack.createFromFloors({ floors, plans })
+// 4. Adds element to proposal with transform
+```
+
+**What happens under the hood:**
+
+```typescript
+// FloorPlanData is converted to FloorStack Plan format
+const plan: FloorStackPlan = {
+  id: 'plan1',
+  vertices: [
+    { id: 'v0', x: -10, y: -5 },
+    { id: 'v1', x: 10, y: -5 },
+    // ... deduplicated vertices
+  ],
+  units: [
+    { polygon: ['v0', 'v1', 'v2', 'v3'], holes: [], program: 'LIVING_UNIT' },
+    { polygon: ['v4', 'v5', 'v6', 'v7'], holes: [], program: 'CORE' },
+    { polygon: ['v8', 'v9', 'v10', 'v11'], holes: [], program: 'CORRIDOR' },
+  ]
+};
+
+// Create building with SDK
+const { urn } = await Forma.elements.floorStack.createFromFloors({
+  floors: Array(numFloors).fill({ planId: 'plan1', height: 3.2 }),
+  plans: [plan]
+});
+
+// Add to proposal
+await Forma.proposal.addElement({ urn, transform });
+```
+
+**Advantages over BasicBuilding API:**
+- No manual authentication (SDK handles it)
+- Simpler API surface
+- Works in both localhost and production
+- Proper unit program tagging (CORE, CORRIDOR, LIVING_UNIT)
+
+**Critical: Position Compensation Required**
+
+Even with centered coordinates, the FloorStack API places the southwest corner at the transform origin instead of the building center. Apply this offset compensation:
+
+```typescript
+const cos = Math.cos(floorplan.transform.rotation);
+const sin = Math.sin(floorplan.transform.rotation);
+
+// Vertex at (-halfWidth, -halfDepth) ends up at target center
+// After rotation, this offset becomes:
+const offsetX = (-halfWidth) * cos - (-halfDepth) * sin;
+const offsetY = (-halfWidth) * sin + (-halfDepth) * cos;
+
+// Subtract offset from translation to compensate
+const adjustedCenterX = floorplan.transform.centerX - offsetX;
+const adjustedCenterY = floorplan.transform.centerY - offsetY;
+
+const transform = [
+  cos, sin, 0, 0,
+  -sin, cos, 0, 0,
+  0, 0, 1, 0,
+  adjustedCenterX, adjustedCenterY, floorplan.floorElevation, 1
+];
+```
+
+---
+
+### BasicBuilding API - Alternative Solution
 
 ```typescript
 // 1. Convert floorplan to BasicBuilding format (vertices + units)
@@ -1017,12 +1099,25 @@ When creating GLB files for Forma:
 #### Current Workaround
 The building works as a solid volume without room subdivisions. The generated `graphBuilding` and `grossFloorAreaPolygons` data is preserved in code for future use when the `basicbuilding` API documentation becomes available.
 
-#### Alternative: floorStack API
+#### FloorStack API (SDK v0.90.0) - NOW SUPPORTS PLANS
 The SDK provides `Forma.elements.floorStack.createFromFloors()` which:
-- Creates 2.5D buildings from floor polygons
+- Creates 2.5D buildings from floor polygons OR plan references
 - Generates `volumeMesh` automatically
-- Simpler but lacks unit/space subdivisions
-- May auto-generate `grossFloorAreaPolygons` (unconfirmed)
+- **NEW in v0.90.0:** Supports `plans` parameter for unit subdivisions
+- Properly tags programs (CORE, CORRIDOR, LIVING_UNIT, PARKING)
+- **This is now the recommended approach** - see `bakeWithFloorStack()` function
+
+```typescript
+// New SDK v0.90.0 usage with plans
+const { urn } = await Forma.elements.floorStack.createFromFloors({
+  floors: [{ planId: 'plan1', height: 3.2 }],
+  plans: [{
+    id: 'plan1',
+    vertices: [...],
+    units: [{ polygon: [...], holes: [], program: 'LIVING_UNIT' }]
+  }]
+});
+```
 
 ### Documentation Gap
 > "I realize we haven't documented the integrateElements in our SDK documentation, which we should add ASAP, but there is an in depth explanation in our http specification."

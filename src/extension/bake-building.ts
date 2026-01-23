@@ -110,6 +110,38 @@ interface BasicBuildingCreateResponse {
 }
 
 // ============================================================================
+// FLOORSTACK API TYPES (SDK v0.90.0 - plan-based floors with units)
+// ============================================================================
+
+interface FloorStackVertex {
+  id: string;   // Pattern: [a-zA-Z0-9-]{2,20}
+  x: number;    // Local X coordinate
+  y: number;    // Local Y coordinate
+}
+
+type FloorStackProgram = 'CORE' | 'CORRIDOR' | 'LIVING_UNIT' | 'PARKING';
+
+interface FloorStackUnit {
+  polygon: string[];           // Vertex IDs (counterclockwise winding)
+  holes: string[][];           // Interior hole vertex IDs (nested array, each inner array is one hole)
+  program?: FloorStackProgram;
+  functionId?: string;
+}
+
+interface FloorStackPlan {
+  id: string;
+  vertices: FloorStackVertex[];
+  units: FloorStackUnit[];
+}
+
+// Floor type variants for FloorStack API (SDK v0.90.0)
+// FloorByPlan is for plan-based floors with unit subdivisions
+type FloorByPlan = {
+  height: number;
+  planId: string;
+};
+
+// ============================================================================
 // MESH GENERATION
 // ============================================================================
 
@@ -1463,86 +1495,204 @@ export async function canBake(): Promise<boolean> {
 }
 
 /**
- * Alternative bake method using the floorStack API
- * Creates a simpler building without unit subdivisions but with proper floor representation
- * This may automatically generate grossFloorAreaPolygons representation
+ * Bake using the FloorStack API with plan-based floors (SDK v0.90.0)
+ * Creates a native Forma building with unit subdivisions (CORE, CORRIDOR, LIVING_UNIT)
+ *
+ * This method:
+ * - Converts FloorPlanData to a Plan with units
+ * - Creates floors that reference the plan
+ * - Properly tags programs (CORE, CORRIDOR, LIVING_UNIT)
+ * - Handles L-shaped units via polyPoints
  */
 export async function bakeWithFloorStack(
   floorplan: FloorPlanData,
   options: BakeOptions
 ): Promise<BakeResult> {
   try {
-    console.log('='.repeat(60));
-    console.log('BAKE WITH FLOORSTACK STARTING');
-    console.log('='.repeat(60));
-
     const { numFloors, originalBuildingPath } = options;
 
-    // Generate floor polygons for the floorStack API
-    // The floorStack expects local coordinates, transform applied separately
-    const halfLength = floorplan.buildingLength / 2;
+    // Create building footprint polygon from floorplan dimensions
+    // Coordinates in local space (centered at origin)
+    const halfWidth = floorplan.buildingLength / 2;
     const halfDepth = floorplan.buildingDepth / 2;
 
-    // Create counterclockwise polygon for building footprint (local coords)
+    // Building footprint as counterclockwise polygon
     const polygon: [number, number][] = [
-      [-halfLength, -halfDepth],
-      [halfLength, -halfDepth],
-      [halfLength, halfDepth],
-      [-halfLength, halfDepth],
-      [-halfLength, -halfDepth]  // Close the polygon
+      [-halfWidth, -halfDepth],
+      [halfWidth, -halfDepth],
+      [halfWidth, halfDepth],
+      [-halfWidth, halfDepth]
     ];
 
-    // Create one floor entry per level
-    const floors = Array.from({ length: numFloors }, () => ({
-      polygon: polygon,
-      height: FLOOR_HEIGHT
-    }));
+    console.log(`Baking ${numFloors}-floor building (${floorplan.buildingLength.toFixed(1)}m x ${floorplan.buildingDepth.toFixed(1)}m)...`);
 
-    console.log(`Creating building with ${numFloors} floors using floorStack API`);
-    console.log('Floor polygon:', polygon);
-    console.log('Floor height:', FLOOR_HEIGHT);
+    let urn: string;
 
-    // Create the building using floorStack API
-    const { urn } = await Forma.elements.floorStack.createFromFloors({ floors });
-    console.log('FloorStack building created with URN:', urn);
+    // First try: plan-based FloorStack with unit subdivisions
+    try {
+      const plan = convertFloorPlanToFloorStackPlan(floorplan);
 
-    // Add to proposal with transform
+      const planFloors: FloorByPlan[] = Array.from({ length: numFloors }, () => ({
+        planId: plan.id,
+        height: FLOOR_HEIGHT
+      }));
+
+      const result = await Forma.elements.floorStack.createFromFloors({
+        floors: planFloors,
+        plans: [plan]
+      });
+      urn = result.urn;
+      console.log(`Building created with ${plan.units.length} units (URN: ${urn})`);
+
+    } catch (planError) {
+      // Plan-based failed, fall back to polygon mode
+      console.warn('Plan-based FloorStack failed, using polygon fallback:',
+        planError instanceof Error ? planError.message : String(planError));
+
+      const polygonFloors = Array.from({ length: numFloors }, () => ({
+        polygon,
+        height: FLOOR_HEIGHT
+      }));
+
+      const result = await Forma.elements.floorStack.createFromFloors({
+        floors: polygonFloors
+      });
+      urn = result.urn;
+      console.log(`Building created without unit subdivisions (URN: ${urn})`);
+    }
+
+    // 4. Add to proposal with transform
+    // Apply the same position compensation as in bakeBuilding()
     const cos = Math.cos(floorplan.transform.rotation);
     const sin = Math.sin(floorplan.transform.rotation);
 
-    // FloorStack buildings are created at origin, transform positions them
+    // Even with centered coordinates, the FloorStack API places a corner at the
+    // transform origin instead of the building center. We compensate by adjusting
+    // the translation to offset by the rotated half-dimensions.
+    // Note: halfWidth and halfDepth are already defined above
+
+    // Calculate offset: vertex at (-halfWidth, -halfDepth) ends up at target center
+    // After rotation, this offset becomes:
+    const offsetX = (-halfWidth) * cos - (-halfDepth) * sin;
+    const offsetY = (-halfWidth) * sin + (-halfDepth) * cos;
+
+    // Subtract this offset from translation to compensate
+    const adjustedCenterX = floorplan.transform.centerX - offsetX;
+    const adjustedCenterY = floorplan.transform.centerY - offsetY;
+
     const transform: [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number] = [
       cos, sin, 0, 0,
       -sin, cos, 0, 0,
       0, 0, 1, 0,
-      floorplan.transform.centerX, floorplan.transform.centerY, floorplan.floorElevation, 1
+      adjustedCenterX, adjustedCenterY, floorplan.floorElevation, 1
     ];
 
-    console.log('Adding to proposal with transform:', transform);
     await Forma.proposal.addElement({ urn, transform });
-    console.log('Element added to proposal');
 
     // Remove original building if specified
     if (originalBuildingPath) {
-      console.log('Removing original building:', originalBuildingPath);
       try {
         await Forma.proposal.removeElement({ path: originalBuildingPath });
-        console.log('Original building removed');
       } catch (removeError) {
         console.warn('Could not remove original building:', removeError);
       }
     }
 
-    console.log('='.repeat(60));
-    console.log('BAKE WITH FLOORSTACK COMPLETE');
-    console.log('='.repeat(60));
-
+    console.log('Bake complete');
     return { success: true, urn };
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error('Bake with floorStack failed:', error);
-    return { success: false, error: errorMessage };
+    console.error('FloorStack bake failed:', errorMessage);
+
+    // Fallback to BasicBuilding API
+    try {
+      console.log('Falling back to BasicBuilding API...');
+      return await bakeWithBasicBuildingAPI(floorplan, options);
+    } catch (fallbackError) {
+      const fallbackMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+      console.error('BasicBuilding fallback also failed:', fallbackMessage);
+      return { success: false, error: `FloorStack failed: ${errorMessage}. Fallback also failed: ${fallbackMessage}` };
+    }
+  }
+}
+
+/**
+ * Batch bake multiple floorplans using FloorStack API
+ * Creates multiple buildings in a single API call for better performance
+ */
+export async function bakeWithFloorStackBatch(
+  buildings: Array<{
+    floorplan: FloorPlanData;
+    options: BakeOptions;
+  }>
+): Promise<Array<BakeResult>> {
+  try {
+    console.log('='.repeat(60));
+    console.log('BAKE WITH FLOORSTACK BATCH STARTING');
+    console.log('='.repeat(60));
+    console.log(`Creating ${buildings.length} buildings...`);
+
+    // Convert all floorplans to FloorStack format
+    const batchRequest = buildings.map(({ floorplan, options }, index) => {
+      const plan = convertFloorPlanToFloorStackPlan(floorplan);
+      // Make plan IDs unique across batch
+      plan.id = `plan_${index}`;
+
+      const floors: FloorByPlan[] = Array.from({ length: options.numFloors }, () => ({
+        planId: plan.id,
+        height: FLOOR_HEIGHT
+      }));
+
+      return { floors, plans: [plan] };
+    });
+
+    // Call batch API (SDK v0.90.0)
+    const { urns } = await Forma.elements.floorStack.createFromFloorsBatch(batchRequest);
+    console.log(`Batch creation complete: ${urns.length} buildings created`);
+
+    // Add each building to proposal with transform
+    const bakeResults: BakeResult[] = [];
+
+    for (let i = 0; i < urns.length; i++) {
+      const urn = urns[i];
+      const { floorplan, options } = buildings[i];
+
+      const cos = Math.cos(floorplan.transform.rotation);
+      const sin = Math.sin(floorplan.transform.rotation);
+
+      const transform: [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number] = [
+        cos, sin, 0, 0,
+        -sin, cos, 0, 0,
+        0, 0, 1, 0,
+        floorplan.transform.centerX, floorplan.transform.centerY, floorplan.floorElevation, 1
+      ];
+
+      await Forma.proposal.addElement({ urn, transform });
+
+      // Remove original building if specified
+      if (options.originalBuildingPath) {
+        try {
+          await Forma.proposal.removeElement({ path: options.originalBuildingPath });
+        } catch (removeError) {
+          console.warn(`Could not remove original building ${i}:`, removeError);
+        }
+      }
+
+      bakeResults.push({ success: true, urn });
+    }
+
+    console.log('='.repeat(60));
+    console.log('BAKE WITH FLOORSTACK BATCH COMPLETE');
+    console.log('='.repeat(60));
+
+    return bakeResults;
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Batch bake failed:', error);
+    // Return failure for all buildings
+    return buildings.map(() => ({ success: false, error: errorMessage }));
   }
 }
 
@@ -1710,57 +1860,47 @@ function coordKey(x: number, y: number): string {
 // Transforms local (building) coordinates to world coordinates using rotation + translation.
 
 /**
- * Convert FloorPlanData to BasicBuilding API format
- * Transforms our internal representation to the format expected by basicbuilding/batch-create
+ * Convert FloorPlanData to FloorStack Plan format (SDK v0.90.0)
+ * Creates a Plan with units for use with Forma.elements.floorStack.createFromFloors()
  *
- * IMPORTANT: This function transforms vertices to WORLD coordinates before sending to API.
- * The BasicBuilding API expects world coordinates, not local coordinates.
+ * This function:
+ * - Deduplicates vertices using coordKey() helper
+ * - Converts units, cores, corridor to SDK Unit format
+ * - Maps program types (LIVING_UNIT, CORE, CORRIDOR)
+ * - Handles L-shaped units via polyPoints
+ * - Uses counterclockwise polygon winding
+ * - CENTERS coordinates at origin (transform handles world positioning)
  *
- * IMPORTANT: This function deduplicates vertices by coordinate to avoid the
- * "Vertex id is duplicated" validation error. Units that share corners will
- * reference the same vertex ID.
+ * Coordinates are in LOCAL building space (centered at origin).
+ * Transform is applied separately when adding element to proposal.
  */
-function convertFloorPlanToBasicBuilding(
-  floorplan: FloorPlanData,
-  numFloors: number
-): CreateBasicBuildingRequest {
-  const vertices: BasicBuildingVertex[] = [];
-  const units: BasicBuildingUnit[] = [];
+function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackPlan {
+  const vertices: FloorStackVertex[] = [];
+  const units: FloorStackUnit[] = [];
 
-  // Get transform parameters
-  const { centerX, centerY, rotation } = floorplan.transform;
-
-  // IMPORTANT: Building local coordinates are ALREADY CENTERED around (0, 0)
-  // The generator applies offsetX = -length/2 and offsetY = -depth/2 to all coordinates
-  // This means the building center is at origin in local space
-  // So we just need to rotate around origin and translate to world center
-
-  console.log('[BasicBuilding] Using CENTERED local coordinates (already centered around 0):');
-  console.log(`  - Building dimensions: ${floorplan.buildingLength.toFixed(2)} x ${floorplan.buildingDepth.toFixed(2)}`);
-  console.log(`  - Transform will be applied when adding element:`);
-  console.log(`    - World center: (${centerX.toFixed(2)}, ${centerY.toFixed(2)})`);
-  console.log(`    - Rotation: ${(rotation * 180 / Math.PI).toFixed(2)} degrees`);
+  // Center offset - FloorStack expects centered coordinates for transform to work correctly
+  const halfWidth = floorplan.buildingLength / 2;
+  const halfDepth = floorplan.buildingDepth / 2;
 
   // Map from coordinate key to vertex ID for deduplication
   const coordToVertexId = new Map<string, string>();
   let vertexIndex = 0;
 
   // Helper to add a vertex (or return existing ID if coordinates match)
-  // Takes raw building local coordinates (0 to length, 0 to depth)
-  // Uses them directly without centering - transform will handle positioning
-  const getOrAddVertex = (rawX: number, rawY: number): string => {
-    // Use raw local coordinates directly
-    const key = coordKey(rawX, rawY);
+  // Automatically applies centering offset
+  const getOrAddVertex = (x: number, y: number): string => {
+    // Center the coordinates (floorplan uses corner-origin, we need center-origin)
+    const centeredX = x - halfWidth;
+    const centeredY = y - halfDepth;
 
-    // Check if we already have a vertex at these coordinates
+    const key = coordKey(centeredX, centeredY);
     const existingId = coordToVertexId.get(key);
     if (existingId !== undefined) {
       return existingId;
     }
 
-    // Create new vertex with raw local coordinates
     const id = `v${vertexIndex++}`;
-    vertices.push({ id, x: rawX, y: rawY });
+    vertices.push({ id, x: centeredX, y: centeredY });
     coordToVertexId.set(key, id);
     return id;
   };
@@ -1768,11 +1908,11 @@ function convertFloorPlanToBasicBuilding(
   // Process units (residential)
   for (const unit of floorplan.units) {
     if (unit.isLShaped && unit.polyPoints && unit.polyPoints.length >= 3) {
-      // L-shaped unit: use the polyPoints
+      // L-shaped unit: use the polyPoints (need to center each point)
       const vertexIds = unit.polyPoints.map(pt => getOrAddVertex(pt.x, pt.y));
       units.push({
         polygon: vertexIds,
-        holes: [],
+        holes: [],  // FloorStack SDK uses nested array for holes
         program: 'LIVING_UNIT',
         functionId: 'residential'
       });
@@ -1818,37 +1958,51 @@ function convertFloorPlanToBasicBuilding(
     functionId: 'residential'
   });
 
-  // Log deduplication stats
-  const originalVertexCount = floorplan.units.length * 4 + floorplan.cores.length * 4 + 4;
-  console.log(`[BasicBuilding] Vertex deduplication: ${originalVertexCount} original -> ${vertices.length} unique`);
-
-  // Debug: Log all unit geometries to help diagnose overlaps
-  console.log('[BasicBuilding] Unit geometries (for overlap debugging):');
-  for (let i = 0; i < units.length; i++) {
-    const unit = units[i];
-    const unitVertices = unit.polygon.map(vid => {
-      const v = vertices.find(v => v.id === vid);
-      return v ? `(${v.x.toFixed(2)}, ${v.y.toFixed(2)})` : `?${vid}`;
-    });
-    console.log(`  Unit ${i} [${unit.program}]: ${unitVertices.join(' -> ')}`);
-  }
-
-  // Create floor plan
-  const floorPlan: BasicBuildingFloorPlan = {
+  return {
     id: 'plan1',
     vertices,
     units
   };
+}
+
+/**
+ * Convert FloorPlanData to BasicBuilding API format
+ * Delegates to shared convertFloorPlanToFloorStackPlan() since both APIs use same format.
+ *
+ * Both FloorStack SDK v0.90.0 and BasicBuilding API use:
+ * - holes: string[][] (nested array where each inner array is one hole polygon)
+ */
+function convertFloorPlanToBasicBuilding(
+  floorplan: FloorPlanData,
+  numFloors: number
+): CreateBasicBuildingRequest {
+  // Use shared conversion function - format is now identical
+  const floorStackPlan = convertFloorPlanToFloorStackPlan(floorplan);
+
+  // FloorStack and BasicBuilding formats are now the same (SDK v0.90.0)
+  const basicBuildingPlan: BasicBuildingFloorPlan = {
+    id: floorStackPlan.id,
+    vertices: floorStackPlan.vertices,
+    units: floorStackPlan.units.map(unit => ({
+      polygon: unit.polygon,
+      holes: unit.holes,  // Same format: string[][]
+      program: unit.program,
+      functionId: unit.functionId
+    }))
+  };
 
   // Create floor entries (one per level, all referencing the same plan)
   const floors: BasicBuildingFloorByPlan[] = Array.from({ length: numFloors }, () => ({
-    planId: 'plan1',
+    planId: basicBuildingPlan.id,
     height: FLOOR_HEIGHT
   }));
 
+  console.log('[BasicBuilding] Converted from FloorStack plan format');
+  console.log(`  - ${basicBuildingPlan.vertices.length} vertices, ${basicBuildingPlan.units.length} units`);
+
   return {
     floors,
-    plans: [floorPlan]
+    plans: [basicBuildingPlan]
   };
 }
 
@@ -2018,4 +2172,12 @@ export const _reserved = {
   generateFloorsFromFloorplan: _generateFloorsFromFloorplan,
   convertFloorPlanToBasicBuilding,
   createBasicBuildingAPI
+};
+
+// Export internal utilities for testing
+export const _testUtils = {
+  coordKey,
+  roundCoord,
+  ensureCounterClockwise,
+  convertFloorPlanToFloorStackPlan
 };

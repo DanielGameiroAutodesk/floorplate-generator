@@ -75,7 +75,7 @@ import {
 import { initInspectTab } from './building-inspector';
 
 // Baking
-import { bakeWithBasicBuildingAPI } from './bake-building';
+import { bakeWithFloorStack } from './bake-building';
 
 // Logging
 import { Logger } from '../algorithm/utils/logger';
@@ -153,7 +153,7 @@ async function handleBakeFloorplate(layoutOption: LayoutOption): Promise<void> {
     Logger.info('Starting bake process...');
 
     const selection = getCurrentSelection();
-    const result = await bakeWithBasicBuildingAPI(layoutOption.floorplan, {
+    const result = await bakeWithFloorStack(layoutOption.floorplan, {
       numFloors: state.stories,
       originalBuildingPath: selection[0],
       name: `Generated Building - ${layoutOption.strategy}`

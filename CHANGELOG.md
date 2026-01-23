@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-01-23
+
+### Changed
+
+- **Upgraded Forma SDK** from 0.87.0 to 0.90.0
+- **FloorStack API with Unit Subdivisions** - Buildings now bake with proper unit subdivisions (CORE, CORRIDOR, LIVING_UNIT programs)
+- **No Authentication Dialog** - SDK handles authentication automatically, no OAuth flow required
+
+### Fixed
+
+- **Building Position** - Fixed coordinate centering and transform offset compensation for correct building placement
+- **Debug Logging** - Reduced verbose console output to essential logs only
+
+### Technical Details
+
+- FloorStack API `createFromFloors()` now uses plan-based floors with unit definitions
+- Coordinates are centered at origin with offset compensation in transform
+- Transform uses column-major 4x4 matrix with rotation around Z-axis
+
+---
+
 ## [0.1.0] - 2025-01-16
 
 ### Added
@@ -49,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Build Tool**: Vite 5.0
 - **Test Framework**: Jest 29.7
 - **Dependencies**:
-  - `forma-embedded-view-sdk` ^0.87.0 (only production dependency)
+  - `forma-embedded-view-sdk` ^0.90.0 (only production dependency)
 
 ### Architecture
 

@@ -2,6 +2,8 @@
 
 This folder contains example code for learning how to build Forma extensions.
 
+**SDK Requirement**: All examples require `forma-embedded-view-sdk@0.90.0` or later.
+
 ## Available Examples
 
 ### [minimal/](./minimal/)
@@ -14,6 +16,23 @@ A ~50 line example demonstrating the 5 core Forma extension concepts:
 - **Display**: Show results
 
 Perfect for understanding the basics before diving into the full Floorplate implementation.
+
+### [custom-units/](./custom-units/)
+
+Configure custom unit types for floorplate generation:
+- Define unit dimensions and target areas
+- Set percentage targets for unit mix
+- Configure colors for visualization
+- Export configuration for use in generator
+
+### [baking/](./baking/)
+
+Complete workflow for baking floorplates to native Forma buildings:
+- Select building footprint
+- Generate simple floorplate layout
+- Convert to FloorStack Plan format
+- Create building with unit subdivisions (LIVING_UNIT, CORE, CORRIDOR)
+- Apply transforms with position compensation
 
 ## Learning Path
 

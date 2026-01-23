@@ -4,7 +4,7 @@ An automated apartment layout generation tool for **US multifamily residential b
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)
-![Forma SDK](https://img.shields.io/badge/Forma%20SDK-0.87.0-orange.svg)
+![Forma SDK](https://img.shields.io/badge/Forma%20SDK-0.90.0-orange.svg)
 ![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)
 
 > **About This Project**

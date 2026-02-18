@@ -337,34 +337,9 @@ Format:
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
-## Architecture Overview
+## Architecture
 
-Before diving into the code, understand the main components:
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Extension UI                          │
-│  (main.ts, index.html, floorplate-panel.ts)             │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│                 Algorithm Layer                          │
-│  (generator.ts, types.ts, constants.ts)                 │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│                 Geometry Utilities                       │
-│  (point.ts, line.ts, polygon.ts, rectangle.ts)          │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│              Forma SDK Integration                       │
-│  (forma-embedded-view-sdk)                              │
-└─────────────────────────────────────────────────────────┘
-```
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the system architecture, module dependencies, and design decisions.
 
 ## Questions?
 

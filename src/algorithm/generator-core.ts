@@ -17,6 +17,7 @@ import {
   FloorPlanData,
   UnitBlock,
   CoreBlock,
+  FillerBlock,
   CorridorBlock,
   BuildingFootprint,
   LayoutOption,
@@ -109,6 +110,116 @@ const getUnitColor = (type: UnitType, customColors?: UnitColorMap): string => {
   // Fallback to default UNIT_COLORS
   const c = UNIT_COLORS[type];
   return `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a / 255})`;
+};
+
+// Minimum filler width threshold
+// Set to 1cm (0.01m) to capture real gaps while ignoring floating-point precision errors
+// Gaps smaller than this are likely just numerical artifacts, not real layout gaps
+const MIN_FILLER_WIDTH = 0.01;
+
+/**
+ * Detect gaps in a segment and create filler blocks for them.
+ * Returns FillerBlock[] for any gaps larger than MIN_FILLER_WIDTH.
+ * These fillers are baked as CORE-type units to ensure full building coverage.
+ *
+ * @param cores - Core blocks to exclude from gap detection (cores already occupy that space)
+ * @param coreSide - Which side has cores ('North' or 'South')
+ */
+const detectGapsAndCreateFillers = (
+  units: InternalUnitBlock[],
+  cores: CoreBlock[],
+  coreSide: 'North' | 'South',
+  segmentStartX: number,
+  segmentEndX: number,
+  y: number,
+  depth: number,
+  side: 'North' | 'South',
+  fillerIdPrefix: string
+): FillerBlock[] => {
+  const fillers: FillerBlock[] = [];
+
+  // Get units that OVERLAP with this segment (within Y tolerance)
+  // A unit overlaps if it starts before segment ends AND ends after segment starts
+  const segmentUnits = units.filter(u =>
+    Math.abs(u.y - y) < 0.1 &&
+    u.x < segmentEndX + 0.1 &&           // starts before segment ends
+    (u.x + u.width) > segmentStartX - 0.1  // ends after segment starts
+  );
+
+  // Create "occupied ranges" from units (clipped to segment bounds)
+  // Also include cores if this is the core side (cores occupy space on their side)
+  interface OccupiedRange { x: number; endX: number }
+  const occupiedRanges: OccupiedRange[] = segmentUnits.map(u => ({
+    x: Math.max(u.x, segmentStartX),          // clip to segment start
+    endX: Math.min(u.x + u.width, segmentEndX)  // clip to segment end
+  }));
+
+  // Add core ranges if this is the core side (clipped to segment bounds)
+  if (side === coreSide) {
+    for (const core of cores) {
+      // Only include cores that overlap with this segment
+      if (core.x < segmentEndX && (core.x + core.width) > segmentStartX) {
+        occupiedRanges.push({
+          x: Math.max(core.x, segmentStartX),
+          endX: Math.min(core.x + core.width, segmentEndX)
+        });
+      }
+    }
+  }
+
+  // Sort by x position and merge overlapping ranges
+  occupiedRanges.sort((a, b) => a.x - b.x);
+
+  const mergedRanges: OccupiedRange[] = [];
+  for (const range of occupiedRanges) {
+    if (mergedRanges.length === 0) {
+      mergedRanges.push({ ...range });
+    } else {
+      const last = mergedRanges[mergedRanges.length - 1];
+      if (range.x <= last.endX + 0.01) {
+        // Overlapping or adjacent, merge
+        last.endX = Math.max(last.endX, range.endX);
+      } else {
+        mergedRanges.push({ ...range });
+      }
+    }
+  }
+
+  // Find gaps between merged ranges
+  let currentX = segmentStartX;
+  let fillerCount = 0;
+
+  for (const range of mergedRanges) {
+    const gapWidth = range.x - currentX;
+    if (gapWidth > MIN_FILLER_WIDTH) {
+      fillers.push({
+        id: `${fillerIdPrefix}-filler-${fillerCount++}`,
+        x: currentX,
+        y,
+        width: gapWidth,
+        depth,
+        side
+      });
+      Logger.debug(` Created filler at x=${currentX.toFixed(2)}, width=${gapWidth.toFixed(2)}m`);
+    }
+    currentX = range.endX;
+  }
+
+  // Check for gap at end of segment
+  const endGap = segmentEndX - currentX;
+  if (endGap > MIN_FILLER_WIDTH) {
+    fillers.push({
+      id: `${fillerIdPrefix}-filler-${fillerCount}`,
+      x: currentX,
+      y,
+      width: endGap,
+      depth,
+      side
+    });
+    Logger.debug(` Created end filler at x=${currentX.toFixed(2)}, width=${endGap.toFixed(2)}m`);
+  }
+
+  return fillers;
 };
 
 // ============================================================================
@@ -484,22 +595,30 @@ const generateUnitSegment = (
     unitsToPlace.push(...inventoryList);
   }
 
+  // For right-only corner segments, the bonus applies to the FIRST unit (adjacent to right core),
+  // not the last. For all other segments (including left corners), it applies to the last unit.
+  const bonusOnFirstUnit = isRightCorner && !isLeftCorner;
+
   // --- CONSTRAINT: NO STUDIOS AT WRAP ---
   if (endBonusArea > 0 && unitsToPlace.length > 0) {
-    const lastIdx = unitsToPlace.length - 1;
-    if (unitsToPlace[lastIdx] === UnitType.Studio) {
+    const wrapIdx = bonusOnFirstUnit ? 0 : unitsToPlace.length - 1;
+    if (unitsToPlace[wrapIdx] === UnitType.Studio) {
       let swapIdx = -1;
-      const stopIdx = startX === 0 ? 1 : 0;
-
-      for (let i = lastIdx - 1; i >= stopIdx; i--) {
-        if (unitsToPlace[i] !== UnitType.Studio) {
-          swapIdx = i;
-          break;
+      if (bonusOnFirstUnit) {
+        // Swap away from index 0 toward the end
+        const stopIdx = isRightCorner ? unitsToPlace.length - 2 : unitsToPlace.length - 1;
+        for (let i = 1; i <= stopIdx; i++) {
+          if (unitsToPlace[i] !== UnitType.Studio) { swapIdx = i; break; }
+        }
+      } else {
+        const stopIdx = startX === 0 ? 1 : 0;
+        for (let i = wrapIdx - 1; i >= stopIdx; i--) {
+          if (unitsToPlace[i] !== UnitType.Studio) { swapIdx = i; break; }
         }
       }
 
       if (swapIdx !== -1) {
-        [unitsToPlace[lastIdx], unitsToPlace[swapIdx]] = [unitsToPlace[swapIdx], unitsToPlace[lastIdx]];
+        [unitsToPlace[wrapIdx], unitsToPlace[swapIdx]] = [unitsToPlace[swapIdx], unitsToPlace[wrapIdx]];
       }
     }
   }
@@ -629,10 +748,11 @@ const generateUnitSegment = (
 
   // --- WEIGHTED GEOMETRY GENERATION ---
   const endBonusWidth = endBonusArea / rentableDepth;
+  const bonusIdx = bonusOnFirstUnit ? 0 : unitsToPlace.length - 1;
 
   const idealWidthSum = unitsToPlace.reduce((sum, type, idx) => {
     let w = getUnitWidth(type, config, rentableDepth);
-    if (idx === unitsToPlace.length - 1 && endBonusWidth > 0) {
+    if (idx === bonusIdx && endBonusWidth > 0) {
       w = Math.max(1, w - endBonusWidth);
     }
     return sum + w;
@@ -649,7 +769,7 @@ const generateUnitSegment = (
   // Calculate target widths (MINIMUM), max widths, and weights for each unit
   const unitData = unitsToPlace.map((type, idx) => {
     let targetW = getUnitWidth(type, config, rentableDepth);
-    if (idx === unitsToPlace.length - 1 && endBonusWidth > 0) {
+    if (idx === bonusIdx && endBonusWidth > 0) {
       targetW = Math.max(1, targetW - endBonusWidth);
     }
     const maxW = getMaxUnitWidth(type, config, rentableDepth);
@@ -705,6 +825,11 @@ const generateUnitSegment = (
   // when there is enough width for another unit at target size.
 
   const calculatedWidths = unitData.map(u => u.width);
+
+  const nonFiniteCalculatedWidths = calculatedWidths.filter(w => !Number.isFinite(w));
+  if (nonFiniteCalculatedWidths.length > 0) {
+    Logger.warn(` generateUnitSegment: ${nonFiniteCalculatedWidths.length} non-finite calculated widths in segment at x=${startX.toFixed(2)}`);
+  }
 
   // Final adjustment: ensure total matches effectiveLength exactly
   const currentSum = calculatedWidths.reduce((a, b) => a + b, 0);
@@ -777,7 +902,8 @@ const generateUnitSegment = (
   Logger.debug(` generateUnitSegment: calculatedWidths: ${calculatedWidths.map(w => w.toFixed(2)).join(', ')}`);
   Logger.debug(` generateUnitSegment: isCorner=${isCorner}, isLeftCorner=${isLeftCorner}, isRightCorner=${isRightCorner}`);
 
-  unitsToPlace.forEach((type, index) => {
+  for (let index = 0; index < unitsToPlace.length; index++) {
+    const type = unitsToPlace[index];
     const targetW = getUnitWidth(type, config, rentableDepth); // MINIMUM width
     const maxW = getMaxUnitWidth(type, config, rentableDepth);
     let width = calculatedWidths[index] ?? targetW; // Use target if index doesn't exist (after removal)
@@ -790,9 +916,11 @@ const generateUnitSegment = (
       // AUTO-SPLIT HUGE UNITS: If the last unit is huge, split it!
       // This prevents "2000sf 3BR" monsters when geometry leaves a large gap.
       // We insert a new unit (Studio or 1BR) to absorb the excess.
-      // Threshold: 1.3x target width (tighter control)
+      // EXCEPTION: Never split a corner-eligible unit at the right facade edge —
+      // a wide premium corner unit is always better than a Studio at the building corner.
       const threshold = targetW * 1.3;
-      if (width > threshold) {
+      const isRightFacadeUnit = isRightCorner && !isLeftCorner && isCornerEligible(type, config);
+      if (width > threshold && !isRightFacadeUnit) {
         const excess = width - targetW;
         const studioW = getUnitWidth(UnitType.Studio, config, rentableDepth);
         
@@ -834,7 +962,7 @@ const generateUnitSegment = (
 
     finalWidths.push(width);
     totalAssigned += width;
-  });
+  }
 
   // FILL LEFTOVER SPACE: Distribute any remaining gap to units (prioritize space utilization)
   const totalFinalWidthDbg = finalWidths.reduce((a, b) => a + b, 0);
@@ -874,12 +1002,17 @@ const generateUnitSegment = (
     Logger.debug(`   Unit ${i} (${unitsToPlace[i]}): width=${w.toFixed(2)}m`);
   });
 
+  const nonFiniteFinalWidths = finalWidths.filter(w => !Number.isFinite(w));
+  if (nonFiniteFinalWidths.length > 0) {
+    Logger.warn(` generateUnitSegment: ${nonFiniteFinalWidths.length} non-finite final widths in segment at x=${startX.toFixed(2)}`);
+  }
+
   // Now create the unit blocks
   unitsToPlace.forEach((type, index) => {
     const finalWidth = finalWidths[index];
 
     let areaBonus = 0;
-    if (index === unitsToPlace.length - 1) {
+    if (bonusOnFirstUnit ? index === 0 : index === unitsToPlace.length - 1) {
       areaBonus = endBonusArea;
     }
 
@@ -1001,7 +1134,7 @@ const findOptimalGeometry = (
 
       const leftBonus = isContinuousSide ? 0 : singleCoreBonusArea;
       simSegments.push({ len: cornerLen, isCorner: true, bonusArea: leftBonus });
-      simSegments.push({ len: cornerLen, isCorner: true, bonusArea: 0 });
+      simSegments.push({ len: cornerLen, isCorner: true, bonusArea: leftBonus });
 
       if (isContinuousSide) {
         simSegments.push({ len: totalMidLen, isCorner: false, bonusArea: 0 });
@@ -1451,7 +1584,7 @@ export function generateFloorplate(
       segs.push({ x: midCoreEnd, len: midSpan2, isSouth, pattern: midPattern, isCorner: false, extraWidth: 0, bonusArea: singleCoreBonusArea });
     }
 
-    segs.push({ x: rightCoreStart + coreWidth, len: length - (rightCoreStart + coreWidth), isSouth, pattern: rightCornerPattern, isCorner: true, extraWidth: 0, bonusArea: 0 });
+    segs.push({ x: rightCoreStart + coreWidth, len: length - (rightCoreStart + coreWidth), isSouth, pattern: rightCornerPattern, isCorner: true, extraWidth: 0, bonusArea: singleCoreBonusArea });
     return segs;
   };
 
@@ -1516,24 +1649,24 @@ export function generateFloorplate(
 
     // --- 7B. MIRRORED CORNER PLACEMENT (3BR STACKING) ---
     {
-    // Explicitly enforce 3BR stacking: if one side has a 3BR corner, the other side MUST matches it if possible.
+    // Explicitly enforce 3BR stacking: if one side has a 3BR corner, the other side MUST match it if possible.
+    // CRITICAL: Only pull 3BRs from MID segments — never steal from another corner segment,
+    // as that would degrade one corner to fix another.
     const stackCorner = (sideA: Record<UnitType, number>[], sideB: Record<UnitType, number>[], cornerIdx: number) => {
       const segA = sideA[cornerIdx];
       const segB = sideB[cornerIdx];
+      const sideBCornerIndices = new Set([0, sideB.length - 1]);
       
       const has3BR_A = segA[UnitType.ThreeBed] > 0;
       const has3BR_B = segB[UnitType.ThreeBed] > 0;
       
       if (has3BR_A && !has3BR_B) {
-        // Side A has 3BR, Side B doesn't. Try to find a 3BR in Side B to move here.
-        const donorIdx = sideB.findIndex((c, i) => i !== cornerIdx && c[UnitType.ThreeBed] > 0);
+        // Only search MID segments (not other corners) for a 3BR to move here
+        const donorIdx = sideB.findIndex((c, i) => i !== cornerIdx && !sideBCornerIndices.has(i) && c[UnitType.ThreeBed] > 0);
         if (donorIdx !== -1) {
-          // Swap!
-          // Take 3BR from donor, give to corner
           sideB[donorIdx][UnitType.ThreeBed]--;
           sideB[cornerIdx][UnitType.ThreeBed]++;
           
-          // Take whatever was at corner (prioritize 2BR, then 1BR...), give to donor
           const swapType = segB[UnitType.TwoBed] > 0 ? UnitType.TwoBed : 
                            segB[UnitType.OneBed] > 0 ? UnitType.OneBed : 
                            UnitType.Studio;
@@ -1541,11 +1674,9 @@ export function generateFloorplate(
           if (segB[swapType] > 0) {
              segB[swapType]--;
              sideB[donorIdx][swapType]++;
-             Logger.debug(` STACKING: Moved 3BR from Side B segment ${donorIdx} to corner ${cornerIdx} to stack with Side A (swapped ${swapType})`);
+             Logger.debug(` STACKING: Moved 3BR from MID segment ${donorIdx} to corner ${cornerIdx} (swapped ${swapType})`);
           } else {
-             // Corner was empty? Just added 3BR. donor has -1 unit count?
-             // Should not happen if segments are filled, but safe to just move 3BR.
-             Logger.debug(` STACKING: Moved 3BR from Side B segment ${donorIdx} to corner ${cornerIdx} (no swap back needed?)`);
+             Logger.debug(` STACKING: Moved 3BR from MID segment ${donorIdx} to corner ${cornerIdx} (no swap back)`);
           }
         }
       }
@@ -1589,6 +1720,13 @@ export function generateFloorplate(
       customColors
     }, config, rentableDepth);
 
+    const hasNonFiniteSegmentUnits = newUnits.some(u =>
+      !Number.isFinite(u.x) || !Number.isFinite(u.y) || !Number.isFinite(u.width) || !Number.isFinite(u.depth)
+    );
+    if (hasNonFiniteSegmentUnits) {
+      Logger.warn(` Segment ${idx} at x=${seg.x.toFixed(2)} produced units with non-finite geometry`);
+    }
+
     // Debug: Show what units were created and their positions
     if (isLeftCorner || isRightCorner) {
       Logger.debug(` Units created in ${isLeftCorner ? 'LEFT' : 'RIGHT'} corner segment:`);
@@ -1600,6 +1738,10 @@ export function generateFloorplate(
 
     units.push(...newUnits);
   });
+
+  // NOTE: Filler detection moved to AFTER all unit modifications
+  // (alignment, core wrapping, corridor void absorption) to ensure
+  // fillers cover actual gaps in final unit positions.
 
   // --- 9. Alignment / Mirroring ---
   // For strict alignment, follow the mental model:
@@ -1671,6 +1813,13 @@ export function generateFloorplate(
       }
     });
 
+    const hasNonFiniteMirroredUnits = mirroredClear.some(u =>
+      !Number.isFinite(u.x) || !Number.isFinite(u.y) || !Number.isFinite(u.width) || !Number.isFinite(u.depth)
+    );
+    if (hasNonFiniteMirroredUnits) {
+      Logger.warn(` Strict alignment produced mirrored units with non-finite geometry`);
+    }
+
     const coreY = coreSideIsNorth ? 0 : (rentableDepth + corridorWidth);
     const coreSideUnitsFinal = units.filter(u => u.y === coreY);
     units = [...coreSideUnitsFinal, ...mirroredClear];
@@ -1706,32 +1855,53 @@ export function generateFloorplate(
     const coreSideUnits = units.filter(u => coreSide === 'North' ? u.y === 0 : u.y > 0);
 
     const processWrapping = (unitList: InternalUnitBlock[], coreList: CoreBlock[], isSouth: boolean) => {
+      const rightmostCoreX = Math.max(...coreList.map(c => c.x));
+
       coreList.forEach(core => {
-        const leftUnit = unitList.find(u => Math.abs((u.x + u.width) - core.x) < 0.1);
-        if (leftUnit) {
-          // CHECK L-SHAPE ELIGIBILITY: Studios and small units should NOT wrap
-          if (!isLShapeEligible(leftUnit.type, config)) {
-            Logger.debug(` Skipping L-shape wrap for ${leftUnit.type} - not L-shape eligible`);
-            return; // Skip this unit, don't make it L-shaped
+        const isRightmostCore = core.x === rightmostCoreX;
+        const gapY = isSouth ? (rentableDepth + corridorWidth + coreDepth) : 0;
+        const gapRect = { x: core.x, y: gapY, width: core.width, depth: gapHeight };
+
+        if (isRightmostCore) {
+          // RIGHT CORNER WRAPPING: wrap the unit to the RIGHT of the rightmost core.
+          // This gives the right corner unit an L-shape symmetric to the left corner.
+          // We skip left-side wrapping for this core to avoid overlapping geometry.
+          const rightUnit = unitList.find(u => Math.abs(u.x - (core.x + core.width)) < 0.1);
+          if (rightUnit && isLShapeEligible(rightUnit.type, config)) {
+            if (!rightUnit.rects) rightUnit.rects = [{ x: rightUnit.x, y: rightUnit.y, width: rightUnit.width, depth: rightUnit.depth }];
+            rightUnit.rects.push(gapRect);
+
+            const uY = rightUnit.y;
+            if (isSouth) {
+              // South right-wrap: L extends left at the bottom (below coreDepth from unit top)
+              rightUnit.polyPoints = `${core.x},${uY} ${rightUnit.x + rightUnit.width},${uY} ${rightUnit.x + rightUnit.width},${uY + rightUnit.depth} ${core.x},${uY + rightUnit.depth} ${core.x},${uY + coreDepth} ${rightUnit.x},${uY + coreDepth}`;
+            } else {
+              // North right-wrap: L extends left at the top (within gapHeight from unit top)
+              rightUnit.polyPoints = `${core.x},${uY} ${rightUnit.x + rightUnit.width},${uY} ${rightUnit.x + rightUnit.width},${uY + rightUnit.depth} ${rightUnit.x},${uY + rightUnit.depth} ${rightUnit.x},${uY + gapHeight} ${core.x},${uY + gapHeight}`;
+            }
+            Logger.debug(` Right-corner wrap: ${rightUnit.type} at x=${rightUnit.x.toFixed(2)} wraps left into core gap`);
+          } else if (rightUnit) {
+            Logger.debug(` Skipping right-corner L-shape wrap for ${rightUnit.type} - not L-shape eligible`);
           }
+        } else {
+          // LEFT-SIDE WRAPPING: wrap the unit to the LEFT of this core (standard behavior).
+          const leftUnit = unitList.find(u => Math.abs((u.x + u.width) - core.x) < 0.1);
+          if (leftUnit) {
+            if (!isLShapeEligible(leftUnit.type, config)) {
+              Logger.debug(` Skipping L-shape wrap for ${leftUnit.type} - not L-shape eligible`);
+              return;
+            }
 
-          const gapY = isSouth ? (rentableDepth + corridorWidth + coreDepth) : 0;
-          const gapRect = {
-            x: core.x,
-            y: gapY,
-            width: core.width,
-            depth: gapHeight
-          };
+            if (!leftUnit.rects) leftUnit.rects = [{ x: leftUnit.x, y: leftUnit.y, width: leftUnit.width, depth: leftUnit.depth }];
+            leftUnit.rects.push(gapRect);
 
-          if (!leftUnit.rects) leftUnit.rects = [{ x: leftUnit.x, y: leftUnit.y, width: leftUnit.width, depth: leftUnit.depth }];
-          leftUnit.rects.push(gapRect);
-
-          if (isSouth) {
             const uY = leftUnit.y;
-            leftUnit.polyPoints = `${leftUnit.x},${uY} ${leftUnit.x + leftUnit.width},${uY} ${leftUnit.x + leftUnit.width},${uY + coreDepth} ${leftUnit.x + leftUnit.width + core.width},${uY + coreDepth} ${leftUnit.x + leftUnit.width + core.width},${uY + leftUnit.depth} ${leftUnit.x},${uY + leftUnit.depth}`;
-          } else {
-            const uY = leftUnit.y;
-            leftUnit.polyPoints = `${leftUnit.x},${uY} ${leftUnit.x + leftUnit.width + core.width},${uY} ${leftUnit.x + leftUnit.width + core.width},${uY + gapHeight} ${leftUnit.x + leftUnit.width},${uY + gapHeight} ${leftUnit.x + leftUnit.width},${uY + leftUnit.depth} ${leftUnit.x},${uY + leftUnit.depth}`;
+            if (isSouth) {
+              leftUnit.polyPoints = `${leftUnit.x},${uY} ${leftUnit.x + leftUnit.width},${uY} ${leftUnit.x + leftUnit.width},${uY + coreDepth} ${leftUnit.x + leftUnit.width + core.width},${uY + coreDepth} ${leftUnit.x + leftUnit.width + core.width},${uY + leftUnit.depth} ${leftUnit.x},${uY + leftUnit.depth}`;
+            } else {
+              leftUnit.polyPoints = `${leftUnit.x},${uY} ${leftUnit.x + leftUnit.width + core.width},${uY} ${leftUnit.x + leftUnit.width + core.width},${uY + gapHeight} ${leftUnit.x + leftUnit.width},${uY + gapHeight} ${leftUnit.x + leftUnit.width},${uY + leftUnit.depth} ${leftUnit.x},${uY + leftUnit.depth}`;
+            }
+            Logger.debug(` Left-side wrap: ${leftUnit.type} at x=${leftUnit.x.toFixed(2)} wraps right into core gap`);
           }
         }
       });
@@ -1809,6 +1979,46 @@ export function generateFloorplate(
     Logger.debug(` Right corner void skipped: northEligible=${rightNorthEligible}, southEligible=${rightSouthEligible}`);
   }
 
+  // --- 11b. Detect and create fillers for leftover space ---
+  // IMPORTANT: This MUST happen AFTER all unit modifications (alignment, core wrapping,
+  // corridor void absorption) to ensure fillers cover actual gaps in final unit positions.
+  const fillers: FillerBlock[] = [];
+
+  // Detect gaps in North side (y=0)
+  const northFillers = detectGapsAndCreateFillers(
+    units,
+    cores,
+    coreSide,
+    0,          // segmentStartX
+    length,     // segmentEndX (full building length)
+    0,          // y position for North units
+    rentableDepth,
+    'North',
+    'north'
+  );
+  fillers.push(...northFillers);
+
+  // Detect gaps in South side (y=rentableDepth+corridorWidth)
+  const southFillers = detectGapsAndCreateFillers(
+    units,
+    cores,
+    coreSide,
+    0,          // segmentStartX
+    length,     // segmentEndX (full building length)
+    rentableDepth + corridorWidth,  // y position for South units
+    rentableDepth,
+    'South',
+    'south'
+  );
+  fillers.push(...southFillers);
+
+  if (fillers.length > 0) {
+    Logger.info(` Created ${fillers.length} filler block(s) for leftover space`);
+    fillers.forEach(f => {
+      Logger.debug(`   Filler: ${f.side} at x=${f.x.toFixed(2)}, width=${f.width.toFixed(2)}m`);
+    });
+  }
+
   // --- 12. Calculate Stats ---
   const totalGSF = length * buildingDepth;
   const unitCounts = { [UnitType.Studio]: 0, [UnitType.OneBed]: 0, [UnitType.TwoBed]: 0, [UnitType.ThreeBed]: 0 };
@@ -1869,6 +2079,13 @@ export function generateFloorplate(
   }
   Logger.debug(` === END CORNER UNITS ===`);
 
+  const hasNonFiniteUnitsBeforeOutput = units.some(u =>
+    !Number.isFinite(u.x) || !Number.isFinite(u.y) || !Number.isFinite(u.width) || !Number.isFinite(u.depth)
+  );
+  if (hasNonFiniteUnitsBeforeOutput) {
+    Logger.warn(` Non-finite unit geometry detected before output transform (${units.length} units total)`);
+  }
+
   // --- 14. Convert to Output Format ---
   // Apply coordinate centering: shift from (0,0)-(length,depth) to centered around (0,0)
   const offsetX = -length / 2;
@@ -1911,6 +2128,13 @@ export function generateFloorplate(
     y: c.y + offsetY
   }));
 
+  // Apply offset to fillers
+  const outputFillers: FillerBlock[] = fillers.map(f => ({
+    ...f,
+    x: f.x + offsetX,
+    y: f.y + offsetY
+  }));
+
   const corridor: CorridorBlock = {
     x: leftCorridorVoid + offsetX,
     y: rentableDepth + offsetY,
@@ -1921,6 +2145,7 @@ export function generateFloorplate(
   return {
     units: outputUnits,
     cores: outputCores,
+    fillers: outputFillers,
     corridor,
     buildingLength: length,
     buildingDepth: buildingDepth,

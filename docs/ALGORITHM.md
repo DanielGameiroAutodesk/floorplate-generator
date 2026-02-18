@@ -266,6 +266,41 @@ Standard Unit:       L-Shaped Unit:
 └──────────┘        └───────────────┘
 ```
 
+### Gap Detection and Filler Creation
+
+After ALL unit modifications (alignment, core wrapping, corridor void absorption), the algorithm scans for leftover gaps that couldn't be absorbed by adjacent units through the flexibility model.
+
+**Gap Detection Process:**
+1. Scan North and South sides for gaps between units
+2. Exclude areas occupied by cores (on core side) to prevent overlapping geometry
+3. Identify gaps larger than `MIN_FILLER_WIDTH` (0.001m)
+4. Create `FillerBlock` entries for these gaps
+
+**Filler Characteristics:**
+- **Minimum width**: 0.001m (effectively captures all gaps for FloorStack API coverage)
+- **Depth**: Same as rentable depth
+- **Side**: North or South (matching the segment)
+- **Core exclusion**: On the core side, gaps occupied by cores are not filled (cores already cover that space)
+- **Baked as**: `program: 'CORE'` in FloorStack/BasicBuilding APIs
+
+```
+Before Filler Detection:
+┌────────┬────────┐   ┌─────────┐
+│ Unit A │ Unit B │   │  Unit C │
+└────────┴────────┘   └─────────┘
+                  ▲
+               0.8m gap (creates filler)
+
+After Filler Creation:
+┌────────┬────────┬──────┬─────────┐
+│ Unit A │ Unit B │FILLER│  Unit C │
+└────────┴────────┴──────┴─────────┘
+```
+
+**IMPORTANT**: Filler detection must happen AFTER all unit position adjustments (alignment, L-shape wrapping, corridor void absorption) to ensure fillers cover actual gaps in final unit positions. The FloorStack API requires 100% footprint coverage with no gaps or overlaps.
+
+This ensures full building footprint coverage with no white space gaps in the baked building.
+
 ## Phase 6: Wall Alignment
 
 **Input**: Units on both sides of corridor
@@ -341,6 +376,7 @@ Example:
 interface FloorPlanData {
   units: UnitBlock[];           // All apartment units
   cores: CoreBlock[];           // Elevator/stair cores
+  fillers: FillerBlock[];       // Leftover space fillers (baked as CORE)
   corridor: CorridorBlock;      // Central corridor
   metrics: FloorplanMetrics;    // Calculated statistics
   buildingOutline: Point[];     // Original footprint

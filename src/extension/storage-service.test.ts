@@ -37,6 +37,7 @@ function createMockFloorplan(): FloorPlanData {
   return {
     corridor: { x: 0, y: 0, width: 100, depth: 2 },
     cores: [],
+    fillers: [],
     units: [],
     buildingLength: 100,
     buildingDepth: 20,

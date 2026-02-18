@@ -2,10 +2,14 @@
 
 An automated apartment layout generation tool for **US multifamily residential buildings**. Built as an extension for [Autodesk Forma](https://www.autodesk.com/products/forma).
 
+![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)
 ![Forma SDK](https://img.shields.io/badge/Forma%20SDK-0.90.0-orange.svg)
-![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)
+![Tests](https://img.shields.io/badge/tests-170+-brightgreen.svg)
+
+![Floorplate Generator in Autodesk Forma](docs/images/forma-ui_baking-output-forma-native-graph-building.png)
+*Automatically generated apartment layouts baked as native Forma buildings with unit subdivisions*
 
 > **About This Project**
 >
@@ -16,297 +20,135 @@ An automated apartment layout generation tool for **US multifamily residential b
 >
 > This is not production-grade software. It's a learning project and a reference implementation that demonstrates what's possible when combining domain knowledge with AI-assisted development.
 
-## What is This?
+## What It Does
 
-This extension automatically generates optimized apartment layouts for **US multifamily residential buildings** in Autodesk Forma. It applies **US building codes** (egress requirements, travel distances) and uses **US unit standards** (square feet, typical apartment sizes). It's designed to help architects, real estate developers, and urban planners quickly explore different unit mix configurations.
+Select a building in Forma, configure your unit mix, and instantly generate three optimized apartment layouts applying US building codes (IBC egress, travel distances) and US unit standards (square feet, typical apartment sizes).
 
-### Key Features
+- **3 Layout Options** -- Balanced, Mix-Optimized, and Efficiency-Optimized strategies generated simultaneously
+- **Building Code Compliance** -- Validates egress requirements (travel distance, dead-ends, common paths)
+- **Dynamic Unit Types** -- Configure any number of unit types with custom sizes and properties
+- **Smart Defaults** -- Automatically calculates optimal unit properties based on area
+- **Complex Buildings** -- Handles L, U, V-shaped buildings with wing detection
+- **Cloud Storage** -- Save and restore floorplate designs
+- **Bake to Building** -- Convert layouts to native Forma building elements with unit subdivisions
 
-- **3 Layout Options**: Generates Balanced, Mix-Optimized, and Efficiency-Optimized layouts simultaneously
-- **Building Code Compliance**: Validates egress requirements (travel distance, dead-ends, common paths)
-- **Dynamic Unit Types**: Configure any number of unit types with custom sizes and properties
-- **Smart Defaults**: Automatically calculates optimal unit properties based on area
-- **Complex Building Support**: Handles L, U, V-shaped buildings with wing detection
-- **Cloud Storage**: Save and restore floorplate designs
-- **Bake to Building**: Convert generated layouts to native Forma building elements
-
-## Screenshots
-
-### Unit Mix Configuration
-![Unit mix configuration panel](docs/images/left-sidepanel_input-unit-mix_partition-alignment.png)
-
-Configure unit types with target percentages and areas. Adjust partition alignment for strict or flexible unit sizing.
-
-### Generated Floorplate
-![Generated floorplate with metrics](docs/images/floating-menu_output-generation.png)
-
-Compare three layout strategies (Balanced, Mix Optimized, Efficiency) with real-time metrics including unit counts, efficiency ratios, and egress compliance.
+| Unit Mix Configuration | Generated Floorplate |
+|:---:|:---:|
+| ![Config](docs/images/left-sidepanel_input-unit-mix_partition-alignment.png) | ![Output](docs/images/floating-menu_output-generation.png) |
+| Configure unit types, percentages, and areas | Compare three strategies with real-time metrics |
 
 ## Quick Start
 
-### Prerequisites
+**Prerequisites:** [Node.js](https://nodejs.org/) v18+ and an [Autodesk Forma](https://www.autodesk.com/products/forma) account with extension development access.
 
-- [Node.js](https://nodejs.org/) v18 or higher
-- npm v9 or higher
-- An Autodesk Forma account with extension development access
+```bash
+git clone https://github.com/DanielGameiroAutodesk/floorplate-generator.git
+cd floorplate-generator
+npm install
+npm run dev
+```
 
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/DanielGameiroAutodesk/floorplate-generator.git
-   cd floorplate-generator
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. The extension will be available at `http://localhost:5173`
-
-### Running in Forma
-
-1. Open Autodesk Forma
-2. Go to **Extensions** > **Developer Tools**
-3. Add a new extension with the URL: `http://localhost:5173`
-4. Select a building in your project to start generating floorplates
+Then in Forma: **Extensions** > **Developer Tools** > add `http://localhost:5173` > select a building.
 
 ## Usage
 
-### Basic Workflow
+1. **Select a Building** in your Forma project
+2. **Configure Unit Mix** (MIX tab) -- set unit types, target percentages, and areas
+3. **Set Dimensions** (DIM tab) -- adjust corridor width and core placement
+4. **Configure Egress** (EGRESS tab) -- set sprinkler status and distance limits
+5. **Generate** -- click "Generate" to create 3 layout options
+6. **Review & Select** -- compare metrics and pick your preferred option
+7. **Save or Bake** -- save the design or convert to a native Forma building
 
-1. **Select a Building**: Click on a building in your Forma project
-2. **Configure Unit Mix** (MIX tab):
-   - Add/remove unit types
-   - Set target percentages and areas for each type
-   - Customize colors for visualization
-3. **Set Dimensions** (DIM tab):
-   - Adjust corridor width
-   - Configure core placement (North/South)
-   - Set core dimensions
-4. **Configure Egress** (EGRESS tab):
-   - Choose sprinklered/unsprinklered
-   - Set travel distance, dead-end, and common path limits
-5. **Generate**: Click "Generate" to create 3 layout options
-6. **Review & Select**: Compare metrics and select your preferred option
-7. **Save or Bake**: Save the design or convert it to a native Forma building
-
-### Auto-Generation Mode
-
-After your first generation, toggle "Auto-Generate" to automatically regenerate layouts when you change any parameter.
+Toggle **Auto-Generate** after your first generation to regenerate layouts automatically when parameters change.
 
 ## Project Structure
 
 ```
-floorplate-generator/
-├── src/
-│   ├── algorithm/           # Core generation algorithm
-│   │   ├── generator-core.ts  # Main floorplate generation logic
-│   │   ├── flexibility-model.ts  # Unit stretch/shrink rules
-│   │   ├── footprint.ts      # Building footprint extraction
-│   │   ├── unit-counts.ts    # Unit distribution calculation
-│   │   ├── type-compat.ts    # Legacy/dynamic type bridging
-│   │   ├── renderer.ts       # Converts FloorPlanData to Forma mesh
-│   │   ├── types.ts          # Type definitions
-│   │   ├── constants.ts      # Default values and configurations
-│   │   ├── index.ts          # Public API exports
-│   │   └── utils/            # Algorithm utilities
-│   │
-│   ├── extension/           # Forma extension UI & integration
-│   │   ├── main.ts          # Extension entry point
-│   │   ├── managers/        # Core functionality managers
-│   │   │   ├── generation-manager.ts   # Generation orchestration
-│   │   │   ├── floating-panel-manager.ts  # Floating panel UI
-│   │   │   └── saved-manager.ts        # Saved floorplates
-│   │   ├── state/           # UI state management
-│   │   │   ├── ui-state.ts     # Central UI state store
-│   │   │   └── unit-config.ts  # Config converters
-│   │   ├── tabs/            # Tab-specific handlers
-│   │   │   ├── mix-tab.ts      # Unit mix configuration
-│   │   │   ├── dim-tab.ts      # Building dimensions
-│   │   │   └── egress-tab.ts   # Egress settings
-│   │   ├── utils/           # Extension utilities
-│   │   ├── components/      # UI components
-│   │   ├── storage-service.ts   # Cloud storage API wrapper
-│   │   ├── bake-building.ts     # Native Forma building conversion
-│   │   └── building-inspector.ts  # Building inspection utilities
-│   │
-│   ├── geometry/            # Geometric utilities
-│   │   ├── point.ts         # Point operations
-│   │   ├── line.ts          # Line segment operations
-│   │   ├── polygon.ts       # Polygon area and analysis
-│   │   └── rectangle.ts     # Rectangle collision detection
-│   │
-│   └── types/               # Shared type definitions
-│
-├── docs/                    # Documentation
-│   ├── ARCHITECTURE.md      # System architecture overview
-│   ├── ALGORITHM.md         # Algorithm deep-dive
-│   ├── BAKING_WORKFLOW.md   # Baking layouts guide
-│   ├── FORMA_EXTENSION_GUIDE.md  # Building Forma extensions
-│   ├── design-system/       # Forma UI design reference
-│   ├── images/              # Screenshots
-│   └── planning/            # Historical planning docs
-│
-├── examples/                # Example code
-│   └── minimal/             # Minimal ~100 line example
-│
-├── dist/                    # Compiled TypeScript (library)
-└── dist-extension/          # Built extension for deployment
+src/
+  algorithm/    # Core generation logic (independent of Forma SDK)
+  extension/    # Forma UI, panels, managers, baking
+  geometry/     # Reusable geometric utilities (point, line, polygon, rectangle)
+docs/           # Architecture, algorithm, API reference, guides
+examples/       # Minimal (~100 lines), custom-units, baking examples
 ```
 
-## Development
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed module structure and design decisions.
 
-### Available Scripts
+## Development
 
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start development server with hot reload |
 | `npm run build` | Compile TypeScript to JavaScript |
 | `npm run build:extension` | Build production extension bundle |
-| `npm test` | Run unit tests |
+| `npm test` | Run all 170+ tests |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with coverage report |
 | `npm run lint` | Run ESLint |
 | `npm run clean` | Remove build artifacts |
 
-### Building for Production
-
-```bash
-npm run build:extension
-```
-
-The production build will be in `dist-extension/`.
-
-### Running Tests
-
-```bash
-npm test              # Run all tests
-npm run test:watch    # Watch mode during development
-npm run test:coverage # Generate coverage report
-```
-
-After running coverage, view the HTML report at `coverage/lcov-report/index.html`.
-
-> **Note**: 170 tests cover geometry, algorithm, renderer, and storage modules. Run `npm run test:coverage` for detailed coverage report.
-
 ## Algorithm Overview
 
-The floorplate generator uses a multi-phase approach:
+The floorplate generator uses a 7-phase pipeline:
 
-1. **Footprint Analysis**: Extracts building geometry and detects shape (rectangular, L, U, V)
-2. **Corridor Placement**: Creates a central double-loaded corridor
-3. **Core Placement**: Positions elevator/stair cores at ends and wing intersections
-4. **Egress Validation**: Ensures all points meet travel distance requirements
-5. **Unit Placement**: Distributes units using one of three optimization strategies:
-   - **Balanced**: Balances efficiency and unit mix matching
-   - **Mix Optimized**: Prioritizes matching target unit percentages
-   - **Efficiency Optimized**: Maximizes rentable square footage ratio
+1. **Footprint Analysis** -- extract building geometry, detect shape (rectangular, L, U, V)
+2. **Corridor Placement** -- create central double-loaded corridor
+3. **Core Placement** -- position elevator/stair cores at ends and wing intersections
+4. **Egress Validation** -- ensure all points meet travel distance requirements
+5. **Unit Placement** -- distribute units using one of three optimization strategies
+6. **Wall Alignment** -- align demising walls across corridor sides
+7. **Metrics Calculation** -- compute efficiency, unit counts, and egress compliance
 
-For detailed algorithm documentation, see [docs/ALGORITHM.md](docs/ALGORITHM.md).
+For the full algorithm documentation, see [docs/ALGORITHM.md](docs/ALGORITHM.md).
 
 ## For Vibecoders: Building Forma Extensions
 
-**Why this exists**: Whether you're an AEC professional solving a specific problem, or a designer/PM conducting product discovery - having a working prototype is infinitely more valuable than slides or mockups. This project demonstrates how someone without an engineering background can build functional Forma extensions using AI-assisted coding (vibecoding).
+This project demonstrates how someone without an engineering background can build functional Forma extensions using AI-assisted coding. Whether you're solving workflow problems or validating product ideas with users, here's what you need to know:
 
-This project serves as a reference implementation for building Autodesk Forma extensions. Whether you're solving your own workflow problems or validating product ideas with users - here's what you need to know:
-
-### Key Concepts
-
-1. **Forma Embedded View SDK**: The only production dependency. Provides access to:
-   - Project/scene data
-   - Geometry operations
-   - Selection handling
-   - 3D rendering
-   - Cloud storage
-
-2. **Extension Structure**: Two entry points:
-   - `index.html`: Main extension panel
-   - `floorplate-panel.html`: Floating preview panel (optional)
-
-3. **Communication**: Use `Forma.createMessagePort()` for cross-frame communication between panels
-
-4. **Rendering**: Use `Forma.render.addMesh()` to display custom geometry in the 3D view
-
-### Example: Getting Selected Building Geometry
+**Key Concepts:**
+1. **Forma Embedded View SDK** -- the only production dependency. Provides project data, geometry, selection, 3D rendering, and cloud storage.
+2. **Extension Structure** -- two entry points: `index.html` (main panel) and `floorplate-panel.html` (floating preview).
+3. **Communication** -- use `Forma.createMessagePort()` for cross-frame messaging between panels.
+4. **Rendering** -- use `Forma.render.addMesh()` to display custom geometry in the 3D view.
 
 ```typescript
 import { Forma } from "forma-embedded-view-sdk";
 
 async function getSelectedBuildingFootprint() {
-  // Get current selection
   const selection = await Forma.selection.getSelection();
   if (selection.length === 0) return null;
 
-  // Get triangle data for the selected element
   const path = selection[0];
   const triangles = await Forma.geometry.getTriangles({ path });
-
-  // Process triangles to extract footprint...
   return processFootprint(triangles);
 }
 ```
 
-### Example: Adding Custom 3D Geometry
+For a quick-start ~100 line example, see [examples/minimal/](examples/minimal/). For the complete guide, see [docs/FORMA_EXTENSION_GUIDE.md](docs/FORMA_EXTENSION_GUIDE.md).
 
-```typescript
-import { Forma } from "forma-embedded-view-sdk";
+## Documentation
 
-async function renderFloorplate(meshData: Float32Array) {
-  await Forma.render.addMesh({
-    geometryData: meshData,
-    // Optional: transform, color, etc.
-  });
-}
-```
+Full documentation is available in the [docs/](docs/) directory:
 
-For a complete guide on building Forma extensions, see [docs/FORMA_EXTENSION_GUIDE.md](docs/FORMA_EXTENSION_GUIDE.md).
-
-### Minimal Example
-
-For a quick-start ~100 line example demonstrating the 5 core Forma extension concepts (Connect, Select, Read, Process, Display), see [examples/minimal/](examples/minimal/).
+- [Architecture Overview](docs/ARCHITECTURE.md) -- system design and module structure
+- [Algorithm Deep Dive](docs/ALGORITHM.md) -- how the generation algorithm works
+- [API Reference](docs/API.md) -- types, functions, and constants
+- [Baking Workflow](docs/BAKING_WORKFLOW.md) -- converting layouts to native Forma buildings
+- [Forma Extension Guide](docs/FORMA_EXTENSION_GUIDE.md) -- building Forma extensions
+- [Troubleshooting](docs/TROUBLESHOOTING.md) -- common issues and solutions
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Ways to Contribute
-
-- Report bugs and suggest features via [GitHub Issues](https://github.com/DanielGameiroAutodesk/floorplate-generator/issues)
-- Submit pull requests for bug fixes or new features
-- Improve documentation
-- Share your use cases and feedback
-
-## Future Enhancements
-
-These features were documented for future development but are not currently implemented:
-
-### Ground Floor Variation
-- Different layout for ground floor (retail, lobby, amenities)
-- Different unit mix per floor
-- Podium + tower configurations
-
-### Advanced Unit Types
-- Townhouse/duplex units spanning multiple floors
-- Live/work units with commercial component
-- ADA-compliant unit requirements
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on getting started, code style, and the pull request process.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License -- see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- Built on [Autodesk Forma](https://www.autodesk.com/products/forma)
-- Developed using AI-assisted coding (vibecoding) with Claude
-- Inspired by the need to accelerate early-stage multifamily residential design
-- Created to support the vibecoding community in building functional prototypes for product discovery
+Built on [Autodesk Forma](https://www.autodesk.com/products/forma). Developed using AI-assisted coding (vibecoding) with Claude. Created to support the vibecoding community in building functional prototypes for product discovery.
 
 ## Resources
 
@@ -316,4 +158,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Questions or feedback?** Open an issue or start a discussion!
+**Questions or feedback?** Open an [issue](https://github.com/DanielGameiroAutodesk/floorplate-generator/issues) or start a [discussion](https://github.com/DanielGameiroAutodesk/floorplate-generator/discussions)!

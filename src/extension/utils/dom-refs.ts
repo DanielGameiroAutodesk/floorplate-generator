@@ -62,6 +62,7 @@ export const deadEndInput = document.getElementById('dead-end') as HTMLInputElem
 // ============================================================================
 
 export const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
+export const showResultsBtn = document.getElementById('show-results-btn') as HTMLButtonElement;
 
 // ============================================================================
 // Debug

@@ -87,16 +87,3 @@ The project is organized into three main layers:
 - **US building codes** - Egress defaults follow IBC requirements (International Building Code)
 - **Meters internally** - All calculations use SI units; feet displayed in UI for US market
 
----
-
-## Future Releases
-
-Planned features for future versions:
-
-- Ground floor variations (retail, lobby, amenities)
-- Townhouse/duplex units spanning multiple floors
-- Live/work units with commercial component
-- ADA-compliant unit requirements
-- International building code support
-- Curved building support
-- Machine learning optimization

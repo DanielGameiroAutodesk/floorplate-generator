@@ -1,6 +1,6 @@
 {
   "name": "floorplate-generator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Floorplate Generator for Autodesk Forma - Automated apartment layout generation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

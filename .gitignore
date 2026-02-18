@@ -75,3 +75,9 @@ VibeCoding_Platform_OnePager_v2.md
 
 # Test directory
 tst/
+
+# Cursor AI
+.cursor/
+
+# Reference repos downloaded locally
+forma-extension-cost-calculator-main/

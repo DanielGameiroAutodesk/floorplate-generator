@@ -581,6 +581,19 @@ function generateBuildingMeshLocal(floorplan: FloorPlanData, numFloors: number):
       FLOOR_HEIGHT
     );
     meshes.push(corridorMesh);
+
+    // Generate filler meshes (rendered same as cores)
+    for (const filler of floorplan.fillers || []) {
+      const fillerMesh = generateBoxMeshLocal(
+        filler.x - halfLength,
+        filler.y - halfDepth,
+        floorZ,
+        filler.width,
+        filler.depth,
+        FLOOR_HEIGHT
+      );
+      meshes.push(fillerMesh);
+    }
   }
 
   const merged = mergeMeshes(meshes);
@@ -1129,6 +1142,26 @@ function generateGFAPolygons(floorplan: FloorPlanData, numFloors: number): Gross
       elevation,
       areaType: 'CORRIDOR'
     });
+
+    // Fillers -> CORE (same as cores)
+    for (const filler of floorplan.fillers || []) {
+      const fx = filler.x - halfLength;
+      const fy = filler.y - halfDepth;
+
+      const fillerPolygon: [number, number][] = [
+        [fx, fy],
+        [fx + filler.width, fy],
+        [fx + filler.width, fy + filler.depth],
+        [fx, fy + filler.depth],
+        [fx, fy]
+      ];
+
+      polygons.push({
+        grossFloorPolygon: [fillerPolygon],
+        elevation,
+        areaType: 'CORE'
+      });
+    }
   }
 
   return polygons;
@@ -1508,6 +1541,10 @@ export async function bakeWithFloorStack(
   floorplan: FloorPlanData,
   options: BakeOptions
 ): Promise<BakeResult> {
+  // PROMINENT LOG - This MUST appear if function is called
+  console.log('%c>>> BAKE WITH FLOORSTACK STARTED <<<', 'background: blue; color: white; font-size: 16px; padding: 4px;');
+  console.log('Floorplan:', floorplan.buildingLength, 'x', floorplan.buildingDepth);
+
   try {
     const { numFloors, originalBuildingPath } = options;
 
@@ -1529,25 +1566,144 @@ export async function bakeWithFloorStack(
     let urn: string;
 
     // First try: plan-based FloorStack with unit subdivisions
+    // Declare plan outside try block so it's accessible in catch for debugging
+    let plan: FloorStackPlan | null = null;
     try {
-      const plan = convertFloorPlanToFloorStackPlan(floorplan);
+      plan = convertFloorPlanToFloorStackPlan(floorplan);
+
+      // Debug: Log plan details
+      console.log(`[FloorStack] Plan has ${plan.vertices.length} vertices and ${plan.units.length} units`);
+      console.log(`[FloorStack] Fillers in floorplan: ${floorplan.fillers?.length || 0}`);
+      const programCounts = plan.units.reduce((acc, u) => {
+        acc[u.program || 'unknown'] = (acc[u.program || 'unknown'] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      console.log(`[FloorStack] Unit programs:`, programCounts);
+
+      // Debug: Validate footprint coverage
+      const buildingArea = floorplan.buildingLength * floorplan.buildingDepth;
+      const unitsArea = floorplan.units.reduce((sum, u) => sum + u.width * u.depth, 0);
+      const coresArea = floorplan.cores.reduce((sum, c) => sum + c.width * c.depth, 0);
+      const corridorArea = floorplan.corridor.width * floorplan.corridor.depth;
+      const fillersArea = (floorplan.fillers || []).reduce((sum, f) => sum + f.width * f.depth, 0);
+      const coveredArea = unitsArea + coresArea + corridorArea + fillersArea;
+      const gap = buildingArea - coveredArea;
+      console.log(`[FloorStack] Building area: ${buildingArea.toFixed(2)} sq m`);
+      console.log(`[FloorStack] Coverage: units=${unitsArea.toFixed(2)}, cores=${coresArea.toFixed(2)}, corridor=${corridorArea.toFixed(2)}, fillers=${fillersArea.toFixed(2)}`);
+      console.log(`[FloorStack] Total covered: ${coveredArea.toFixed(2)} sq m (gap: ${gap.toFixed(2)} sq m)`);
+      if (Math.abs(gap) > 0.01) {
+        console.warn(`[FloorStack] WARNING: Footprint coverage gap of ${gap.toFixed(2)} sq m detected!`);
+      }
+
+      // TypeScript null check (plan was just assigned above)
+      if (!plan) throw new Error('Plan conversion failed unexpectedly');
+      const validPlan = plan; // Capture for closures
+
+      // Debug: Dump plan data for inspection
+      console.log('[FloorStack] === PLAN DATA ===');
+      console.log('[FloorStack] Vertices:', JSON.stringify(validPlan.vertices.slice(0, 10), null, 2));
+      if (validPlan.vertices.length > 10) {
+        console.log(`[FloorStack] ... and ${validPlan.vertices.length - 10} more vertices`);
+      }
+      console.log('[FloorStack] Units (first 5):', JSON.stringify(validPlan.units.slice(0, 5), null, 2));
+      if (validPlan.units.length > 5) {
+        console.log(`[FloorStack] ... and ${validPlan.units.length - 5} more units`);
+      }
+
+      // Pre-validation: Check for common issues
+      console.log('[FloorStack] === PRE-VALIDATION ===');
+
+      // Check for units with invalid polygon references
+      const vertexIds = new Set(validPlan.vertices.map(v => v.id));
+      let invalidRefs = 0;
+      for (const unit of validPlan.units) {
+        for (const vid of unit.polygon) {
+          if (!vertexIds.has(vid)) {
+            console.error(`[FloorStack] Unit has invalid vertex reference: ${vid}`);
+            invalidRefs++;
+          }
+        }
+      }
+      if (invalidRefs > 0) {
+        console.error(`[FloorStack] Found ${invalidRefs} invalid vertex references!`);
+      } else {
+        console.log('[FloorStack] All vertex references valid ✓');
+      }
+
+      // Check for units with < 3 vertices (invalid polygons)
+      const smallPolygons = validPlan.units.filter(u => u.polygon.length < 3);
+      if (smallPolygons.length > 0) {
+        console.error(`[FloorStack] Found ${smallPolygons.length} units with < 3 vertices!`);
+      } else {
+        console.log('[FloorStack] All polygons have >= 3 vertices ✓');
+      }
+
+      // Check for duplicate vertex IDs in same polygon
+      let duplicateVerts = 0;
+      for (const unit of validPlan.units) {
+        const uniqueVerts = new Set(unit.polygon);
+        if (uniqueVerts.size !== unit.polygon.length) {
+          console.error(`[FloorStack] Unit has duplicate vertices in polygon`);
+          duplicateVerts++;
+        }
+      }
+      if (duplicateVerts > 0) {
+        console.error(`[FloorStack] Found ${duplicateVerts} units with duplicate vertices!`);
+      } else {
+        console.log('[FloorStack] No duplicate vertices in polygons ✓');
+      }
+
+      console.log('[FloorStack] === END PRE-VALIDATION ===');
 
       const planFloors: FloorByPlan[] = Array.from({ length: numFloors }, () => ({
-        planId: plan.id,
+        planId: validPlan.id,
         height: FLOOR_HEIGHT
       }));
 
+      console.log('[FloorStack] Calling createFromFloors...');
       const result = await Forma.elements.floorStack.createFromFloors({
         floors: planFloors,
-        plans: [plan]
+        plans: [validPlan]
       });
       urn = result.urn;
-      console.log(`Building created with ${plan.units.length} units (URN: ${urn})`);
+      console.log('%c>>> FLOORSTACK SUCCESS! <<<', 'background: green; color: white; font-size: 16px; padding: 4px;');
+      console.log(`Building created WITH ${validPlan.units.length} units (URN: ${urn})`);
 
     } catch (planError) {
       // Plan-based failed, fall back to polygon mode
-      console.warn('Plan-based FloorStack failed, using polygon fallback:',
-        planError instanceof Error ? planError.message : String(planError));
+      // VERY PROMINENT ERROR - Must be visible
+      console.log('%c!!! FLOORSTACK PLAN FAILED !!!', 'background: red; color: white; font-size: 20px; padding: 8px; font-weight: bold;');
+      console.log('%cFalling back to polygon mode (NO UNITS)', 'background: orange; color: black; font-size: 14px; padding: 4px;');
+      console.error('='.repeat(60));
+      console.error('[FloorStack] PLAN-BASED CREATION FAILED');
+      console.error('='.repeat(60));
+      console.error('[FloorStack] Error object:', planError);
+      console.error('[FloorStack] Error type:', typeof planError);
+      console.error('[FloorStack] Error message:', planError instanceof Error ? planError.message : String(planError));
+      if (planError instanceof Error && planError.stack) {
+        console.error('[FloorStack] Stack:', planError.stack);
+      }
+      // Try to extract more details from error object
+      if (planError && typeof planError === 'object') {
+        const errObj = planError as Record<string, unknown>;
+        if (errObj.response) console.error('[FloorStack] Response:', errObj.response);
+        if (errObj.data) console.error('[FloorStack] Data:', errObj.data);
+        if (errObj.status) console.error('[FloorStack] Status:', errObj.status);
+        if (errObj.code) console.error('[FloorStack] Code:', errObj.code);
+      }
+      if (plan) {
+        console.error('[FloorStack] Plan had', plan.vertices.length, 'vertices,', plan.units.length, 'units');
+        // Dump full plan for debugging
+        console.error('[FloorStack] FULL PLAN DATA:');
+        console.error(JSON.stringify(plan, null, 2));
+
+        const invalidVertexCount = plan.vertices.filter(v => !Number.isFinite(v.x) || !Number.isFinite(v.y)).length;
+        if (invalidVertexCount > 0) {
+          console.error(`[FloorStack] ${invalidVertexCount} invalid vertices found in plan`);
+        }
+      }
+      console.error('[FloorStack] Falling back to polygon mode (no unit subdivisions)');
+      console.error('='.repeat(60));
 
       const polygonFloors = Array.from({ length: numFloors }, () => ({
         polygon,
@@ -1558,33 +1714,23 @@ export async function bakeWithFloorStack(
         floors: polygonFloors
       });
       urn = result.urn;
-      console.log(`Building created without unit subdivisions (URN: ${urn})`);
+      console.log('%c>>> POLYGON FALLBACK USED <<<', 'background: orange; color: black; font-size: 16px; padding: 4px;');
+      console.log(`Building created WITHOUT units (URN: ${urn})`);
     }
 
     // 4. Add to proposal with transform
-    // Apply the same position compensation as in bakeBuilding()
+    // Vertices are already centered at origin by convertFloorPlanToFloorStackPlan().
+    // The building center is at (0, 0) in local space, so we translate directly
+    // to world center without any offset adjustment. This matches the behavior
+    // of bakeWithFloorStackBatch() and bakeWithBasicBuildingAPI().
     const cos = Math.cos(floorplan.transform.rotation);
     const sin = Math.sin(floorplan.transform.rotation);
-
-    // Even with centered coordinates, the FloorStack API places a corner at the
-    // transform origin instead of the building center. We compensate by adjusting
-    // the translation to offset by the rotated half-dimensions.
-    // Note: halfWidth and halfDepth are already defined above
-
-    // Calculate offset: vertex at (-halfWidth, -halfDepth) ends up at target center
-    // After rotation, this offset becomes:
-    const offsetX = (-halfWidth) * cos - (-halfDepth) * sin;
-    const offsetY = (-halfWidth) * sin + (-halfDepth) * cos;
-
-    // Subtract this offset from translation to compensate
-    const adjustedCenterX = floorplan.transform.centerX - offsetX;
-    const adjustedCenterY = floorplan.transform.centerY - offsetY;
 
     const transform: [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number] = [
       cos, sin, 0, 0,
       -sin, cos, 0, 0,
       0, 0, 1, 0,
-      adjustedCenterX, adjustedCenterY, floorplan.floorElevation, 1
+      floorplan.transform.centerX, floorplan.transform.centerY, floorplan.floorElevation, 1
     ];
 
     await Forma.proposal.addElement({ urn, transform });
@@ -1878,29 +2024,28 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
   const vertices: FloorStackVertex[] = [];
   const units: FloorStackUnit[] = [];
 
-  // Center offset - FloorStack expects centered coordinates for transform to work correctly
-  const halfWidth = floorplan.buildingLength / 2;
-  const halfDepth = floorplan.buildingDepth / 2;
+  // NOTE: FloorPlanData coordinates are ALREADY CENTERED by the generator
+  // (generator applies offsetX = -length/2, offsetY = -buildingDepth/2)
+  // So we use coordinates directly - no additional centering needed.
 
   // Map from coordinate key to vertex ID for deduplication
   const coordToVertexId = new Map<string, string>();
   let vertexIndex = 0;
 
   // Helper to add a vertex (or return existing ID if coordinates match)
-  // Automatically applies centering offset
   const getOrAddVertex = (x: number, y: number): string => {
-    // Center the coordinates (floorplan uses corner-origin, we need center-origin)
-    const centeredX = x - halfWidth;
-    const centeredY = y - halfDepth;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+      console.warn(`[FloorStack] Non-finite vertex coordinates: x=${x}, y=${y}`);
+    }
 
-    const key = coordKey(centeredX, centeredY);
+    const key = coordKey(x, y);
     const existingId = coordToVertexId.get(key);
     if (existingId !== undefined) {
       return existingId;
     }
 
     const id = `v${vertexIndex++}`;
-    vertices.push({ id, x: centeredX, y: centeredY });
+    vertices.push({ id, x, y });
     coordToVertexId.set(key, id);
     return id;
   };
@@ -1908,7 +2053,11 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
   // Process units (residential)
   for (const unit of floorplan.units) {
     if (unit.isLShaped && unit.polyPoints && unit.polyPoints.length >= 3) {
-      // L-shaped unit: use the polyPoints (need to center each point)
+      const invalidPolyPoints = unit.polyPoints.filter(pt => !Number.isFinite(pt.x) || !Number.isFinite(pt.y));
+      if (invalidPolyPoints.length > 0) {
+        console.warn(`[FloorStack] Unit ${unit.id} has ${invalidPolyPoints.length} non-finite polyPoints`);
+      }
+      // L-shaped unit: use the polyPoints directly
       const vertexIds = unit.polyPoints.map(pt => getOrAddVertex(pt.x, pt.y));
       units.push({
         polygon: vertexIds,
@@ -1917,7 +2066,10 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
         functionId: 'residential'
       });
     } else {
-      // Rectangular unit: create 4 corners (counterclockwise winding)
+      if (!Number.isFinite(unit.x) || !Number.isFinite(unit.y) || !Number.isFinite(unit.width) || !Number.isFinite(unit.depth)) {
+        console.warn(`[FloorStack] Unit ${unit.id} has non-finite rect geometry`);
+      }
+      // Rectangular unit: create 4 corners (clockwise winding for Forma)
       const v1 = getOrAddVertex(unit.x, unit.y);
       const v2 = getOrAddVertex(unit.x + unit.width, unit.y);
       const v3 = getOrAddVertex(unit.x + unit.width, unit.y + unit.depth);
@@ -1931,8 +2083,11 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
     }
   }
 
-  // Process cores
+  // Process cores (clockwise winding for Forma)
   for (const core of floorplan.cores) {
+    if (!Number.isFinite(core.x) || !Number.isFinite(core.y) || !Number.isFinite(core.width) || !Number.isFinite(core.depth)) {
+      console.warn(`[FloorStack] Core ${core.id} has non-finite geometry`);
+    }
     const v1 = getOrAddVertex(core.x, core.y);
     const v2 = getOrAddVertex(core.x + core.width, core.y);
     const v3 = getOrAddVertex(core.x + core.width, core.y + core.depth);
@@ -1945,8 +2100,11 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
     });
   }
 
-  // Process corridor
+  // Process corridor (clockwise winding for Forma)
   const corridor = floorplan.corridor;
+  if (!Number.isFinite(corridor.x) || !Number.isFinite(corridor.y) || !Number.isFinite(corridor.width) || !Number.isFinite(corridor.depth)) {
+    console.warn('[FloorStack] Corridor has non-finite geometry');
+  }
   const cv1 = getOrAddVertex(corridor.x, corridor.y);
   const cv2 = getOrAddVertex(corridor.x + corridor.width, corridor.y);
   const cv3 = getOrAddVertex(corridor.x + corridor.width, corridor.y + corridor.depth);
@@ -1957,6 +2115,23 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
     program: 'CORRIDOR',
     functionId: 'residential'
   });
+
+  // Process fillers (clockwise winding for Forma)
+  for (const filler of floorplan.fillers || []) {
+    if (!Number.isFinite(filler.x) || !Number.isFinite(filler.y) || !Number.isFinite(filler.width) || !Number.isFinite(filler.depth)) {
+      console.warn(`[FloorStack] Filler ${filler.id} has non-finite geometry`);
+    }
+    const fv1 = getOrAddVertex(filler.x, filler.y);
+    const fv2 = getOrAddVertex(filler.x + filler.width, filler.y);
+    const fv3 = getOrAddVertex(filler.x + filler.width, filler.y + filler.depth);
+    const fv4 = getOrAddVertex(filler.x, filler.y + filler.depth);
+    units.push({
+      polygon: [fv1, fv2, fv3, fv4],
+      holes: [],
+      program: 'CORE',  // Filler space is categorized as CORE
+      functionId: 'residential'
+    });
+  }
 
   return {
     id: 'plan1',

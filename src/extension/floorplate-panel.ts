@@ -25,6 +25,7 @@ const bakeFeedbackText = document.getElementById('bake-feedback-text') as HTMLSp
 let currentFloorplan: FloorPlanData | null = null;
 let allOptions: LayoutOption[] = [];
 let selectedOptionIndex = 0;
+let currentStories = 1;
 let metricsCollapsed = false;
 let messagePort: MessagePort | null = null;
 let isSaving = false;
@@ -64,7 +65,7 @@ function updateMetrics(): void {
   if (!metricsContainer) return;
 
   if (currentFloorplan) {
-    metricsContainer.innerHTML = renderMetricsPanel(currentFloorplan);
+    metricsContainer.innerHTML = renderMetricsPanel(currentFloorplan, undefined, currentStories);
   } else {
     metricsContainer.innerHTML = renderEmptyMetricsPanel();
   }
@@ -296,12 +297,15 @@ function handleMessage(event: MessageEvent): void {
       // Received all 3 options
       allOptions = data.options as LayoutOption[];
       selectedOptionIndex = data.selectedIndex ?? 0;
+      currentStories = data.stories ?? 1;
       currentFloorplan = allOptions[selectedOptionIndex]?.floorplan ?? null;
       updateSVG();
       updateMetrics();
       updateOptionTabs();
       updateSaveButton();
       updateBakeButton();
+      // ACK so the main panel knows we're alive
+      if (messagePort) messagePort.postMessage({ type: 'ACK' });
       break;
 
     case 'UPDATE_FLOORPLAN':

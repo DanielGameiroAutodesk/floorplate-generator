@@ -10,6 +10,7 @@ export {
   setPanelCallbacks,
   setGeneratedOptions as setPanelGeneratedOptions,
   isPanelCurrentlyOpen,
+  resetPanelState,
   handleOptionSelected,
   notifySaveSuccess,
   notifySaveError,

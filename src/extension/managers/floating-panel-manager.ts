@@ -21,6 +21,8 @@ import { renderFloorplate } from '../../algorithm';
 
 let floatingPanelPort: MessagePort | null = null;
 let isPanelOpen: boolean = false;
+let lastPanelAckTime: number = 0;
+let pendingAckTimer: ReturnType<typeof setTimeout> | null = null;
 
 // Callbacks set by main module
 let onOptionSelectedCallback: ((index: number) => Promise<void>) | null = null;
@@ -30,6 +32,7 @@ let onBakeRequestCallback: ((layoutOption: LayoutOption) => Promise<void>) | nul
 // Reference to generated options (set by generation manager)
 let generatedOptionsRef: LayoutOption[] = [];
 let selectedOptionIndexRef: number = 0;
+let storiesRef: number = 1;
 
 // ============================================================================
 // Configuration
@@ -51,9 +54,10 @@ export function setPanelCallbacks(callbacks: {
 /**
  * Update the reference to generated options (called after generation).
  */
-export function setGeneratedOptions(options: LayoutOption[], selectedIndex: number): void {
+export function setGeneratedOptions(options: LayoutOption[], selectedIndex: number, stories?: number): void {
   generatedOptionsRef = options;
   selectedOptionIndexRef = selectedIndex;
+  if (stories !== undefined) storiesRef = stories;
 }
 
 // ============================================================================
@@ -83,12 +87,10 @@ function getExtensionBaseUrl(): string {
  * - Integrates with Forma's panel management
  */
 export async function openFloorplatePanel(): Promise<void> {
-  if (isPanelOpen) return;
+  if (floatingPanelPort) return;
 
   const baseUrl = getExtensionBaseUrl();
   const panelUrl = `${baseUrl}/floorplate-panel.html`;
-
-  console.log('Opening floating panel with URL:', panelUrl);
 
   try {
     await Forma.openFloatingPanel({
@@ -100,21 +102,25 @@ export async function openFloorplatePanel(): Promise<void> {
       minimumWidth: 400,
       minimumHeight: 300
     });
+  } catch (error) {
+    const msg = String(error);
+    if (!msg.includes('already open')) {
+      console.error('Failed to open floating panel:', error);
+      return;
+    }
+    // "View already open" — panel exists but we lost our port. Fall through to reconnect.
+  }
 
-    isPanelOpen = true;
-
-    // Set up message port for bidirectional communication
+  try {
     floatingPanelPort = await Forma.createMessagePort({
       embeddedViewId: 'floorplate-preview'
     });
-    console.log('[DEBUG] Message port created:', !!floatingPanelPort);
-
-    // Listen for messages from floating panel
     floatingPanelPort.onmessage = handlePanelMessage;
-
-  } catch (error) {
-    console.error('Failed to open floating panel:', error);
+    isPanelOpen = true;
+  } catch (portError) {
+    console.error('Failed to create message port:', portError);
     isPanelOpen = false;
+    floatingPanelPort = null;
   }
 }
 
@@ -122,17 +128,21 @@ export async function openFloorplatePanel(): Promise<void> {
  * Handle incoming messages from the floating panel.
  */
 async function handlePanelMessage(event: MessageEvent): Promise<void> {
-  console.log('[DEBUG] Raw message received:', event.data);
   const { type, data } = event.data;
-  console.log('[DEBUG] Message type:', type, 'data:', data);
 
   switch (type) {
     case 'PANEL_READY':
       // Panel has loaded and is ready to receive data
       console.log('Floating panel ready');
+      lastPanelAckTime = Date.now();
       if (generatedOptionsRef.length > 0) {
-        sendOptionsToPanel(generatedOptionsRef, selectedOptionIndexRef);
+        sendOptionsToPanel(generatedOptionsRef, selectedOptionIndexRef, storiesRef);
       }
+      break;
+
+    case 'ACK':
+      lastPanelAckTime = Date.now();
+      if (pendingAckTimer) { clearTimeout(pendingAckTimer); pendingAckTimer = null; }
       break;
 
     case 'OPTION_SELECTED':
@@ -150,8 +160,6 @@ async function handlePanelMessage(event: MessageEvent): Promise<void> {
       break;
 
     case 'BAKE_FLOORPLATE':
-      // User clicked bake in the floating panel
-      console.log('[DEBUG] Received BAKE_FLOORPLATE message', data);
       if (onBakeRequestCallback) {
         await onBakeRequestCallback(data.layoutOption);
       }
@@ -168,13 +176,32 @@ async function handlePanelMessage(event: MessageEvent): Promise<void> {
  *
  * @param options - Array of layout options (typically 3: balanced, mix, efficiency)
  * @param selectedIndex - Index of currently selected option
+ * @param stories - Number of stories from UI state
  */
-export function sendOptionsToPanel(options: LayoutOption[], selectedIndex: number): void {
+export function sendOptionsToPanel(options: LayoutOption[], selectedIndex: number, stories?: number): void {
   if (floatingPanelPort) {
-    floatingPanelPort.postMessage({
-      type: 'UPDATE_OPTIONS',
-      data: { options, selectedIndex }
-    });
+    try {
+      floatingPanelPort.postMessage({
+        type: 'UPDATE_OPTIONS',
+        data: { options, selectedIndex, stories: stories ?? 1 }
+      });
+
+      const sentOptions = options;
+      const sentIndex = selectedIndex;
+      if (pendingAckTimer) clearTimeout(pendingAckTimer);
+      pendingAckTimer = setTimeout(async () => {
+        resetPanelState();
+        pendingAckTimer = null;
+        await openFloorplatePanel();
+        if (floatingPanelPort) {
+          generatedOptionsRef = sentOptions;
+          selectedOptionIndexRef = sentIndex;
+          sendOptionsToPanel(sentOptions, sentIndex);
+        }
+      }, 1000);
+    } catch {
+      resetPanelState();
+    }
   }
 }
 
@@ -235,6 +262,16 @@ export function notifyBakeError(error: string): void {
  */
 export function isPanelCurrentlyOpen(): boolean {
   return isPanelOpen;
+}
+
+/**
+ * Reset panel state when the panel is closed externally (e.g. user clicked X).
+ * Forma does not notify us on close, so we must reset before reopening.
+ */
+export function resetPanelState(): void {
+  isPanelOpen = false;
+  floatingPanelPort = null;
+  if (pendingAckTimer) { clearTimeout(pendingAckTimer); pendingAckTimer = null; }
 }
 
 /**

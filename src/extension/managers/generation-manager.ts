@@ -109,6 +109,9 @@ export function setGeneratedOptions(options: LayoutOption[], floorplan: FloorPla
 export function resetAfterBake(): void {
   buildingTriangles = null;
   currentSelection = [];
+  generatedOptions = [];
+  selectedOptionIndex = 0;
+  currentFloorplan = null;
 }
 
 // ============================================================================
@@ -158,9 +161,13 @@ export function handleStopAutoGeneration(): void {
   // Disable auto-generation
   state.autoGenerate = false;
 
-  // Update button to "Generate" state
+  // Clear cached building data so next Generate fetches fresh selection
+  buildingTriangles = null;
+  currentSelection = [];
+
+  // Return to "Select Building" so user knows to pick a (new) building
   if (updateButtonStateCallback) {
-    updateButtonStateCallback('generate');
+    updateButtonStateCallback('select');
   }
 }
 
@@ -196,7 +203,6 @@ export async function handleGenerate(): Promise<void> {
   dom.generateBtn.innerHTML = '<span class="generate-btn-icon">&#9881;</span> Generating...';
 
   try {
-    // Get current selection
     const selection = await Forma.selection.getSelection();
 
     if (!selection || selection.length === 0) {
@@ -236,8 +242,18 @@ export async function handleGenerate(): Promise<void> {
     console.log('Center:', footprint.centerX.toFixed(2), footprint.centerY.toFixed(2));
     console.log('Rotation:', (footprint.rotation * 180 / Math.PI).toFixed(1), 'deg');
 
-    // Populate dimension inputs with building's actual dimensions
-    updateDimensionsFromBuilding(footprint.width, footprint.depth, footprint.height);
+    // On first selection, populate dimension inputs with geometry values.
+    // On subsequent auto-generations, the user may have tweaked Length/Depth/Stories —
+    // honour their overrides instead of re-extracting from geometry every time.
+    const isFirstRunForThisBuilding = !state.autoGenerate;
+    if (isFirstRunForThisBuilding) {
+      updateDimensionsFromBuilding(footprint.width, footprint.depth, footprint.height);
+    }
+
+    // Override footprint dimensions with the (possibly user-adjusted) UI state values
+    // so the algorithm respects slider/input changes.
+    footprint.width = state.length * FEET_TO_METERS;
+    footprint.depth = state.buildingDepth * FEET_TO_METERS;
 
     // Get configurations from UI
     const unitConfig = getUnitConfiguration();

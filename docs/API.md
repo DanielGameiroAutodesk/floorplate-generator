@@ -163,6 +163,7 @@ interface BuildingFootprint {
 interface FloorPlanData {
   units: UnitBlock[];
   cores: CoreBlock[];
+  fillers: FillerBlock[];   // Leftover space fillers (baked as CORE)
   corridor: CorridorBlock;
   buildingLength: number;
   buildingDepth: number;
@@ -221,6 +222,26 @@ interface CoreBlock {
   side: 'North' | 'South';
 }
 ```
+
+### `FillerBlock`
+
+Represents leftover space that couldn't be absorbed by adjacent units. These are baked as CORE-type units to ensure full building coverage.
+
+```typescript
+interface FillerBlock {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  depth: number;
+  side: 'North' | 'South';
+}
+```
+
+**Notes:**
+- Created when gaps > 0.5m (MIN_FILLER_WIDTH) exist after unit placement
+- Baked with `program: 'CORE'` in FloorStack/BasicBuilding APIs
+- Rendered with the same visual style as cores
 
 ### `CorridorBlock`
 

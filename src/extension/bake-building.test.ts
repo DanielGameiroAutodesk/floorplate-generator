@@ -99,7 +99,9 @@ describe('Bake Building Utilities', () => {
   });
 
   describe('convertFloorPlanToFloorStackPlan', () => {
-    // Create a minimal mock FloorPlanData
+    // Create a minimal mock FloorPlanData with PRE-CENTERED coordinates
+    // (matching what the generator outputs: center at origin)
+    // Building is 30x20, so halfWidth=15, halfDepth=10
     const createMockFloorplan = (): FloorPlanData => ({
       buildingLength: 30,
       buildingDepth: 20,
@@ -109,8 +111,8 @@ describe('Bake Building Utilities', () => {
           id: 'unit-1',
           typeId: 'studio',
           typeName: 'Studio',
-          x: 0,
-          y: 0,
+          x: -15,  // Centered: was 0, subtract halfWidth=15
+          y: -10,  // Centered: was 0, subtract halfDepth=10
           width: 10,
           depth: 8,
           area: 80,
@@ -122,8 +124,8 @@ describe('Bake Building Utilities', () => {
           id: 'unit-2',
           typeId: '1br',
           typeName: '1BR',
-          x: 10,
-          y: 0,
+          x: -5,   // Centered: was 10, subtract halfWidth=15
+          y: -10,  // Centered: was 0, subtract halfDepth=10
           width: 10,
           depth: 8,
           area: 80,
@@ -135,17 +137,18 @@ describe('Bake Building Utilities', () => {
       cores: [
         {
           id: 'core-1',
-          x: 12,
-          y: 8,
+          x: -3,   // Centered: was 12, subtract halfWidth=15
+          y: -2,   // Centered: was 8, subtract halfDepth=10
           width: 6,
           depth: 4,
           type: 'Mid' as const,
           side: 'North' as const
         }
       ],
+      fillers: [],
       corridor: {
-        x: 0,
-        y: 8,
+        x: -15,  // Centered: was 0, subtract halfWidth=15
+        y: -2,   // Centered: was 8, subtract halfDepth=10
         width: 30,
         depth: 4
       },
@@ -176,16 +179,16 @@ describe('Bake Building Utilities', () => {
       expect(plan.id).toBe('plan1');
     });
 
-    it('should center coordinates at origin', () => {
+    it('should preserve pre-centered coordinates from generator', () => {
       const floorplan = createMockFloorplan();
       const plan = convertFloorPlanToFloorStackPlan(floorplan);
 
-      // With 30x20 building, half dimensions are 15x10
-      // Coordinates are centered by subtracting (halfWidth, halfDepth) = (15, 10)
-      // The mock has:
-      // - Units at x=0-20, y=0-8 → centered: x=-15 to 5, y=-10 to -2
-      // - Corridor at x=0-30, y=8-12 → centered: x=-15 to 15, y=-2 to 2
-      // - Core at x=12-18, y=8-12 → centered: x=-3 to 3, y=-2 to 2
+      // FloorPlanData coordinates are PRE-CENTERED by the generator
+      // (center at origin, coordinates range from -halfWidth to +halfWidth)
+      // The mock uses pre-centered coordinates:
+      // - Units at x=-15 to 5, y=-10 to -2
+      // - Corridor at x=-15 to 15, y=-2 to 2
+      // - Core at x=-3 to 3, y=-2 to 2
       const xCoords = plan.vertices.map(v => v.x);
       const yCoords = plan.vertices.map(v => v.y);
 

@@ -46,7 +46,7 @@ import {
   sendOptionsToPanel,
   setPanelCallbacks,
   setPanelGeneratedOptions,
-  isPanelCurrentlyOpen,
+  resetPanelState,
   notifySaveSuccess,
   notifySaveError,
   notifyBakeSuccess,
@@ -148,10 +148,7 @@ async function handleSaveFloorplate(layoutOption: LayoutOption): Promise<void> {
  * Creates a native Forma building from the generated floorplate.
  */
 async function handleBakeFloorplate(layoutOption: LayoutOption): Promise<void> {
-  Logger.debug('handleBakeFloorplate called');
   try {
-    Logger.info('Starting bake process...');
-
     const selection = getCurrentSelection();
     const result = await bakeWithFloorStack(layoutOption.floorplan, {
       numFloors: state.stories,
@@ -162,10 +159,9 @@ async function handleBakeFloorplate(layoutOption: LayoutOption): Promise<void> {
     if (result.success) {
       notifyBakeSuccess(result.urn || '');
       Logger.info(`Bake successful! URN: ${result.urn}`);
-
-      // Reset state since original building is gone
       resetAfterBake();
       updateButtonState('select');
+      updateShowResultsButtonVisibility();
     } else {
       throw new Error(result.error || 'Unknown error');
     }
@@ -204,6 +200,14 @@ async function handleOptionSelected(index: number): Promise<void> {
 }
 
 /**
+ * Update visibility of the "Show Results" button (visible when we have generated options).
+ */
+function updateShowResultsButtonVisibility(): void {
+  const options = getGeneratedOptions();
+  dom.showResultsBtn.style.display = options.length > 0 ? 'flex' : 'none';
+}
+
+/**
  * Handle generation complete - open panel and send options.
  */
 async function onGenerationComplete(options: LayoutOption[], selectedIndex: number, _floorplan: FloorPlanData): Promise<void> {
@@ -211,14 +215,13 @@ async function onGenerationComplete(options: LayoutOption[], selectedIndex: numb
   const buildingId = storage.generateBuildingId(state.length, state.buildingDepth);
   setCurrentBuildingId(buildingId);
 
-  // Open panel if not open
-  if (!isPanelCurrentlyOpen()) {
-    await openFloorplatePanel();
-  }
+  // Open/reconnect the panel if needed (port=null means panel closed or never opened)
+  await openFloorplatePanel();
 
-  // Update panel with options
-  setPanelGeneratedOptions(options, selectedIndex);
-  sendOptionsToPanel(options, selectedIndex);
+  // Update panel with options (include stories for total-building metrics)
+  setPanelGeneratedOptions(options, selectedIndex, state.stories);
+  sendOptionsToPanel(options, selectedIndex, state.stories);
+  updateShowResultsButtonVisibility();
 }
 
 /**
@@ -228,13 +231,11 @@ async function onSavedFloorplateLoaded(options: LayoutOption[], floorplan: Floor
   // Set the loaded options
   setGeneratedOptions(options, floorplan);
 
-  // Open panel if not open
-  if (!isPanelCurrentlyOpen()) {
-    await openFloorplatePanel();
-  }
+  // Open/reconnect the panel if needed
+  await openFloorplatePanel();
 
   // Send to floating panel
-  sendOptionsToPanel(options, 0);
+  sendOptionsToPanel(options, 0, state.stories);
 
   // Render to Forma
   const meshData = renderFloorplate(floorplan);
@@ -244,6 +245,7 @@ async function onSavedFloorplateLoaded(options: LayoutOption[], floorplan: Floor
       color: meshData.colors
     }
   });
+  updateShowResultsButtonVisibility();
 }
 
 // ============================================================================
@@ -315,11 +317,26 @@ function init(): void {
   // Set up generate button
   dom.generateBtn.addEventListener('click', handleButtonClick);
 
+  // Set up Show Results button (reopen preview panel after user closed it)
+  dom.showResultsBtn.addEventListener('click', async () => {
+    const options = getGeneratedOptions();
+    const idx = getSelectedOptionIndex();
+    if (options.length === 0) return;
+    // Reset port so openFloorplatePanel reconnects even if panel appears "open"
+    resetPanelState();
+    await openFloorplatePanel();
+    setPanelGeneratedOptions(options, idx, state.stories);
+    sendOptionsToPanel(options, idx, state.stories);
+  });
+
   // Initialize Forma connection
   initForma();
 
   // Load saved floorplates
   loadSavedFloorplates();
+
+  // Initial button visibility (hidden until we have results)
+  updateShowResultsButtonVisibility();
 }
 
 // Start the extension

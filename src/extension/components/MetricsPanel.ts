@@ -42,12 +42,15 @@ function formatNumber(num: number): string {
  * @param floorplan The floor plan data to display
  * @param unitTypes Optional array of dynamic unit types for flexible rendering
  */
-export function renderMetricsPanel(floorplan: FloorPlanData, unitTypes?: DynamicUnitType[]): string {
+export function renderMetricsPanel(floorplan: FloorPlanData, unitTypes?: DynamicUnitType[], stories = 1): string {
   const { stats, egress } = floorplan;
 
   // Convert areas to square feet for display
   const gsfFeet = sqMetersToSqFeet(stats.gsf);
   const nrsfFeet = sqMetersToSqFeet(stats.nrsf);
+  const totalGsfFeet = gsfFeet * stories;
+  const totalNrsfFeet = nrsfFeet * stories;
+  const totalUnits = stats.totalUnits * stories;
 
   // Calculate unit percentages (works with both string keys and UnitType enum)
   const unitPercentages: Record<string, number> = {};
@@ -77,8 +80,18 @@ export function renderMetricsPanel(floorplan: FloorPlanData, unitTypes?: Dynamic
         ">Summary</div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #747474;">Total units</span>
+          <span style="color: #747474;">Stories</span>
+          <span style="font-weight: 600; color: #3C3C3C;">${stories}</span>
+        </div>
+
+        <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #747474;">Units/floor</span>
           <span style="font-weight: 600; color: #3C3C3C;">${stats.totalUnits}</span>
+        </div>
+
+        <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #747474;">Total units</span>
+          <span style="font-weight: 600; color: #3C3C3C;">${totalUnits}</span>
         </div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
@@ -87,13 +100,18 @@ export function renderMetricsPanel(floorplan: FloorPlanData, unitTypes?: Dynamic
         </div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #747474;">GSF</span>
+          <span style="color: #747474;">GSF/floor</span>
           <span style="font-weight: 600; color: #3C3C3C;">${formatNumber(gsfFeet)} sf</span>
         </div>
 
         <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #747474;">NRSF</span>
-          <span style="font-weight: 600; color: #3C3C3C;">${formatNumber(nrsfFeet)} sf</span>
+          <span style="color: #747474;">Total GSF</span>
+          <span style="font-weight: 600; color: #3C3C3C;">${formatNumber(totalGsfFeet)} sf</span>
+        </div>
+
+        <div class="metric-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #747474;">Total NRSF</span>
+          <span style="font-weight: 600; color: #3C3C3C;">${formatNumber(totalNrsfFeet)} sf</span>
         </div>
       </div>
 

@@ -158,6 +158,19 @@ export interface CoreBlock {
   side: 'North' | 'South';
 }
 
+/**
+ * Filler block for leftover space that cannot be absorbed by units.
+ * These are rendered and baked as CORE-type units to ensure full building coverage.
+ */
+export interface FillerBlock {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  depth: number;
+  side: 'North' | 'South';
+}
+
 export interface CorridorBlock {
   x: number;
   y: number;
@@ -168,6 +181,7 @@ export interface CorridorBlock {
 export interface FloorPlanData {
   units: UnitBlock[];
   cores: CoreBlock[];
+  fillers: FillerBlock[];
   corridor: CorridorBlock;
   buildingLength: number;
   buildingDepth: number;

@@ -519,16 +519,6 @@ function generateBuildingMeshLocal(floorplan: FloorPlanData, numFloors: number):
   const halfLength = floorplan.buildingLength / 2;
   const halfDepth = floorplan.buildingDepth / 2;
 
-  console.log('[DEBUG MESH] Building dimensions:', {
-    buildingLength: floorplan.buildingLength,
-    buildingDepth: floorplan.buildingDepth,
-    halfLength,
-    halfDepth,
-    numFloors,
-    floorHeight: FLOOR_HEIGHT,
-    totalHeight: numFloors * FLOOR_HEIGHT
-  });
-
   for (let floor = 0; floor < numFloors; floor++) {
     const floorZ = floor * FLOOR_HEIGHT;  // Start at 0, elevation handled by transform
 
@@ -609,13 +599,6 @@ function generateBuildingMeshLocal(floorplan: FloorPlanData, numFloors: number):
     minZ = Math.min(minZ, merged.verts[i + 2]);
     maxZ = Math.max(maxZ, merged.verts[i + 2]);
   }
-  console.log('[DEBUG MESH] Local mesh bounds (Z-up, before GLB):', {
-    x: { min: minX, max: maxX, range: maxX - minX },
-    y: { min: minY, max: maxY, range: maxY - minY },
-    z: { min: minZ, max: maxZ, range: maxZ - minZ },
-    note: 'Z is height in local coords'
-  });
-
   return merged;
 }
 
@@ -714,8 +697,6 @@ function generateGLB(mesh: MeshData): ArrayBuffer {
   const vertexCount = mesh.verts.length / 3;
   const vertices = new Float32Array(mesh.verts.length);
 
-  console.log('[DEBUG GLB] Converting vertices using Forma formula: (x, y, z) → (x, -z, y)');
-
   for (let i = 0; i < vertexCount; i++) {
     const srcX = mesh.verts[i * 3];      // Local X (width)
     const srcY = mesh.verts[i * 3 + 1];  // Local Y (depth)
@@ -741,13 +722,6 @@ function generateGLB(mesh: MeshData): ArrayBuffer {
     minZ = Math.min(minZ, vertices[i + 2]);
     maxZ = Math.max(maxZ, vertices[i + 2]);
   }
-
-  console.log('[DEBUG GLB] Mesh bounds AFTER Y-up conversion:', {
-    x: { min: minX, max: maxX, range: maxX - minX },
-    y: { min: minY, max: maxY, range: maxY - minY },
-    z: { min: minZ, max: maxZ, range: maxZ - minZ },
-    note: 'Y is now height (up) in glTF coords'
-  });
 
   // Binary buffer: vertices followed by indices
   const vertexByteLength = vertices.byteLength;
@@ -943,7 +917,8 @@ function generateRectangularSpace(
 /**
  * Generate GraphBuilding representation from floorplan
  */
-function generateGraphBuilding(floorplan: FloorPlanData, numFloors: number): GraphBuilding {
+/** @internal Reserved for future API support */
+export function generateGraphBuilding(floorplan: FloorPlanData, numFloors: number): GraphBuilding {
   const units: GraphBuildingUnit[] = [];
   const levels: GraphBuildingLevel[] = [];
 
@@ -1060,7 +1035,8 @@ function mapUnitTypeToFunction(_unit: UnitBlock): string {
  * Generate GrossFloorAreaPolygons from floorplan
  * Used by createElementV2 to define area types (LIVING_UNIT, CORE, CORRIDOR)
  */
-function generateGFAPolygons(floorplan: FloorPlanData, numFloors: number): GrossFloorAreaPolygon[] {
+/** @internal Reserved for future API support */
+export function generateGFAPolygons(floorplan: FloorPlanData, numFloors: number): GrossFloorAreaPolygon[] {
   const polygons: GrossFloorAreaPolygon[] = [];
 
   const halfLength = floorplan.buildingLength / 2;
@@ -1283,58 +1259,19 @@ export async function bakeBuilding(
   options: BakeOptions
 ): Promise<BakeResult> {
   try {
-    console.log('='.repeat(60));
-    console.log('BAKE PROCESS STARTING');
-    console.log('='.repeat(60));
-    console.log('[DEBUG] Current approach:');
-    console.log('  - Mesh generation: Z-up (Forma local coords)');
-    console.log('  - GLB conversion: (x,y,z) → (x,-z,y) per Forma team');
-    console.log('  - Transform: Z-up rotation (around Z axis)');
-    console.log('  - Position compensation: subtract rotated half-dimensions');
-    console.log('  - This approach gave correct elevation+rotation, fixing position offset');
-    console.log('-'.repeat(60));
-    console.log('[DEBUG] Floorplan input:', JSON.stringify({
-      buildingLength: floorplan.buildingLength,
-      buildingDepth: floorplan.buildingDepth,
-      floorElevation: floorplan.floorElevation,
-      transform: floorplan.transform,
-      unitCount: floorplan.units.length,
-      coreCount: floorplan.cores.length
-    }, null, 2));
-    console.log('[DEBUG] Options:', options);
-
     const { numFloors, originalBuildingPath } = options;
 
     // 1. Generate building mesh (in local coordinates)
-    console.log('Generating building mesh...');
     const mesh = generateBuildingMeshLocal(floorplan, numFloors);
-    console.log(`Mesh: ${mesh.verts.length / 3} vertices, ${mesh.faces.length / 3} triangles`);
-
     // 2. Convert mesh to GLB format
-    console.log('Converting to GLB...');
     const glbData = generateGLB(mesh);
-    console.log(`GLB size: ${glbData.byteLength} bytes`);
-
     // 3. Upload GLB to integrate storage
-    console.log('Uploading GLB...');
     const uploadResult = await Forma.integrateElements.uploadFile({
       data: glbData
     });
-    console.log('Upload complete, blobId:', uploadResult.blobId);
-
-    // 4. Generate representations
-    console.log('Generating representations...');
-    const graphBuilding = generateGraphBuilding(floorplan, numFloors);
-    console.log(`GraphBuilding: ${graphBuilding.units.length} units, ${graphBuilding.levels.length} levels`);
-
-    const gfaPolygons = generateGFAPolygons(floorplan, numFloors);
-    console.log(`GFA Polygons: ${gfaPolygons.length} polygons`);
-
+    // 4. Representations: graphBuilding and GFA not yet supported by API
     // 5. Create element with createElementV2 (volumeMesh only first)
     // The API doesn't accept all representations in one call, so we do it in two steps
-    console.log('Creating element with createElementV2...');
-    console.log('Using blobId:', uploadResult.blobId);
-
     let urn: string;
     try {
       // Step 1: Create element with just volumeMesh
@@ -1351,27 +1288,17 @@ export async function bakeBuilding(
         }
       });
       urn = result.urn;
-      console.log('Element created with URN:', urn);
-
       // NOTE: graphBuilding and grossFloorAreaPolygons representations are NOT supported
       // by batchIngestElementsV2 (returns 400 error). Per Forma product team:
       // - graphBuilding requires POST /public-api/v1alpha/basicbuilding/batch-create API
       // - This API is not exposed in the SDK and requires direct HTTP calls with authentication
       // - For now, the building works as a solid volume without unit subdivisions
       //
-      // TODO: Implement basicbuilding/batch-create API call when documentation is available
+      // Note: basicbuilding/batch-create API not yet supported — awaiting documentation
       // See: BAKING_WORKFLOW.md for details on API limitations
-      console.log('NOTE: graphBuilding and grossFloorAreaPolygons representations skipped');
-      console.log('  - batchIngestElementsV2 does not support these representation types');
-      console.log('  - Building will work as solid volume without unit subdivisions');
-      console.log('  - Generated graphBuilding data preserved for future use:',
-        `${graphBuilding.units.length} units, ${graphBuilding.levels.length} levels`);
-      console.log('  - Generated GFA polygons preserved:', gfaPolygons.length, 'polygons');
     } catch (createError) {
       console.error('createElementV2 failed:', createError);
       // Try with createElementHierarchy as fallback
-      console.log('Trying createElementHierarchy as fallback...');
-
       const result = await Forma.integrateElements.createElementHierarchy({
         data: {
           rootElement: 'root',
@@ -1392,7 +1319,6 @@ export async function bakeBuilding(
         }
       });
       urn = result.urn as string;
-      console.log('Element created via hierarchy with URN:', urn);
     }
 
     // 6. Add to proposal with correct transform
@@ -1401,19 +1327,8 @@ export async function bakeBuilding(
     // The transform is applied in this Y-up space, so we need to:
     //   - Rotate around Y axis (up) for building orientation
     //   - Translate in X and Z (horizontal plane) for positioning
-    console.log('[DEBUG TRANSFORM] Input values:');
-    console.log('  - centerX (Forma world X):', floorplan.transform.centerX);
-    console.log('  - centerY (Forma world Y):', floorplan.transform.centerY);
-    console.log('  - floorElevation:', floorplan.floorElevation);
-    console.log('  - rotation (radians):', floorplan.transform.rotation);
-    console.log('  - rotation (degrees):', (floorplan.transform.rotation * 180 / Math.PI).toFixed(2));
-
     const cos = Math.cos(floorplan.transform.rotation);
     const sin = Math.sin(floorplan.transform.rotation);
-
-    console.log('[DEBUG TRANSFORM] Rotation values:');
-    console.log('  - cos:', cos.toFixed(6));
-    console.log('  - sin:', sin.toFixed(6));
 
     // Z-up transform - empirically gives correct elevation and rotation
     // Issue: mesh corner ends up at center instead of mesh center
@@ -1443,14 +1358,6 @@ export async function bakeBuilding(
     const adjustedCenterX = floorplan.transform.centerX - offsetX;
     const adjustedCenterY = floorplan.transform.centerY - offsetY;
 
-    console.log('[DEBUG TRANSFORM] Position adjustment:');
-    console.log(`  - halfLength: ${halfLength.toFixed(2)}m`);
-    console.log(`  - halfDepth: ${halfDepth.toFixed(2)}m`);
-    console.log(`  - Rotated offset: (${offsetX.toFixed(2)}, ${offsetY.toFixed(2)})`);
-    console.log(`  - Original center: (${floorplan.transform.centerX.toFixed(2)}, ${floorplan.transform.centerY.toFixed(2)})`);
-    console.log(`  - Adjusted center: (${adjustedCenterX.toFixed(2)}, ${adjustedCenterY.toFixed(2)})`);
-    console.log(`  - zTranslation: ${zTranslation.toFixed(2)}m`);
-
     const transform: [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number] = [
       cos, sin, 0, 0,     // Column 0: X basis (rotated around Z)
       -sin, cos, 0, 0,    // Column 1: Y basis (rotated around Z)
@@ -1458,54 +1365,18 @@ export async function bakeBuilding(
       adjustedCenterX, adjustedCenterY, zTranslation, 1  // Column 3: adjusted translation
     ];
 
-    console.log('[DEBUG TRANSFORM] Final 4x4 matrix (column-major):');
-    console.log('  Column 0 (X basis):', transform.slice(0, 4));
-    console.log('  Column 1 (Y basis):', transform.slice(4, 8));
-    console.log('  Column 2 (Z basis):', transform.slice(8, 12));
-    console.log('  Column 3 (Translation):', transform.slice(12, 16));
-    console.log('[DEBUG TRANSFORM] As row-major (easier to read):');
-    console.log(`  | ${transform[0].toFixed(3)}  ${transform[4].toFixed(3)}  ${transform[8].toFixed(3)}  ${transform[12].toFixed(3)} |`);
-    console.log(`  | ${transform[1].toFixed(3)}  ${transform[5].toFixed(3)}  ${transform[9].toFixed(3)}  ${transform[13].toFixed(3)} |`);
-    console.log(`  | ${transform[2].toFixed(3)}  ${transform[6].toFixed(3)}  ${transform[10].toFixed(3)} ${transform[14].toFixed(3)} |`);
-    console.log(`  | ${transform[3].toFixed(3)}  ${transform[7].toFixed(3)}  ${transform[11].toFixed(3)} ${transform[15].toFixed(3)} |`);
-
     // Calculate where the mesh SHOULD appear after transform
-    console.log('[DEBUG TRANSFORM] Expected final position (Forma world):');
-    console.log('  - Building center should be at:');
-    console.log(`    X: ${floorplan.transform.centerX.toFixed(2)}`);
-    console.log(`    Y: ${floorplan.transform.centerY.toFixed(2)}`);
-    console.log(`    Z (floor): ${floorplan.floorElevation.toFixed(2)}m`);
-    console.log(`    Z (roof): ${(floorplan.floorElevation + totalHeight).toFixed(2)}m`);
-
     await Forma.proposal.addElement({ urn, transform });
-    console.log('[DEBUG] Element added to proposal successfully');
-
     // 7. Remove original building if specified
     if (originalBuildingPath) {
-      console.log('Removing original building:', originalBuildingPath);
       try {
         await Forma.proposal.removeElement({ path: originalBuildingPath });
-        console.log('Original building removed');
       } catch (removeError) {
         console.warn('Could not remove original building:', removeError);
         // Don't fail the whole operation
       }
     }
 
-    console.log('='.repeat(60));
-    console.log('BAKE COMPLETE');
-    console.log('='.repeat(60));
-    console.log('[DEBUG] Summary:');
-    console.log(`  - URN: ${urn}`);
-    console.log(`  - Floors: ${numFloors}`);
-    console.log(`  - Total height: ${(numFloors * FLOOR_HEIGHT).toFixed(2)}m`);
-    console.log('[DEBUG] If building appears FLAT:');
-    console.log('  → Transform may be zeroing height, or Forma auto-converts Y-up GLB');
-    console.log('[DEBUG] If building appears in WRONG POSITION:');
-    console.log('  → Transform coordinate system mismatch (Y-up vs Z-up)');
-    console.log('[DEBUG] If building appears ON ITS SIDE:');
-    console.log('  → GLB coordinate conversion issue');
-    console.log('='.repeat(60));
     return { success: true, urn };
 
   } catch (error) {
@@ -1542,9 +1413,6 @@ export async function bakeWithFloorStack(
   options: BakeOptions
 ): Promise<BakeResult> {
   // PROMINENT LOG - This MUST appear if function is called
-  console.log('%c>>> BAKE WITH FLOORSTACK STARTED <<<', 'background: blue; color: white; font-size: 16px; padding: 4px;');
-  console.log('Floorplan:', floorplan.buildingLength, 'x', floorplan.buildingDepth);
-
   try {
     const { numFloors, originalBuildingPath } = options;
 
@@ -1561,8 +1429,6 @@ export async function bakeWithFloorStack(
       [-halfWidth, halfDepth]
     ];
 
-    console.log(`Baking ${numFloors}-floor building (${floorplan.buildingLength.toFixed(1)}m x ${floorplan.buildingDepth.toFixed(1)}m)...`);
-
     let urn: string;
 
     // First try: plan-based FloorStack with unit subdivisions
@@ -1570,15 +1436,6 @@ export async function bakeWithFloorStack(
     let plan: FloorStackPlan | null = null;
     try {
       plan = convertFloorPlanToFloorStackPlan(floorplan);
-
-      // Debug: Log plan details
-      console.log(`[FloorStack] Plan has ${plan.vertices.length} vertices and ${plan.units.length} units`);
-      console.log(`[FloorStack] Fillers in floorplan: ${floorplan.fillers?.length || 0}`);
-      const programCounts = plan.units.reduce((acc, u) => {
-        acc[u.program || 'unknown'] = (acc[u.program || 'unknown'] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
-      console.log(`[FloorStack] Unit programs:`, programCounts);
 
       // Debug: Validate footprint coverage
       const buildingArea = floorplan.buildingLength * floorplan.buildingDepth;
@@ -1588,9 +1445,6 @@ export async function bakeWithFloorStack(
       const fillersArea = (floorplan.fillers || []).reduce((sum, f) => sum + f.width * f.depth, 0);
       const coveredArea = unitsArea + coresArea + corridorArea + fillersArea;
       const gap = buildingArea - coveredArea;
-      console.log(`[FloorStack] Building area: ${buildingArea.toFixed(2)} sq m`);
-      console.log(`[FloorStack] Coverage: units=${unitsArea.toFixed(2)}, cores=${coresArea.toFixed(2)}, corridor=${corridorArea.toFixed(2)}, fillers=${fillersArea.toFixed(2)}`);
-      console.log(`[FloorStack] Total covered: ${coveredArea.toFixed(2)} sq m (gap: ${gap.toFixed(2)} sq m)`);
       if (Math.abs(gap) > 0.01) {
         console.warn(`[FloorStack] WARNING: Footprint coverage gap of ${gap.toFixed(2)} sq m detected!`);
       }
@@ -1600,19 +1454,12 @@ export async function bakeWithFloorStack(
       const validPlan = plan; // Capture for closures
 
       // Debug: Dump plan data for inspection
-      console.log('[FloorStack] === PLAN DATA ===');
-      console.log('[FloorStack] Vertices:', JSON.stringify(validPlan.vertices.slice(0, 10), null, 2));
       if (validPlan.vertices.length > 10) {
-        console.log(`[FloorStack] ... and ${validPlan.vertices.length - 10} more vertices`);
       }
-      console.log('[FloorStack] Units (first 5):', JSON.stringify(validPlan.units.slice(0, 5), null, 2));
       if (validPlan.units.length > 5) {
-        console.log(`[FloorStack] ... and ${validPlan.units.length - 5} more units`);
       }
 
       // Pre-validation: Check for common issues
-      console.log('[FloorStack] === PRE-VALIDATION ===');
-
       // Check for units with invalid polygon references
       const vertexIds = new Set(validPlan.vertices.map(v => v.id));
       let invalidRefs = 0;
@@ -1627,7 +1474,6 @@ export async function bakeWithFloorStack(
       if (invalidRefs > 0) {
         console.error(`[FloorStack] Found ${invalidRefs} invalid vertex references!`);
       } else {
-        console.log('[FloorStack] All vertex references valid ✓');
       }
 
       // Check for units with < 3 vertices (invalid polygons)
@@ -1635,7 +1481,6 @@ export async function bakeWithFloorStack(
       if (smallPolygons.length > 0) {
         console.error(`[FloorStack] Found ${smallPolygons.length} units with < 3 vertices!`);
       } else {
-        console.log('[FloorStack] All polygons have >= 3 vertices ✓');
       }
 
       // Check for duplicate vertex IDs in same polygon
@@ -1650,30 +1495,21 @@ export async function bakeWithFloorStack(
       if (duplicateVerts > 0) {
         console.error(`[FloorStack] Found ${duplicateVerts} units with duplicate vertices!`);
       } else {
-        console.log('[FloorStack] No duplicate vertices in polygons ✓');
       }
-
-      console.log('[FloorStack] === END PRE-VALIDATION ===');
 
       const planFloors: FloorByPlan[] = Array.from({ length: numFloors }, () => ({
         planId: validPlan.id,
         height: FLOOR_HEIGHT
       }));
 
-      console.log('[FloorStack] Calling createFromFloors...');
       const result = await Forma.elements.floorStack.createFromFloors({
         floors: planFloors,
         plans: [validPlan]
       });
       urn = result.urn;
-      console.log('%c>>> FLOORSTACK SUCCESS! <<<', 'background: green; color: white; font-size: 16px; padding: 4px;');
-      console.log(`Building created WITH ${validPlan.units.length} units (URN: ${urn})`);
-
     } catch (planError) {
       // Plan-based failed, fall back to polygon mode
       // VERY PROMINENT ERROR - Must be visible
-      console.log('%c!!! FLOORSTACK PLAN FAILED !!!', 'background: red; color: white; font-size: 20px; padding: 8px; font-weight: bold;');
-      console.log('%cFalling back to polygon mode (NO UNITS)', 'background: orange; color: black; font-size: 14px; padding: 4px;');
       console.error('='.repeat(60));
       console.error('[FloorStack] PLAN-BASED CREATION FAILED');
       console.error('='.repeat(60));
@@ -1714,8 +1550,6 @@ export async function bakeWithFloorStack(
         floors: polygonFloors
       });
       urn = result.urn;
-      console.log('%c>>> POLYGON FALLBACK USED <<<', 'background: orange; color: black; font-size: 16px; padding: 4px;');
-      console.log(`Building created WITHOUT units (URN: ${urn})`);
     }
 
     // 4. Add to proposal with transform
@@ -1744,7 +1578,6 @@ export async function bakeWithFloorStack(
       }
     }
 
-    console.log('Bake complete');
     return { success: true, urn };
 
   } catch (error) {
@@ -1753,7 +1586,6 @@ export async function bakeWithFloorStack(
 
     // Fallback to BasicBuilding API
     try {
-      console.log('Falling back to BasicBuilding API...');
       return await bakeWithBasicBuildingAPI(floorplan, options);
     } catch (fallbackError) {
       const fallbackMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
@@ -1774,11 +1606,6 @@ export async function bakeWithFloorStackBatch(
   }>
 ): Promise<Array<BakeResult>> {
   try {
-    console.log('='.repeat(60));
-    console.log('BAKE WITH FLOORSTACK BATCH STARTING');
-    console.log('='.repeat(60));
-    console.log(`Creating ${buildings.length} buildings...`);
-
     // Convert all floorplans to FloorStack format
     const batchRequest = buildings.map(({ floorplan, options }, index) => {
       const plan = convertFloorPlanToFloorStackPlan(floorplan);
@@ -1795,8 +1622,6 @@ export async function bakeWithFloorStackBatch(
 
     // Call batch API (SDK v0.90.0)
     const { urns } = await Forma.elements.floorStack.createFromFloorsBatch(batchRequest);
-    console.log(`Batch creation complete: ${urns.length} buildings created`);
-
     // Add each building to proposal with transform
     const bakeResults: BakeResult[] = [];
 
@@ -1827,10 +1652,6 @@ export async function bakeWithFloorStackBatch(
 
       bakeResults.push({ success: true, urn });
     }
-
-    console.log('='.repeat(60));
-    console.log('BAKE WITH FLOORSTACK BATCH COMPLETE');
-    console.log('='.repeat(60));
 
     return bakeResults;
 
@@ -1983,7 +1804,6 @@ function logOverlaps(floorplan: FloorPlanData): void {
     }
     console.warn('[BasicBuilding] This may cause API validation errors.');
   } else {
-    console.log('[BasicBuilding] No overlapping geometry detected.');
   }
 }
 
@@ -2133,11 +1953,74 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
     });
   }
 
-  return {
-    id: 'plan1',
-    vertices,
-    units
-  };
+  const rawPlan: FloorStackPlan = { id: 'plan1', vertices, units };
+  return fixTJunctions(rawPlan);
+}
+
+/**
+ * Resolve T-junctions: when a vertex from one polygon lies on another polygon's edge
+ * but isn't included in that polygon's vertex list. This creates non-conforming mesh
+ * boundaries that the FloorStack API rejects with 400.
+ */
+function fixTJunctions(plan: FloorStackPlan): FloorStackPlan {
+  const vertexMap = new Map(plan.vertices.map(v => [v.id, { x: v.x, y: v.y }]));
+  const eps = 0.001;
+  const allVertexIds = plan.vertices.map(v => v.id);
+
+  let totalInsertions = 0;
+
+  const fixedUnits = plan.units.map(unit => {
+    let polygon = [...unit.polygon];
+    let changed = true;
+
+    while (changed) {
+      changed = false;
+      for (let i = 0; i < polygon.length; i++) {
+        const p1 = vertexMap.get(polygon[i])!;
+        const p2 = vertexMap.get(polygon[(i + 1) % polygon.length])!;
+
+        const toInsert: { id: string; t: number }[] = [];
+
+        for (const vid of allVertexIds) {
+          if (polygon.includes(vid)) continue;
+          const vc = vertexMap.get(vid)!;
+
+          if (Math.abs(p1.x - p2.x) < eps) {
+            if (Math.abs(vc.x - p1.x) < eps) {
+              const minY = Math.min(p1.y, p2.y);
+              const maxY = Math.max(p1.y, p2.y);
+              if (vc.y > minY + eps && vc.y < maxY - eps) {
+                toInsert.push({ id: vid, t: (vc.y - p1.y) / (p2.y - p1.y) });
+              }
+            }
+          } else if (Math.abs(p1.y - p2.y) < eps) {
+            if (Math.abs(vc.y - p1.y) < eps) {
+              const minX = Math.min(p1.x, p2.x);
+              const maxX = Math.max(p1.x, p2.x);
+              if (vc.x > minX + eps && vc.x < maxX - eps) {
+                toInsert.push({ id: vid, t: (vc.x - p1.x) / (p2.x - p1.x) });
+              }
+            }
+          }
+        }
+
+        if (toInsert.length > 0) {
+          toInsert.sort((a, b) => a.t - b.t);
+          polygon.splice(i + 1, 0, ...toInsert.map(e => e.id));
+          totalInsertions += toInsert.length;
+          changed = true;
+          break;
+        }
+      }
+    }
+
+    return { ...unit, polygon };
+  });
+
+  if (totalInsertions > 0) {
+  }
+
+  return { ...plan, units: fixedUnits };
 }
 
 /**
@@ -2172,9 +2055,6 @@ function convertFloorPlanToBasicBuilding(
     height: FLOOR_HEIGHT
   }));
 
-  console.log('[BasicBuilding] Converted from FloorStack plan format');
-  console.log(`  - ${basicBuildingPlan.vertices.length} vertices, ${basicBuildingPlan.units.length} units`);
-
   return {
     floors,
     plans: [basicBuildingPlan]
@@ -2198,10 +2078,6 @@ async function createBasicBuildingAPI(
   // Choose API endpoint based on environment
   const apiBase = isLocalhost ? FORMA_API_DIRECT : FORMA_API_PROXY;
   const url = `${apiBase}/forma/basicbuilding/v1alpha/basicbuilding/batch-create?authcontext=${encodeURIComponent(authContext)}`;
-
-  console.log('[BasicBuilding API] Environment:', isLocalhost ? 'localhost (using direct API)' : 'production (using proxy)');
-  console.log('[BasicBuilding API] Calling:', url);
-  console.log('[BasicBuilding API] Building data:', JSON.stringify(building, null, 2));
 
   // Build fetch options based on environment
   let response: Response;
@@ -2237,7 +2113,6 @@ async function createBasicBuildingAPI(
   }
 
   const results: BasicBuildingCreateResponse[] = await response.json();
-  console.log('[BasicBuilding API] Response:', results);
   return results;
 }
 
@@ -2251,22 +2126,14 @@ export async function bakeWithBasicBuildingAPI(
   options: BakeOptions
 ): Promise<BakeResult> {
   try {
-    console.log('='.repeat(60));
-    console.log('BAKE WITH BASIC BUILDING API STARTING');
-    console.log('='.repeat(60));
-
     const { numFloors, originalBuildingPath } = options;
 
     // 0. Check for overlapping geometry (pre-validation)
     logOverlaps(floorplan);
 
     // 1. Convert FloorPlanData to BasicBuilding format
-    console.log('Converting floorplan to BasicBuilding format...');
     const buildingData = convertFloorPlanToBasicBuilding(floorplan, numFloors);
-    console.log(`Converted: ${buildingData.plans[0].vertices.length} vertices, ${buildingData.plans[0].units.length} units, ${buildingData.floors.length} floors`);
-
     // 2. Call BasicBuilding API (uses session cookies via Forma proxy)
-    console.log('Calling BasicBuilding API...');
     const results = await createBasicBuildingAPI(buildingData);
 
     if (!results || results.length === 0) {
@@ -2274,15 +2141,11 @@ export async function bakeWithBasicBuildingAPI(
     }
 
     const urn = results[0].urn;
-    console.log('Building created with URN:', urn);
-
     // 3. Get terrain elevation for positioning
     const elevation = await Forma.terrain.getElevationAt({
       x: floorplan.transform.centerX,
       y: floorplan.transform.centerY
     });
-    console.log('Terrain elevation at center:', elevation);
-
     // 4. Calculate transform
     // IMPORTANT: Vertices are in CENTERED local coordinates (origin at building center)
     // The generator already applies offsetX = -length/2 and offsetY = -depth/2
@@ -2290,12 +2153,6 @@ export async function bakeWithBasicBuildingAPI(
     const { centerX, centerY, rotation } = floorplan.transform;
     const cos = Math.cos(rotation);
     const sin = Math.sin(rotation);
-
-    console.log('[DEBUG TRANSFORM BasicBuilding] Applying transform:');
-    console.log(`  - Rotation: ${(rotation * 180 / Math.PI).toFixed(2)} degrees`);
-    console.log(`  - Local coords are centered at (0, 0) - building center is at origin`);
-    console.log(`  - World center target: (${centerX.toFixed(2)}, ${centerY.toFixed(2)})`);
-    console.log(`  - Translation: (${centerX.toFixed(2)}, ${centerY.toFixed(2)}, ${elevation.toFixed(2)})`);
 
     // 4x4 column-major transform matrix:
     // [ cos  -sin  0   centerX ]
@@ -2310,26 +2167,16 @@ export async function bakeWithBasicBuildingAPI(
       centerX, centerY, elevation, 1  // Column 3: Direct translation to world center
     ];
 
-    console.log('[DEBUG TRANSFORM] Adding to proposal with rotation + translation to world center');
-
     // 5. Add to proposal
     await Forma.proposal.addElement({ urn, transform });
-    console.log('Element added to proposal');
-
     // 6. Remove original building if specified
     if (originalBuildingPath) {
-      console.log('Removing original building:', originalBuildingPath);
       try {
         await Forma.proposal.removeElement({ path: originalBuildingPath });
-        console.log('Original building removed');
       } catch (removeError) {
         console.warn('Could not remove original building:', removeError);
       }
     }
-
-    console.log('='.repeat(60));
-    console.log('BAKE WITH BASIC BUILDING API COMPLETE');
-    console.log('='.repeat(60));
 
     return { success: true, urn };
 

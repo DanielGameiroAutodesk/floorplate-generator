@@ -5,98 +5,136 @@ This document describes the architecture of the Floorplate Generator extension f
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           Autodesk Forma                                 │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                      Forma Extension Host                        │   │
-│  │                                                                  │   │
-│  │  ┌────────────────────┐    ┌────────────────────────────────┐  │   │
-│  │  │   Main Panel       │    │     Floating Preview Panel      │  │   │
-│  │  │   (index.html)     │◄──►│   (floorplate-panel.html)      │  │   │
-│  │  │                    │    │                                 │  │   │
-│  │  │  ┌──────────────┐  │    │  ┌─────────────────────────┐   │  │   │
-│  │  │  │   main.ts    │  │    │  │  floorplate-panel.ts    │   │  │   │
-│  │  │  │  (UI Logic)  │  │    │  │  (Preview Rendering)    │   │  │   │
-│  │  │  └──────┬───────┘  │    │  └───────────┬─────────────┘   │  │   │
-│  │  └─────────┼──────────┘    └──────────────┼─────────────────┘  │   │
-│  │            │ MessagePort                   │                    │   │
-│  │            └───────────────────────────────┘                    │   │
-│  │                           │                                      │   │
-│  │                           ▼                                      │   │
-│  │  ┌─────────────────────────────────────────────────────────┐   │   │
-│  │  │                   Algorithm Layer                        │   │   │
-│  │  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐   │   │   │
-│  │  │  │ generator.ts│ │   types.ts  │ │   constants.ts  │   │   │   │
-│  │  │  │  (Core)     │ │ (Interfaces)│ │   (Defaults)    │   │   │   │
-│  │  │  └─────────────┘ └─────────────┘ └─────────────────┘   │   │   │
-│  │  │  ┌─────────────────────────────────────────────────┐   │   │   │
-│  │  │  │                  renderer.ts                     │   │   │   │
-│  │  │  │          (FloorPlan → Forma Mesh)               │   │   │   │
-│  │  │  └─────────────────────────────────────────────────┘   │   │   │
-│  │  └─────────────────────────────────────────────────────────┘   │   │
-│  │                           │                                      │   │
-│  │                           ▼                                      │   │
-│  │  ┌─────────────────────────────────────────────────────────┐   │   │
-│  │  │                   Geometry Layer                         │   │   │
-│  │  │  ┌──────────┐ ┌─────────┐ ┌───────────┐ ┌────────────┐ │   │   │
-│  │  │  │ point.ts │ │ line.ts │ │ polygon.ts│ │rectangle.ts│ │   │   │
-│  │  │  └──────────┘ └─────────┘ └───────────┘ └────────────┘ │   │   │
-│  │  └─────────────────────────────────────────────────────────┘   │   │
-│  │                           │                                      │   │
-│  └───────────────────────────┼──────────────────────────────────────┘   │
-│                              ▼                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                     Forma SDK (forma-embedded-view-sdk)          │   │
-│  │  ┌─────────────┐ ┌───────────┐ ┌─────────┐ ┌─────────────────┐ │   │
-│  │  │   project   │ │ selection │ │geometry │ │     render      │ │   │
-│  │  │  .get()     │ │.getSelection│.getTriangles│   .addMesh()  │ │   │
-│  │  └─────────────┘ └───────────┘ └─────────┘ └─────────────────┘ │   │
-│  │  ┌──────────────────────────────────────────────────────────┐  │   │
-│  │  │             extensions.storage (Cloud Persistence)        │  │   │
-│  │  └──────────────────────────────────────────────────────────┘  │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                              Autodesk Forma                                  │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │                        Forma Extension Host                            │  │
+│  │                                                                        │  │
+│  │  ┌──────────────────────────┐    ┌──────────────────────────────────┐  │  │
+│  │  │     Main Panel           │    │     Floating Preview Panel        │  │  │
+│  │  │     (index.html)         │◄──►│   (floorplate-panel.html)        │  │  │
+│  │  │                          │    │                                   │  │  │
+│  │  │  ┌────────────────────┐  │    │  ┌───────────────────────────┐   │  │  │
+│  │  │  │     main.ts        │  │    │  │   floorplate-panel.ts     │   │  │  │
+│  │  │  │   (Orchestrator)   │  │    │  │  (Preview Rendering)      │   │  │  │
+│  │  │  └──────┬─────────────┘  │    │  └───────────────────────────┘   │  │  │
+│  │  │         │                │    │                                   │  │  │
+│  │  │  ┌──────┴─────────────────────────────────────────────────────┐  │  │  │
+│  │  │  │                Extension Modules                            │  │  │  │
+│  │  │  │  ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐ │  │  │  │
+│  │  │  │  │  managers/   │ │   tabs/      │ │   state/             │ │  │  │  │
+│  │  │  │  │ generation   │ │ mix-tab      │ │ ui-state             │ │  │  │  │
+│  │  │  │  │ float-panel  │ │ dim-tab      │ │ unit-config          │ │  │  │  │
+│  │  │  │  │ saved        │ │ egress-tab   │ │                      │ │  │  │  │
+│  │  │  │  └─────────────┘ └─────────────┘ └──────────────────────┘ │  │  │  │
+│  │  │  │  ┌─────────────────────┐  ┌─────────────────────────────┐ │  │  │  │
+│  │  │  │  │  bake-building.ts   │  │  storage-service.ts          │ │  │  │  │
+│  │  │  │  │  (Forma Buildings)  │  │  (Cloud Persistence)         │ │  │  │  │
+│  │  │  │  └─────────────────────┘  └─────────────────────────────┘ │  │  │  │
+│  │  │  └─────────────────────────────────────────────────────────────┘  │  │  │
+│  │  └──────────────────────────┘    └──────────────────────────────────┘  │  │
+│  │              │  MessagePort                                            │  │
+│  │              ▼                                                         │  │
+│  │  ┌──────────────────────────────────────────────────────────────────┐  │  │
+│  │  │                      Algorithm Layer                              │  │  │
+│  │  │  ┌──────────────────┐ ┌──────────────┐ ┌──────────────────────┐ │  │  │
+│  │  │  │generator-core.ts │ │  types.ts     │ │   constants.ts       │ │  │  │
+│  │  │  │ (14-Step Pipeline)│ │ (Dual Types) │ │   (Defaults)         │ │  │  │
+│  │  │  └──────────────────┘ └──────────────┘ └──────────────────────┘ │  │  │
+│  │  │  ┌──────────────────┐ ┌──────────────┐ ┌──────────────────────┐ │  │  │
+│  │  │  │  footprint.ts    │ │ renderer.ts  │ │ flexibility-model.ts │ │  │  │
+│  │  │  │ (Mesh→Footprint) │ │ (→Forma Mesh)│ │  (Unit Sizing)       │ │  │  │
+│  │  │  └──────────────────┘ └──────────────┘ └──────────────────────┘ │  │  │
+│  │  │  ┌──────────────────┐ ┌──────────────┐                         │  │  │
+│  │  │  │  unit-counts.ts  │ │type-compat.ts│                         │  │  │
+│  │  │  │ (Distribution)   │ │(Legacy↔Dyn)  │                         │  │  │
+│  │  │  └──────────────────┘ └──────────────┘                         │  │  │
+│  │  └──────────────────────────────────────────────────────────────────┘  │  │
+│  │              │                                                         │  │
+│  │              ▼                                                         │  │
+│  │  ┌──────────────────────────────────────────────────────────────────┐  │  │
+│  │  │                      Geometry Layer                                │  │  │
+│  │  │  ┌──────────┐ ┌─────────┐ ┌───────────┐ ┌──────────────┐       │  │  │
+│  │  │  │ point.ts │ │ line.ts │ │ polygon.ts│ │ rectangle.ts │       │  │  │
+│  │  │  └──────────┘ └─────────┘ └───────────┘ └──────────────┘       │  │  │
+│  │  └──────────────────────────────────────────────────────────────────┘  │  │
+│  │              │                                                         │  │
+│  └──────────────┼─────────────────────────────────────────────────────────┘  │
+│                 ▼                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │                  Forma SDK (forma-embedded-view-sdk)                   │    │
+│  │  ┌─────────────┐ ┌────────────┐ ┌──────────┐ ┌─────────────────┐   │    │
+│  │  │   project    │ │  selection  │ │ geometry │ │     render      │   │    │
+│  │  │   .get()     │ │.getSelection│ │.getTri.. │ │   .addMesh()   │   │    │
+│  │  └─────────────┘ └────────────┘ └──────────┘ └─────────────────┘   │    │
+│  │  ┌─────────────────────┐  ┌──────────────────────────────────────┐ │    │
+│  │  │  elements.floorStack │  │  extensions.storage (Cloud Storage)  │ │    │
+│  │  │  .createFromFloors() │  │  .getItem() / .setItem()            │ │    │
+│  │  └─────────────────────┘  └──────────────────────────────────────┘ │    │
+│  └──────────────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Layer Descriptions
 
 ### 1. Extension UI Layer (`src/extension/`)
 
-The user interface layer responsible for:
+The entry point and user interface layer:
 
-- **main.ts**: Main controller handling UI state, user input, and orchestrating generation
-- **floorplate-panel.ts**: Floating panel for 2D visualization of generated layouts
+- **main.ts**: Orchestrator -- initializes all modules, wires cross-module callbacks, manages the button state machine (select → generate → stop)
+- **floorplate-panel.ts**: Floating panel for 2D SVG visualization of generated layouts
+- **bake-building.ts**: Converts floorplates to native Forma building elements via FloorStack SDK and BasicBuilding API
+- **storage-service.ts**: Cloud persistence via Forma `extensions.storage` API (save/load/delete)
+- **managers/**: Core functionality extracted from main.ts for modularity
+  - `generation-manager.ts`: Building selection, footprint extraction, generation orchestration, auto-generate with debouncing
+  - `floating-panel-manager.ts`: MessagePort communication with the floating preview panel, panel lifecycle
+  - `saved-manager.ts`: Save/load/rename/duplicate/delete saved floorplate designs, building ID grouping
+- **tabs/**: Tab-specific UI initialization and event handlers
+  - `mix-tab.ts`: Unit type configuration (add/remove types, percentages, areas, advanced settings)
+  - `dim-tab.ts`: Building dimensions (corridor width, core placement, core dimensions)
+  - `egress-tab.ts`: Egress configuration (sprinkler status, travel distances, dead-end limits)
+- **state/**: Centralized state management
+  - `ui-state.ts`: `UIState` interface, global mutable state object, smart defaults calculation from unit area
+  - `unit-config.ts`: Converters from UI state to algorithm-compatible `UnitConfiguration` and `DynamicUnitConfiguration` formats
+- **utils/**: Shared extension utilities
+  - `dom-refs.ts`: Cached DOM element references for all UI controls (single source of truth for querySelector calls)
 - **components/**: Reusable UI components
-  - `FloorplateSVG.ts`: Renders floorplates as SVG
-  - `MetricsPanel.ts`: Displays statistics and metrics
+  - `FloorplateSVG.ts`: Renders floorplates as SVG for the floating panel
+  - `MetricsPanel.ts`: Displays unit counts, efficiency, and egress compliance metrics
 
 ### 2. Algorithm Layer (`src/algorithm/`)
 
-The core business logic:
+Core business logic, independent of Forma SDK:
 
-- **generator-core.ts**: Main floorplate generation algorithm with 3 optimization strategies
-- **types.ts**: TypeScript interfaces and type definitions
-- **constants.ts**: Default values, colors, and configuration
-- **renderer.ts**: Transforms FloorPlanData into Forma-compatible mesh data
+- **generator-core.ts**: Main 14-step generation pipeline with 3 optimization strategies (balanced, mix-optimized, efficiency-optimized)
+- **types.ts**: Dual type system -- legacy `UnitType` enum (Studio/1BR/2BR/3BR) + extensible `DynamicUnitType` system
+- **constants.ts**: All default values, unit colors, flexibility factors, strategy configs, IBC egress limits
+- **renderer.ts**: Transforms `FloorPlanData` into Forma-compatible mesh data (positions, normals, colors)
+- **footprint.ts**: Extracts `BuildingFootprint` from Forma triangle mesh data (convex hull, orientation, dimensions)
+- **flexibility-model.ts**: Unit sizing logic -- expansion/compression weights, smart defaults interpolation, corner/L-shape eligibility rules
+- **unit-counts.ts**: Unit count distribution using Largest Remainder Method, per-side allocation, core-side mix bias
+- **type-compat.ts**: Bidirectional conversion between legacy `UnitConfiguration` and dynamic `DynamicUnitConfiguration`
+- **utils/logger.ts**: Configurable logging utility (levels: DEBUG, INFO, WARN, ERROR, NONE)
 
 ### 3. Geometry Layer (`src/geometry/`)
 
-Low-level geometric utilities:
+Pure geometric utilities with no dependencies:
 
-- **point.ts**: Point class with distance, rotation, and transformation methods
-- **line.ts**: Line segment operations (intersection, projection)
-- **polygon.ts**: Polygon area calculation, point-in-polygon tests
-- **rectangle.ts**: Rectangle collision detection and overlap calculation
+- **point.ts**: 2D point operations -- distance, rotation, translation, interpolation, angle calculation
+- **line.ts**: Line segment operations -- intersection, closest point, parallel offset, extension
+- **polygon.ts**: Polygon operations -- area (signed), perimeter, point-in-polygon, centroid
+- **rectangle.ts**: Rectangle operations -- overlap detection, subdivision (horizontal/vertical/by-widths), edge extraction, expansion
 
 ### 4. Forma SDK Layer
 
-The `forma-embedded-view-sdk` provides all integration with Autodesk Forma:
+The `forma-embedded-view-sdk` (v0.90.0) provides all integration with Autodesk Forma:
 
 - Project and scene access
 - Building selection handling
-- Geometry extraction
-- 3D rendering
-- Cloud storage for saved designs
+- Geometry extraction (triangle meshes)
+- 3D rendering (`Forma.render.addMesh()`)
+- Building creation (`Forma.elements.floorStack.createFromFloors()`)
+- Cloud storage for saved designs (`Forma.extensions.storage`)
 
 ## Data Flow
 
@@ -106,9 +144,10 @@ The `forma-embedded-view-sdk` provides all integration with Autodesk Forma:
 User Selection → Footprint Extraction → Generation → Visualization → Export
       │                 │                   │              │            │
       ▼                 ▼                   ▼              ▼            ▼
-  Forma.selection   Forma.geometry     generator.ts   renderer.ts   bake-building.ts
-  .getSelection()   .getTriangles()    generates 3    creates mesh   creates native
-                                       FloorPlanData  data           Forma building
+  Forma.selection   Forma.geometry    generator-      renderer.ts   bake-building.ts
+  .getSelection()   .getTriangles()   core.ts         creates mesh   creates native
+                    → footprint.ts    generates 3      data           Forma building
+                                      FloorPlanData
 ```
 
 ### Communication Flow
@@ -117,6 +156,10 @@ User Selection → Footprint Extraction → Generation → Visualization → Exp
 ┌─────────────────┐     MessagePort      ┌─────────────────┐
 │   Main Panel    │◄────────────────────►│  Floating Panel │
 │   (main.ts)     │                      │(floorplate-panel.ts)
+│                 │                      │                 │
+│  managers/      │   Options, save/     │  SVG rendering  │
+│  tabs/          │   bake callbacks     │  Option select  │
+│  state/         │                      │                 │
 └────────┬────────┘                      └────────┬────────┘
          │                                        │
          │ Forma SDK                              │ Forma SDK
@@ -200,26 +243,64 @@ Guiding principles for this extension:
 
 **Trade-off**: May result in unused corridor space when units can't fit; algorithm must handle this gracefully.
 
+### 6. Modular Manager Pattern
+
+**What**: Core functionality split from `main.ts` into `managers/`, `tabs/`, `state/`, and `utils/` subdirectories.
+
+**Why**:
+- `main.ts` acts as a thin orchestrator wiring modules together, not implementing logic itself
+- Each manager handles a single responsibility (generation, panel communication, saved designs)
+- Tab modules encapsulate all UI logic for their respective tabs
+- State is centralized in `ui-state.ts` rather than scattered across files
+- Easier to understand any single module in isolation
+
+**Trade-off**: More files to navigate; requires explicit wiring in main.ts.
+
+### 7. Dual Type System (Legacy + Dynamic)
+
+**What**: Two coexisting unit type systems -- legacy `UnitType` enum and extensible `DynamicUnitType`.
+
+**Why**:
+- Legacy system (Studio/1BR/2BR/3BR) is deeply integrated into the algorithm and is the stable API
+- Dynamic system supports arbitrary unit types for the UI and future extensibility
+- `type-compat.ts` bridges the two with bidirectional conversion
+- Avoids risky refactoring of a working algorithm while enabling new features
+
+**Trade-off**: Two systems to maintain; conversion overhead; potential for confusion about which to use.
+
 ## Module Dependencies
 
 ```
-main.ts
-  ├── algorithm/
-  │     ├── index.ts (public API)
-  │     ├── generator-core.ts
-  │     │     ├── types.ts
-  │     │     └── constants.ts
-  │     └── renderer.ts
-  │           └── types.ts
-  ├── storage-service.ts
-  │     └── (Forma SDK)
-  ├── bake-building.ts
-  │     └── (Forma SDK)
-  ├── building-inspector.ts
-  │     └── (Forma SDK)
+main.ts (orchestrator)
+  ├── state/
+  │     ├── ui-state.ts (UIState, INITIAL_STATE, smart defaults)
+  │     └── unit-config.ts → ui-state.ts, algorithm/types.ts
+  ├── tabs/
+  │     ├── mix-tab.ts → state/ui-state.ts
+  │     ├── dim-tab.ts → state/ui-state.ts
+  │     └── egress-tab.ts → state/ui-state.ts
+  ├── managers/
+  │     ├── generation-manager.ts → algorithm/generator-core.ts, algorithm/footprint.ts
+  │     ├── floating-panel-manager.ts → (Forma SDK MessagePort)
+  │     └── saved-manager.ts → storage-service.ts, state/ui-state.ts
+  ├── utils/
+  │     └── dom-refs.ts (cached DOM elements)
+  ├── bake-building.ts → algorithm/types.ts, (Forma SDK floorStack)
+  ├── storage-service.ts → algorithm/types.ts, (Forma SDK storage)
   └── components/
         ├── FloorplateSVG.ts
         └── MetricsPanel.ts
+
+algorithm/
+  ├── generator-core.ts → types.ts, constants.ts, flexibility-model.ts, unit-counts.ts
+  ├── footprint.ts → types.ts, geometry/
+  ├── renderer.ts → types.ts, constants.ts, geometry/
+  ├── flexibility-model.ts → types.ts, constants.ts
+  ├── unit-counts.ts → types.ts, flexibility-model.ts
+  ├── type-compat.ts → types.ts
+  ├── types.ts (no deps)
+  ├── constants.ts → types.ts
+  └── utils/logger.ts (no deps)
 
 geometry/
   ├── point.ts (no deps)
@@ -234,29 +315,34 @@ types/
 
 ## State Management
 
-State is managed at the UI layer in `main.ts`:
+State is managed centrally in `src/extension/state/ui-state.ts`:
 
 ```typescript
-// Core state categories:
-interface ExtensionState {
-  // UI State
-  activeTab: 'MIX' | 'DIM' | 'EGRESS';
-  autoGenerateEnabled: boolean;
-
-  // Configuration State
-  unitConfig: UnitConfiguration;
-  egressConfig: EgressConfig;
-  dimensions: BuildingDimensions;
-
-  // Generation State
-  layoutOptions: LayoutOption[];
-  selectedOptionIndex: number;
-
-  // Building State
-  selectedBuildingPath: string | null;
-  buildingFootprint: BuildingFootprint | null;
+interface UIState {
+  // MIX tab
+  alignment: number;
+  unitTypes: UnitTypeConfig[];
+  // DIM tab
+  length: number;
+  stories: number;
+  buildingDepth: number;
+  corridorWidth: number;
+  corePlacement: 'North' | 'South';
+  coreWidth: number;
+  coreDepth: number;
+  // EGRESS tab
+  sprinklered: boolean;
+  commonPath: number;
+  travelDistance: number;
+  deadEnd: number;
+  // Auto-generate
+  autoGenerate: boolean;
 }
 ```
+
+The state pattern is deliberately simple: a mutable global `state` object exported from `ui-state.ts`. This is a design choice for vibecoding accessibility -- more sophisticated patterns (Redux, signals, etc.) add complexity that outweighs their benefits for this project.
+
+Each tab module reads/writes directly to `state`, and calls `markInputChanged()` to trigger auto-regeneration when inputs change.
 
 ## File Organization Patterns
 
@@ -264,9 +350,11 @@ interface ExtensionState {
 
 | Pattern | Example | Usage |
 |---------|---------|-------|
-| `feature.ts` | `generator.ts` | Main feature implementation |
+| `feature-name.ts` | `generator-core.ts` | Main feature implementation |
 | `feature-panel.ts` | `floorplate-panel.ts` | Panel-specific code |
 | `feature-service.ts` | `storage-service.ts` | Service/API wrappers |
+| `feature-manager.ts` | `generation-manager.ts` | Feature managers |
+| `feature-tab.ts` | `mix-tab.ts` | Tab UI modules |
 | `Feature.ts` (PascalCase) | `FloorplateSVG.ts` | Component classes |
 
 ### Export Patterns
@@ -275,9 +363,9 @@ Each directory has an `index.ts` that re-exports public APIs:
 
 ```typescript
 // src/algorithm/index.ts
-export { generateFloorplates } from './generator';
-export type { FloorPlanData, UnitBlock, CoreBlock } from './types';
-export { DEFAULT_UNIT_CONFIG, DEFAULT_EGRESS_CONFIG } from './constants';
+export { generateFloorplate, generateFloorplateVariants, extractFootprintFromTriangles } from './generator-core';
+export type { FloorPlanData, UnitBlock, CoreBlock, LayoutOption } from './types';
+export { DEFAULT_UNIT_CONFIG, EGRESS_SPRINKLERED, STRATEGY_CONFIGS } from './constants';
 ```
 
 ## Testing Strategy
@@ -297,12 +385,18 @@ export { DEFAULT_UNIT_CONFIG, DEFAULT_EGRESS_CONFIG } from './constants';
 │      └─────────────────────────┘                    │
 │                                                      │
 │   ┌────────────────────────────────┐                │
-│   │         Unit Tests              │  Geometry,    │
-│   │     (point.test.ts, etc.)       │  Pure funcs   │
+│   │         Unit Tests              │  170+ tests   │
+│   │    (*.test.ts colocated)        │  across core  │
 │   └────────────────────────────────┘                │
 │                                                      │
 └─────────────────────────────────────────────────────┘
 ```
+
+Test files are colocated with their source:
+- `geometry/point.test.ts`, `line.test.ts`, `rectangle.test.ts`, `polygon.test.ts`
+- `algorithm/generator-core.test.ts`, `renderer.test.ts`
+- `extension/bake-building.test.ts`, `storage-service.test.ts`
+- `extension/state/ui-state.test.ts`, `unit-config.test.ts`
 
 ## Performance Considerations
 

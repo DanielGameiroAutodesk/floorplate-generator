@@ -234,7 +234,7 @@ function triangulatePolygon(points: { x: number; y: number }[]): number[] {
 
 **Root Cause**: The code incorrectly assumed that floorplan coordinates were in "raw" local space (0 to length, 0 to depth), but they were actually **already centered** around the origin.
 
-**Where Coordinates Get Centered** (in `generator.ts:2170-2171`):
+**Where Coordinates Get Centered** (in `generator-core.ts`):
 ```typescript
 const offsetX = -length / 2;
 const offsetY = -buildingDepth / 2;

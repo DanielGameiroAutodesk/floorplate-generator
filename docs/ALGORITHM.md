@@ -93,7 +93,7 @@ The algorithm uses a central double-loaded corridor:
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| Width | 1.524m (5ft) | Standard corridor width |
+| Width | 1.83m (6ft) | Standard corridor width |
 | Depth | Building depth | Runs full length |
 
 ## Phase 3: Core Placement
@@ -118,8 +118,8 @@ Simple Building:                With Mid-Core:
 
 | Dimension | Default | Description |
 |-----------|---------|-------------|
-| Width | 4.572m (15ft) | Perpendicular to corridor |
-| Depth | 12.192m (40ft) | Along corridor direction |
+| Width | 3.66m (12ft) | Perpendicular to corridor |
+| Depth | 8.99m (29.5ft) | Along corridor direction |
 
 ## Phase 4: Egress Validation
 
@@ -159,10 +159,10 @@ This is the most complex phase, implementing three distinct strategies.
 
 ```
 Total Building Depth = 30m
-Corridor Width = 1.5m
-Core Depth = 4.5m (each side)
+Corridor Width = 1.83m (6ft)
+Core Depth = 8.99m (29.5ft)
 
-Rentable Depth (per side) = (30 - 1.5) / 2 - 4.5 = 9.75m
+Rentable Depth (per side) = (30 - 1.83) / 2 = 14.09m
 ```
 
 ### Unit Count Calculation (Largest Remainder Method)
@@ -192,16 +192,33 @@ while (allocated < totalSlots) {
 
 **Critical Rule**: Units can NEVER be smaller than their target size.
 
-```typescript
-// Flexibility weights (expansion capacity)
-Studio:   1    // Minimal expansion
-1BR:      5    // Some expansion
-2BR:      15   // Moderate expansion
-3BR:      40   // Most expansion
+Two systems coexist (see `flexibility-model.ts` and `type-compat.ts`):
 
-// Compression weights (virtually rigid)
-All types: 0.0001  // Cannot shrink
+**Legacy system** (fixed 4-type enum, used by the core algorithm):
+
+```typescript
+// Expansion weights (how much each type absorbs extra space)
+EXPANSION_WEIGHTS = { Studio: 1, 1BR: 5, 2BR: 15, 3BR: 40 }
+
+// Flexibility factors (% tolerance for sizing)
+FLEXIBILITY_FACTORS = { Studio: 0%, 1BR: ±2%, 2BR: ±5%, 3BR: ±10% }
 ```
+
+**Dynamic system** (extensible, used by the UI via smart defaults):
+
+```typescript
+// Per-type behavioral parameters (calculated from unit area)
+interface UnitTypeAdvancedSettings {
+  sizeTolerance: number;      // 0-25% based on area
+  expansionWeight: number;    // 1-40, interpolated from area
+  compressionWeight: number;  // 0.5-10, interpolated from area
+  cornerEligible: boolean;    // true for units > ~1003 sq ft
+  lShapeEligible: boolean;    // true for units >= ~885 sq ft
+  placementPriority: number;  // 10-100
+}
+```
+
+Smart defaults interpolate these values from unit area: small units (~590sf studios) get rigid/no-corner settings, while large units (~1180sf+ 2BR) get flexible/corner-eligible settings.
 
 ### Width Bounds
 
@@ -399,17 +416,38 @@ interface LayoutOption {
 | Unit Calculations | O(n) where n = unit count |
 | Wall Alignment | O(n × m) for n × m units |
 
+## Internal Pipeline (14 Steps)
+
+The 7 phases above are the conceptual model. Internally, `generator-core.ts` implements these as 14 numbered steps:
+
+| Step | Phase | What It Does |
+|------|-------|-------------|
+| 1 | Phase 1 | **Core Count Determination** -- 2 or 3 cores based on travel distance |
+| 2 | Phase 1 | **Building-Wide Unit Counts** -- Largest Remainder Method for global distribution |
+| 3 | Phase 1 | **Core Side Geometry Optimization** -- find optimal corner lengths and core offset |
+| 4 | Phase 2-3 | **Clear Side Optimization + Geometry Construction** -- corridor/core positions |
+| 5 | Phase 3 | **Generate Cores** -- create CoreBlock objects at computed positions |
+| 6 | Phase 5 | **Define Unit Segments** -- partition each side into corner/mid segments |
+| 7 | Phase 5 | **Distribution** -- allocate unit counts to segments; 7B mirrors 3BR at corners |
+| 8 | Phase 5 | **Generate Units** -- create unit blocks within each segment |
+| 9 | Phase 6 | **Alignment / Mirroring** -- align walls across corridor or mirror core side |
+| 10 | Phase 5 | **Core Wrapping** -- create L-shaped units that wrap around cores |
+| 11 | Phase 5 | **Corridor Void Absorption** -- end units wrap into corridor overhang |
+| 11b | Phase 5 | **Filler Detection** -- create FillerBlocks for remaining gaps |
+| 12 | Phase 7 | **Calculate Stats** -- GSF, NRSF, efficiency, unit counts |
+| 13 | Phase 4 | **Egress Validation** -- verify travel distance and dead-end compliance |
+| 14 | Phase 7 | **Convert to Output Format** -- produce final FloorPlanData |
+
 ## Known Limitations
 
-1. **Rectangular bias**: Algorithm optimized for rectangular buildings
+1. **Rectangular bias**: Algorithm optimized for rectangular buildings (multi-wing support in progress)
 2. **Single-level**: All floors assumed identical
 3. **No interior rooms**: Only demising walls, not bathroom/kitchen layouts
 4. **US codes only**: Egress defaults are US-centric
 
 ## Future Improvements
 
-- Curved building support
+- Multi-wing building support (L, U, V shapes) -- see [MULTI-WING-PROBLEM-SPEC.md](planning/MULTI-WING-PROBLEM-SPEC.md)
 - Multi-floor variations
 - Interior room layouts
 - International building codes
-- Machine learning optimization

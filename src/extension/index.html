@@ -774,47 +774,6 @@
         background: currentColor;
       }
 
-      /* Debug Output */
-      .debug-section {
-        padding: var(--forma-space-4);
-        border-top: 1px solid var(--forma-surface-300);
-        display: none;
-      }
-
-      .debug-section.show {
-        display: block;
-      }
-
-      .debug-toggle {
-        font-size: var(--forma-body-size);
-        color: var(--forma-text-dim);
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: var(--forma-space-2) var(--forma-space-4);
-        width: 100%;
-        text-align: left;
-        font-family: var(--forma-font-family);
-      }
-
-      .debug-toggle:hover {
-        color: var(--forma-icon-on-default);
-      }
-
-      .debug-output {
-        background: var(--forma-surface-200);
-        border: 1px solid var(--forma-surface-300);
-        border-radius: var(--forma-border-radius);
-        padding: var(--forma-space-3);
-        font-family: 'Monaco', 'Menlo', monospace;
-        font-size: var(--forma-body-size);
-        white-space: pre-wrap;
-        word-break: break-all;
-        max-height: 200px;
-        overflow-y: auto;
-        color: var(--forma-text-default);
-      }
-
       /* Auto-Generate Toggle */
       .auto-generate-container {
         display: flex;
@@ -1067,153 +1026,6 @@
         color: var(--forma-text-placeholder);
       }
 
-      /* Inspector Styles */
-      .inspect-status {
-        padding: 10px 14px;
-        border-radius: var(--forma-border-radius);
-        margin-bottom: var(--forma-space-4);
-        font-size: var(--forma-body-size);
-      }
-
-      .inspect-status.loading {
-        background: #fef6e6;
-        color: var(--forma-yellow);
-      }
-
-      .inspect-status.success {
-        background: #e8f5e1;
-        color: var(--forma-green);
-      }
-
-      .inspect-status.error {
-        background: #fdeaea;
-        color: var(--forma-red);
-      }
-
-      .inspect-results {
-        min-height: 100px;
-      }
-
-      .inspect-empty {
-        padding: var(--forma-space-6) var(--forma-space-4);
-        text-align: center;
-        color: var(--forma-text-placeholder);
-        font-size: var(--forma-body-size);
-        background: var(--forma-surface-200);
-        border-radius: var(--forma-border-radius);
-        border: 1px dashed var(--forma-surface-300);
-      }
-
-      .inspect-summary {
-        margin-bottom: var(--forma-space-4);
-      }
-
-      .inspect-cards {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--forma-space-2);
-      }
-
-      .inspect-card {
-        background: var(--forma-surface-100);
-        border: 1px solid var(--forma-surface-300);
-        border-radius: var(--forma-border-radius);
-        padding: var(--forma-space-3);
-      }
-
-      .inspect-card-label {
-        font-size: var(--forma-body-size);
-        color: var(--forma-text-dim);
-        margin-bottom: var(--forma-space-1);
-      }
-
-      .inspect-card-value {
-        font-size: var(--forma-header-size);
-        font-weight: var(--forma-header-weight);
-        color: var(--forma-text-default);
-      }
-
-      .inspect-section {
-        margin-bottom: var(--forma-space-2);
-      }
-
-      .inspect-section-toggle {
-        width: 100%;
-        padding: 10px var(--forma-space-3);
-        background: var(--forma-surface-250);
-        border: 1px solid var(--forma-surface-300);
-        border-radius: var(--forma-border-radius);
-        font-size: var(--forma-body-size);
-        font-weight: var(--forma-subheader-weight);
-        font-family: var(--forma-font-family);
-        color: var(--forma-text-default);
-        cursor: pointer;
-        text-align: left;
-        display: flex;
-        align-items: center;
-        gap: var(--forma-space-2);
-        transition: all 0.15s ease;
-      }
-
-      .inspect-section-toggle:hover {
-        background: var(--forma-surface-300);
-      }
-
-      .inspect-section-toggle.expanded {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border-bottom: none;
-      }
-
-      .inspect-section-toggle.expanded span {
-        transform: rotate(90deg);
-      }
-
-      .inspect-section-toggle span {
-        transition: transform 0.15s ease;
-        font-size: 10px;
-      }
-
-      .inspect-section-content {
-        border: 1px solid var(--forma-surface-300);
-        border-top: none;
-        border-radius: 0 0 var(--forma-border-radius) var(--forma-border-radius);
-        background: var(--forma-surface-200);
-        max-height: 400px;
-        overflow: auto;
-      }
-
-      .inspect-json {
-        margin: 0;
-        padding: var(--forma-space-3);
-        font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-        font-size: var(--forma-body-size);
-        line-height: 1.5;
-        white-space: pre-wrap;
-        word-break: break-all;
-        color: var(--forma-text-default);
-      }
-
-      .inspect-json .key {
-        color: #7c3aed;
-      }
-
-      .inspect-json .string {
-        color: var(--forma-green);
-      }
-
-      .inspect-json .number {
-        color: var(--forma-blue);
-      }
-
-      .inspect-json .boolean {
-        color: var(--forma-red);
-      }
-
-      .inspect-json .null {
-        color: var(--forma-text-dim);
-      }
-
     </style>
   </head>
   <body>
@@ -1242,9 +1054,6 @@
       </button>
       <button class="tab" data-tab="egress">
         Egress
-      </button>
-      <button class="tab" data-tab="inspect">
-        Inspect
       </button>
     </div>
 
@@ -1411,121 +1220,6 @@
       </div>
     </div>
 
-    <!-- INSPECT Tab Content -->
-    <div id="tab-inspect" class="tab-content">
-      <div class="info-box" style="margin-top: 0; margin-bottom: 16px; background: #fef6e6; border-left-color: var(--forma-yellow);">
-        <div class="info-box-title" style="color: var(--forma-yellow);">Building inspector</div>
-        <div class="info-box-text">Select a native Forma building and click "Inspect building" to fetch all available metadata. This helps understand the data structure needed to create new buildings.</div>
-      </div>
-
-      <button class="generate-btn" id="inspect-btn" style="margin-bottom: 16px;">
-        Inspect selected building
-      </button>
-
-      <!-- Inspection Status -->
-      <div id="inspect-status" class="inspect-status" style="display: none;">
-        <span id="inspect-status-text"></span>
-      </div>
-
-      <!-- Inspection Results -->
-      <div id="inspect-results" class="inspect-results">
-        <div class="inspect-empty">
-          Select a building in Forma and click "Inspect Building" to see its metadata.
-        </div>
-      </div>
-
-      <!-- Quick Summary Cards -->
-      <div id="inspect-summary" class="inspect-summary" style="display: none;">
-        <div class="section-title">Quick Summary</div>
-        <div class="inspect-cards">
-          <div class="inspect-card">
-            <div class="inspect-card-label">Category</div>
-            <div class="inspect-card-value" id="summary-category">-</div>
-          </div>
-          <div class="inspect-card">
-            <div class="inspect-card-label">Units</div>
-            <div class="inspect-card-value" id="summary-units">-</div>
-          </div>
-          <div class="inspect-card">
-            <div class="inspect-card-label">Levels</div>
-            <div class="inspect-card-value" id="summary-levels">-</div>
-          </div>
-          <div class="inspect-card">
-            <div class="inspect-card-label">Has GFA</div>
-            <div class="inspect-card-value" id="summary-gfa">-</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Full Data Sections -->
-      <div id="inspect-data-sections" style="display: none;">
-        <!-- Element Properties -->
-        <div class="inspect-section">
-          <button class="inspect-section-toggle" data-section="element">
-            <span>&#9654;</span> Element Properties
-          </button>
-          <div class="inspect-section-content" id="section-element" style="display: none;">
-            <pre class="inspect-json" id="json-element"></pre>
-          </div>
-        </div>
-
-        <!-- Graph Building (Units) -->
-        <div class="inspect-section">
-          <button class="inspect-section-toggle" data-section="graphBuilding">
-            <span>&#9654;</span> Graph Building (Units & Spaces)
-          </button>
-          <div class="inspect-section-content" id="section-graphBuilding" style="display: none;">
-            <pre class="inspect-json" id="json-graphBuilding"></pre>
-          </div>
-        </div>
-
-        <!-- Gross Floor Area Polygons -->
-        <div class="inspect-section">
-          <button class="inspect-section-toggle" data-section="gfa">
-            <span>&#9654;</span> Gross Floor Area Polygons
-          </button>
-          <div class="inspect-section-content" id="section-gfa" style="display: none;">
-            <pre class="inspect-json" id="json-gfa"></pre>
-          </div>
-        </div>
-
-        <!-- Footprint -->
-        <div class="inspect-section">
-          <button class="inspect-section-toggle" data-section="footprint">
-            <span>&#9654;</span> Footprint
-          </button>
-          <div class="inspect-section-content" id="section-footprint" style="display: none;">
-            <pre class="inspect-json" id="json-footprint"></pre>
-          </div>
-        </div>
-
-        <!-- World Transform -->
-        <div class="inspect-section">
-          <button class="inspect-section-toggle" data-section="transform">
-            <span>&#9654;</span> World Transform
-          </button>
-          <div class="inspect-section-content" id="section-transform" style="display: none;">
-            <pre class="inspect-json" id="json-transform"></pre>
-          </div>
-        </div>
-
-        <!-- Raw Element JSON -->
-        <div class="inspect-section">
-          <button class="inspect-section-toggle" data-section="raw">
-            <span>&#9654;</span> Raw Element JSON (Full)
-          </button>
-          <div class="inspect-section-content" id="section-raw" style="display: none;">
-            <pre class="inspect-json" id="json-raw"></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- Copy All Button -->
-      <button class="add-unit-btn" id="copy-all-btn" style="display: none; margin-top: 16px;">
-        Copy All Data to Clipboard
-      </button>
-    </div>
-
     <!-- Generate Button Section -->
     <div class="generate-section">
       <button class="window-toggle-btn" id="show-results-btn" style="display: none;">
@@ -1547,12 +1241,6 @@
           No saved floorplates. Generate a layout and click Save to store it.
         </div>
       </div>
-    </div>
-
-    <!-- Debug Section -->
-    <button class="debug-toggle" id="debug-toggle">&#9660; Show Debug Output</button>
-    <div class="debug-section" id="debug-section">
-      <div class="debug-output" id="debug-output">Select a building and click Generate to see output...</div>
     </div>
 
     <script type="module" src="./main.ts"></script>

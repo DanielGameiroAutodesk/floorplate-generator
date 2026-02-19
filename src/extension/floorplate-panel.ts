@@ -223,13 +223,7 @@ function showSaveFeedback(name: string): void {
  * Handle bake button click
  */
 function handleBake(): void {
-  console.log('[DEBUG PANEL] handleBake called');
-  console.log('[DEBUG PANEL] currentFloorplan:', !!currentFloorplan);
-  console.log('[DEBUG PANEL] allOptions.length:', allOptions.length);
-  console.log('[DEBUG PANEL] isBaking:', isBaking);
-
   if (!currentFloorplan || allOptions.length === 0 || isBaking) {
-    console.log('[DEBUG PANEL] handleBake returning early due to guard conditions');
     return;
   }
 
@@ -243,7 +237,6 @@ function handleBake(): void {
   }
 
   // Send bake request to main extension
-  console.log('[DEBUG PANEL] Sending BAKE_FLOORPLATE message, messagePort:', !!messagePort);
   if (messagePort) {
     const message = {
       type: 'BAKE_FLOORPLATE',
@@ -252,11 +245,9 @@ function handleBake(): void {
         optionIndex: selectedOptionIndex
       }
     };
-    console.log('[DEBUG PANEL] Posting message:', JSON.stringify(message, null, 2).substring(0, 500));
     messagePort.postMessage(message);
-    console.log('[DEBUG PANEL] Message posted successfully');
   } else {
-    console.error('[DEBUG PANEL] No messagePort available!');
+    console.error('No messagePort available for bake request');
   }
 }
 
@@ -389,14 +380,11 @@ function init(): void {
   });
 
   // Listen for message port from main extension
-  console.log('[DEBUG PANEL] Setting up message port listener...');
   Forma.onMessagePort(({ port }) => {
-    console.log('[DEBUG PANEL] Message port received from main extension');
     messagePort = port;
     port.onmessage = handleMessage;
 
     // Send ready signal
-    console.log('[DEBUG PANEL] Sending PANEL_READY signal');
     port.postMessage({ type: 'PANEL_READY' });
   });
 

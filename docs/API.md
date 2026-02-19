@@ -59,18 +59,33 @@ Generates three layout options using different optimization strategies.
 ```typescript
 function generateFloorplateVariants(
   footprint: BuildingFootprint,
-  unitConfig: UnitConfiguration,
-  egress: EgressConfig,
-  corridorWidth?: number,
-  coreWidth?: number,
-  coreDepth?: number,
-  coreSide?: 'North' | 'South',
-  alignment?: number,
-  customColors?: UnitColorMap
+  config: UnitConfiguration,
+  egressConfig: EgressConfig,
+  options?: GeneratorOptions
 ): LayoutOption[]
 ```
 
-**Parameters:** Same as `generateFloorplate` (except no `strategy` parameter).
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `footprint` | `BuildingFootprint` | required | Building dimensions and position |
+| `config` | `UnitConfiguration` | required | Unit type sizes and percentages |
+| `egressConfig` | `EgressConfig` | required | Egress requirements |
+| `options` | `GeneratorOptions` | `{}` | Optional generation parameters |
+
+**GeneratorOptions:**
+
+```typescript
+interface GeneratorOptions {
+  corridorWidth?: number;    // Corridor width in meters (default: ~1.83m / 6ft)
+  coreWidth?: number;        // Core width in meters (default: ~3.66m / 12ft)
+  coreDepth?: number;        // Core depth in meters (default: ~9m / 29.5ft)
+  coreSide?: 'North' | 'South'; // Which side to place cores (default: 'North')
+  alignment?: number;        // Wall alignment strength 0-1 (default: 1.0)
+  customColors?: UnitColorMap; // Custom colors for unit types
+}
+```
 
 **Returns:** `LayoutOption[]` - Array of 3 options:
 1. **Balanced** - Equal priority to mix accuracy, size accuracy, and efficiency
@@ -400,7 +415,7 @@ import {
   extractFootprintFromTriangles,
   DEFAULT_UNIT_CONFIG,
   EGRESS_SPRINKLERED
-} from 'floorplate-generator/algorithm';
+} from 'floorplate-generator';
 
 // Get building triangles from Forma
 const triangles = await Forma.geometry.getTriangles({ path: buildingPath });
@@ -424,7 +439,7 @@ console.log(`Total Units: ${balancedLayout.floorplan.stats.totalUnits}`);
 ### Custom Unit Configuration
 
 ```typescript
-import { UnitType, generateFloorplate } from 'floorplate-generator/algorithm';
+import { UnitType, generateFloorplate } from 'floorplate-generator';
 
 const customConfig = {
   [UnitType.Studio]:   { percentage: 30, area: 50 },   // 30% studios at 50 sq m
@@ -437,18 +452,19 @@ const floorplan = generateFloorplate(
   footprint,
   customConfig,
   EGRESS_SPRINKLERED,
-  2.0,           // 2m corridor
-  4.0,           // 4m core width
-  10.0,          // 10m core depth
-  'South',       // Cores on south side
-  'mixOptimized' // Prioritize exact percentages
+  2.0,             // 2m corridor
+  4.0,             // 4m core width
+  10.0,            // 10m core depth
+  'South',         // Cores on south side
+  0.5,             // Wall alignment strength (0-1)
+  'mixOptimized'   // Prioritize exact percentages
 );
 ```
 
 ### Rendering to Forma
 
 ```typescript
-import { renderFloorplate } from 'floorplate-generator/algorithm';
+import { renderFloorplate } from 'floorplate-generator';
 
 const meshData = renderFloorplate(floorplan);
 
@@ -467,6 +483,43 @@ All internal calculations use meters. Use these constants for conversion:
 ```typescript
 export const FEET_TO_METERS = 0.3048;
 export const SQ_FEET_TO_SQ_METERS = 0.0929;  // FEET_TO_METERS^2
+```
+
+---
+
+## Utility Exports
+
+### `canBake`
+
+Checks whether the current user has edit permissions in the Forma project.
+
+```typescript
+async function canBake(): Promise<boolean>
+```
+
+**Returns:** `true` if the user can create building elements, `false` otherwise.
+
+### `Logger`
+
+Configurable logging utility for debug output.
+
+```typescript
+import { Logger, LogLevel } from 'floorplate-generator';
+
+Logger.setLevel(LogLevel.DEBUG);   // Show all logs
+Logger.setLevel(LogLevel.NONE);    // Silence all logs
+Logger.info('Generation complete');
+Logger.warn('Building too narrow');
+```
+
+### `VERSION` / `NAME`
+
+Package metadata constants.
+
+```typescript
+import { VERSION, NAME } from 'floorplate-generator';
+
+console.log(`${NAME} v${VERSION}`);  // "Floorplate Generator v0.2.0"
 ```
 
 ---

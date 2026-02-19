@@ -1849,6 +1849,9 @@ export function generateFloorplate(
     units = alignedUnits;
   }
 
+  // Fillers array - declared early so core gap fillers can be added during wrapping
+  const fillers: FillerBlock[] = [];
+
   // --- 10. Apply Core Wrapping (L-Shapes) ---
   // Only L-shape eligible units can wrap around cores
   if (gapHeight > 1) {
@@ -1886,12 +1889,8 @@ export function generateFloorplate(
         } else {
           // LEFT-SIDE WRAPPING: wrap the unit to the LEFT of this core (standard behavior).
           const leftUnit = unitList.find(u => Math.abs((u.x + u.width) - core.x) < 0.1);
-          if (leftUnit) {
-            if (!isLShapeEligible(leftUnit.type, config)) {
-              Logger.debug(` Skipping L-shape wrap for ${leftUnit.type} - not L-shape eligible`);
-              return;
-            }
-
+          const rightUnitFallback = unitList.find(u => Math.abs(u.x - (core.x + core.width)) < 0.1);
+          if (leftUnit && isLShapeEligible(leftUnit.type, config)) {
             if (!leftUnit.rects) leftUnit.rects = [{ x: leftUnit.x, y: leftUnit.y, width: leftUnit.width, depth: leftUnit.depth }];
             leftUnit.rects.push(gapRect);
 
@@ -1902,12 +1901,52 @@ export function generateFloorplate(
               leftUnit.polyPoints = `${leftUnit.x},${uY} ${leftUnit.x + leftUnit.width + core.width},${uY} ${leftUnit.x + leftUnit.width + core.width},${uY + gapHeight} ${leftUnit.x + leftUnit.width},${uY + gapHeight} ${leftUnit.x + leftUnit.width},${uY + leftUnit.depth} ${leftUnit.x},${uY + leftUnit.depth}`;
             }
             Logger.debug(` Left-side wrap: ${leftUnit.type} at x=${leftUnit.x.toFixed(2)} wraps right into core gap`);
+          } else if (rightUnitFallback && isLShapeEligible(rightUnitFallback.type, config)) {
+            if (!rightUnitFallback.rects) rightUnitFallback.rects = [{ x: rightUnitFallback.x, y: rightUnitFallback.y, width: rightUnitFallback.width, depth: rightUnitFallback.depth }];
+            rightUnitFallback.rects.push(gapRect);
+
+            const uY = rightUnitFallback.y;
+            if (isSouth) {
+              rightUnitFallback.polyPoints = `${core.x},${uY} ${rightUnitFallback.x + rightUnitFallback.width},${uY} ${rightUnitFallback.x + rightUnitFallback.width},${uY + rightUnitFallback.depth} ${core.x},${uY + rightUnitFallback.depth} ${core.x},${uY + coreDepth} ${rightUnitFallback.x},${uY + coreDepth}`;
+            } else {
+              rightUnitFallback.polyPoints = `${core.x},${uY} ${rightUnitFallback.x + rightUnitFallback.width},${uY} ${rightUnitFallback.x + rightUnitFallback.width},${uY + rightUnitFallback.depth} ${rightUnitFallback.x},${uY + rightUnitFallback.depth} ${rightUnitFallback.x},${uY + gapHeight} ${core.x},${uY + gapHeight}`;
+            }
+            Logger.debug(` Right-side fallback wrap: ${rightUnitFallback.type} at x=${rightUnitFallback.x.toFixed(2)} wraps left into core gap`);
+          } else {
+            Logger.debug(` Skipping L-shape wrap for core ${core.id}: left=${leftUnit?.type ?? 'none'}(eligible=${leftUnit ? isLShapeEligible(leftUnit.type, config) : 'N/A'}), right=${rightUnitFallback?.type ?? 'none'}(eligible=${rightUnitFallback ? isLShapeEligible(rightUnitFallback.type, config) : 'N/A'})`);
           }
         }
       });
     };
 
     processWrapping(coreSideUnits, cores, coreSide === 'South');
+
+    // Create fillers for core gaps that weren't covered by wrapping
+    const isSouth = coreSide === 'South';
+    const gapY = isSouth ? (rentableDepth + corridorWidth + coreDepth) : 0;
+    const rightmostCoreX = Math.max(...cores.map(c => c.x));
+    cores.forEach(core => {
+      const isRightmostCore = core.x === rightmostCoreX;
+      let adjacentUnit: InternalUnitBlock | undefined;
+      if (isRightmostCore) {
+        adjacentUnit = coreSideUnits.find(u => Math.abs(u.x - (core.x + core.width)) < 0.1);
+      } else {
+        const leftAdj = coreSideUnits.find(u => Math.abs((u.x + u.width) - core.x) < 0.1);
+        const rightAdj = coreSideUnits.find(u => Math.abs(u.x - (core.x + core.width)) < 0.1);
+        adjacentUnit = (leftAdj?.polyPoints ? leftAdj : null) || (rightAdj?.polyPoints ? rightAdj : null) || leftAdj || rightAdj;
+      }
+      if (!adjacentUnit || !adjacentUnit.polyPoints) {
+        fillers.push({
+          id: `core-gap-filler-${core.id}`,
+          x: core.x,
+          y: gapY,
+          width: core.width,
+          depth: gapHeight,
+          side: coreSide
+        });
+        Logger.debug(` Core gap filler: ${core.id} at x=${core.x.toFixed(2)}, gap not covered by wrapping`);
+      }
+    });
   }
 
   // --- 11. Corridor Void Absorption (End Units become L-shaped) ---
@@ -1931,14 +1970,27 @@ export function generateFloorplate(
       if (!northFirst.rects) northFirst.rects = [{ x: northFirst.x, y: northFirst.y, width: northFirst.width, depth: northFirst.depth }];
       northFirst.rects.push({ x: 0, y: rentableDepth, width: leftCorridorVoid, depth: corridorWidth / 2 });
       northFirst.area += leftCorridorVoid * (corridorWidth / 2);
-      if (!northFirst.polyPoints?.includes(',')) {
+      if (northFirst.polyPoints?.includes(',') && coreSide === 'North' && gapHeight > 1) {
+        const lCore = cores.reduce((a: CoreBlock, b: CoreBlock) => a.x < b.x ? a : b);
+        if (Math.abs((northFirst.x + northFirst.width) - lCore.x) < 0.1) {
+          northFirst.polyPoints = `0,0 ${northFirst.width + lCore.width},0 ${northFirst.width + lCore.width},${gapHeight} ${northFirst.width},${gapHeight} ${northFirst.width},${rentableDepth} ${leftCorridorVoid},${rentableDepth} ${leftCorridorVoid},${rentableDepth + corridorWidth / 2} 0,${rentableDepth + corridorWidth / 2}`;
+          Logger.debug(` Merged core wrapping + corridor void for northFirst`);
+        }
+      } else if (!northFirst.polyPoints?.includes(',')) {
         northFirst.polyPoints = `0,0 ${northFirst.width},0 ${northFirst.width},${northFirst.depth} ${leftCorridorVoid},${northFirst.depth} ${leftCorridorVoid},${northFirst.depth + corridorWidth / 2} 0,${northFirst.depth + corridorWidth / 2}`;
       }
 
       if (!southFirst.rects) southFirst.rects = [{ x: southFirst.x, y: southFirst.y, width: southFirst.width, depth: southFirst.depth }];
       southFirst.rects.push({ x: 0, y: rentableDepth + (corridorWidth / 2), width: leftCorridorVoid, depth: corridorWidth / 2 });
       southFirst.area += leftCorridorVoid * (corridorWidth / 2);
-      if (!southFirst.polyPoints?.includes(',')) {
+      if (southFirst.polyPoints?.includes(',') && coreSide === 'South' && gapHeight > 1) {
+        const lCore = cores.reduce((a: CoreBlock, b: CoreBlock) => a.x < b.x ? a : b);
+        if (Math.abs((southFirst.x + southFirst.width) - lCore.x) < 0.1) {
+          const sY = rentableDepth + corridorWidth;
+          southFirst.polyPoints = `0,${sY + coreDepth} ${southFirst.width},${sY + coreDepth} ${southFirst.width},${sY + rentableDepth} ${leftCorridorVoid},${sY + rentableDepth} ${leftCorridorVoid},${rentableDepth + corridorWidth / 2} 0,${rentableDepth + corridorWidth / 2}`;
+          Logger.debug(` Merged core wrapping + corridor void for southFirst`);
+        }
+      } else if (!southFirst.polyPoints?.includes(',')) {
         southFirst.polyPoints = `0,${rentableDepth + corridorWidth / 2} ${leftCorridorVoid},${rentableDepth + corridorWidth / 2} ${leftCorridorVoid},${rentableDepth + corridorWidth} ${southFirst.width},${rentableDepth + corridorWidth} ${southFirst.width},${rentableDepth + corridorWidth + southFirst.depth} 0,${rentableDepth + corridorWidth + southFirst.depth}`;
       }
     }
@@ -1963,7 +2015,13 @@ export function generateFloorplate(
       northLast.rects.push({ x: startX, y: rentableDepth, width: rightCorridorVoid, depth: corridorWidth / 2 });
       northLast.area += rightCorridorVoid * (corridorWidth / 2);
       const nlX = northLast.x;
-      if (!northLast.polyPoints?.includes(',')) {
+      if (northLast.polyPoints?.includes(',') && coreSide === 'North' && gapHeight > 1) {
+        const rCore = cores.reduce((a: CoreBlock, b: CoreBlock) => a.x > b.x ? a : b);
+        if (Math.abs(nlX - (rCore.x + rCore.width)) < 0.1) {
+          northLast.polyPoints = `${rCore.x},0 ${length},0 ${length},${rentableDepth + corridorWidth / 2} ${startX},${rentableDepth + corridorWidth / 2} ${startX},${rentableDepth} ${nlX},${rentableDepth} ${nlX},${gapHeight} ${rCore.x},${gapHeight}`;
+          Logger.debug(` Merged core wrapping + corridor void for northLast`);
+        }
+      } else if (!northLast.polyPoints?.includes(',')) {
         northLast.polyPoints = `${nlX},0 ${length},0 ${length},${rentableDepth + corridorWidth / 2} ${startX},${rentableDepth + corridorWidth / 2} ${startX},${rentableDepth} ${nlX},${rentableDepth}`;
       }
 
@@ -1971,7 +2029,14 @@ export function generateFloorplate(
       southLast.rects.push({ x: startX, y: rentableDepth + (corridorWidth / 2), width: rightCorridorVoid, depth: corridorWidth / 2 });
       southLast.area += rightCorridorVoid * (corridorWidth / 2);
       const slX = southLast.x;
-      if (!southLast.polyPoints?.includes(',')) {
+      if (southLast.polyPoints?.includes(',') && coreSide === 'South' && gapHeight > 1) {
+        const rCore = cores.reduce((a: CoreBlock, b: CoreBlock) => a.x > b.x ? a : b);
+        if (Math.abs(slX - (rCore.x + rCore.width)) < 0.1) {
+          const sY = rentableDepth + corridorWidth;
+          southLast.polyPoints = `${slX},${sY} ${startX},${sY} ${startX},${rentableDepth + corridorWidth / 2} ${length},${rentableDepth + corridorWidth / 2} ${length},${sY + rentableDepth} ${rCore.x},${sY + rentableDepth} ${rCore.x},${sY + coreDepth} ${slX},${sY + coreDepth}`;
+          Logger.debug(` Merged core wrapping + corridor void for southLast`);
+        }
+      } else if (!southLast.polyPoints?.includes(',')) {
         southLast.polyPoints = `${slX},${rentableDepth + corridorWidth} ${startX},${rentableDepth + corridorWidth} ${startX},${rentableDepth + corridorWidth / 2} ${length},${rentableDepth + corridorWidth / 2} ${length},${rentableDepth + corridorWidth + southLast.depth} ${slX},${rentableDepth + corridorWidth + southLast.depth}`;
       }
     }
@@ -1982,7 +2047,6 @@ export function generateFloorplate(
   // --- 11b. Detect and create fillers for leftover space ---
   // IMPORTANT: This MUST happen AFTER all unit modifications (alignment, core wrapping,
   // corridor void absorption) to ensure fillers cover actual gaps in final unit positions.
-  const fillers: FillerBlock[] = [];
 
   // Detect gaps in North side (y=0)
   const northFillers = detectGapsAndCreateFillers(

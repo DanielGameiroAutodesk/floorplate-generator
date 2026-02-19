@@ -37,7 +37,6 @@ export {
   handleStopAutoGeneration,
   markInputChanged,
   debounceGenerate,
-  showDebug,
   setOnGenerationComplete,
   setUpdateButtonState,
   getCurrentSelection,

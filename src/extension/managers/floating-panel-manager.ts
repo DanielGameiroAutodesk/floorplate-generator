@@ -21,7 +21,6 @@ import { renderFloorplate } from '../../algorithm';
 
 let floatingPanelPort: MessagePort | null = null;
 let isPanelOpen: boolean = false;
-let lastPanelAckTime: number = 0;
 let pendingAckTimer: ReturnType<typeof setTimeout> | null = null;
 
 // Callbacks set by main module
@@ -133,15 +132,12 @@ async function handlePanelMessage(event: MessageEvent): Promise<void> {
   switch (type) {
     case 'PANEL_READY':
       // Panel has loaded and is ready to receive data
-      console.log('Floating panel ready');
-      lastPanelAckTime = Date.now();
       if (generatedOptionsRef.length > 0) {
         sendOptionsToPanel(generatedOptionsRef, selectedOptionIndexRef, storiesRef);
       }
       break;
 
     case 'ACK':
-      lastPanelAckTime = Date.now();
       if (pendingAckTimer) { clearTimeout(pendingAckTimer); pendingAckTimer = null; }
       break;
 
@@ -305,7 +301,6 @@ export async function handleOptionSelected(
         color: meshData.colors
       }
     });
-    console.log('Rendered option:', selectedOption.strategy);
   } catch (error) {
     console.error('Failed to render option:', error);
   }

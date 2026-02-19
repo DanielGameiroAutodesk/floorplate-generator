@@ -196,7 +196,6 @@ export async function handleLoadSaved(id: string): Promise<void> {
       await onLoadCallback([saved.layoutOption], saved.layoutOption.floorplan);
     }
 
-    console.log('Loaded saved floorplate:', saved.name);
   } catch (error) {
     console.error('Failed to load saved floorplate:', error);
   }

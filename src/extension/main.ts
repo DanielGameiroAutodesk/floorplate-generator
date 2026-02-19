@@ -71,9 +71,6 @@ import {
   getCurrentSelection
 } from './managers';
 
-// Building inspector (separate module)
-import { initInspectTab } from './building-inspector';
-
 // Baking
 import { bakeWithFloorStack } from './bake-building';
 
@@ -249,21 +246,6 @@ async function onSavedFloorplateLoaded(options: LayoutOption[], floorplan: Floor
 }
 
 // ============================================================================
-// Debug Section
-// ============================================================================
-
-function initDebug(): void {
-  dom.debugToggle.addEventListener('click', () => {
-    dom.debugSection.classList.toggle('show');
-    if (dom.debugSection.classList.contains('show')) {
-      dom.debugToggle.innerHTML = '&#9650; Hide Debug Output';
-    } else {
-      dom.debugToggle.innerHTML = '&#9660; Show Debug Output';
-    }
-  });
-}
-
-// ============================================================================
 // Forma Connection
 // ============================================================================
 
@@ -311,8 +293,6 @@ function init(): void {
   initMixTab();
   initDimTab();
   initEgressTab();
-  initInspectTab();
-  initDebug();
 
   // Set up generate button
   dom.generateBtn.addEventListener('click', handleButtonClick);

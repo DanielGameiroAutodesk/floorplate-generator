@@ -17,3 +17,6 @@
 
 - [Design System Reference](design-system/) -- Forma UI patterns and component guidelines
 - [Planning Documents](planning/) -- Historical PRD, feature specs, and task lists
+- [Multi-Wing Problem Spec](planning/MULTI-WING-PROBLEM-SPEC.md) -- Problem specification for multi-wing building support
+
+> **Note**: Planning documents in `planning/` reflect original specifications and may differ from current implementation. They are preserved for historical context and onboarding.

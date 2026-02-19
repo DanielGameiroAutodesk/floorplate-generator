@@ -21,6 +21,7 @@ import { state, ButtonState } from '../state/ui-state';
 import { getUnitConfiguration, getUnitColors, getEgressConfig } from '../state/unit-config';
 import { updateDimensionsFromBuilding } from '../tabs/dim-tab';
 import * as dom from '../utils/dom-refs';
+import { Logger } from '../../algorithm/utils/logger';
 
 // ============================================================================
 // Module State
@@ -172,19 +173,6 @@ export function handleStopAutoGeneration(): void {
 }
 
 // ============================================================================
-// Debug Output
-// ============================================================================
-
-/**
- * Display debug information in the debug panel.
- */
-export function showDebug(data: unknown): void {
-  dom.debugOutput.textContent = typeof data === 'string'
-    ? data
-    : JSON.stringify(data, null, 2);
-}
-
-// ============================================================================
 // Main Generation
 // ============================================================================
 
@@ -206,10 +194,6 @@ export async function handleGenerate(): Promise<void> {
     const selection = await Forma.selection.getSelection();
 
     if (!selection || selection.length === 0) {
-      showDebug({
-        status: 'Error',
-        message: 'Please select a building in Forma first'
-      });
       // Keep button in "select" state since no building was selected
       dom.generateBtn.disabled = false;
       if (updateButtonStateCallback) {
@@ -224,10 +208,6 @@ export async function handleGenerate(): Promise<void> {
     const triangles = await Forma.geometry.getTriangles({ path: currentSelection[0] });
 
     if (!triangles || triangles.length === 0) {
-      showDebug({
-        status: 'Error',
-        message: 'Could not read building geometry. Try selecting a different building.'
-      });
       return;
     }
 
@@ -235,12 +215,6 @@ export async function handleGenerate(): Promise<void> {
 
     // Extract footprint from triangles
     const footprint = extractFootprintFromTriangles(buildingTriangles);
-
-    console.log('=== FOOTPRINT ===');
-    console.log('Width:', footprint.width.toFixed(2), 'm');
-    console.log('Depth:', footprint.depth.toFixed(2), 'm');
-    console.log('Center:', footprint.centerX.toFixed(2), footprint.centerY.toFixed(2));
-    console.log('Rotation:', (footprint.rotation * 180 / Math.PI).toFixed(1), 'deg');
 
     // On first selection, populate dimension inputs with geometry values.
     // On subsequent auto-generations, the user may have tweaked Length/Depth/Stories —
@@ -263,15 +237,6 @@ export async function handleGenerate(): Promise<void> {
     const coreWidth = state.coreWidth * FEET_TO_METERS;
     const coreDepth = state.coreDepth * FEET_TO_METERS;
 
-    console.log('=== UI CONFIG ===');
-    console.log('Unit Types:', state.unitTypes);
-    console.log('Unit Colors:', unitColors);
-    console.log('Corridor Width:', state.corridorWidth, 'ft =>', corridorWidth.toFixed(2), 'm');
-    console.log('Core Width:', state.coreWidth, 'ft =>', coreWidth.toFixed(2), 'm');
-    console.log('Core Depth:', state.coreDepth, 'ft =>', coreDepth.toFixed(2), 'm');
-    console.log('Core Placement:', state.corePlacement);
-    console.log('Sprinklered:', state.sprinklered);
-
     // Generate all 3 variants with custom colors
     generatedOptions = generateFloorplateVariants(
       footprint,
@@ -286,12 +251,6 @@ export async function handleGenerate(): Promise<void> {
         alignment: state.alignment / 100  // Convert 0-100 to 0.0-1.0
       }
     );
-
-    console.log('Generated options:', generatedOptions.map(o => ({
-      strategy: o.strategy,
-      units: o.floorplan.stats.totalUnits,
-      efficiency: (o.floorplan.stats.efficiency * 100).toFixed(1) + '%'
-    })));
 
     // Select the first option (Balanced) by default
     selectedOptionIndex = 0;
@@ -324,51 +283,8 @@ export async function handleGenerate(): Promise<void> {
       onGenerationCompleteCallback(generatedOptions, selectedOptionIndex, currentFloorplan);
     }
 
-    // Calculate stats using typeId (or legacy type as fallback)
-    const unitCounts: Record<string, number> = {};
-    selectedOption.floorplan.units.forEach(unit => {
-      const typeKey = unit.typeId || unit.type || 'unknown';
-      unitCounts[typeKey] = (unitCounts[typeKey] || 0) + 1;
-    });
-
-    // Show results with all options comparison
-    const optionsSummary = generatedOptions.map(o => ({
-      strategy: o.strategy,
-      units: o.floorplan.stats.totalUnits,
-      efficiency: `${(o.floorplan.stats.efficiency * 100).toFixed(1)}%`,
-      nrsf: `${o.floorplan.stats.nrsf.toFixed(0)} sq m`
-    }));
-
-    showDebug({
-      status: 'Success!',
-      selectedOptionIndex,
-      building: {
-        width: `${footprint.width.toFixed(1)}m (${(footprint.width / FEET_TO_METERS).toFixed(0)} ft)`,
-        depth: `${footprint.depth.toFixed(1)}m (${(footprint.depth / FEET_TO_METERS).toFixed(0)} ft)`,
-        rotation: `${(footprint.rotation * 180 / Math.PI).toFixed(1)}deg`
-      },
-      options: optionsSummary,
-      selected: {
-        corridor: `${selectedOption.floorplan.corridor.width.toFixed(1)}m x ${selectedOption.floorplan.corridor.depth.toFixed(1)}m`,
-        cores: selectedOption.floorplan.cores.length,
-        totalUnits: selectedOption.floorplan.units.length
-      },
-      unitBreakdown: unitCounts,
-      metrics: {
-        gsf: `${selectedOption.floorplan.stats.gsf.toFixed(0)} sq m`,
-        nrsf: `${selectedOption.floorplan.stats.nrsf.toFixed(0)} sq m`,
-        efficiency: `${(selectedOption.floorplan.stats.efficiency * 100).toFixed(1)}%`
-      },
-      egress: selectedOption.floorplan.egress
-    });
-
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    showDebug({
-      status: 'Error',
-      error: errorMessage
-    });
-    console.error('Generation failed:', error);
+    Logger.error(`Generation failed: ${error}`);
     // On error, reset to appropriate state
     dom.generateBtn.disabled = false;
     if (updateButtonStateCallback) {

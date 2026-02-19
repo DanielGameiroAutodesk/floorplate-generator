@@ -189,7 +189,7 @@ interface UnitConfig {
 }
 
 // Use const for immutable values
-const DEFAULT_CORRIDOR_WIDTH = 1.524; // 5 feet in meters
+const DEFAULT_CORRIDOR_WIDTH = 1.83; // 6 feet in meters
 
 // Use descriptive variable names
 const maximumTravelDistanceFeet = 250;

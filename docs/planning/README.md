@@ -11,3 +11,6 @@ Preserved for historical reference and onboarding context.
 - **implementation-plan.md** - Technical implementation roadmap
 - **task-list.md** - Task breakdown used during development
 - **feature-spec.md** - Comprehensive feature specification
+- **MULTI-WING-PROBLEM-SPEC.md** - Problem specification for multi-wing building support (active)
+
+> Planning documents reflect original specifications and may differ from current implementation. They are preserved for historical context and onboarding.

@@ -67,8 +67,9 @@ Toggle **Auto-Generate** after your first generation to regenerate layouts autom
 ```
 src/
   algorithm/    # Core generation logic (independent of Forma SDK)
-  extension/    # Forma UI, panels, managers, baking
+  extension/    # Forma UI, panels, managers, state, baking
   geometry/     # Reusable geometric utilities (point, line, polygon, rectangle)
+  types/        # Shared TypeScript type definitions
 docs/           # Architecture, algorithm, API reference, guides
 examples/       # Minimal (~100 lines), custom-units, baking examples
 ```

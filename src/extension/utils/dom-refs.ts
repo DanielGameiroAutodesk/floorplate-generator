@@ -65,14 +65,6 @@ export const generateBtn = document.getElementById('generate-btn') as HTMLButton
 export const showResultsBtn = document.getElementById('show-results-btn') as HTMLButtonElement;
 
 // ============================================================================
-// Debug
-// ============================================================================
-
-export const debugToggle = document.getElementById('debug-toggle')!;
-export const debugSection = document.getElementById('debug-section')!;
-export const debugOutput = document.getElementById('debug-output')!;
-
-// ============================================================================
 // Saved Floorplates
 // ============================================================================
 

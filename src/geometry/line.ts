@@ -242,3 +242,43 @@ export function reverseLine(line: Line): Line {
     end: { ...line.start }
   };
 }
+
+/**
+ * Computes the angle bisector line at a vertex where two directions meet.
+ * The bisector divides the angular space evenly between the two wing directions.
+ */
+export function angleBisectorLine(
+  vertex: Point,
+  dir1: Point,
+  dir2: Point
+): Line {
+  const len1 = Math.sqrt(dir1.x * dir1.x + dir1.y * dir1.y);
+  const len2 = Math.sqrt(dir2.x * dir2.x + dir2.y * dir2.y);
+  if (len1 < 1e-9 || len2 < 1e-9) {
+    return { start: vertex, end: { x: vertex.x + 1, y: vertex.y } };
+  }
+  const n1 = { x: dir1.x / len1, y: dir1.y / len1 };
+  const n2 = { x: dir2.x / len2, y: dir2.y / len2 };
+  const bx = n1.x + n2.x;
+  const by = n1.y + n2.y;
+  const bLen = Math.sqrt(bx * bx + by * by);
+  if (bLen < 1e-9) {
+    // Directions are opposite; bisector is perpendicular to either
+    return { start: vertex, end: { x: vertex.x - n1.y, y: vertex.y + n1.x } };
+  }
+  return {
+    start: vertex,
+    end: { x: vertex.x + bx / bLen, y: vertex.y + by / bLen }
+  };
+}
+
+/**
+ * Computes the total length of a polyline defined by ordered points.
+ */
+export function polylineLength(points: Point[]): number {
+  let total = 0;
+  for (let i = 0; i < points.length - 1; i++) {
+    total += distance(points[i], points[i + 1]);
+  }
+  return total;
+}

@@ -1370,6 +1370,26 @@ const applyWallAlignment = (
  * );
  * ```
  */
+/** Options for generating a single wing of a multi-wing building.
+ *  When undefined, generateFloorplate behaves identically to the original. */
+export interface WingGenerationOptions {
+  /** Skip the left end core (intersection provides it). */
+  skipLeftEndCore?: boolean;
+  /** Skip the right end core (intersection provides it). */
+  skipRightEndCore?: boolean;
+  /**
+   * Suppress corner segment behavior at intersection end(s).
+   * Prevents residential units from leaking into the INNER_CORNER zone.
+   * 'left' = suppress left-end corner, 'right' = suppress right-end corner.
+   * Array allows suppressing BOTH ends (e.g., H-shape crossbar with intersections at both ends).
+   */
+  intersectionEnds?: ('left' | 'right')[];
+  /** Override auto-calculated unit counts per type. */
+  unitInventory?: Record<UnitType, number>;
+  /** Skip per-wing egress validation (orchestrator validates globally). */
+  skipEgress?: boolean;
+}
+
 export function generateFloorplate(
   footprint: BuildingFootprint,
   config: UnitConfiguration,
@@ -1380,7 +1400,8 @@ export function generateFloorplate(
   coreSide: 'North' | 'South' = 'North',
   alignment: number = 0.5,
   strategy: OptimizationStrategy = 'balanced',
-  customColors?: UnitColorMap
+  customColors?: UnitColorMap,
+  wingOptions?: WingGenerationOptions
 ): FloorPlanData {
   // VERSION MARKER - if you see this, new code is loaded!
   Logger.info('GENERATOR v2025.01.13.F - CORNER ENFORCEMENT + SPACE UTILIZATION + ALIGNMENT FIXES');
@@ -1423,8 +1444,6 @@ export function generateFloorplate(
   const snapToCore = alignment > 0.6;
 
   // --- 2. Calculate BUILDING-WIDE unit counts first ---
-  // This ensures consistent unit counts are used for BOTH geometry optimization AND unit placement
-  // Prevents the issue where geometry is optimized for 2 3BRs but only 1 is placed
   const earlyBuildingCountsRaw = calculateBuildingUnitCounts(
     availableRentableLengthCoreSide,  // Core side (North or South depending on coreSide)
     availableRentableLengthClearSide, // Clear side
@@ -1444,9 +1463,31 @@ export function generateFloorplate(
   // If strict alignment is ON, we mirror the core side to the clear side.
   // If we bias the core side (more studios) and then mirror it, we DOUBLE the bias (too many studios globally).
   // const snapToCore = alignment > 0.6; // Defined above
-  const earlyBuildingCounts = snapToCore 
-    ? earlyBuildingCountsRaw 
+  let earlyBuildingCounts = snapToCore
+    ? earlyBuildingCountsRaw
     : applyCoreSideMixBias(earlyBuildingCountsRaw, coreSide, numCores);
+
+  // If wingOptions.unitInventory is provided, override the computed counts.
+  // The orchestrator pre-allocates exact counts per wing.
+  if (wingOptions?.unitInventory) {
+    const inv = wingOptions.unitInventory;
+    const half = (t: UnitType) => Math.round(inv[t] / 2);
+    const northInv: Record<UnitType, number> = {
+      [UnitType.Studio]: half(UnitType.Studio),
+      [UnitType.OneBed]: half(UnitType.OneBed),
+      [UnitType.TwoBed]: half(UnitType.TwoBed),
+      [UnitType.ThreeBed]: half(UnitType.ThreeBed)
+    };
+    earlyBuildingCounts = {
+      north: northInv,
+      south: {
+        [UnitType.Studio]: inv[UnitType.Studio] - northInv[UnitType.Studio],
+        [UnitType.OneBed]: inv[UnitType.OneBed] - northInv[UnitType.OneBed],
+        [UnitType.TwoBed]: inv[UnitType.TwoBed] - northInv[UnitType.TwoBed],
+        [UnitType.ThreeBed]: inv[UnitType.ThreeBed] - northInv[UnitType.ThreeBed]
+      }
+    };
+  }
 
   // Use the split counts for each side's geometry optimization
   const coreSideCounts = coreSide === 'North' ? earlyBuildingCounts.north : earlyBuildingCounts.south;
@@ -1527,8 +1568,12 @@ export function generateFloorplate(
     });
   };
 
-  addCore(leftCoreStart, 'left', 'End');
-  addCore(rightCoreStart, 'right', 'End');
+  if (!wingOptions?.skipLeftEndCore) {
+    addCore(leftCoreStart, 'left', 'End');
+  }
+  if (!wingOptions?.skipRightEndCore) {
+    addCore(rightCoreStart, 'right', 'End');
+  }
   if (hasMidCore) {
     addCore(midCoreStart, 'mid', 'Mid');
   }
@@ -1573,9 +1618,20 @@ export function generateFloorplate(
       break;
   }
 
+  // intersectionEnd suppresses corner segment behavior at the intersection end.
+  // 'left' → left segment is a standard mid segment (no premium, no void absorption)
+  // 'right' → right segment is a standard mid segment
+  const suppressLeftCorner = wingOptions?.intersectionEnds?.includes('left') ?? false;
+  const suppressRightCorner = wingOptions?.intersectionEnds?.includes('right') ?? false;
+  if (wingOptions?.intersectionEnds?.length) {
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({runId:'run1',hypothesisId:'H5',location:'generator-core.ts:1624',message:'Wing corner suppression flags',data:{intersectionEnds:wingOptions.intersectionEnds,suppressLeftCorner,suppressRightCorner,skipLeftEndCore:wingOptions.skipLeftEndCore,skipRightEndCore:wingOptions.skipRightEndCore,length,buildingDepth},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+  }
+
   const generateCoreSideSegments = (isSouth: boolean): SegmentDef[] => {
     const segs: SegmentDef[] = [];
-    segs.push({ x: 0, len: leftCoreStart, isSouth, pattern: leftCornerPattern, isCorner: true, extraWidth: 0, bonusArea: singleCoreBonusArea });
+    segs.push({ x: 0, len: leftCoreStart, isSouth, pattern: leftCornerPattern, isCorner: !suppressLeftCorner, extraWidth: 0, bonusArea: singleCoreBonusArea });
 
     if (!hasMidCore) {
       segs.push({ x: leftCoreEnd, len: midSpan1, isSouth, pattern: midPattern, isCorner: false, extraWidth: 0, bonusArea: singleCoreBonusArea });
@@ -1584,7 +1640,7 @@ export function generateFloorplate(
       segs.push({ x: midCoreEnd, len: midSpan2, isSouth, pattern: midPattern, isCorner: false, extraWidth: 0, bonusArea: singleCoreBonusArea });
     }
 
-    segs.push({ x: rightCoreStart + coreWidth, len: length - (rightCoreStart + coreWidth), isSouth, pattern: rightCornerPattern, isCorner: true, extraWidth: 0, bonusArea: singleCoreBonusArea });
+    segs.push({ x: rightCoreStart + coreWidth, len: length - (rightCoreStart + coreWidth), isSouth, pattern: rightCornerPattern, isCorner: !suppressRightCorner, extraWidth: 0, bonusArea: singleCoreBonusArea });
     return segs;
   };
 
@@ -1597,7 +1653,7 @@ export function generateFloorplate(
       const totalMidLen = length - (2 * finalClearSideCornerLen);
       const midSpan1 = (totalMidLen / 2) + midCoreOffset;
       const midSpan2 = (totalMidLen / 2) - midCoreOffset;
-      
+
       segs.push({ x: 0, len: finalClearSideCornerLen, isSouth, pattern: leftCornerPattern, isCorner: true, extraWidth: 0, bonusArea: 0 });
       segs.push({ x: finalClearSideCornerLen, len: midSpan1, isSouth, pattern: midPattern, isCorner: false, extraWidth: 0, bonusArea: 0 });
       segs.push({ x: finalClearSideCornerLen + midSpan1, len: midSpan2, isSouth, pattern: midPattern, isCorner: false, extraWidth: 0, bonusArea: 0 });
@@ -1962,7 +2018,7 @@ export function generateFloorplate(
   const leftNorthEligible = northFirst && isCornerEligible(northFirst.type, config) && isLShapeEligible(northFirst.type, config);
   const leftSouthEligible = southFirst && isCornerEligible(southFirst.type, config) && isLShapeEligible(southFirst.type, config);
 
-  if (northFirst && southFirst && leftNorthEligible && leftSouthEligible) {
+  if (!suppressLeftCorner && northFirst && southFirst && leftNorthEligible && leftSouthEligible) {
     const minW = Math.min(northFirst.width, southFirst.width);
     if (minW > END_OVERLAP) {
       leftCorridorVoid = minW - END_OVERLAP;
@@ -2005,7 +2061,7 @@ export function generateFloorplate(
   const rightNorthEligible = northLast && isCornerEligible(northLast.type, config) && isLShapeEligible(northLast.type, config);
   const rightSouthEligible = southLast && isCornerEligible(southLast.type, config) && isLShapeEligible(southLast.type, config);
 
-  if (northLast && southLast && rightNorthEligible && rightSouthEligible) {
+  if (!suppressRightCorner && northLast && southLast && rightNorthEligible && rightSouthEligible) {
     const minW = Math.min(northLast.width, southLast.width);
     if (minW > END_OVERLAP) {
       rightCorridorVoid = minW - END_OVERLAP;
@@ -2042,6 +2098,11 @@ export function generateFloorplate(
     }
   } else if (northLast && southLast) {
     Logger.debug(` Right corner void skipped: northEligible=${rightNorthEligible}, southEligible=${rightSouthEligible}`);
+  }
+  if (wingOptions?.intersectionEnds?.length) {
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({runId:'run1',hypothesisId:'H5',location:'generator-core.ts:2098',message:'Corridor void absorption outcome',data:{intersectionEnds:wingOptions.intersectionEnds,leftCorridorVoid,rightCorridorVoid,leftNorthEligible:!!leftNorthEligible,leftSouthEligible:!!leftSouthEligible,rightNorthEligible:!!rightNorthEligible,rightSouthEligible:!!rightSouthEligible,northFirstType:northFirst?.type,southFirstType:southFirst?.type,northLastType:northLast?.type,southLastType:southLast?.type},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
   }
 
   // --- 11b. Detect and create fillers for leftover space ---
@@ -2097,32 +2158,43 @@ export function generateFloorplate(
   const efficiency = totalGSF > 0 ? nrsf / totalGSF : 0;
 
   // --- 13. Egress Validation ---
-  const leftDeadEnd = leftCoreStart - leftCorridorVoid;
-  const rightDeadEnd = (length - rightCoreStart - coreWidth) - rightCorridorVoid;
+  // If skipEgress is set (multi-wing mode), skip validation — the orchestrator validates globally.
+  const leftDeadEnd = wingOptions?.skipLeftEndCore ? 0 : (leftCoreStart - leftCorridorVoid);
+  const rightDeadEnd = wingOptions?.skipRightEndCore ? 0 : ((length - rightCoreStart - coreWidth) - rightCorridorVoid);
   const maxDeadEnd = Math.max(leftDeadEnd, rightDeadEnd);
 
   const alcoveLimit = 2.5 * corridorWidth;
   const isAlcove = maxDeadEnd < alcoveLimit;
 
-  let deadEndStatus: 'Pass' | 'Fail' = 'Fail';
-  if (isAlcove) {
-    deadEndStatus = 'Pass';
-  } else if (maxDeadEnd <= egressConfig.deadEndLimit) {
-    deadEndStatus = 'Pass';
-  }
+  let deadEndStatus: 'Pass' | 'Fail' | null = 'Fail';
+  let maxTravelDistance: number | null = null;
+  let travelDistStatus: 'Pass' | 'Fail' | null = null;
 
-  let maxTravelBetweenCores = 0;
-  if (hasMidCore) {
-    const dist1 = midCoreStart - leftCoreEnd;
-    const dist2 = rightCoreStart - midCoreEnd;
-    maxTravelBetweenCores = Math.max(dist1, dist2) / 2;
+  if (wingOptions?.skipEgress) {
+    // Deferred to orchestrator
+    deadEndStatus = null;
+    maxTravelDistance = null;
+    travelDistStatus = null;
   } else {
-    const dist = rightCoreStart - leftCoreEnd;
-    maxTravelBetweenCores = dist / 2;
-  }
+    if (isAlcove) {
+      deadEndStatus = 'Pass';
+    } else if (maxDeadEnd <= egressConfig.deadEndLimit) {
+      deadEndStatus = 'Pass';
+    }
 
-  const maxTravelDistance = Math.max(maxDeadEnd, maxTravelBetweenCores);
-  const travelDistStatus = maxTravelDistance <= limit ? 'Pass' : 'Fail';
+    let maxTravelBetweenCores = 0;
+    if (hasMidCore) {
+      const dist1 = midCoreStart - leftCoreEnd;
+      const dist2 = rightCoreStart - midCoreEnd;
+      maxTravelBetweenCores = Math.max(dist1, dist2) / 2;
+    } else {
+      const dist = rightCoreStart - leftCoreEnd;
+      maxTravelBetweenCores = dist / 2;
+    }
+
+    maxTravelDistance = Math.max(maxDeadEnd, maxTravelBetweenCores);
+    travelDistStatus = maxTravelDistance <= limit ? 'Pass' : 'Fail';
+  }
 
   // --- Debug: Show units at building corners BEFORE coordinate transform ---
   Logger.debug(` === FINAL CORNER UNITS (before transform) ===`);
@@ -2228,9 +2300,9 @@ export function generateFloorplate(
     },
     egress: {
       maxDeadEnd,
-      maxTravelDistance,
-      deadEndStatus: isAlcove ? 'Pass' : deadEndStatus,
-      travelDistanceStatus: travelDistStatus
+      maxTravelDistance: maxTravelDistance ?? 0,
+      deadEndStatus: wingOptions?.skipEgress ? 'Pass' : (isAlcove ? 'Pass' : (deadEndStatus ?? 'Fail')),
+      travelDistanceStatus: travelDistStatus ?? 'Pass'
     }
   };
 }
@@ -2329,6 +2401,14 @@ export function generateFloorplateVariants(
     };
   });
 }
+
+// ============================================================================
+// EXPORTS FOR MULTI-WING ORCHESTRATOR
+// These internal helpers are exposed so the orchestrator can reuse them
+// without duplicating logic. Their behavior is not changed.
+// ============================================================================
+
+export { findOptimalGeometry, distributeUnitsToSegments, generateUnitSegment };
 
 // ============================================================================
 // FOOTPRINT EXTRACTION

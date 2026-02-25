@@ -3,7 +3,7 @@
  * Renders FloorPlanData as a 2D SVG visualization
  */
 
-import { FloorPlanData, UnitBlock, CoreBlock, CorridorBlock, UnitType } from '../../algorithm/types';
+import { FloorPlanData, UnitBlock, CoreBlock, CorridorBlock, FillerBlock, UnitType } from '../../algorithm/types';
 import { FEET_TO_METERS } from '../../algorithm/constants';
 
 // Unit type display abbreviations
@@ -48,6 +48,14 @@ interface SVGRenderOptions {
   showAreas?: boolean;       // Show unit areas
 }
 
+interface WingDimensionInfo {
+  id: number;
+  length: number;
+  width: number;
+  center: { x: number; y: number };
+  direction: number;
+}
+
 /**
  * Render FloorPlanData to SVG string
  */
@@ -64,7 +72,8 @@ export function renderFloorplateSVG(
     showAreas = true
   } = options;
 
-  const { buildingLength, buildingDepth, units, cores, corridor } = floorplan;
+  const { buildingLength, buildingDepth, units, cores, fillers, corridor } = floorplan;
+  const corridorSegments: CorridorBlock[] = (floorplan as { corridorSegments?: CorridorBlock[] }).corridorSegments ?? [];
 
   // Calculate SVG viewBox dimensions
   // The algorithm uses local coordinates centered at origin
@@ -75,85 +84,319 @@ export function renderFloorplateSVG(
   // SVG coordinate system: x goes right, y goes down
   // Algorithm coordinates: x goes right (length), y goes up (depth)
   // We need to flip y-axis for SVG
+  const isMultiWing = ((floorplan as { wingInfo?: { wingCount?: number } }).wingInfo?.wingCount ?? 0) > 1;
+
+  const addRectPoints = (
+    points: { x: number; y: number }[],
+    x: number,
+    y: number,
+    width: number,
+    depth: number
+  ) => {
+    points.push(
+      { x, y },
+      { x: x + width, y },
+      { x: x + width, y: y + depth },
+      { x, y: y + depth }
+    );
+  };
+
+  const geometryPoints: { x: number; y: number }[] = [];
+  units.forEach(unit => {
+    if (unit.polyPoints && unit.polyPoints.length >= 3) {
+      geometryPoints.push(...unit.polyPoints);
+    } else {
+      addRectPoints(geometryPoints, unit.x, unit.y, unit.width, unit.depth);
+    }
+  });
+  cores.forEach(core => {
+    if (core.polyPoints && core.polyPoints.length >= 3) {
+      geometryPoints.push(...core.polyPoints);
+    } else {
+      addRectPoints(geometryPoints, core.x, core.y, core.width, core.depth);
+    }
+  });
+  fillers.forEach(filler => {
+    if (filler.polyPoints && filler.polyPoints.length >= 3) {
+      geometryPoints.push(...filler.polyPoints);
+    } else {
+      addRectPoints(geometryPoints, filler.x, filler.y, filler.width, filler.depth);
+    }
+  });
+  // Include all corridor segments (multi-wing) or primary corridor in bounding box
+  if (corridorSegments.length > 0) {
+    corridorSegments.forEach(seg => {
+      if (seg.polyPoints && seg.polyPoints.length >= 3) {
+        geometryPoints.push(...seg.polyPoints);
+      } else {
+        addRectPoints(geometryPoints, seg.x, seg.y, seg.width, seg.depth);
+      }
+    });
+  } else if (corridor.polyPoints && corridor.polyPoints.length >= 3) {
+    geometryPoints.push(...corridor.polyPoints);
+  } else {
+    addRectPoints(geometryPoints, corridor.x, corridor.y, corridor.width, corridor.depth);
+  }
+  if (geometryPoints.length === 0) {
+    addRectPoints(geometryPoints, -halfLength, -halfDepth, buildingLength, buildingDepth);
+  }
+  const minX = Math.min(...geometryPoints.map(p => p.x));
+  const maxX = Math.max(...geometryPoints.map(p => p.x));
+  const minY = Math.min(...geometryPoints.map(p => p.y));
+  const maxY = Math.max(...geometryPoints.map(p => p.y));
+  const renderLength = Math.max(0.0001, maxX - minX);
+  const renderDepth = Math.max(0.0001, maxY - minY);
 
   // Calculate scale to fit container while maintaining aspect ratio
   const availableWidth = containerWidth - 2 * padding;
   const availableHeight = containerHeight - 2 * padding;
-  const scaleX = availableWidth / buildingLength;
-  const scaleY = availableHeight / buildingDepth;
+  const scaleX = availableWidth / renderLength;
+  const scaleY = availableHeight / renderDepth;
   const scale = Math.min(scaleX, scaleY);
 
   // Calculate actual SVG dimensions
-  const svgWidth = buildingLength * scale + 2 * padding;
-  const svgHeight = buildingDepth * scale + 2 * padding;
+  const svgWidth = renderLength * scale + 2 * padding;
+  const svgHeight = renderDepth * scale + 2 * padding;
 
-  // Transform function: local coords -> SVG coords
+  // Transform function: floorplan/world coords -> SVG coords
   const toSVG = (x: number, y: number) => ({
-    x: (x + halfLength) * scale + padding,
-    y: (halfDepth - y) * scale + padding  // Flip y-axis
+    x: (x - minX) * scale + padding,
+    y: (maxY - y) * scale + padding  // Flip y-axis
   });
 
   // Build SVG elements
   const elements: string[] = [];
+  const dimensionElements: string[] = [];
 
-  // Building outline
-  const outlineStart = toSVG(-halfLength, halfDepth);
-  elements.push(`
-    <rect
-      x="${outlineStart.x}"
-      y="${outlineStart.y}"
-      width="${buildingLength * scale}"
-      height="${buildingDepth * scale}"
-      fill="none"
-      stroke="#3C3C3C"
-      stroke-width="2"
-    />
-  `);
-
-  // Dimension labels (if enabled)
-  if (showDimensions) {
-    // Length dimension (bottom)
-    const lengthLabelPos = toSVG(0, -halfDepth);
+  // Building outline (skip for multi-wing, where a rectangle is misleading)
+  if (!isMultiWing) {
+    const outlineStart = toSVG(minX, maxY);
     elements.push(`
-      <text
-        x="${lengthLabelPos.x}"
-        y="${lengthLabelPos.y + 30}"
-        text-anchor="middle"
-        font-family="Artifakt Element, Arial, sans-serif"
-        font-size="12"
-        font-weight="bold"
-        fill="#3C3C3C"
-      >${formatDimension(buildingLength)}</text>
-    `);
-
-    // Depth dimension (left)
-    const depthLabelPos = toSVG(-halfLength, 0);
-    elements.push(`
-      <text
-        x="${depthLabelPos.x - 20}"
-        y="${depthLabelPos.y}"
-        text-anchor="middle"
-        font-family="Artifakt Element, Arial, sans-serif"
-        font-size="12"
-        font-weight="bold"
-        fill="#3C3C3C"
-        transform="rotate(-90, ${depthLabelPos.x - 20}, ${depthLabelPos.y})"
-      >${formatDimension(buildingDepth)}</text>
+      <rect
+        x="${outlineStart.x}"
+        y="${outlineStart.y}"
+        width="${renderLength * scale}"
+        height="${renderDepth * scale}"
+        fill="none"
+        stroke="#3C3C3C"
+        stroke-width="2"
+      />
     `);
   }
 
-  // Corridor
-  elements.push(renderCorridor(corridor, scale, toSVG, buildingLength));
+  // Dimension labels (if enabled)
+  if (showDimensions) {
+    const wingDimensions =
+      (((floorplan as { wingInfo?: { wings?: WingDimensionInfo[] } }).wingInfo?.wings) ?? [])
+        .filter(wing => Number.isFinite(wing.length) && Number.isFinite(wing.width) && wing.length > 0 && wing.width > 0);
+    const corridorGraph = (floorplan as {
+      corridorGraph?: { nodes: { x: number; y: number }[]; edges: [number, number][] };
+    }).corridorGraph;
+    const corridorGraphNodes = corridorGraph?.nodes ?? [];
+    const corridorGraphEdges = corridorGraph?.edges ?? [];
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-polyline-pre',hypothesisId:'H5',location:'FloorplateSVG.ts:renderFloorplateSVG:dimensionSourceChoice',message:'Dimension source selection inputs',data:{isMultiWing,hasCorridorGraph:corridorGraphNodes.length>0&&corridorGraphEdges.length>0,corridorGraphNodeCount:corridorGraphNodes.length,corridorGraphEdgeCount:corridorGraphEdges.length,wingDimensionCount:wingDimensions.length},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+
+    if (isMultiWing && corridorGraphNodes.length > 0 && corridorGraphEdges.length > 0) {
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-debug-postfix',hypothesisId:'H3-FIX',location:'FloorplateSVG.ts:renderFloorplateSVG',message:'Corridor graph dashed dimension source',data:{nodeCount:corridorGraphNodes.length,edgeCount:corridorGraphEdges.length,nodes:corridorGraphNodes,edges:corridorGraphEdges},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      corridorGraphEdges.forEach(([fromIdx, toIdx], idx) => {
+        const from = corridorGraphNodes[fromIdx];
+        const to = corridorGraphNodes[toIdx];
+        if (!from || !to) return;
+
+        const segLength = Math.hypot(to.x - from.x, to.y - from.y);
+        if (segLength < 1e-6) return;
+
+        const start = toSVG(from.x, from.y);
+        const end = toSVG(to.x, to.y);
+        const dx = end.x - start.x;
+        const dy = end.y - start.y;
+        const drawLen = Math.hypot(dx, dy);
+        if (drawLen < 1e-6) return;
+
+        const perpX = -dy / drawLen;
+        const perpY = dx / drawLen;
+        const midX = (start.x + end.x) / 2;
+        const midY = (start.y + end.y) / 2;
+        const labelOffset = 11;
+        const labelX = midX + perpX * labelOffset;
+        const labelY = midY + perpY * labelOffset;
+        const labelAngle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+        dimensionElements.push(`
+          <g class="corridor-dim corridor-dim-${idx}" opacity="1">
+            <line x1="${start.x}" y1="${start.y}" x2="${end.x}" y2="${end.y}" stroke="#6E6E6E" stroke-width="1.8" stroke-dasharray="5,3" />
+            <text
+              x="${labelX}"
+              y="${labelY}"
+              text-anchor="middle"
+              font-family="Artifakt Element, Arial, sans-serif"
+              font-size="11"
+              font-weight="700"
+              fill="#1F1F1F"
+              style="paint-order:stroke;stroke:#FFFFFF;stroke-width:2;"
+              transform="rotate(${labelAngle}, ${labelX}, ${labelY})"
+            >L: ${formatDimension(segLength)}</text>
+          </g>
+        `);
+      });
+    } else if (isMultiWing && wingDimensions.length > 0) {
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-debug-pre',hypothesisId:'H3',location:'FloorplateSVG.ts:renderFloorplateSVG',message:'Multi-wing dashed dimension source',data:{wingCount:wingDimensions.length,wings:wingDimensions.map(w=>({id:w.id,length:w.length,width:w.width,center:w.center,direction:w.direction})),corridorSegmentCount:corridorSegments.length,corridorCenterlinePointCount:((floorplan as { corridorCenterline?: { x: number; y: number }[] }).corridorCenterline ?? []).length},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      wingDimensions.forEach((wing, idx) => {
+        const dirX = Math.cos(wing.direction);
+        const dirY = Math.sin(wing.direction);
+        const perpX = -dirY;
+        const perpY = dirX;
+        const halfLen = wing.length / 2;
+        const halfWid = wing.width / 2;
+
+        const lenStart = toSVG(wing.center.x - dirX * halfLen, wing.center.y - dirY * halfLen);
+        const lenEnd = toSVG(wing.center.x + dirX * halfLen, wing.center.y + dirY * halfLen);
+        const widStart = toSVG(wing.center.x - perpX * halfWid, wing.center.y - perpY * halfWid);
+        const widEnd = toSVG(wing.center.x + perpX * halfWid, wing.center.y + perpY * halfWid);
+
+        const lenMidX = (lenStart.x + lenEnd.x) / 2;
+        const lenMidY = (lenStart.y + lenEnd.y) / 2;
+        const lenAngle = Math.atan2(lenEnd.y - lenStart.y, lenEnd.x - lenStart.x) * 180 / Math.PI;
+        const lenLabelOffset = 14;
+        const lenLabelX = lenMidX + perpX * lenLabelOffset;
+        const lenLabelY = lenMidY - perpY * lenLabelOffset;
+
+        const widMidX = (widStart.x + widEnd.x) / 2;
+        const widMidY = (widStart.y + widEnd.y) / 2;
+        const widAngle = Math.atan2(widEnd.y - widStart.y, widEnd.x - widStart.x) * 180 / Math.PI;
+        const widLabelOffset = 12;
+        const widLabelX = widMidX + dirX * widLabelOffset;
+        const widLabelY = widMidY - dirY * widLabelOffset;
+        const centerMarker = toSVG(wing.center.x, wing.center.y);
+
+        dimensionElements.push(`
+          <g class="segment-dim segment-dim-${idx}" opacity="1">
+            <line x1="${lenStart.x}" y1="${lenStart.y}" x2="${lenEnd.x}" y2="${lenEnd.y}" stroke="#6E6E6E" stroke-width="1.5" stroke-dasharray="4,3" />
+            <text
+              x="${lenLabelX}"
+              y="${lenLabelY}"
+              text-anchor="middle"
+              font-family="Artifakt Element, Arial, sans-serif"
+              font-size="11"
+              font-weight="700"
+              fill="#1F1F1F"
+              style="paint-order:stroke;stroke:#FFFFFF;stroke-width:2;"
+              transform="rotate(${lenAngle}, ${lenLabelX}, ${lenLabelY})"
+            >L: ${formatDimension(wing.length)}</text>
+
+            <line x1="${widStart.x}" y1="${widStart.y}" x2="${widEnd.x}" y2="${widEnd.y}" stroke="#8A8A8A" stroke-width="1.2" />
+            <text
+              x="${widLabelX}"
+              y="${widLabelY}"
+              text-anchor="start"
+              font-family="Artifakt Element, Arial, sans-serif"
+              font-size="10"
+              font-weight="700"
+              fill="#1F1F1F"
+              style="paint-order:stroke;stroke:#FFFFFF;stroke-width:2;"
+              transform="rotate(${widAngle}, ${widLabelX}, ${widLabelY})"
+            >D: ${formatDimension(wing.width)}</text>
+            <circle cx="${centerMarker.x}" cy="${centerMarker.y}" r="7" fill="#FFFFFF" stroke="#303030" stroke-width="1.5" />
+            <text
+              x="${centerMarker.x}"
+              y="${centerMarker.y + 0.5}"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              font-family="Artifakt Element, Arial, sans-serif"
+              font-size="9"
+              font-weight="700"
+              fill="#303030"
+            >${idx + 1}</text>
+          </g>
+        `);
+      });
+
+      const legendWidth = 170;
+      const legendLineHeight = 14;
+      const legendHeight = 26 + wingDimensions.length * legendLineHeight;
+      const legendX = 8;
+      const legendY = 8;
+      const legendRows = wingDimensions.map((wing, idx) => (
+        `<text x="${legendX + 10}" y="${legendY + 22 + idx * legendLineHeight}" font-family="Artifakt Element, Arial, sans-serif" font-size="10" font-weight="700" fill="#1F1F1F">${idx + 1}) L ${formatDimension(wing.length)}  D ${formatDimension(wing.width)}</text>`
+      )).join('');
+      dimensionElements.push(`
+        <g class="segment-dim-legend" opacity="0.98">
+          <rect x="${legendX}" y="${legendY}" width="${legendWidth}" height="${legendHeight}" rx="4" ry="4" fill="#FFFFFF" stroke="#9A9A9A" stroke-width="1" />
+          <text x="${legendX + 10}" y="${legendY + 12}" font-family="Artifakt Element, Arial, sans-serif" font-size="10" font-weight="700" fill="#303030">Wing dimensions</text>
+          ${legendRows}
+        </g>
+      `);
+    } else {
+      const midX = (minX + maxX) / 2;
+      const midY = (minY + maxY) / 2;
+
+      // Length dimension (bottom)
+      const lengthLabelPos = toSVG(midX, minY);
+      dimensionElements.push(`
+        <text
+          x="${lengthLabelPos.x}"
+          y="${lengthLabelPos.y + 30}"
+          text-anchor="middle"
+          font-family="Artifakt Element, Arial, sans-serif"
+          font-size="12"
+          font-weight="bold"
+          fill="#3C3C3C"
+        >${formatDimension(renderLength)}</text>
+      `);
+
+      // Depth dimension (left)
+      const depthLabelPos = toSVG(minX, midY);
+      dimensionElements.push(`
+        <text
+          x="${depthLabelPos.x - 20}"
+          y="${depthLabelPos.y}"
+          text-anchor="middle"
+          font-family="Artifakt Element, Arial, sans-serif"
+          font-size="12"
+          font-weight="bold"
+          fill="#3C3C3C"
+          transform="rotate(-90, ${depthLabelPos.x - 20}, ${depthLabelPos.y})"
+        >${formatDimension(renderDepth)}</text>
+      `);
+    }
+  }
+
+  // Corridor — render all segments for multi-wing, or primary corridor for single bar
+  if (corridorSegments.length > 0) {
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-polyline-pre',hypothesisId:'H3',location:'FloorplateSVG.ts:renderFloorplateSVG:corridorSegmentRendering',message:'Corridor segments rendered as independent polygons',data:{isMultiWing,segmentCount:corridorSegments.length,segments:corridorSegments.map((s,idx)=>({idx,hasPoly:!!(s.polyPoints&&s.polyPoints.length>=3),polyPointCount:s.polyPoints?.length??0,width:s.width,depth:s.depth}))},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+    corridorSegments.forEach((seg, idx) => {
+      const showLabelForSegment = !isMultiWing || idx === 0;
+      elements.push(renderCorridor(seg, scale, toSVG, showLabelForSegment));
+    });
+  } else {
+    elements.push(renderCorridor(corridor, scale, toSVG, true));
+  }
 
   // Cores
   cores.forEach(core => {
     elements.push(renderCore(core, scale, toSVG));
   });
 
+  // Fillers are rendered as core-like blocks to show footprint coverage.
+  fillers.forEach((filler, idx) => {
+    elements.push(renderFillerAsCore(filler, idx, scale, toSVG));
+  });
+
   // Units
   units.forEach(unit => {
     elements.push(renderUnit(unit, scale, toSVG, showLabels, showAreas));
   });
+
+  // Draw dimensions last so labels are visible over units.
+  elements.push(...dimensionElements);
 
   // Build final SVG
   return `
@@ -177,6 +420,25 @@ export function renderFloorplateSVG(
   `;
 }
 
+function renderFillerAsCore(
+  filler: FillerBlock,
+  idx: number,
+  scale: number,
+  toSVG: (x: number, y: number) => { x: number; y: number }
+): string {
+  const asCore: CoreBlock = {
+    id: filler.id || `filler-${idx}`,
+    x: filler.x,
+    y: filler.y,
+    width: filler.width,
+    depth: filler.depth,
+    type: 'Mid',
+    side: filler.side,
+    polyPoints: filler.polyPoints
+  };
+  return renderCore(asCore, scale, toSVG);
+}
+
 /**
  * Render corridor as SVG
  */
@@ -184,8 +446,35 @@ function renderCorridor(
   corridor: CorridorBlock,
   scale: number,
   toSVG: (x: number, y: number) => { x: number; y: number },
-  _buildingLength: number
+  showLabel: boolean
 ): string {
+  if (corridor.polyPoints && corridor.polyPoints.length >= 3) {
+    const svgPoints = corridor.polyPoints.map(p => toSVG(p.x, p.y));
+    const pointsString = svgPoints.map(p => `${p.x},${p.y}`).join(' ');
+    const centerX = svgPoints.reduce((s, p) => s + p.x, 0) / svgPoints.length;
+    const centerY = svgPoints.reduce((s, p) => s + p.y, 0) / svgPoints.length;
+    const corridorWidthFeet = Math.round(metersToFeet(corridor.depth));
+    return `
+      <g class="corridor">
+        <polygon
+          points="${pointsString}"
+          fill="${SVG_COLORS.Corridor}"
+          stroke="#D9D9D9"
+          stroke-width="1"
+        />
+        ${showLabel ? `
+        <text
+          x="${centerX}"
+          y="${centerY + 4}"
+          text-anchor="middle"
+          class="corridor-label"
+          font-size="11"
+        >Corridor (${corridorWidthFeet}')</text>
+        ` : ''}
+      </g>
+    `;
+  }
+
   const topLeft = toSVG(corridor.x, corridor.y + corridor.depth);
   const width = corridor.width * scale;
   const height = corridor.depth * scale;
@@ -207,6 +496,7 @@ function renderCorridor(
         stroke="#D9D9D9"
         stroke-width="1"
       />
+      ${showLabel ? `
       <text
         x="${centerX}"
         y="${centerY + 4}"
@@ -214,6 +504,7 @@ function renderCorridor(
         class="corridor-label"
         font-size="11"
       >Corridor (${corridorWidthFeet}')</text>
+      ` : ''}
     </g>
   `;
 }
@@ -226,6 +517,38 @@ function renderCore(
   scale: number,
   toSVG: (x: number, y: number) => { x: number; y: number }
 ): string {
+  if (core.polyPoints && core.polyPoints.length >= 3) {
+    const svgPoints = core.polyPoints.map(p => toSVG(p.x, p.y));
+    const pointsString = svgPoints.map(p => `${p.x},${p.y}`).join(' ');
+    const centerX = svgPoints.reduce((s, p) => s + p.x, 0) / svgPoints.length;
+    const centerY = svgPoints.reduce((s, p) => s + p.y, 0) / svgPoints.length;
+    const minX = Math.min(...svgPoints.map(p => p.x));
+    const maxX = Math.max(...svgPoints.map(p => p.x));
+    const minY = Math.min(...svgPoints.map(p => p.y));
+    const maxY = Math.max(...svgPoints.map(p => p.y));
+    const width = maxX - minX;
+    const height = maxY - minY;
+    const fontSize = Math.min(12, Math.min(width, height) * 0.3);
+    return `
+      <g class="core">
+        <polygon
+          points="${pointsString}"
+          fill="${SVG_COLORS.Core}"
+          stroke="#3C3C3C"
+          stroke-width="1"
+        />
+        <text
+          x="${centerX}"
+          y="${centerY}"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          class="core-label"
+          font-size="${fontSize}"
+        >CORE</text>
+      </g>
+    `;
+  }
+
   const topLeft = toSVG(core.x, core.y + core.depth);
   const width = core.width * scale;
   const height = core.depth * scale;

@@ -12,8 +12,11 @@
 import { Forma } from 'forma-embedded-view-sdk/auto';
 import {
   generateFloorplateVariants,
-  extractFootprintFromTriangles,
-  renderFloorplate
+  renderFloorplate,
+  extractFootprintPolygon,
+  polygonToLegacyFootprint,
+  generateMultiWingFloorplateVariants,
+  analyzeFootprint
 } from '../../algorithm';
 import { LayoutOption, FloorPlanData } from '../../algorithm/types';
 import { FEET_TO_METERS } from '../../algorithm/constants';
@@ -213,19 +216,19 @@ export async function handleGenerate(): Promise<void> {
 
     buildingTriangles = triangles;
 
-    // Extract footprint from triangles
-    const footprint = extractFootprintFromTriangles(buildingTriangles);
+    // Extract actual polygon (preserves concave corners for L/U/H shapes)
+    const { polygon, floorZ, height } = extractFootprintPolygon(buildingTriangles);
+
+    // Extract legacy footprint for dimension display and bar-building fallback
+    const footprint = polygonToLegacyFootprint(polygon, floorZ, height);
 
     // On first selection, populate dimension inputs with geometry values.
-    // On subsequent auto-generations, the user may have tweaked Length/Depth/Stories —
-    // honour their overrides instead of re-extracting from geometry every time.
     const isFirstRunForThisBuilding = !state.autoGenerate;
     if (isFirstRunForThisBuilding) {
       updateDimensionsFromBuilding(footprint.width, footprint.depth, footprint.height);
     }
 
-    // Override footprint dimensions with the (possibly user-adjusted) UI state values
-    // so the algorithm respects slider/input changes.
+    // Override footprint dimensions with user-adjusted UI state values
     footprint.width = state.length * FEET_TO_METERS;
     footprint.depth = state.buildingDepth * FEET_TO_METERS;
 
@@ -237,20 +240,28 @@ export async function handleGenerate(): Promise<void> {
     const coreWidth = state.coreWidth * FEET_TO_METERS;
     const coreDepth = state.coreDepth * FEET_TO_METERS;
 
-    // Generate all 3 variants with custom colors
-    generatedOptions = generateFloorplateVariants(
-      footprint,
-      unitConfig,
-      egressConfig,
-      {
-        corridorWidth,
-        coreWidth,
-        coreDepth,
-        coreSide: state.corePlacement,
-        customColors: unitColors,
-        alignment: state.alignment / 100  // Convert 0-100 to 0.0-1.0
-      }
-    );
+    const generatorOptions = {
+      corridorWidth,
+      coreWidth,
+      coreDepth,
+      coreSide: state.corePlacement,
+      customColors: unitColors,
+      alignment: state.alignment / 100
+    };
+
+    // Multi-wing gate: use topology check (not vertex count heuristic)
+    // A simplified rectangle could have 5+ vertices from Douglas-Peucker artifacts
+    const wingAnalysis = analyzeFootprint(polygon);
+    const isMultiWing = !wingAnalysis.isSimpleBar && wingAnalysis.wings.length > 1;
+
+    if (isMultiWing) {
+      generatedOptions = generateMultiWingFloorplateVariants(
+        polygon, unitConfig, egressConfig, generatorOptions
+      );
+    } else {
+      // Existing pipeline — identical to original behavior
+      generatedOptions = generateFloorplateVariants(footprint, unitConfig, egressConfig, generatorOptions);
+    }
 
     // Select the first option (Balanced) by default
     selectedOptionIndex = 0;
@@ -269,6 +280,9 @@ export async function handleGenerate(): Promise<void> {
 
     // Render to mesh
     const meshData = renderFloorplate(selectedOption.floorplan);
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-missing-pink-pre',hypothesisId:'H3',location:'generation-manager.ts:handleGenerate:renderedMesh',message:'Mesh produced before Forma render',data:{positions:meshData.positions.length,colors:meshData.colors.length,corridorSegments:selectedOption.floorplan.corridorSegments?.length??0,corridorHasPoly:!!(selectedOption.floorplan.corridor.polyPoints&&selectedOption.floorplan.corridor.polyPoints.length>=3)},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
 
     // Add to Forma
     await Forma.render.addMesh({

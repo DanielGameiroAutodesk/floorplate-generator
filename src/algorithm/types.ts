@@ -156,6 +156,7 @@ export interface CoreBlock {
   depth: number;
   type: 'End' | 'Mid';
   side: 'North' | 'South';
+  polyPoints?: { x: number; y: number }[];
 }
 
 /**
@@ -169,6 +170,7 @@ export interface FillerBlock {
   width: number;
   depth: number;
   side: 'North' | 'South';
+  polyPoints?: { x: number; y: number }[];
 }
 
 export interface CorridorBlock {
@@ -176,6 +178,7 @@ export interface CorridorBlock {
   y: number;
   width: number;
   depth: number;
+  polyPoints?: { x: number; y: number }[];
 }
 
 export interface FloorPlanData {
@@ -205,6 +208,21 @@ export interface FloorPlanData {
     deadEndStatus: 'Pass' | 'Fail';
     travelDistanceStatus: 'Pass' | 'Fail';
   };
+  // Optional multi-wing fields (present only for multi-wing buildings)
+  corridorSegments?: CorridorBlock[];
+  corridorCenterline?: { x: number; y: number }[];
+  corridorGraph?: { nodes: { x: number; y: number }[]; edges: [number, number][] };
+  wingInfo?: {
+    shape: string;
+    wingCount: number;
+    wings?: Array<{
+      id: number;
+      length: number;
+      width: number;
+      center: { x: number; y: number };
+      direction: number;
+    }>;
+  };
 }
 
 export interface BuildingFootprint {
@@ -219,6 +237,9 @@ export interface BuildingFootprint {
   centerY: number;
   floorZ: number;  // Ground level elevation
   rotation: number; // Rotation angle in radians (from global X axis to building's long axis)
+  /** Actual footprint polygon vertices (preserved from boundary extraction, CCW winding).
+      Present when extracted via extractFootprintPolygon(); absent for legacy bar footprints. */
+  polygon?: { x: number; y: number }[];
 }
 
 // ============================================================================
@@ -326,6 +347,8 @@ export interface Wing {
   centerline: { start: { x: number; y: number }; end: { x: number; y: number } };
   /** Bounding box */
   bounds: { minX: number; maxX: number; minY: number; maxY: number };
+  /** OBB center (oriented bounding box center in world coordinates) */
+  center?: { x: number; y: number };
 }
 
 /**

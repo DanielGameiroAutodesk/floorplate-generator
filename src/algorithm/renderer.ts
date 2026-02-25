@@ -6,7 +6,7 @@
  * to world coordinates (Forma scene).
  */
 
-import { FloorPlanData, UnitBlock, CoreBlock, CorridorBlock, UnitType } from './types';
+import { FloorPlanData, UnitBlock, CoreBlock, CorridorBlock, FillerBlock, UnitType } from './types';
 import { UNIT_COLORS } from './constants';
 
 /**
@@ -194,6 +194,157 @@ function triangulateConvex(
 }
 
 /**
+ * Point-in-triangle test using barycentric coordinates.
+ */
+function pointInTriangle(
+  p: { x: number; y: number },
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+  c: { x: number; y: number }
+): boolean {
+  const d1 = (p.x - b.x) * (a.y - b.y) - (a.x - b.x) * (p.y - b.y);
+  const d2 = (p.x - c.x) * (b.y - c.y) - (b.x - c.x) * (p.y - c.y);
+  const d3 = (p.x - a.x) * (c.y - a.y) - (c.x - a.x) * (p.y - a.y);
+  const hasNeg = d1 < 0 || d2 < 0 || d3 < 0;
+  const hasPos = d1 > 0 || d2 > 0 || d3 > 0;
+  return !(hasNeg && hasPos);
+}
+
+/**
+ * Ear-clipping triangulation for arbitrary simple (non-self-intersecting) polygons.
+ *
+ * Handles both convex and concave polygons correctly. For convex polygons,
+ * this is equivalent to fan triangulation. For concave polygons (like L-shaped
+ * corridor wedges and inner cores), it produces correct non-overlapping triangles.
+ *
+ * Algorithm:
+ * 1. Determine polygon winding order (CW/CCW)
+ * 2. Find an "ear" vertex: convex, and the ear triangle contains no other vertices
+ * 3. Clip the ear (emit triangle, remove vertex)
+ * 4. Repeat until only a triangle remains
+ */
+function triangulatePolygon(
+  points: { x: number; y: number }[],
+  z: number,
+  color: { r: number; g: number; b: number; a: number },
+  transform: { centerX: number; centerY: number; rotation: number }
+): { positions: number[]; colors: number[] } {
+  const n = points.length;
+  if (n < 3) return { positions: [], colors: [] };
+
+  // Transform all points to world coordinates
+  const wp = points.map(p =>
+    transformPoint(p.x, p.y, transform.centerX, transform.centerY, transform.rotation)
+  );
+
+  if (n === 3) {
+    return {
+      positions: [wp[0].x, wp[0].y, z, wp[1].x, wp[1].y, z, wp[2].x, wp[2].y, z],
+      colors: [
+        color.r, color.g, color.b, color.a,
+        color.r, color.g, color.b, color.a,
+        color.r, color.g, color.b, color.a
+      ]
+    };
+  }
+
+  // For 4-point polygons (quads), fan triangulation is always valid
+  if (n === 4) {
+    const positions: number[] = [];
+    const colors: number[] = [];
+    for (let i = 1; i < n - 1; i++) {
+      positions.push(wp[0].x, wp[0].y, z, wp[i].x, wp[i].y, z, wp[i + 1].x, wp[i + 1].y, z);
+      colors.push(color.r, color.g, color.b, color.a, color.r, color.g, color.b, color.a, color.r, color.g, color.b, color.a);
+    }
+    return { positions, colors };
+  }
+
+  // Determine winding order
+  let signedArea = 0;
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n;
+    signedArea += wp[i].x * wp[j].y - wp[j].x * wp[i].y;
+  }
+  const isCCW = signedArea > 0;
+
+  // Ear clipping
+  const indices: number[] = [];
+  for (let i = 0; i < n; i++) indices.push(i);
+
+  const positions: number[] = [];
+  const colors: number[] = [];
+
+  let safety = n * n;
+  while (indices.length > 3 && safety-- > 0) {
+    let earFound = false;
+    const m = indices.length;
+
+    for (let i = 0; i < m; i++) {
+      const prevIdx = indices[(i - 1 + m) % m];
+      const currIdx = indices[i];
+      const nextIdx = indices[(i + 1) % m];
+
+      const prev = wp[prevIdx];
+      const curr = wp[currIdx];
+      const next = wp[nextIdx];
+
+      // Check if vertex is convex (ear candidate)
+      const cross = (curr.x - prev.x) * (next.y - curr.y) - (curr.y - prev.y) * (next.x - curr.x);
+      const isConvex = isCCW ? cross >= 0 : cross <= 0;
+
+      if (!isConvex) continue;
+
+      // Check if any other vertex lies inside the ear triangle
+      let containsVertex = false;
+      for (let j = 0; j < m; j++) {
+        if (j === (i - 1 + m) % m || j === i || j === (i + 1) % m) continue;
+        if (pointInTriangle(wp[indices[j]], prev, curr, next)) {
+          containsVertex = true;
+          break;
+        }
+      }
+
+      if (!containsVertex) {
+        // Clip this ear
+        positions.push(prev.x, prev.y, z, curr.x, curr.y, z, next.x, next.y, z);
+        colors.push(
+          color.r, color.g, color.b, color.a,
+          color.r, color.g, color.b, color.a,
+          color.r, color.g, color.b, color.a
+        );
+        indices.splice(i, 1);
+        earFound = true;
+        break;
+      }
+    }
+
+    if (!earFound) break; // Degenerate polygon
+  }
+
+  // Final triangle
+  if (indices.length === 3) {
+    positions.push(
+      wp[indices[0]].x, wp[indices[0]].y, z,
+      wp[indices[1]].x, wp[indices[1]].y, z,
+      wp[indices[2]].x, wp[indices[2]].y, z
+    );
+    colors.push(
+      color.r, color.g, color.b, color.a,
+      color.r, color.g, color.b, color.a,
+      color.r, color.g, color.b, color.a
+    );
+  }
+
+  // #region agent log
+  if (n >= 4 && positions.length === 0) {
+    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-missing-pink-pre',hypothesisId:'H2',location:'renderer.ts:triangulatePolygon',message:'Triangulation produced no faces for polygon',data:{pointCount:n,signedAreaHalf:signedArea/2,safetyRemaining:safety,points},timestamp:Date.now()})}).catch(()=>{});
+  }
+  // #endregion
+
+  return { positions, colors };
+}
+
+/**
  * Create mesh for a unit (rectangle or L-shaped polygon)
  */
 function createUnitMesh(
@@ -203,11 +354,11 @@ function createUnitMesh(
   transform: { centerX: number; centerY: number; rotation: number }
 ): { positions: number[]; colors: number[] } {
   if (unit.polyPoints && unit.polyPoints.length >= 3) {
-    // L-shaped or polygon unit
+    // L-shaped or polygon unit — use ear-clipping for all polygon shapes
     if (unit.isLShaped && unit.polyPoints.length === 6) {
       return triangulateLShape(unit.polyPoints, z, color, transform);
     } else {
-      return triangulateConvex(unit.polyPoints, z, color, transform);
+      return triangulatePolygon(unit.polyPoints, z, color, transform);
     }
   } else {
     // Simple rectangle
@@ -385,15 +536,9 @@ function renderCores(cores: CoreBlock[], elevation: number, transform: Transform
   const color = UNIT_COLORS['Core'];
 
   cores.forEach(core => {
-    const { positions, colors } = createRectangleMesh(
-      core.x,
-      core.y,
-      core.width,
-      core.depth,
-      elevation,
-      color,
-      transform
-    );
+    const { positions, colors } = core.polyPoints && core.polyPoints.length >= 3
+      ? triangulatePolygon(core.polyPoints, elevation, color, transform)
+      : createRectangleMesh(core.x, core.y, core.width, core.depth, elevation, color, transform);
     allPositions.push(...positions);
     allColors.push(...colors);
   });
@@ -405,24 +550,72 @@ function renderCores(cores: CoreBlock[], elevation: number, transform: Transform
 }
 
 /**
+ * Convert fillers into core-like render blocks so uncovered footprint areas
+ * are still visible in both 3D and 2D outputs.
+ */
+function fillersToCoreBlocks(fillers: FillerBlock[]): CoreBlock[] {
+  return fillers.map((filler, idx) => ({
+    id: filler.id || `filler-${idx}`,
+    x: filler.x,
+    y: filler.y,
+    width: filler.width,
+    depth: filler.depth,
+    type: 'Mid',
+    side: filler.side,
+    polyPoints: filler.polyPoints
+  }));
+}
+
+/**
  * Render corridor to mesh data
  */
 function renderCorridor(corridor: CorridorBlock, elevation: number, transform: Transform): FormaMeshData {
   const color = UNIT_COLORS['Corridor'];
-  const { positions, colors } = createRectangleMesh(
-    corridor.x,
-    corridor.y,
-    corridor.width,
-    corridor.depth,
-    elevation,
-    color,
-    transform
-  );
+  let signedArea = 0;
+  if (corridor.polyPoints && corridor.polyPoints.length >= 3) {
+    for (let i = 0; i < corridor.polyPoints.length; i++) {
+      const a = corridor.polyPoints[i];
+      const b = corridor.polyPoints[(i + 1) % corridor.polyPoints.length];
+      signedArea += a.x * b.y - b.x * a.y;
+    }
+  }
+  const corridorPolyForRender =
+    corridor.polyPoints && corridor.polyPoints.length >= 3 && signedArea < 0
+      ? [...corridor.polyPoints].reverse()
+      : corridor.polyPoints;
+  const { positions, colors } = corridorPolyForRender && corridorPolyForRender.length >= 3
+    ? triangulatePolygon(corridorPolyForRender, elevation, color, transform)
+    : createRectangleMesh(corridor.x, corridor.y, corridor.width, corridor.depth, elevation, color, transform);
+  // #region agent log
+  fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-winding-postfix',hypothesisId:'H6',location:'renderer.ts:renderCorridor',message:'Corridor mesh winding + triangulation',data:{hasPoly:!!(corridor.polyPoints&&corridor.polyPoints.length>=3),polyPointCount:corridor.polyPoints?.length??0,signedAreaHalf:signedArea/2,reversedForWinding:!!(corridor.polyPoints&&corridor.polyPoints.length>=3&&signedArea<0),positionsCount:positions.length},timestamp:Date.now()})}).catch(()=>{});
+  // #endregion
 
   return {
     positions: new Float32Array(positions),
     colors: new Uint8Array(colors)
   };
+}
+
+/**
+ * Combine multiple FormaMeshData objects into one by concatenating arrays.
+ */
+function combineMeshes(meshes: FormaMeshData[]): FormaMeshData {
+  if (meshes.length === 0) {
+    return { positions: new Float32Array(0), colors: new Uint8Array(0) };
+  }
+  if (meshes.length === 1) return meshes[0];
+  const totalPos = meshes.reduce((s, m) => s + m.positions.length, 0);
+  const totalCol = meshes.reduce((s, m) => s + m.colors.length, 0);
+  const positions = new Float32Array(totalPos);
+  const colors = new Uint8Array(totalCol);
+  let posOff = 0, colOff = 0;
+  for (const m of meshes) {
+    positions.set(m.positions, posOff);
+    colors.set(m.colors, colOff);
+    posOff += m.positions.length;
+    colOff += m.colors.length;
+  }
+  return { positions, colors };
 }
 
 /**
@@ -467,12 +660,20 @@ function renderCorridor(corridor: CorridorBlock, elevation: number, transform: T
 export function renderFloorplate(floorplan: FloorPlanData, elevationOffset: number = 0.5): FormaMeshData {
   const elevation = floorplan.floorElevation + elevationOffset;
   const transform = floorplan.transform;
+  // #region agent log
+  fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-winding-postfix',hypothesisId:'H6',location:'renderer.ts:renderFloorplate',message:'Render floorplate entry',data:{transform,corridorSegments:floorplan.corridorSegments?.length??0,units:floorplan.units.length,cores:floorplan.cores.length,fillers:floorplan.fillers?.length??0,wingCount:floorplan.wingInfo?.wingCount??1},timestamp:Date.now()})}).catch(()=>{});
+  // #endregion
+  const fillerCores = fillersToCoreBlocks(floorplan.fillers ?? []);
+  const allCores = [...floorplan.cores, ...fillerCores];
 
-  // Render corridor first (bottom layer)
-  const corridorMesh = renderCorridor(floorplan.corridor, elevation, transform);
+  // Render corridor(s) first (bottom layer)
+  // For multi-wing buildings, render each corridor segment separately
+  const corridorMesh = floorplan.corridorSegments && floorplan.corridorSegments.length > 0
+    ? combineMeshes(floorplan.corridorSegments.map(seg => renderCorridor(seg, elevation, transform)))
+    : renderCorridor(floorplan.corridor, elevation, transform);
 
   // Render cores
-  const coresMesh = renderCores(floorplan.cores, elevation + 0.1, transform);
+  const coresMesh = renderCores(allCores, elevation + 0.1, transform);
 
   // Render unit fills
   const unitFillsMesh = renderUnitFills(floorplan.units, elevation + 0.2, transform);
@@ -558,10 +759,16 @@ export function renderFloorplateLayers(
 } {
   const elevation = floorplan.floorElevation + elevationOffset;
   const transform = floorplan.transform;
+  const fillerCores = fillersToCoreBlocks(floorplan.fillers ?? []);
+  const allCores = [...floorplan.cores, ...fillerCores];
+
+  const corridorMeshForLayers = floorplan.corridorSegments && floorplan.corridorSegments.length > 0
+    ? combineMeshes(floorplan.corridorSegments.map(seg => renderCorridor(seg, elevation, transform)))
+    : renderCorridor(floorplan.corridor, elevation, transform);
 
   return {
-    corridor: renderCorridor(floorplan.corridor, elevation, transform),
-    cores: renderCores(floorplan.cores, elevation + 0.1, transform),
+    corridor: corridorMeshForLayers,
+    cores: renderCores(allCores, elevation + 0.1, transform),
     units: renderUnitFills(floorplan.units, elevation + 0.2, transform),
     borders: renderUnitBorders(floorplan.units, elevation + 0.3, transform)
   };

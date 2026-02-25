@@ -53,3 +53,13 @@ export {
 } from './renderer';
 
 export type { FormaMeshData } from './renderer';
+
+// Multi-wing support
+export { extractFootprintPolygon, polygonToLegacyFootprint } from './footprint-polygon';
+export { analyzeFootprint } from './wing-detection';
+export {
+  generateMultiWingFloorplate,
+  generateMultiWingFloorplateVariants
+} from './multi-wing-generator';
+export type { MultiWingGeneratorOptions } from './multi-wing-generator';
+export type { WingGenerationOptions } from './generator-core';

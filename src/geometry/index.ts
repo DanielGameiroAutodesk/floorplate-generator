@@ -6,3 +6,5 @@ export * from './point';
 export * from './line';
 export * from './rectangle';
 export * from './polygon';
+export * from './clip';
+export * from './graph';

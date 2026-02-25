@@ -14,6 +14,8 @@ export enum LogLevel {
 }
 
 let currentLevel: LogLevel = LogLevel.WARN;
+const warnCounts = new Map<string, number>();
+const WARN_REPEAT_THRESHOLDS = new Set([2, 5, 10, 25, 50, 100]);
 
 /**
  * Logger with configurable levels.
@@ -59,7 +61,19 @@ export const Logger = {
    */
   warn: (msg: string, ...args: unknown[]): void => {
     if (currentLevel <= LogLevel.WARN) {
-      console.warn(`[WARN] ${msg}`, ...args);
+      // Cap the map size to prevent unbounded growth from unique messages
+      if (warnCounts.size > 10000) {
+        warnCounts.clear();
+      }
+      const count = (warnCounts.get(msg) ?? 0) + 1;
+      warnCounts.set(msg, count);
+
+      if (count === 1) {
+        console.warn(`[WARN] ${msg}`, ...args);
+      } else if (WARN_REPEAT_THRESHOLDS.has(count)) {
+        console.warn(`[WARN] ${msg} (repeated ${count}x)`);
+      }
+
     }
   },
 

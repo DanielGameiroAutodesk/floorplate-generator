@@ -1,0 +1,36 @@
+.RowWithSub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.MenuButton {
+  position: absolute;
+  right: 8px;
+  transition: transform 150ms;
+
+  &.open {
+    transform: rotate(90deg);
+  }
+}
+
+.DatePanel {
+  padding: 4px 12px;
+  min-width: 240px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

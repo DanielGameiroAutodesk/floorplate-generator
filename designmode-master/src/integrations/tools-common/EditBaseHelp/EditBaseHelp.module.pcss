@@ -1,0 +1,46 @@
+.MixedMessage {
+  margin: 1.2rem 0;
+  padding: 1.2rem;
+  -webkit-box-align: center;
+  align-items: center;
+  text-align: center;
+}
+
+.BaseLayerHelp {
+  background: transparent;
+  width: 100%;
+  margin: 1.2rem 0;
+  padding: 1.6rem;
+  -webkit-box-align: center;
+  border: 1px solid var(--scenario-purple);
+  border-radius: 4px;
+  align-items: center;
+  text-align: center;
+  display: flex;
+
+  font-family: "Artifakt Element", serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 14px;
+
+  &:hover {
+    cursor: pointer;
+    background: var(--scenario-purple-15);
+  }
+
+  flex-direction: column;
+
+  :first-child {
+    margin-bottom: 1.2rem;
+  }
+}
+
+.DisabledProperties {
+  margin-top: 2.4rem;
+  pointer-events: none;
+
+  * {
+    opacity: 0.8;
+  }
+}

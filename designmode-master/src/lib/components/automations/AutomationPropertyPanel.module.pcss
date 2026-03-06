@@ -1,0 +1,71 @@
+body {
+  --columnWidth: 84px;
+}
+
+.AutomationsContainer {
+  border: 1px solid var(--border-color-divider-light);
+  border-radius: 4px;
+  padding: 4px 10px 10px 10px;
+  margin-top: 12px;
+}
+
+.AutomationRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 36px;
+}
+
+.AutomationInputWithIcon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: var(--columnWidth);
+  color: var(--icon-color-medium);
+}
+
+.AutomationRowTwoColumns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  .AutomationInputWithIcon {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.AutomationIconLabel {
+  height: 16px;
+  margin-right: 8px;
+}
+
+.Divider {
+  border: none;
+  height: 1px;
+  background-color: var(--border-color-divider-light);
+}
+
+.SubHeader {
+  font: var(--12-bold);
+  height: 40px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.SubHeaderWithIconWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.SubSubHeader {
+  font: var(--11-bold);
+  /* Weave design system does not have a --10-bold, so this is a workaround */
+  font-size: 10px;
+  color: var(--text-color-light);
+  height: 28px;
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,38 @@
+.popoutPropertyHolder {
+  position: relative;
+  border: 1px solid var(--border-color-divider-light);
+  overflow: visible;
+}
+
+.closeButton,
+weave-tile {
+  cursor: pointer;
+}
+
+.floater {
+  position: absolute;
+  top: 0;
+  right: 272px;
+  padding: 4px 0;
+  border-radius: 4px;
+  box-shadow: 0 0 16px #0003;
+  background-color: #fff;
+  z-index: var(--z-dialog);
+  min-width: 300px;
+
+  & header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & h1 {
+      margin: 0;
+      font: var(--12-medium);
+    }
+  }
+}
+
+header,
+.form > * {
+  margin: 6px 0;
+  min-width: 300px;
+}

@@ -1,0 +1,124 @@
+.Container {
+  margin: 16px -16px -10px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &::after {
+    border-left: 3px solid var(--status-error);
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 10px;
+    width: 1px;
+    height: calc(100% - 20px);
+    pointer-events: none;
+  }
+}
+
+.Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: var(--11-medium);
+  padding: 11px 16px 11px 27px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.HeaderMeta {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+}
+
+.AlertListOpen {
+  display: flex;
+  flex-direction: column;
+  transition: all 5.5s ease-in;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.AlertListClosed {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  transition: all 5.5s ease-in;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.AlertListItem {
+  padding: 6px 16px 6px 27px;
+
+  &:hover {
+    background-color: var(--background-empty-level100to250-hover);
+    cursor: pointer;
+  }
+}
+
+.AlertTitle {
+  font: var(--small-regular);
+}
+
+.AlertDescription {
+  font: var(--small-regular);
+  line-height: 14px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.ContainerV2 {
+  margin: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &::after {
+    border-left: 3px solid var(--status-error);
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 10px;
+    width: 1px;
+    height: calc(100% - 20px);
+    pointer-events: none;
+  }
+}
+
+.HeaderV2 {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: var(--11-medium);
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.AlertListItemv2 {
+  padding: 6px 16px;
+
+  &:hover {
+    background-color: var(--background-empty-level100to250-hover);
+    cursor: pointer;
+  }
+}
+
+.AlertTitleV2 {
+  font: var(--small-regular);
+  padding: 0 16px;
+}
+
+.AlertDescriptionV2 {
+  font: var(--small-regular);
+  line-height: 14px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  padding: 0 16px;
+}

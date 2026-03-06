@@ -1,0 +1,126 @@
+.Wrapper {
+  position: absolute;
+  justify-self: center;
+  top: 0;
+  width: 260px;
+  max-width: 260px;
+  z-index: var(--z-dialog);
+  box-shadow: var(--forma-box-shadow);
+  left: 0;
+  border-radius: 4px;
+  background: var(--background-color-surface-100);
+}
+
+.QuickAccessListPanel {
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  font: var(--12-regular);
+  color: var(--text-color-medium-default);
+  max-height: 50vh;
+}
+
+.SearchBar {
+  display: flex;
+  align-items: center;
+  margin: 16px;
+  margin-bottom: 12px;
+  height: 36px;
+}
+
+.FilterField {
+  background: transparent;
+  padding-bottom: 6px;
+  color: var(--text-color-medium-default);
+  outline: none;
+  border: none;
+  font-size: var(--12-regular);
+  flex: 1;
+  border-bottom: 1px solid var(--border-color-divider-light);
+
+  &::placeholder {
+    color: var(--text-color-placeholder);
+  }
+}
+
+.GroupHeader {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  padding-bottom: 12px;
+  color: var(--text-color-medium-default);
+}
+
+.Header {
+  height: 32px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  padding-left: 10px;
+
+  & H1 {
+    font: var(--11-bold);
+    text-transform: uppercase;
+    color: var(--text-color-placeholder);
+  }
+}
+
+.Listing {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  padding: 0 6px 12px 6px;
+}
+
+.ShortcutListing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: var(--12-regular);
+  color: var(--text-color-medium-default);
+  padding: 0 4px 0 10px;
+  scroll-margin: 6px;
+  height: 32px;
+
+  &.CurrentSuggestion {
+    background-color: var(--background-color-ghost-high-hover);
+  }
+
+  &:not(.CurrentSuggestion):hover {
+    background: var(--background-color-ghost-high-hover);
+  }
+}
+
+.NoSuggestions {
+  color: var(--text-color-medium-default);
+  padding: 0 0 12px 10px;
+}
+
+.Shortcut {
+  font-family: sans-serif;
+  color: var(--text-color-light);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 2px;
+  padding: 0 4px;
+  margin-left: 6px;
+  cursor: pointer;
+  min-width: 16px;
+  height: 24px;
+  text-align: center;
+  border: 1px solid var(--text-color-placeholder);
+}
+
+.ButtonWrapper {
+  display: inline-block;
+  position: fixed;
+  left: 22px;
+  bottom: 55px;
+}
+
+.Button {
+  width: 24px;
+  height: 24px;
+}

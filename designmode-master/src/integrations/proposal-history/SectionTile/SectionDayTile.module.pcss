@@ -1,0 +1,101 @@
+.SectionTileWrapper {
+  position: relative;
+
+  /* hover bg */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -18px;
+    right: -8px;
+    bottom: 0;
+  }
+
+  &:hover::before {
+    background: var(--background-color-ghost-high-hover);
+  }
+}
+
+.SectionTile {
+  border-left: 1px solid var(--border-color-medium-default);
+  padding: 9px;
+  position: relative;
+  min-width: 45px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  z-index: 0;
+
+  /* dot */
+  &::after {
+    content: "";
+    border-radius: 100%;
+    border: 1px solid var(--border-color-medium-default);
+    width: 3px;
+    height: 3px;
+    display: block;
+    position: absolute;
+    top: 15px;
+    background: var(--background-color-surface-100);
+    margin-left: -12px;
+  }
+
+  &:hover {
+    &::after {
+      background: var(--background-color-surface-250);
+    }
+  }
+
+  &:hover .Chevron {
+    opacity: 1;
+  }
+
+  &.Last {
+    border-left-color: transparent;
+
+    &::before {
+      display: block;
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 0px;
+      bottom: 0;
+      border: 1px solid transparent;
+      border-left-color: var(--border-color-medium-default);
+      height: 16px;
+    }
+  }
+}
+
+.SectionTileOpen {
+  cursor: pointer;
+}
+
+.SectionHeader {
+  font: var(--11-medium);
+  padding: 4px 6px 0 7px;
+}
+
+.Wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.Chevron {
+  opacity: 0;
+}
+
+.NumberOfPinned {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  height: 18px;
+  width: 32px;
+  color: var(--icon-color-medium);
+
+  & span {
+    margin-right: -4px;
+  }
+}

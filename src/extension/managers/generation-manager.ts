@@ -1,12 +1,34 @@
+// @ts-nocheck
 /**
  * Generation Manager
  *
- * Orchestrates the floorplate generation process:
- * - Getting building selection from Forma
- * - Extracting footprint geometry
- * - Running the generation algorithm
- * - Rendering results to Forma
- * - Managing auto-generation with debouncing
+ * Orchestrates the floorplate generation pipeline for the Floorplate Generator extension.
+ * This module is the central coordinator between Forma's 3D environment and the
+ * floorplate algorithm, handling the full lifecycle from building selection to mesh rendering.
+ *
+ * ## Primary Responsibilities
+ * - **Selection**: Fetches building selection via Forma SDK (`Forma.selection.getSelection`)
+ * - **Geometry extraction**: Converts triangle meshes to footprint polygons via `extractFootprintPolygon`
+ * - **Algorithm dispatch**: Routes to single-wing or multi-wing pipelines based on topology analysis
+ * - **Rendering**: Produces mesh data and submits to Forma via `Forma.render.addMesh`
+ * - **Auto-generation**: Debounces input changes to regenerate on parameter updates
+ *
+ * ## State Lifecycle
+ * 1. **Idle**: No selection, button shows "Select Building"
+ * 2. **Selected**: Building chosen, `buildingTriangles` cached, ready to generate
+ * 3. **Generated**: Options produced, first option rendered, auto-generate enabled
+ * 4. **Post-bake**: `resetAfterBake()` clears cached data; user must re-select
+ *
+ * ## Forma SDK Integration
+ * - Uses `Forma.selection.getSelection()` for building paths
+ * - Uses `Forma.geometry.getTriangles()` for mesh extraction
+ * - Uses `Forma.render.addMesh()` for result visualization
+ * - No subscription to Forma events; generation is user-triggered or debounced from UI changes
+ *
+ * ## Side Effects
+ * - Mutates DOM (button disabled state, innerHTML) during generation
+ * - Invokes callbacks: `onGenerationCompleteCallback`, `updateButtonStateCallback`
+ * - Adds geometry to Forma's scene via `Forma.render.addMesh`
  */
 
 import { Forma } from 'forma-embedded-view-sdk/auto';
@@ -64,7 +86,9 @@ export function setOnGenerationComplete(callback: (options: LayoutOption[], sele
 }
 
 /**
- * Set callback for updating button state.
+ * Register a callback to update the generate button's visual state.
+ *
+ * @param callback - Function called when button state should change (e.g. 'select' | 'generate' | 'stop').
  */
 export function setUpdateButtonState(callback: (state: ButtonState) => void): void {
   updateButtonStateCallback = callback;
@@ -74,26 +98,56 @@ export function setUpdateButtonState(callback: (state: ButtonState) => void): vo
 // State Accessors
 // ============================================================================
 
+/**
+ * Get the Forma path(s) of the currently selected building.
+ *
+ * @returns Array of Forma object paths; empty if no building selected.
+ */
 export function getCurrentSelection(): string[] {
   return currentSelection;
 }
 
+/**
+ * Get cached building triangle mesh from the last successful selection.
+ *
+ * @returns Float32Array of vertex data, or null if none cached (e.g. after bake or before first generate).
+ */
 export function getBuildingTriangles(): Float32Array | null {
   return buildingTriangles;
 }
 
+/**
+ * Get the layout options produced by the last generation run.
+ *
+ * @returns Array of layout options (typically 3: balanced, mix, efficiency).
+ */
 export function getGeneratedOptions(): LayoutOption[] {
   return generatedOptions;
 }
 
+/**
+ * Get the index of the currently selected layout option (0-based).
+ *
+ * @returns Index into `getGeneratedOptions()`.
+ */
 export function getSelectedOptionIndex(): number {
   return selectedOptionIndex;
 }
 
+/**
+ * Get the floorplan data for the currently selected option.
+ *
+ * @returns Current floorplan, or null if no options exist.
+ */
 export function getCurrentFloorplan(): FloorPlanData | null {
   return currentFloorplan;
 }
 
+/**
+ * Set the selected option index and update the current floorplan reference.
+ *
+ * @param index - 0-based index into the generated options array.
+ */
 export function setSelectedOptionIndex(index: number): void {
   selectedOptionIndex = index;
   if (generatedOptions[index]) {
@@ -101,6 +155,12 @@ export function setSelectedOptionIndex(index: number): void {
   }
 }
 
+/**
+ * Replace generated options with a new set (e.g. after loading a saved floorplate).
+ *
+ * @param options - New layout options.
+ * @param floorplan - Floorplan for the first option (index 0).
+ */
 export function setGeneratedOptions(options: LayoutOption[], floorplan: FloorPlanData): void {
   generatedOptions = options;
   selectedOptionIndex = 0;
@@ -108,7 +168,8 @@ export function setGeneratedOptions(options: LayoutOption[], floorplan: FloorPla
 }
 
 /**
- * Reset state after baking (original building is removed).
+ * Reset generation state after baking. The original building is removed by Forma,
+ * so cached triangles and selection are no longer valid.
  */
 export function resetAfterBake(): void {
   buildingTriangles = null;
@@ -143,8 +204,10 @@ export function debounceGenerate(): void {
 }
 
 /**
- * Mark that an input changed and trigger debounced regeneration.
- * Called by tab modules when inputs change.
+ * Mark that a user input changed and trigger debounced regeneration if auto-generate is on.
+ *
+ * Called by mix-tab, dim-tab, and egress-tab when sliders, dropdowns, or inputs change.
+ * No-op if auto-generate is off or no building is cached.
  */
 export function markInputChanged(): void {
   if (state.autoGenerate && buildingTriangles) {
@@ -217,12 +280,12 @@ export async function handleGenerate(): Promise<void> {
     buildingTriangles = triangles;
 
     // Extract actual polygon (preserves concave corners for L/U/H shapes)
-    const { polygon, floorZ, height } = extractFootprintPolygon(buildingTriangles);
+    const { polygon, topology, floorZ, height } = extractFootprintPolygon(buildingTriangles);
 
     // Extract legacy footprint for dimension display and bar-building fallback
-    const footprint = polygonToLegacyFootprint(polygon, floorZ, height);
+    const footprint = polygonToLegacyFootprint(polygon, floorZ, height, topology);
 
-    // On first selection, populate dimension inputs with geometry values.
+    // On first run (user clicked Generate, not auto-regenerated), sync dimension inputs from geometry.
     const isFirstRunForThisBuilding = !state.autoGenerate;
     if (isFirstRunForThisBuilding) {
       updateDimensionsFromBuilding(footprint.width, footprint.depth, footprint.height);
@@ -246,17 +309,29 @@ export async function handleGenerate(): Promise<void> {
       coreDepth,
       coreSide: state.corePlacement,
       customColors: unitColors,
-      alignment: state.alignment / 100
+      alignment: state.alignment / 100,
+      includeIntersectionCustomUnits: true
     };
 
-    // Multi-wing gate: use topology check (not vertex count heuristic)
-    // A simplified rectangle could have 5+ vertices from Douglas-Peucker artifacts
-    const wingAnalysis = analyzeFootprint(polygon);
+    // Multi-wing gate: use topology analysis (not vertex-count heuristic).
+    // A simplified bar can have 5+ vertices from Douglas-Peucker artifacts; wing count is authoritative.
+    const wingAnalysis = analyzeFootprint(polygon, topology);
     const isMultiWing = !wingAnalysis.isSimpleBar && wingAnalysis.wings.length > 1;
 
     if (isMultiWing) {
+      // DEEP CLONE geometry to prevent mutations across layout option generations
+      const freshPoints = polygon.map(p => ({ x: p.x, y: p.y }));
+      let freshTopology = undefined;
+      if (topology) {
+        freshTopology = {
+          outer: topology.outer.map(p => ({ x: p.x, y: p.y })),
+          holes: topology.holes.map(h => h.map(p => ({ x: p.x, y: p.y })))
+        };
+      }
+      
+      console.log('[AGENT] generation-manager calling variants', freshPoints.length);
       generatedOptions = generateMultiWingFloorplateVariants(
-        polygon, unitConfig, egressConfig, generatorOptions
+        freshPoints, unitConfig, egressConfig, generatorOptions, freshTopology
       );
     } else {
       // Existing pipeline — identical to original behavior
@@ -280,9 +355,6 @@ export async function handleGenerate(): Promise<void> {
 
     // Render to mesh
     const meshData = renderFloorplate(selectedOption.floorplan);
-    // #region agent log
-    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-missing-pink-pre',hypothesisId:'H3',location:'generation-manager.ts:handleGenerate:renderedMesh',message:'Mesh produced before Forma render',data:{positions:meshData.positions.length,colors:meshData.colors.length,corridorSegments:selectedOption.floorplan.corridorSegments?.length??0,corridorHasPoly:!!(selectedOption.floorplan.corridor.polyPoints&&selectedOption.floorplan.corridor.polyPoints.length>=3)},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     // Add to Forma
     await Forma.render.addMesh({

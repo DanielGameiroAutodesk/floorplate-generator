@@ -1,0 +1,25 @@
+:root {
+  /* --border-color-divider-heavy, but with 0.5 opacity*/
+  --line-color: rgba(60, 60, 60, 0.5);
+}
+
+.LeadingLineVertical {
+  position: absolute;
+  left: 50%;
+  z-index: -1;
+  border-left: 1px solid var(--line-color);
+}
+
+.LeadingLineHorizontal {
+  position: absolute;
+  left: 50%;
+  z-index: -1;
+  border-top: 1px solid var(--line-color);
+}
+
+.LeadingLineDot {
+  position: absolute;
+  border-radius: 50%;
+  z-index: -1;
+  background-color: var(--line-color);
+}

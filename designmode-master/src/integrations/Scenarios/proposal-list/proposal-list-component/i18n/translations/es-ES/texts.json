@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "Comparar",
+    "headerText": "Seleccionar propuestas",
+    "maxProposalsWarning": "Solo puede comparar hasta {max} propuestas a la vez.",
+    "minProposalsWarning": "Seleccione {min} o más para comparar."
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "¿Confirma que desea eliminar esta propuesta?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "Suprimir",
+    "duplicateMenuItem": "Duplicar",
+    "exportAsIfcBetaMenuItem": "Exportar como IFC (beta)",
+    "exportAsIfcToDocs": "Exportar como IFC a Docs (beta)",
+    "exportAsObjMenuItem": "Exportar como OBJ",
+    "exportSubmenu": "Exportar...",
+    "renameMenuItem": "Cambiar nombre",
+    "revitDownloadAddinMenuItem": "Descargar complemento de Revit",
+    "revitSendToBetaMenuItem": "Complemento Enviar a Revit (beta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "Mostrar historial de propuestas"
+  },
+  "createProposal": {
+    "buttonTooltip": "Añadir nueva propuesta"
+  },
+  "error": {
+    "couldNotLoadProposals": "No se han podido cargar las propuestas. Inténtelo de nuevo.",
+    "retryButton": "Reintentar"
+  },
+  "exportModal": {
+    "exportingMessage": "Exportando...",
+    "exportPrimaryButtonTitle": "Exportar",
+    "title": "Exportar propuesta de Forma a Docs"
+  },
+  "filter": {
+    "buttonTooltip": "Filtro",
+    "closeButtonTooltip": "Cerrar",
+    "emptyBasesMessage": "El proyecto no tiene ninguna base. Vaya a la sección Capas para crear una.",
+    "sortByHeader": "Ordenar por",
+    "title": "Filtro"
+  },
+  "proposalItem": {
+    "baseTooltip": "Base {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "Crear otra propuesta para comparar",
+    "headerText": "Propuestas",
+    "selectProposalsToCompare": "Seleccionar propuestas que comparar"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A-Z",
+    "alphabeticalDescending": "Z-A",
+    "lastEdited": "Última modificación"
+  },
+  "toast": {
+    "exportAccessDeniedText": "No tiene permiso para acceder a esta carpeta o archivo. Póngase en contacto con el administrador para obtener ayuda.",
+    "exportAccessDeniedTitle": "Acceso denegado",
+    "exportDownloaded": "Exportar descarga",
+    "exportErrorText": "No hemos podido exportar la propuesta. Inténtelo de nuevo. Si el problema persiste, póngase en contacto con el servicio de soporte para obtener ayuda.",
+    "exportErrorTitle": "No se ha podido exportar a Docs",
+    "exportGenericError": "No se ha podido exportar la propuesta.",
+    "exportInProgress": "Exportando propuesta...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "La propuesta de proyecto se ha exportado a Autodesk Docs. Ahora puede utilizarla para vincular los datos de Forma en el proyecto de Revit.",
+    "exportSuccessTitle": "Exportación a Docs completada correctamente",
+    "exportTimeoutText": "Se ha agotado el tiempo de espera del sistema mientras se generaba una exportación a Docs. Esto puede producirse si el proyecto es muy grande o contiene geometrías muy complejas.",
+    "exportTimeoutTitle": "No se ha podido exportar a Docs",
+    "exportTooLargeError": "La exportación no se ha realizado correctamente. Esto puede deberse a que la propuesta es demasiado grande para la capacidad actual de exportación.",
+    "ifcExportFailed": "Error de exportación. Se ha notificado el error.",
+    "ifcExportStarted": "La exportación del archivo IFC ha comenzado; se descargará automáticamente cuando finalice.",
+    "proposalRenamedWarning": "El nombre de la propuesta ya existe; se ha cambiado por {name}.",
+    "revitSendFailed": "No se ha podido enviar la propuesta a Revit.",
+    "revitSendSuccess": "La propuesta se ha enviado a Revit.",
+    "sessionExpired": "La sesión ha caducado. Vuelva a cargar la página."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "Comparer",
+    "headerText": "Sélectionner des propositions",
+    "maxProposalsWarning": "Vous pouvez uniquement comparer jusqu'à {max} propositions à la fois",
+    "minProposalsWarning": "Sélectionnez {min} ou plusieurs à comparer"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "Voulez-vous vraiment supprimer cette proposition?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "Supprimer",
+    "duplicateMenuItem": "Dupliquer",
+    "exportAsIfcBetaMenuItem": "Exporter au format IFC (bêta)",
+    "exportAsIfcToDocs": "Exporter au format IFC vers Docs (bêta)",
+    "exportAsObjMenuItem": "Exporter en tant que OBJ",
+    "exportSubmenu": "Exportation...",
+    "renameMenuItem": "Renommer",
+    "revitDownloadAddinMenuItem": "Télécharger le module complémentaire Revit",
+    "revitSendToBetaMenuItem": "Envoyer vers le module complémentaire Revit (bêta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "Afficher l'historique des propositions"
+  },
+  "createProposal": {
+    "buttonTooltip": "Ajouter une nouvelle proposition"
+  },
+  "error": {
+    "couldNotLoadProposals": "Impossible de charger les propositions. Veuillez réessayer.",
+    "retryButton": "Réessayer"
+  },
+  "exportModal": {
+    "exportingMessage": "Exportation...",
+    "exportPrimaryButtonTitle": "Exporter",
+    "title": "Exporter la proposition de Forma vers Docs"
+  },
+  "filter": {
+    "buttonTooltip": "Filtre",
+    "closeButtonTooltip": "Fermer",
+    "emptyBasesMessage": "Le projet ne comporte aucune base. Accédez à la section Calques pour en créer une.",
+    "sortByHeader": "Trier par",
+    "title": "Filtre"
+  },
+  "proposalItem": {
+    "baseTooltip": "Base {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "Créer une autre proposition pour comparer",
+    "headerText": "Propositions",
+    "selectProposalsToCompare": "Sélectionner les propositions à comparer"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A-Z",
+    "alphabeticalDescending": "Z-A",
+    "lastEdited": "Dernière modification"
+  },
+  "toast": {
+    "exportAccessDeniedText": "Vous n'avez pas l'autorisation d'accéder à ce dossier ou à ce fichier. Veuillez contacter votre administrateur pour obtenir de l'aide.",
+    "exportAccessDeniedTitle": "Accès refusé",
+    "exportDownloaded": "Exportation téléchargée",
+    "exportErrorText": "Nous n'avons pas pu exporter la proposition. Veuillez réessayer. Si le problème persiste, contactez le service d'assistance pour obtenir de l'aide.",
+    "exportErrorTitle": "Échec de l'exportation vers Docs",
+    "exportGenericError": "Échec de l'exportation de la proposition",
+    "exportInProgress": "Exportation de la proposition...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "Votre proposition de projet a été exportée vers Autodesk Docs. Vous pouvez désormais l'utiliser pour lier vos données Forma à votre projet Revit.",
+    "exportSuccessTitle": "Exportation réussie vers Docs",
+    "exportTimeoutText": "Le système a expiré lors de la génération d'une exportation vers Docs. Cela peut se produire si le projet est très volumineux et/ou contient une géométrie très complexe.",
+    "exportTimeoutTitle": "Échec de l'exportation vers Docs",
+    "exportTooLargeError": "L'exportation a échoué. Cela peut être dû au fait que la proposition est trop volumineuse par rapport aux limites actuellement prises en charge pour l'exportation.",
+    "ifcExportFailed": "Échec de l'exportation. L'erreur est signalée.",
+    "ifcExportStarted": "L'exportation de votre fichier IFC a démarré. Elle sera téléchargée automatiquement une fois terminée.",
+    "proposalRenamedWarning": "Le nom de la proposition existe déjà. Elle a été renommée sous le nom {name}",
+    "revitSendFailed": "Échec de l'envoi de la proposition à Revit.",
+    "revitSendSuccess": "La proposition a été envoyée à Revit",
+    "sessionExpired": "Votre session a expiré. Rechargez la page."
+  }
+}

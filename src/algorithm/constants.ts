@@ -1,8 +1,34 @@
 /**
- * Floorplate Generator - Constants
- * Default values and configuration
+ * Floorplate Generator - Algorithm Constants
  *
- * ALL VALUES ARE IN METERS to match Forma's coordinate system
+ * @module algorithm/constants
+ *
+ * ## Overview
+ *
+ * Central repository for all algorithm configuration: unit defaults, egress limits,
+ * optimization parameters, and magic thresholds. Keeps tunable values out of business logic.
+ *
+ * ## Primary Responsibilities
+ *
+ * - **Unit conversions**: Imperial (feet) ↔ metric (meters) for Forma integration
+ * - **Legacy defaults**: `DEFAULT_UNIT_CONFIG`, `UNIT_COLORS` for the 4-type system
+ * - **Dynamic defaults**: `DEFAULT_UNIT_TYPES`, `DEFAULT_SMART_DEFAULTS` for extensible types
+ * - **Strategy configs**: `STRATEGY_CONFIGS` for balanced/mix/efficiency optimization
+ * - **Placement rules**: `ZONE_ELIGIBLE_UNITS`, `L_SHAPE_ELIGIBLE` per feature spec Section 8.5
+ *
+ * ## Legacy vs Dynamic Configuration
+ *
+ * | Aspect | Legacy | Dynamic |
+ * |--------|--------|---------|
+ * | Unit types | Fixed 4 (Studio, 1BR, 2BR, 3BR) | Arbitrary (`DynamicUnitType[]`) |
+ * | Flexibility | `FLEXIBILITY_FACTORS` Record | Per-type `sizeTolerance` |
+ * | Placement | `L_SHAPE_ELIGIBLE` Record | Per-type `lShapeEligible`, `cornerEligible` |
+ * | Defaults | `DEFAULT_UNIT_CONFIG` | `DEFAULT_UNIT_TYPES` + `calculateSmartDefaults()` |
+ *
+ * ## Units
+ *
+ * All internal values use **meters** to match Forma's coordinate system.
+ * Constants derived from IBC/foot-based specs use `FEET_TO_METERS` for conversion.
  */
 
 import {
@@ -16,9 +42,15 @@ import {
   DynamicUnitType
 } from './types';
 
-// Conversion factor
+// ============================================================================
+// UNIT CONVERSION
+// ============================================================================
+
+/** Conversion factor: 1 foot = 0.3048 meters (exact by definition) */
 export const FEET_TO_METERS = 0.3048;
-export const SQ_FEET_TO_SQ_METERS = FEET_TO_METERS * FEET_TO_METERS; // ~0.0929
+
+/** Square feet to square meters (~0.0929). Used for area conversions from IBC/US specs. */
+export const SQ_FEET_TO_SQ_METERS = FEET_TO_METERS * FEET_TO_METERS;
 
 // ============================================================================
 // DYNAMIC UNIT TYPE DEFAULTS
@@ -116,7 +148,7 @@ export function calculateSmartDefaults(
 ): Partial<DynamicUnitType> {
   const { smallUnitMaxArea, largeUnitMinArea } = config;
 
-  // Interpolation factor: 0 = small, 1 = large
+  // Interpolation factor: 0 = small (rigid), 1 = large (flexible)
   const t = Math.max(0, Math.min(1,
     (areaSqMeters - smallUnitMaxArea) / (largeUnitMinArea - smallUnitMaxArea)
   ));
@@ -128,10 +160,10 @@ export function calculateSmartDefaults(
     expansionWeight: Math.round(lerp(config.expansionWeightRange)),
     compressionWeight: parseFloat(lerp(config.compressionWeightRange).toFixed(2)),
     placementPriority: Math.round(lerp(config.placementPriorityRange)),
-    lShapeEligible: t >= 0.5,     // Large units can be L-shaped
-    cornerEligible: t > 0.5,      // Only 2BR+ (>1003sf) can go at corners by default
-    minWidth: 12 * FEET_TO_METERS,
-    maxWidth: (areaSqMeters / (12 * FEET_TO_METERS)) * 1.5  // Based on reasonable depth
+    lShapeEligible: t >= 0.5,     // Units ≥ midpoint (≈1003 sf) can be L-shaped
+    cornerEligible: t > 0.5,      // Slightly stricter: only above midpoint at corners
+    minWidth: 12 * FEET_TO_METERS, // ~3.66m — code minimum unit width
+    maxWidth: (areaSqMeters / (12 * FEET_TO_METERS)) * 1.5  // Depth ~12ft → width = area/12 * 1.5
   };
 }
 
@@ -139,7 +171,10 @@ export function calculateSmartDefaults(
 // LEGACY CONSTANTS (kept for backwards compatibility)
 // ============================================================================
 
-// Unit colors (RGBA - values 0-255)
+/**
+ * Legacy unit colors for rendering (RGBA, values 0-255).
+ * Hex equivalents: Studio #3b82f6, 1BR #22c55e, 2BR #f97316, 3BR #a855f7
+ */
 export const UNIT_COLORS: Record<UnitType | 'Core' | 'Corridor', { r: number; g: number; b: number; a: number }> = {
   [UnitType.Studio]: { r: 59, g: 130, b: 246, a: 200 },   // Blue (#3b82f6)
   [UnitType.OneBed]: { r: 34, g: 197, b: 94, a: 200 },    // Green (#22c55e)
@@ -149,19 +184,35 @@ export const UNIT_COLORS: Record<UnitType | 'Core' | 'Corridor', { r: number; g:
   Corridor: { r: 147, g: 51, b: 234, a: 200 }             // Purple (visible)
 };
 
-// Default dimensions (in METERS)
-export const MIN_UNIT_WIDTH = 12 * FEET_TO_METERS;           // ~3.66m minimum unit width
-export const CORNER_BAY_LENGTH = 40 * FEET_TO_METERS;        // ~12.2m preferred corner unit length
-export const DEFAULT_CORRIDOR_WIDTH = 6 * FEET_TO_METERS;    // ~1.83m standard corridor width
-export const DEFAULT_CORE_WIDTH = 12 * FEET_TO_METERS;       // ~3.66m core width
-export const DEFAULT_CORE_DEPTH = 29.5 * FEET_TO_METERS;     // ~9m core depth
-export const DEFAULT_FLOOR_HEIGHT = 10 * FEET_TO_METERS;     // ~3m floor-to-floor height
+// ============================================================================
+// DIMENSION CONSTANTS (all values in meters)
+// ============================================================================
 
-// Core placement constants
-export const CORE_SETBACK = 45 * FEET_TO_METERS;             // ~13.7m setback from building ends (large corner unit + buffer)
-export const MID_CORE_THRESHOLD = 250 * FEET_TO_METERS;      // ~76.2m - add mid core if building exceeds this
+/** Minimum unit width (~3.66m) — code/compliance minimum for habitability */
+export const MIN_UNIT_WIDTH = 12 * FEET_TO_METERS;
 
-// Default unit configuration (areas in SQUARE METERS)
+/** Preferred corner unit length (~12.2m) — accommodates large L-shaped units */
+export const CORNER_BAY_LENGTH = 40 * FEET_TO_METERS;
+
+/** Standard corridor width (~1.83m) — IBC minimum for two-way egress */
+export const DEFAULT_CORRIDOR_WIDTH = 6 * FEET_TO_METERS;
+
+/** Core width (~3.66m) — typical elevator + stair footprint */
+export const DEFAULT_CORE_WIDTH = 12 * FEET_TO_METERS;
+
+/** Core depth (~9m) — along corridor axis */
+export const DEFAULT_CORE_DEPTH = 29.5 * FEET_TO_METERS;
+
+/** Floor-to-floor height (~3m) — typical residential */
+export const DEFAULT_FLOOR_HEIGHT = 10 * FEET_TO_METERS;
+
+/** Setback from building ends (~13.7m) — space for large corner unit + buffer */
+export const CORE_SETBACK = 45 * FEET_TO_METERS;
+
+/** Building length threshold (~76.2m) — add mid-corridor core when exceeded (IBC travel distance) */
+export const MID_CORE_THRESHOLD = 250 * FEET_TO_METERS;
+
+/** Legacy default unit mix. Areas in square meters (~55, ~82, ~110, ~137). */
 export const DEFAULT_UNIT_CONFIG: UnitConfiguration = {
   [UnitType.Studio]: { percentage: 20, area: 590 * SQ_FEET_TO_SQ_METERS },   // ~55 sq m
   [UnitType.OneBed]: { percentage: 40, area: 885 * SQ_FEET_TO_SQ_METERS },   // ~82 sq m
@@ -169,7 +220,7 @@ export const DEFAULT_UNIT_CONFIG: UnitConfiguration = {
   [UnitType.ThreeBed]: { percentage: 10, area: 1475 * SQ_FEET_TO_SQ_METERS } // ~137 sq m
 };
 
-// Egress configurations (IBC compliant - converted to METERS)
+/** IBC egress limits for sprinklered buildings (converted to meters) */
 export const EGRESS_SPRINKLERED: EgressConfig = {
   sprinklered: true,
   deadEndLimit: 50 * FEET_TO_METERS,           // ~15.24m max dead-end corridor
@@ -177,6 +228,7 @@ export const EGRESS_SPRINKLERED: EgressConfig = {
   commonPathLimit: 125 * FEET_TO_METERS        // ~38.1m max common path
 };
 
+/** IBC egress limits for unsprinklered buildings (stricter; converted to meters) */
 export const EGRESS_UNSPRINKLERED: EgressConfig = {
   sprinklered: false,
   deadEndLimit: 20 * FEET_TO_METERS,           // ~6.1m max dead-end corridor
@@ -184,8 +236,10 @@ export const EGRESS_UNSPRINKLERED: EgressConfig = {
   commonPathLimit: 75 * FEET_TO_METERS         // ~22.9m max common path
 };
 
-// Flexibility model - how much each unit type can stretch/shrink
-// Per feature spec Section 8.5: Studio ±0%, 1BR ±2%, 2BR ±5%, 3BR ±10%
+/**
+ * Flexibility factors per feature spec Section 8.5 — max ±% each type can stretch/shrink.
+ * Studio is rigid (0%); larger units get more flexibility for gap-filling.
+ */
 export const FLEXIBILITY_FACTORS: Record<UnitType, number> = {
   [UnitType.Studio]: 0.0,    // Rigid - Studios can't stretch/shrink
   [UnitType.OneBed]: 0.02,   // ±2%
@@ -193,7 +247,7 @@ export const FLEXIBILITY_FACTORS: Record<UnitType, number> = {
   [UnitType.ThreeBed]: 0.10  // ±10%
 };
 
-// Weights for expansion (filling gaps)
+/** Weights for expansion (filling gaps). Higher = more likely to absorb extra space. */
 export const EXPANSION_WEIGHTS: Record<UnitType, number> = {
   [UnitType.Studio]: 1,
   [UnitType.OneBed]: 5,
@@ -201,8 +255,10 @@ export const EXPANSION_WEIGHTS: Record<UnitType, number> = {
   [UnitType.ThreeBed]: 40
 };
 
-// Weights for compression (squeezing into tight spaces)
-// More balanced than before to prevent wild size variance
+/**
+ * Weights for compression (squeezing into tight spaces). Balanced to prevent wild size variance.
+ * Studio kept at 0.5 (was 0.0001) to allow minimal flexibility without extreme distortion.
+ */
 export const COMPRESSION_WEIGHTS: Record<UnitType, number> = {
   [UnitType.Studio]: 0.5,   // Still rigid but not extreme (was 0.0001)
   [UnitType.OneBed]: 2,
@@ -210,8 +266,8 @@ export const COMPRESSION_WEIGHTS: Record<UnitType, number> = {
   [UnitType.ThreeBed]: 10   // Reduced from 20 to limit size variance
 };
 
-// Maximum adjustment percentage allowed per unit (prevents wild size swings)
-export const MAX_WIDTH_ADJUSTMENT = 0.15; // ±15% max adjustment
+/** Maximum width adjustment per unit (±15%) — prevents wild size swings from optimization */
+export const MAX_WIDTH_ADJUSTMENT = 0.15;
 
 // ============================================================================
 // OPTIMIZATION STRATEGIES
@@ -223,11 +279,17 @@ export const MAX_WIDTH_ADJUSTMENT = 0.15; // ±15% max adjustment
 
 export type OptimizationStrategy = 'balanced' | 'mixOptimized' | 'efficiencyOptimized';
 
+/**
+ * Per-strategy configuration for expansion, compression, flexibility, and placement order.
+ */
 export interface StrategyConfig {
+  /** Weights for absorbing extra space (higher = more expansion) */
   expansionWeights: Record<UnitType, number>;
+  /** Weights for compressing into tight spaces */
   compressionWeights: Record<UnitType, number>;
+  /** Max ±% each type can stretch/shrink (0 = rigid) */
   flexibilityFactors: Record<UnitType, number>;
-  // Priority for unit placement (affects which units go at ends vs middle)
+  /** Placement order — first in array gets premium (corner/end) positions */
   placementPriority: UnitType[];
 }
 
@@ -308,13 +370,14 @@ export const STRATEGY_CONFIGS: Record<OptimizationStrategy, StrategyConfig> = {
   }
 };
 
-// Strategy labels and descriptions
+/** UI labels for each optimization strategy */
 export const STRATEGY_LABELS: Record<OptimizationStrategy, string> = {
   balanced: 'Balanced',
   mixOptimized: 'Mix Optimized',
   efficiencyOptimized: 'Efficiency'
 };
 
+/** Detailed descriptions for strategy selection UI */
 export const STRATEGY_DESCRIPTIONS: Record<OptimizationStrategy, string> = {
   balanced: 'Equal priority to mix accuracy, size accuracy, and efficiency',
   mixOptimized: 'Prioritizes hitting exact unit mix percentages',
@@ -326,6 +389,7 @@ export const STRATEGY_DESCRIPTIONS: Record<OptimizationStrategy, string> = {
 // Per feature spec - geometry search for optimal corner length and core positions
 // ============================================================================
 
+/** Default geometry search parameters — corner length and mid-core offset ranges */
 export const DEFAULT_OPTIMIZATION_PARAMS: OptimizationParams = {
   minCornerLength: 20 * FEET_TO_METERS,      // ~6.1m minimum corner length
   maxCornerLength: 90 * FEET_TO_METERS,      // ~27.4m maximum corner length
@@ -336,7 +400,7 @@ export const DEFAULT_OPTIMIZATION_PARAMS: OptimizationParams = {
   safetyFactor: 0.99                         // Use 99% of available length to avoid tight fits
 };
 
-// Penalty weights for optimization scoring
+/** Penalty weights for optimization scoring — compression heavily penalized vs expansion */
 export const OPTIMIZATION_WEIGHTS = {
   compression: 500,   // Heavy penalty for compression (squeezing units)
   expansion: 100,     // Lighter penalty for expansion (stretching units)
@@ -349,21 +413,25 @@ export const OPTIMIZATION_WEIGHTS = {
 // Per feature spec Section 10 - demising wall alignment across corridor
 // ============================================================================
 
+/** Default wall alignment — 50% strength, 8ft max pull, enabled */
 export const DEFAULT_ALIGNMENT_CONFIG: AlignmentConfig = {
   strength: 0.5,                             // 50% alignment strength (slider default)
   maxPullDistance: 8 * FEET_TO_METERS,       // ~2.4m maximum wall pull distance
   enabled: true                              // Enable alignment by default
 };
 
-// Maximum wall pull distance range based on alignment strength
-export const ALIGNMENT_BASE_PULL = 4 * FEET_TO_METERS;   // ~1.2m at 0% strength
-export const ALIGNMENT_MAX_PULL = 8 * FEET_TO_METERS;    // ~2.4m at 100% strength
+/** Base pull distance at 0% alignment strength (~1.2m) */
+export const ALIGNMENT_BASE_PULL = 4 * FEET_TO_METERS;
+
+/** Maximum pull distance at 100% strength (~2.4m) */
+export const ALIGNMENT_MAX_PULL = 8 * FEET_TO_METERS;
 
 // ============================================================================
 // PLACEMENT ZONE ELIGIBILITY
 // Per feature spec Section 8.5 - which unit types can go in which zones
 // ============================================================================
 
+/** Which unit types can occupy each placement zone — per feature spec Section 8.5 */
 export const ZONE_ELIGIBLE_UNITS: Record<PlacementZone, UnitType[]> = {
   [PlacementZone.CORRIDOR_END]: [UnitType.ThreeBed, UnitType.TwoBed],
   [PlacementZone.OUTER_CORNER]: [UnitType.ThreeBed, UnitType.TwoBed],
@@ -372,7 +440,7 @@ export const ZONE_ELIGIBLE_UNITS: Record<PlacementZone, UnitType[]> = {
   [PlacementZone.STANDARD]: [UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed]
 };
 
-// Priority order for unit placement (largest first for premium positions)
+/** Unit placement priority — largest first for premium (corner/end) positions */
 export const PLACEMENT_PRIORITY: UnitType[] = [
   UnitType.ThreeBed,
   UnitType.TwoBed,
@@ -380,8 +448,9 @@ export const PLACEMENT_PRIORITY: UnitType[] = [
   UnitType.Studio
 ];
 
-// L-shape eligibility - which unit types can become L-shaped
-// Per feature spec: Studios NEVER, 1BR only exceptional, 2BR and 3BR yes
+/**
+ * L-shape eligibility per feature spec — Studios never; 1BR only exceptional; 2BR/3BR yes.
+ */
 export const L_SHAPE_ELIGIBLE: Record<UnitType, boolean> = {
   [UnitType.Studio]: false,
   [UnitType.OneBed]: false,  // Only in exceptional situations (handled specially)
@@ -394,11 +463,12 @@ export const L_SHAPE_ELIGIBLE: Record<UnitType, boolean> = {
 // Per feature spec Appendix C - multi-wing building detection
 // ============================================================================
 
+/** Wing detection parameters for multi-wing footprint analysis — see feature spec Appendix C */
 export const WING_DETECTION = {
-  angleToleranceDegrees: 5,           // ±5° tolerance for grouping edges by direction
-  minWingLength: 30 * FEET_TO_METERS, // ~9.1m minimum wing length to be considered a wing
-  maxInnerZoneDepth: 30 * FEET_TO_METERS, // ~9.1m maximum inner corner zone depth
-  straightAngleTolerance: 10          // ±10° to consider an angle "straight" (≈180°)
+  angleToleranceDegrees: 5,           // ±5° — group edges by direction for wing detection
+  minWingLength: 30 * FEET_TO_METERS, // ~9.1m — filter out short appendages
+  maxInnerZoneDepth: 30 * FEET_TO_METERS, // ~9.1m — inner corner zone for core placement
+  straightAngleTolerance: 10          // ±10° — treat as straight (≈180°) not a corner
 };
 
 // ============================================================================
@@ -406,6 +476,7 @@ export const WING_DETECTION = {
 // For egress-driven core placement optimization
 // ============================================================================
 
+/** Egress-driven core placement — IBC exit separation, single-exit exception limits */
 export const EGRESS_OPTIMIZATION = {
   minCores: 2,                                    // Minimum 2 cores per IBC
   exitSeparationSprinklered: 1/3,                 // ≥1/3 of floor diagonal
@@ -420,24 +491,21 @@ export const EGRESS_OPTIMIZATION = {
 // ROUNDING ERROR DISTRIBUTION
 // ============================================================================
 
+/** Rounding error distribution — when to split rounding errors across multiple units */
 export const ROUNDING_ERROR = {
-  // If total rounding error exceeds this, distribute across multiple units
-  distributionThreshold: 1 * FEET_TO_METERS,  // ~0.3m
-  // Maximum error a single unit can absorb (as fraction of width)
-  maxSingleUnitAbsorption: 0.05  // 5% of unit width
+  distributionThreshold: 1 * FEET_TO_METERS,  // ~0.3m — distribute if total error exceeds
+  maxSingleUnitAbsorption: 0.05                 // 5% of unit width — max one unit can absorb
 };
 
 // ============================================================================
 // CORRIDOR VOID / L-SHAPE PARAMETERS
 // ============================================================================
 
+/** L-shape and corridor void parameters — end overlap, min void for L-shape, max absorption */
 export const CORRIDOR_VOID = {
-  // Standard extension past last demising wall
-  endOverlap: 6 * FEET_TO_METERS,           // ~1.83m (from feature spec)
-  // Minimum void to create an L-shape (below this, don't bother)
-  minVoidForLShape: 2 * FEET_TO_METERS,     // ~0.61m
-  // Maximum void a unit can absorb
-  maxVoidAbsorption: 15 * FEET_TO_METERS    // ~4.6m
+  endOverlap: 6 * FEET_TO_METERS,           // ~1.83m — extension past last demising wall (feature spec)
+  minVoidForLShape: 2 * FEET_TO_METERS,     // ~0.61m — below this, skip L-shape attempt
+  maxVoidAbsorption: 15 * FEET_TO_METERS    // ~4.6m — max corridor void a unit can absorb
 };
 
 // ============================================================================

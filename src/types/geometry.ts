@@ -1,10 +1,39 @@
 /**
- * Core geometry types for the Floorplate Generator
- * All measurements are in feet (imperial system)
+ * Core geometry and floorplate types for the Floorplate Generator
+ *
+ * @module types/geometry
+ *
+ * ## Overview
+ *
+ * This module defines the **conceptual/UI-layer** geometry and floorplate types. It serves
+ * as a domain model for floorplate structure (units, cores, corridors) and is used by
+ * higher-level UI, visualization, and integration code.
+ *
+ * ## Primary Responsibilities
+ *
+ * - **Primitive geometry**: Point, Line, Rectangle, Polygon, BoundingBox
+ * - **Floorplate structure**: Unit, Core, Corridor with semantic properties
+ * - **Configuration**: UnitConfiguration, ConstraintConfig, EgressConfig
+ * - **Defaults**: IBC-based egress presets, market-rate unit mix
+ *
+ * ## Units: Imperial (Feet)
+ *
+ * All measurements in this module use **feet** (imperial). The algorithm layer
+ * (`algorithm/types.ts`, `algorithm/constants.ts`) uses **meters** for Forma integration.
+ * Conversion happens at the boundary via `FEET_TO_METERS` from `algorithm/constants`.
+ *
+ * ## Relationship to algorithm/types.ts
+ *
+ * | This module (geometry) | algorithm/types.ts |
+ * |------------------------|-------------------|
+ * | Conceptual/UI layer | Algorithm I/O layer |
+ * | Feet | Meters |
+ * | BuildingFootprint.outline (Polygon) | BuildingFootprint.polygon (Point[]) |
+ * | Unit.geometry (Polygon) | UnitBlock (x, y, width, depth, polyPoints) |
  */
 
 /**
- * A 2D point representing a location in the floor plan
+ * A 2D point representing a location in the floor plan.
  */
 export interface Point {
   x: number;
@@ -20,8 +49,9 @@ export interface Line {
 }
 
 /**
- * A rectangle defined by position and dimensions
- * The position (x, y) represents the bottom-left corner
+ * A rectangle defined by position and dimensions.
+ *
+ * @remarks Position (x, y) is the bottom-left corner; width/height extend right and up.
  */
 export interface Rectangle {
   x: number;
@@ -31,16 +61,17 @@ export interface Rectangle {
 }
 
 /**
- * A polygon defined by an array of vertices (points)
- * Vertices should be ordered (clockwise or counter-clockwise)
- * The polygon is implicitly closed (last vertex connects to first)
+ * A polygon defined by an ordered array of vertices.
+ *
+ * @remarks Vertices should be ordered (clockwise or counter-clockwise). The polygon
+ * is implicitly closed (last vertex connects to first).
  */
 export interface Polygon {
   vertices: Point[];
 }
 
 /**
- * A bounding box representing the axis-aligned bounds of a shape
+ * Axis-aligned bounding box (AABB) for a shape. All values in feet.
  */
 export interface BoundingBox {
   minX: number;
@@ -50,7 +81,9 @@ export interface BoundingBox {
 }
 
 /**
- * Unit types available in the floorplate
+ * Unit types available in the floorplate (fixed 4-type system).
+ *
+ * @remarks Mirrors algorithm/types.UnitType; this module uses imperial units.
  */
 export enum UnitType {
   Studio = 'Studio',
@@ -60,14 +93,14 @@ export enum UnitType {
 }
 
 /**
- * Configuration for a single unit type
+ * Configuration for a single unit type in the UI layer.
  */
 export interface UnitTypeConfig {
   /** Target percentage of total units (0-100) */
   percentage: number;
   /** Target area in square feet */
   area: number;
-  /** Display color (hex string) */
+  /** Display color (hex string, e.g. "#4A90D9") */
   color: string;
 }
 
@@ -160,18 +193,18 @@ export interface EgressConfig {
 }
 
 /**
- * Constraint configuration for the generation
+ * Constraint configuration for floorplate generation. All dimensions in feet.
  */
 export interface ConstraintConfig {
   /** Corridor width in feet */
   corridorWidth: number;
-  /** End core dimensions */
+  /** End core dimensions (width × depth in feet) */
   endCoreDimensions: { width: number; depth: number };
-  /** Middle core dimensions */
+  /** Middle core dimensions (width × depth in feet) */
   middleCoreDimensions: { width: number; depth: number };
-  /** Which side cores should be placed on */
+  /** Which side of corridor cores are placed on; 'auto' lets algorithm choose */
   coreSide: 'north' | 'south' | 'auto';
-  /** Wall alignment strictness (0-1, where 1 is maximum alignment) */
+  /** Wall alignment strictness (0 = loose, 1 = maximum alignment) */
   wallAlignmentStrictness: number;
 }
 
@@ -220,7 +253,10 @@ export interface FloorplateOption {
 }
 
 /**
- * Building footprint input from Forma
+ * Building footprint input from Forma. All dimensions in feet.
+ *
+ * @remarks This is the conceptual/UI representation. The algorithm uses
+ * algorithm/types.BuildingFootprint with meters and different structure.
  */
 export interface BuildingFootprint {
   /** The polygon outline of the building */
@@ -229,13 +265,13 @@ export interface BuildingFootprint {
   height: number;
   /** Floor-to-floor height in feet */
   floorHeight: number;
-  /** Number of floors (calculated from height / floorHeight) */
+  /** Number of floors (height / floorHeight) */
   floorCount: number;
   /** Total footprint area in square feet */
   area: number;
-  /** Width of the building (shortest dimension) */
+  /** Width of the building — shortest dimension in feet */
   width: number;
-  /** Length of the building (longest dimension) */
+  /** Length of the building — longest dimension in feet */
   length: number;
 }
 

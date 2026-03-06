@@ -14,7 +14,13 @@ export function createRectangle(x: number, y: number, width: number, height: num
 }
 
 /**
- * Creates a rectangle from two corner points (min and max)
+ * Creates a rectangle that bounds two arbitrary corner points.
+ *
+ * Handles any pair of points; result is the minimal AABB containing both.
+ *
+ * @param p1 - First corner
+ * @param p2 - Second corner (can be opposite or same diagonal)
+ * @returns Rectangle with (x,y) = (minX, minY), size from min to max
  */
 export function rectangleFromCorners(p1: Point, p2: Point): Rectangle {
   const minX = Math.min(p1.x, p2.x);
@@ -30,7 +36,12 @@ export function rectangleFromCorners(p1: Point, p2: Point): Rectangle {
 }
 
 /**
- * Creates a rectangle centered at a point
+ * Creates a rectangle centered at a given point.
+ *
+ * @param center - Center point of the rectangle
+ * @param width - Total width
+ * @param height - Total height
+ * @returns Rectangle with center at the given point
  */
 export function rectangleCenteredAt(center: Point, width: number, height: number): Rectangle {
   return {
@@ -42,21 +53,30 @@ export function rectangleCenteredAt(center: Point, width: number, height: number
 }
 
 /**
- * Calculates the area of a rectangle
+ * Calculates the area of a rectangle.
+ *
+ * @param rect - Rectangle
+ * @returns Area in square feet (width × height)
  */
 export function rectangleArea(rect: Rectangle): number {
   return rect.width * rect.height;
 }
 
 /**
- * Calculates the perimeter of a rectangle
+ * Calculates the perimeter of a rectangle.
+ *
+ * @param rect - Rectangle
+ * @returns Perimeter in feet (2 × (width + height))
  */
 export function rectanglePerimeter(rect: Rectangle): number {
   return 2 * (rect.width + rect.height);
 }
 
 /**
- * Returns the center point of a rectangle
+ * Returns the geometric center (centroid) of a rectangle.
+ *
+ * @param rect - Rectangle
+ * @returns Point at (x + width/2, y + height/2)
  */
 export function rectangleCenter(rect: Rectangle): Point {
   return {
@@ -78,7 +98,10 @@ export function rectangleCorners(rect: Rectangle): [Point, Point, Point, Point] 
 }
 
 /**
- * Converts a rectangle to a polygon
+ * Converts a rectangle to a polygon (4 vertices, CCW).
+ *
+ * @param rect - Rectangle
+ * @returns Polygon with vertices from rectangleCorners
  */
 export function rectangleToPolygon(rect: Rectangle): Polygon {
   return {
@@ -87,7 +110,12 @@ export function rectangleToPolygon(rect: Rectangle): Polygon {
 }
 
 /**
- * Returns the bounding box of a rectangle (same as the rectangle for axis-aligned)
+ * Returns the bounding box of a rectangle.
+ *
+ * For axis-aligned rectangles this is equivalent to the rectangle extent.
+ *
+ * @param rect - Rectangle
+ * @returns BoundingBox with minX, minY, maxX, maxY
  */
 export function rectangleBoundingBox(rect: Rectangle): BoundingBox {
   return {
@@ -99,7 +127,13 @@ export function rectangleBoundingBox(rect: Rectangle): BoundingBox {
 }
 
 /**
- * Checks if a point is inside a rectangle
+ * Checks if a point is inside or on the boundary of a rectangle.
+ *
+ * Uses closed interval [x, x+width] × [y, y+height].
+ *
+ * @param rect - Rectangle
+ * @param point - Query point
+ * @returns True if point lies inside or on the rectangle edges
  */
 export function pointInRectangle(rect: Rectangle, point: Point): boolean {
   return (
@@ -111,7 +145,14 @@ export function pointInRectangle(rect: Rectangle, point: Point): boolean {
 }
 
 /**
- * Checks if two rectangles overlap (including edges)
+ * Checks if two rectangles overlap (including shared edges/vertices).
+ *
+ * Uses the separating-axis test: rects overlap iff they overlap on both X and Y.
+ * Touching edges count as overlap.
+ *
+ * @param rect1 - First rectangle
+ * @param rect2 - Second rectangle
+ * @returns True if rectangles intersect
  */
 export function rectanglesOverlap(rect1: Rectangle, rect2: Rectangle): boolean {
   return !(
@@ -123,7 +164,11 @@ export function rectanglesOverlap(rect1: Rectangle, rect2: Rectangle): boolean {
 }
 
 /**
- * Returns the intersection of two rectangles (or null if they don't overlap)
+ * Returns the axis-aligned intersection of two rectangles.
+ *
+ * @param rect1 - First rectangle
+ * @param rect2 - Second rectangle
+ * @returns Overlap rectangle, or null if they do not intersect
  */
 export function rectangleIntersection(rect1: Rectangle, rect2: Rectangle): Rectangle | null {
   const x = Math.max(rect1.x, rect2.x);
@@ -144,7 +189,11 @@ export function rectangleIntersection(rect1: Rectangle, rect2: Rectangle): Recta
 }
 
 /**
- * Returns the bounding box that contains both rectangles
+ * Returns the minimal rectangle that contains both rectangles.
+ *
+ * @param rect1 - First rectangle
+ * @param rect2 - Second rectangle
+ * @returns Bounding rectangle (union of extents)
  */
 export function rectangleUnionBounds(rect1: Rectangle, rect2: Rectangle): Rectangle {
   const minX = Math.min(rect1.x, rect2.x);
@@ -161,7 +210,11 @@ export function rectangleUnionBounds(rect1: Rectangle, rect2: Rectangle): Rectan
 }
 
 /**
- * Expands a rectangle by the given amount on all sides
+ * Expands a rectangle uniformly on all sides.
+ *
+ * @param rect - Source rectangle
+ * @param amount - Expansion in feet (negative to shrink)
+ * @returns New rectangle; width and height change by 2×amount
  */
 export function expandRectangle(rect: Rectangle, amount: number): Rectangle {
   return {
@@ -173,7 +226,14 @@ export function expandRectangle(rect: Rectangle, amount: number): Rectangle {
 }
 
 /**
- * Expands a rectangle by different amounts on each side
+ * Expands a rectangle by specified amounts on each side.
+ *
+ * @param rect - Source rectangle
+ * @param left - Expansion left (negative X)
+ * @param right - Expansion right (positive X)
+ * @param bottom - Expansion downward (negative Y)
+ * @param top - Expansion upward (positive Y)
+ * @returns New rectangle
  */
 export function expandRectangleSides(
   rect: Rectangle,
@@ -191,8 +251,11 @@ export function expandRectangleSides(
 }
 
 /**
- * Subdivides a rectangle horizontally into n equal parts
- * Returns an array of rectangles from left to right
+ * Subdivides a rectangle horizontally into n equal vertical strips.
+ *
+ * @param rect - Source rectangle
+ * @param n - Number of parts (must be > 0)
+ * @returns Array of rectangles from left to right
  */
 export function subdivideHorizontally(rect: Rectangle, n: number): Rectangle[] {
   if (n <= 0) return [];
@@ -210,8 +273,11 @@ export function subdivideHorizontally(rect: Rectangle, n: number): Rectangle[] {
 }
 
 /**
- * Subdivides a rectangle vertically into n equal parts
- * Returns an array of rectangles from bottom to top
+ * Subdivides a rectangle vertically into n equal horizontal bands.
+ *
+ * @param rect - Source rectangle
+ * @param n - Number of parts (must be > 0)
+ * @returns Array of rectangles from bottom to top
  */
 export function subdivideVertically(rect: Rectangle, n: number): Rectangle[] {
   if (n <= 0) return [];
@@ -229,8 +295,14 @@ export function subdivideVertically(rect: Rectangle, n: number): Rectangle[] {
 }
 
 /**
- * Subdivides a rectangle horizontally by an array of widths
- * Returns array of rectangles. If widths don't sum to rect.width, last one is adjusted
+ * Subdivides a rectangle horizontally by an array of widths.
+ *
+ * Slices from left to right. If widths sum to less than rect.width, the last
+ * rectangle extends to fill the remainder.
+ *
+ * @param rect - Source rectangle
+ * @param widths - Width of each slice (feet)
+ * @returns Array of rectangles
  */
 export function subdivideByWidths(rect: Rectangle, widths: number[]): Rectangle[] {
   const result: Rectangle[] = [];
@@ -250,7 +322,11 @@ export function subdivideByWidths(rect: Rectangle, widths: number[]): Rectangle[
 }
 
 /**
- * Splits a rectangle into two parts at a given position along the width
+ * Splits a rectangle into two parts at a given X position.
+ *
+ * @param rect - Source rectangle
+ * @param splitX - X coordinate of split (must be strictly between left and right edges)
+ * @returns [left part, right part] or null if splitX is outside bounds
  */
 export function splitHorizontallyAt(rect: Rectangle, splitX: number): [Rectangle, Rectangle] | null {
   if (splitX <= rect.x || splitX >= rect.x + rect.width) {
@@ -264,7 +340,11 @@ export function splitHorizontallyAt(rect: Rectangle, splitX: number): [Rectangle
 }
 
 /**
- * Splits a rectangle into two parts at a given position along the height
+ * Splits a rectangle into two parts at a given Y position.
+ *
+ * @param rect - Source rectangle
+ * @param splitY - Y coordinate of split (must be strictly between bottom and top edges)
+ * @returns [bottom part, top part] or null if splitY is outside bounds
  */
 export function splitVerticallyAt(rect: Rectangle, splitY: number): [Rectangle, Rectangle] | null {
   if (splitY <= rect.y || splitY >= rect.y + rect.height) {
@@ -278,7 +358,12 @@ export function splitVerticallyAt(rect: Rectangle, splitY: number): [Rectangle, 
 }
 
 /**
- * Translates a rectangle by dx, dy
+ * Translates a rectangle by the given delta.
+ *
+ * @param rect - Source rectangle
+ * @param dx - Horizontal offset
+ * @param dy - Vertical offset
+ * @returns New rectangle (same size, shifted position)
  */
 export function translateRectangle(rect: Rectangle, dx: number, dy: number): Rectangle {
   return {
@@ -290,7 +375,13 @@ export function translateRectangle(rect: Rectangle, dx: number, dy: number): Rec
 }
 
 /**
- * Gets the edge of a rectangle as a line segment
+ * Returns one edge of a rectangle as a line segment.
+ *
+ * Edges are oriented: bottom and top run left→right; left and right run bottom→top.
+ *
+ * @param rect - Rectangle
+ * @param edge - Which edge: 'top' | 'bottom' | 'left' | 'right'
+ * @returns Line segment { start, end }
  */
 export function getRectangleEdge(rect: Rectangle, edge: 'top' | 'bottom' | 'left' | 'right'): { start: Point, end: Point } {
   switch (edge) {

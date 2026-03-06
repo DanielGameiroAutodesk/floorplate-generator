@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "Prepárese para comenzar a diseñar",
+    "body": "Al seleccionar <bold>Continuar</bold>, ejecutaremos automáticamente dos pasos de configuración. No es necesario que realice ninguna acción. Una vez completados los pasos, podrá comenzar a diseñar en Forma Site Design.",
+    "contextual": {
+      "header": "Cargar contexto específico del emplazamiento",
+      "body": "Cargaremos datos contextuales gratuitos para el emplazamiento, incluidos el terreno y los edificios circundantes."
+    },
+    "sunAnalysis": {
+      "header": "Obtenga información sobre las condiciones del emplazamiento",
+      "body": "Realizaremos un análisis de las horas de sol en el emplazamiento y sus alrededores para ayudarle a tomar decisiones de diseño."
+    },
+    "continueButton": "Continuar",
+    "sunAnalysisCoachmark": {
+      "header": "Análisis de horas de sol",
+      "body": "Hemos iniciado automáticamente un análisis de horas de sol en el emplazamiento.{br}{br}Una vez que el indicador esté en verde o se muestre un título en la parte superior del lienzo, podrá revisar los resultados."
+    },
+    "finalModal": {
+      "title": "Ya se ha configurado el emplazamiento",
+      "subTitle": "Continúe con uno de los pasos recomendados a continuación:",
+      "suggestedAction1": {
+        "header": "Dibujar un edificio",
+        "body": "Active una de las herramientas de construcción de la barra de herramientas."
+      },
+      "suggestedAction2": {
+        "header": "Importar un modelo",
+        "body": "Haga clic en el icono de importación de la barra de herramientas y siga los pasos recomendados."
+      },
+      "suggestedAction3": {
+        "header": "Comparar análisis",
+        "body": "Ejecute un segundo análisis y abra el modo de comparación desde la esquina superior izquierda de la pantalla."
+      },
+      "showMeHow": "Mostrar más opciones",
+      "finalButton": "Entendido"
+    },
+    "sunAnalysisTriggerError": "No se ha podido activar el análisis solar."
+  },
+  "alignment": {
+    "center": "Alinear al centro",
+    "left": "Alinear a la izquierda",
+    "right": "Alinear a la derecha"
+  },
+  "analysis": {
+    "alertsLabel": "Alertas",
+    "analyzeTitle": "Analizar",
+    "analysisParameters": "Parámetros de análisis",
+    "areaRadius": "Radio de área",
+    "areaTitle": "Área de análisis",
+    "customCircle": "Círculo personalizado",
+    "daylightAnalysisIllustrationAlt": "Ilustración del análisis de luz diurna",
+    "failedToOrder": "No se ha podido realizar el análisis del pedido: {error}",
+    "learnMore": "Más información",
+    "microclimateAreaRadius": "Radio de área de microclima",
+    "noisePredictionUnavailable": "Predicción de ruido no disponible",
+    "radiusLabel": "Radio",
+    "selectAreaToRunAnalysis": "Seleccione un límite del emplazamiento o una zona para ejecutar un análisis.",
+    "disabledTooltips": {
+      "addRoadsOrRails": "Añadir carreteras o vías férreas con datos de tráfico para ejecutar un análisis",
+      "analysisAreaOutsideMap": "El área de análisis está fuera del área del mapa.",
+      "concurrentQuotaReached": "Se ha alcanzado el límite de análisis de viento simultáneos.",
+      "dailyQuotaReached": "Se ha alcanzado la cuota diaria de análisis de viento.",
+      "geometryAlertsDetected": "Se han detectado problemas de geometría.",
+      "geometryTooComplex": "Geometría demasiado compleja",
+      "invalidParameters": "Parámetros no válidos",
+      "loadingData": "Cargando datos",
+      "notAvailable": "No disponible",
+      "notAbleAsViewer": "No se pueden ejecutar análisis como espectador.",
+      "pleaseWait": "Espere...",
+      "savingInProgress": "Guardando...",
+      "selectSiteLimitOrZone": "Seleccione un límite del emplazamiento o una zona para ejecutar un análisis."
+    },
+    "emptyStateZoneExplanation": "Por defecto, el análisis se realiza en edificios y otros objetos que haya añadido. Añada un límite del emplazamiento o zonas para obtener resultados completos del análisis para un área específica.",
+    "entireModel": "Todo el modelo",
+    "missingTrafficData": {
+      "description": "Añada carreteras o vías férreas con datos de tráfico para predecir las condiciones de ruido reales.",
+      "startGuideButton": "Iniciar guía",
+      "title": "Faltan datos de tráfico"
+    },
+    "noiseAreaRadius": "Radio del área de ruido",
+    "properties": {
+      "radiusLabel": "Radio"
+    },
+    "seeResultButton": "Ver resultado del análisis",
+    "seeResultsButton": "Ver resultados de análisis",
+    "selectionTitle": "Seleccionar áreas de análisis",
+    "selectAllAreasButton": "Seleccionar todas las áreas",
+    "deselectAllAreasButton": "Deseleccionar todas las áreas",
+    "skyComponent": {
+      "potentialDescription": "Nuestro <strong>análisis del potencial de luz diurna</strong> identifica las partes de la fachada con poco acceso a la luz diurna con la ayuda de la puntuación del Componente de cielo vertical. Elija las áreas que desea analizar."
+    },
+    "sun": {
+      "removeDateButton": "Eliminar fecha"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "Edificios con compatibilidad completa",
+      "buildingsPartialSupport": "Edificios/otros con compatibilidad parcial",
+      "iconAlt": "Nivel de compatibilidad de análisis",
+      "title": "Compatibilidad de análisis"
+    },
+    "windAreaRadius": "Radio del área de viento",
+    "windRoseUnavailable": {
+      "description": "Nuestro proveedor de datos de rosa de los vientos está experimentando problemas. Aún así, puede analizar los patrones microclimáticos, pero sin datos históricos para evaluar la probabilidad de las condiciones del viento. Estamos trabajando para restaurar los datos.",
+      "title": "La rosa de los vientos no está disponible actualmente",
+      "windDescription": "Nuestro proveedor de datos de rosa de los vientos está experimentando problemas. Aun así, puede analizar los patrones generales del viento y ajustar manualmente la velocidad. La función de viento rápido no está disponible. Estamos trabajando para restaurar los datos."
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "Ya existe un análisis con esta configuración. ",
+    "concurrentAnalysesReached": "Se ha alcanzado el límite de análisis simultáneos.",
+    "concurrentNoiseAnalysesReached": "Se ha alcanzado el límite de análisis de ruido simultáneos.",
+    "dailyNoiseQuotaReached": "Se ha cumplido el número máximo de análisis de ruido en 24 horas.",
+    "dailyQuotaReached": "Se ha alcanzado la cuota de análisis diarios.",
+    "nothingToAnalyze": "Nada que analizar",
+    "somethingWentWrong": "Se ha producido un problema"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "El análisis de viento detallado no está disponible. Intente ejecutar el análisis más tarde.",
+      "rapidWindUnavailable": "El análisis de viento rápido no está disponible. Intente realizar el análisis más tarde.",
+      "rapidWindUnavailableToast": "El análisis de viento rápido no está disponible. Se le ha notificado a nuestro equipo. Intente realizar el análisis más tarde."
+    },
+    "types": {
+      "microclimate": {
+        "description": "Nuestro análisis de microclima calcula la temperatura percibida en su emplazamiento, teniendo en cuenta las condiciones de sol, viento y luz diurna. Es recomendable esperar hasta que se complete el análisis de viento para obtener resultados más precisos.",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "Microclima",
+        "text": "Análisis de microclima"
+      },
+      "noise": {
+        "description": "Comprenda cómo el diseño afecta a las condiciones de ruido ambiental mediante una predicción en tiempo real en el análisis de ruido rápido. Realice un análisis de ruido detallado para obtener una simulación más precisa de las condiciones de ruido, así como un análisis de las condiciones en las fachadas de los edificios.",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "Ruido",
+        "text": "Análisis de ruido"
+      },
+      "sky-component": {
+        "description": "Evalúe qué partes de las fachadas del edificio tienen poco acceso a la luz diurna con la ayuda de la puntuación del Componente de cielo vertical. Para ejecutar el análisis, debe añadir un límite del emplazamiento.",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "Potencial de luz diurna",
+        "text": "Análisis del potencial de luz diurna"
+      },
+      "solar-panel": {
+        "name": "Energía solar"
+      },
+      "sun": {
+        "description": "Evalúe cuántas horas de luz solar recibirán el emplazamiento y los edificios. Para ejecutar el análisis, debe añadir un límite del emplazamiento y elegir una fecha.",
+        "link": "https://help.autodeskforma.com/en/articles/6951253",
+        "name": "Horas de sol",
+        "text": "Análisis de horas de sol"
+      },
+      "wind": {
+        "description": "Comprenda cómo los cambios en el diseño afectan a las condiciones del viento mediante una predicción en tiempo real en el análisis de viento rápido. Realice un análisis detallado del flujo y la comodidad frente al viento para obtener una simulación más precisa de las diferentes direcciones y velocidades eólicas.",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "Viento",
+        "text": "Análisis de viento"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "Añadir nodo",
+      "buildingWidth": "Anchura del edificio",
+      "cityBlocks": "Manzanas de la ciudad",
+      "editGridOrientationButton": "Editar orientación de rejilla",
+      "explanation": "Se realiza un esfuerzo continuo por desarrollar herramientas que le ayuden a explorar el potencial de masa del emplazamiento. Siga el progreso en nuestro foro.",
+      "floors": "Suelos",
+      "headerTitle": "Explorar",
+      "iterativeExplanation": "Herramienta de automatización del diseño que permite generar y explorar rápidamente diseños de emplazamientos y edificios.",
+      "layoutTitle": "Diseño",
+      "layouts": "Diseños",
+      "linearBuildings": "Edificios lineales",
+      "mixed": "Mixto",
+      "name": "Explorar",
+      "siteAutomation": "Automatización del emplazamiento",
+      "storyHeight": "Altura de planta",
+      "towerBuildings": "Edificios de torres",
+      "towerWidth": "Anchura de torre"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "Añadir nueva base",
+    "changeIndicatorLabel": "Indicador de cambio",
+    "editBaseButton": "Editar base",
+    "editBaseDoneButton": "Listo",
+    "editBaseRightMenuMessage": "Editar base para realizar cambios",
+    "editBaseRightMenuMixedSelectionMessage": "La selección incluye objetos base. No se pueden realizar cambios con una selección mixta.",
+    "editing": {
+      "changesWillAffect": "Los cambios afectarán a",
+      "proposals": "propuestas",
+      "title": "Edición"
+    },
+    "errors": {
+      "deleteFailed": "No se ha podido suprimir la base.",
+      "duplicateFailed": "No se ha podido duplicar la base.",
+      "fetchFailed": "No se han podido recuperar las bases.",
+      "renameIndicatorFailed": "No se ha podido cambiar el nombre del indicador base.",
+      "renameFailed": "No se ha podido cambiar el nombre de la base.",
+      "switchFailed": "No se ha podido cambiar la base."
+    },
+    "noBaseLayersText": "Los elementos que desea reutilizar en las propuestas se pueden añadir a una base.",
+    "strategy": {
+      "description": "La propuesta utiliza una base que está obsoleta. Debe elegir entre actualizar a la última versión de la base o duplicar la versión anterior.",
+      "duplicateOld": "Duplicar versión anterior de la base",
+      "header": "La base está obsoleta",
+      "useLatest": "Usar la última versión de la base"
+    },
+    "swapBaseButton": "Intercambiar base",
+    "swapButton": "Intercambiar",
+    "untitledBaseLabel": "Base sin título"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "Dibujar línea genérica",
+        "name": "Línea",
+        "tooltip": "Cree líneas genéricas para comunicar la finalidad del diseño. No se tendrán en cuenta en los análisis."
+      },
+      "surface": {
+        "draw": "Dibujar superficie genérica",
+        "name": "Superficie",
+        "tooltip": "Cree superficies genéricas para comunicar la finalidad del diseño. No se tendrán en cuenta en los análisis."
+      },
+      "title": "Genérico",
+      "volume": {
+        "draw": "Dibujar volumen genérico",
+        "name": "Volumen",
+        "tooltip": "Aunque se analizarán volúmenes genéricos, su área no se tendrá en cuenta en las métricas de área."
+      }
+    }
+  },
+  "building": {
+    "addFloor": "Añadir suelo",
+    "addFloorsAction": "Añadir suelos",
+    "buildingColorsLabel": "Colores del edificio",
+    "buildingDesignButton": "Abrir en Building Design",
+    "buildingDesignDescription": "Este edificio se ha diseñado en Building Design; abra esta herramienta para editarlo.",
+    "buildingDesignGeometry": "Geometría de Building Design",
+    "buildingsTitle": "Edificios",
+    "buildingWidthLabel": "Anchura del edificio",
+    "divisionWidth": "Anchura de división",
+    "roadWidthLabel": "Anchura de carretera",
+    "towerBlockWidthLabel": "Anchura de bloque de torre",
+    "typesTitle": "Tipos",
+    "upgradingFor3DSketchBuilding": "Actualizando edificio de Boceto 3D para el carbono incorporado",
+    "variationsTitle": "Variaciones",
+    "errors": {
+      "failedToLoadFunctions": "No se han podido cargar las funciones de edificios personalizadas.",
+      "failedToLoadSettings": "No se ha podido cargar la configuración."
+    },
+    "floorPlans": {
+      "addToLibraryButton": "Añadir a la biblioteca",
+      "addToLibraryTooltip": "Añadir a la biblioteca",
+      "emptyFloors": "Suelos vacíos",
+      "parking": "Aparcamiento",
+      "popupTitle": "Planos de planta",
+      "title": "Planos de planta",
+      "cannotDrawCornerDescription": "Aún no puede dibujar planos de esquina.",
+      "cannotDrawSplitDescription": "Aún no puede dibujar planos divididos.",
+      "finishDrawingTooltip": "Finalice el dibujo para añadir planos de planta.",
+      "mixedSelectionDescription": "Planos de planta mixtos seleccionados",
+      "noLibraryDescription": "No hay planos de planta en la biblioteca con esta forma exterior.",
+      "noSelectionDescription": "No hay ningún plano de planta en la selección.",
+      "rightClickToAddDescription": "Haga clic con el botón derecho en un suelo de una de las propuestas para añadirlo a la biblioteca.",
+      "selectSectionsDescription": "Seleccione las secciones que estén vacías o que tengan planos de planta."
+    },
+    "floors": {
+      "seeAllButton": "Ver todos los suelos"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "Añadir nuevo",
+      "addSectionCutButton": "Añadir corte de sección",
+      "apartmentBuildingStories": "Plantas del edificio de apartamentos",
+      "apartmentBuildingStoryHeight": "Altura de plantas del edificio de apartamentos",
+      "apartmentBuildingWidth": "Anchura del edificio de apartamentos",
+      "circulationTitle": "Circulación",
+      "headerTitle": "Edificio lineal",
+      "outdatedLabel": "obsoleto",
+      "targetSectionLength": "Longitud de la sección de destino",
+      "circulation": {
+        "sectionCountText": "N.º de secciones: {count}",
+        "widthLabel": "Anchura del pasillo",
+        "widthText": "Anchura: {width}"
+      },
+      "divisionWidthLabel": "Anchura de división",
+      "releaseToBasicAnimationAlt": "Liberar a animación básica",
+      "releaseToBasicExplanation": "Al liberar la automatización de líneas, se crea un edificio básico que le permite añadir funciones o aparcamientos a suelos individuales. Una vez liberada, la automatización de líneas no se puede recuperar.",
+      "releaseToFloorPlanAction": "Liberar a plano de planta",
+      "releaseToFloorPlanAnimationAlt": "Liberar a animación de plano de planta",
+      "releaseToFloorPlanExplanation": "Al liberar la automatización de la circulación, se crea un plano de planta que le permite diseñar manualmente los diseños. Una vez liberada, no se puede recuperar la automatización de la circulación.",
+      "towerWidthLabel": "Anchura de bloque de torre"
+    },
+    "properties": {
+      "lengthLabel": "Longitud",
+      "numberOfFloorsLabel": "Número de suelos",
+      "numberOfStoriesLabel": "Número de plantas de SiteStudy",
+      "stories": "Plantas",
+      "storyHeight": "Altura de planta",
+      "storyHeightLabel": "Altura de planta",
+      "widthLabel": "Anchura"
+    },
+    "toolbar": {
+      "title": "Edificios"
+    },
+    "tooltips": {
+      "addBuildingsButton": "Añadir edificios",
+      "clampToTerrainButton": "Fijar edificios al terreno",
+      "numberOfFloorsLabel": "Número de suelos",
+      "parkingEditDescription": "La edición del aparcamiento ahora se realiza en el editor de planos de planta.",
+      "releaseToBasicButton": "Liberar a edificio básico",
+      "releaseToZonesButton": "Liberar a zonas",
+      "removeBuildingsButton": "Eliminar edificios",
+      "storyHeightLabel": "Altura de planta",
+      "swapFloorPlansButton": "Intercambiar planos de planta",
+      "targetSectionLengthLabel": "Longitud de la sección de destino",
+      "towerWidthLabel": "Anchura de torre",
+      "widthLabel": "Anchura del edificio"
+    },
+    "types": {
+      "basic": {
+        "draw": "Dibujar un edificio básico",
+        "name": "Edificio básico",
+        "tooltip": "Dibuje edificios con suelos de cualquier forma con control y precisión. Vea las métricas del edificio en Métricas de área."
+      },
+      "line": {
+        "draw": "Dibujar edificio lineal",
+        "name": "Edificio lineal",
+        "tooltip": "Dibuje una estructura de edificio alrededor de una línea. Ajuste sus parámetros, como secciones y suelos. Vea las métricas del edificio en Métricas de área."
+      }
+    }
+  },
+  "camera": {
+    "compass": "Mostrar el norte arriba",
+    "lookAt": {
+      "title": "Mirar a",
+      "tooltip": "Mueva el ratón sobre una cara para alinear la cámara. Haga clic para ajustar el zoom de la cara o arrastre para ajustar el área de zoom."
+    },
+    "lookFrom": {
+      "title": "Mirar desde punto",
+      "tooltip": "Haga clic en un punto de una fachada desde el que mirar. O bien, haga clic y arrastre para elegir el punto y la línea de mira."
+    },
+    "optionsLabel": "Opciones de cámara",
+    "optionsTitle": "Opciones de cámara",
+    "switchCameraMode": "Cambiar el modo de cámara",
+    "vectorExport": {
+      "exportSuccessful": "Exportación correcta",
+      "title": "Exportación de vectores"
+    },
+    "switchTo2d": "Cambiar al modo 2D (ortogonal)",
+    "switchTo3d": "Cambiar al modo 3D",
+    "zoom": {
+      "toFitProposal": "Zoom para ajustarse a la propuesta",
+      "toFitSelection": "Zoom para ajustarse a la selección"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "Borde"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "Varios en línea",
+      "placeSinglesButton": "Colocar individuales"
+    }
+  },
+  "contextualData": {
+    "description": "Vea y administre los datos contextuales disponibles para el proyecto. También puede adquirir más datos aquí.",
+    "title": "Datos contextuales"
+  },
+  "contextMenu": {
+    "copy": "Copiar",
+    "cut": "Cortar",
+    "delete": "Suprimir",
+    "exportTerrainAsObj": "Exportar terreno como obj",
+    "moveToBack": "Mover al fondo",
+    "moveToBase": "Mover a base",
+    "moveToFront": "Mover al frente",
+    "moveToProposal": "Mover a propuesta",
+    "paste": "Pegar",
+    "pasteInPlace": "Pegar en su lugar",
+    "terrainPad": {
+      "moveToBack": "Mover la plataforma de terreno al fondo",
+      "moveToFront": "Mover plataforma de terreno al frente"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "No es posible copiar elementos entre proyectos o centros.",
+    "failedToCopyElementMessage": "No se ha podido copiar el elemento."
+  },
+  "dataOrders": {
+    "completed": "Se ha completado el siguiente pedido de datos: {name}. Se está añadiendo a su propuesta y podrá verlo en Capas en unos segundos.",
+    "completedAll": "{names} se han cargado y añadido a la base de su propuesta. Puede explorar y adquirir más datos en Datos contextuales.",
+    "failed": "Error de {name}",
+    "failedToAdd": "No se ha podido añadir \"{name}\" a la propuesta, pero los datos siguen estando disponibles en la biblioteca.",
+    "processing": "Se está procesando el siguiente pedido de datos: {name}. Se añadirá a su propuesta una vez completado.",
+    "statusTitle": "Estado del pedido de datos"
+  },
+  "demoSite": {
+    "badge": "demostración",
+    "flyout": {
+      "content": "Hemos creado este sitio para demostrar las funciones de Forma. Inicie una guía a continuación para seguir los pasos de un flujo de trabajo simple y cree sus propios sitios una vez que esté listo.",
+      "createSiteButton": "Crear un nuevo emplazamiento",
+      "createSiteTooltip": "Debe tener una licencia activa y permiso para crear emplazamientos en este proyecto.",
+      "header": "Este es un emplazamiento de demostración",
+      "startGuideButton": "Iniciar guía"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "PRIMEROS PASOS CON",
+    "titleFormaSiteDesign": "Un sitio de demostración",
+    "description": "Este es un sitio de ejemplo prediseñado para explorar Forma Emplazamiento Design. No se preocupe por romper nada: considéralo un espacio seguro para experimentar sin que ello afecte a sus proyectos reales.",
+    "callToAction": "Haga clic en {bold} para explorar el sitio demostración.",
+    "callToActionBold": "Continuar",
+    "buttonContinue": "Continuar",
+    "buttonGoToHome": "Ir a la página de inicio de Forma",
+    "imageAlt": "Forma Emplazamiento visualización de diseños"
+  },
+  "drawing": {
+    "traceShape": "Trazar forma existente"
+  },
+  "hotkeys": {
+    "addNode": "Añadir nodo",
+    "cancelDrawingPoint": "Cancelar punto de dibujo",
+    "clickAndMoveGrip": "Haga clic y mueva un pinzamiento para ajustar la escala en esa dirección.",
+    "complete": "Completar",
+    "copy": "Copiar",
+    "cut": "Cortar",
+    "deleteSelected": "Suprimir selección",
+    "drawHouse": "Dibujar casa",
+    "drawHousesWithLine": "Dibujar casas con línea",
+    "drawLine": "Dibujar línea",
+    "drawRoad": "Dibujar carretera",
+    "edit": "Editar",
+    "exitContext": "Salir del contexto",
+    "exitEditGraph": "Salir del gráfico de edición",
+    "exitGraphTool": "Salir de la herramienta Gráfico",
+    "exitHouseTool": "Salir de la herramienta Casa",
+    "exitSiteStudyAndApply": "Salir de la herramienta Estudio del emplazamiento y aplicar el estudio a la propuesta",
+    "exitTool": "Salir de la herramienta",
+    "exitTransportationTool": "Salir de la herramienta Transporte",
+    "finishEditing": "Finalizar edición",
+    "freeform": "Forma libre",
+    "measureDistance": "Medir distancia",
+    "paste": "Pegar",
+    "placeSingleHouses": "Colocar casas individuales",
+    "redo": "Rehacer",
+    "remove": "Eliminar",
+    "resetGraph": "Restablecer gráfico",
+    "selectAll": "Seleccionar todo",
+    "selectSomethingToModify": "Seleccione algo que modificar con {toolName}",
+    "switchHouseCorner": "Cambiar esquina de casa",
+    "switchHousePlacementSide": "Cambiar lado de colocación de la casa",
+    "toggleSidebar": "Activar o desactivar barra lateral",
+    "undo": "Deshacer"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "Al mover la posición de la brújula, mantenga pulsada la tecla Mayús para alinear el eje de rotación con la geometría situada debajo del cursor.",
+    "editSiteLayout": "Edite el diseño del emplazamiento o seleccione zonas individuales para establecer la tipología del edificio.",
+    "freeMode": "Modo libre. Pulse ↹ Tab para pasar al modo horizontal.",
+    "horizontalMode": "Modo horizontal. Pulse ↹ Tab para pasar al modo libre.",
+    "mode2D": "Modo 2D. Todas las herramientas están restringidas al plano horizontal.",
+    "rotateMoveText": "{moveModeText} Desplace ({inputModeText}). Pulse ↹ Tab para {nextMoveModeText} a fin de mover ({nextInputModeText}).",
+    "selectAreaToExplore": "Seleccione el área para la que desea explorar las opciones de diseño del emplazamiento.",
+    "snappingAxesHint": " Pulse Alt para ocultar los ejes de forzado de cursor. Pulse Alt + C para desactivarlos.",
+    "straightAction": "Recta {action}. Pulse ↹ Tab para inclinar {action}.",
+    "switchHouseCornerAndRotate": "Pulse la tecla Tab para cambiar de esquina de la casa. Mantenga pulsado y arrastre el ratón para girar",
+    "switchHousePlacementSide": "Pulse la tecla Tab para cambiar el lado de colocación de la casa.",
+    "taperAction": "Inclinar {action}. Pulse ↹ Tab para inclinar {action}."
+  },
+  "menus": {
+    "generatorsByExtensions": "Generadores por extensiones"
+  },
+  "messages": {
+    "elementAddedTo": "Elemento añadido a {location}"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "Guardando..."
+    },
+    "camera": {
+      "lookAt": "Mirar a"
+    },
+    "lineWidth": "Anchura de línea",
+    "settings": "Configuración",
+    "templates": {
+      "updatesAvailable": "Actualizaciones disponibles"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "No se ha podido ejecutar la opción del botón derecho del ratón en el edificio.",
+      "failedToConvertVolumes": "No se han podido convertir los volúmenes a un edificio básico.",
+      "failedToDraw": "No se ha podido dibujar el edificio básico.",
+      "failedToEdit": "No se ha podido editar el nuevo edificio básico.",
+      "failedToPushPull": "No se ha podido empujar el edificio básico ni tirar de él."
+    },
+    "failedToLoadContextualData": "No se han podido cargar los datos contextuales.",
+    "import": {
+      "largeScale": "La importación contiene elementos de gran tamaño ({size}). Es posible que el proceso de importación no se desarrolle como se esperaba. Pulse Esc para cancelar.",
+      "resultingShapeInvalid": "La forma resultante no es válida."
+    },
+    "modelNotGeolocated": "El modelo de Site Design no dispone de ubicación geográfica. Adquiera datos contextuales para definir su ubicación geográfica.",
+    "terrain": {
+      "boundingBoxTooLarge": "El cuadro delimitador de geometría del elemento es demasiado grande para que se pueda utilizar como terreno. Tamaño máximo: 4 km². Tamaño real: {size} km²."
+    },
+    "library": {
+      "couldNotFindElement": "No se ha podido encontrar el elemento de biblioteca.",
+      "elementNotAvailable": "Elemento de biblioteca no disponible",
+      "failedToConvertTerrain": "No se ha podido convertir a elemento de terreno.",
+      "failedToDownloadFloorPlans": "No se han podido descargar los planos de planta.",
+      "failedToSaveFloorPlans": "No se han guardado los planos de planta de nivel de proyecto. Actualice la página.",
+      "failedToUpdateLibrary": "No se ha podido actualizar la biblioteca."
+    },
+    "lineBuilding": {
+      "failedMenuAction": "Error en el menú Edificio lineal",
+      "failedToDraw": "No se han podido crear los edificios lineales.",
+      "failedToEdit": "No se ha podido editar el edificio lineal.",
+      "failedToolbarAction": "No se ha podido realizar la acción de la barra de tareas del edificio lineal."
+    },
+    "siteStudy": {
+      "errorInExplore": "Error al explorar. Inténtelo de nuevo.",
+      "errorOccurred": "Se ha producido un error; se notificará a nuestros ingenieros.",
+      "failedToLoadPicker": "No se ha podido cargar el selector de exploración. Intente realizar la acción de nuevo."
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "Examinar todos los módulos",
+    "browseDescription": "Examine las extensiones o los generadores existentes de otros proveedores o añada los suyos propios; estos aparecerán aquí.",
+    "downloadButton": "Descargar extensiones",
+    "downloadDescription": "para importar modelos de Revit o Rhino.",
+    "importModelTitle": "Importar modelo desde extensión",
+    "noDescriptionAvailable": "Ninguna descripción disponible.",
+    "plugins": "Módulos de extensión"
+  },
+  "errorBoundary": {
+    "componentCrashed": "Componente bloqueado",
+    "retryButton": "Reintentar",
+    "unexpectedError": "Se ha producido un error inesperado. Intente realizar la acción de nuevo o vuelva a cargar la página."
+  },
+  "guides": {
+    "closeMenu": "Cerrar el menú Guías y medidas"
+  },
+  "geometryAlerts": {
+    "dismiss": "Descartar",
+    "header": "Alertas de geometría",
+    "review": "Revisar",
+    "title": "Alertas de geometría ({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "Elimínelo o modifíquelo para ejecutar análisis.",
+      "title": "Geometrías duplicadas"
+    },
+    "invalidBbox": {
+      "subTitle": "Elimínelo o modifíquelo para ejecutar análisis.",
+      "title": "Elementos con geometría demasiado lejos"
+    },
+    "outOfBounds": {
+      "subTitle": "Elimínelo o modifíquelo para ejecutar análisis.",
+      "title": "Elementos fuera del terreno"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "El primer suelo tiene 0 áreas. Fuerce el cursor horizontalmente a la cara inferior para llevar a cabo su reparación.",
+      "title": "Se ha detectado un primer suelo de área cero"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "Este edificio tiene uno o más suelos con 0 áreas y no se puede convertir en un edificio válido.",
+      "title": "Suelos de cero áreas detectados"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "Este edificio contiene <a>geometría no hermética</a> y puede convertirse en un modelo genérico sin suelos al salir de Boceto 3D.",
+      "title": "El edificio no es hermético"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "Este modelo contiene <a>geometría no hermética</a> que puede afectar al comportamiento de la herramienta y la visualización.",
+      "title": "La geometría no es hermética"
+    }
+  },
+  "importToolbar": {
+    "title": "Importar modelo"
+  },
+  "labels": {
+    "addLabelButton": "Añadir etiqueta",
+    "category": "Texto de etiquetas",
+    "description": "Añada texto de etiquetas para marcar puntos específicos en el lienzo 3D con una breve descripción. Puede añadir hasta {count} líneas de texto. ",
+    "label": "Texto de etiqueta",
+    "placeholder": "Insertar texto..."
+  },
+  "layerList": {
+    "buildings": "Edificios",
+    "category": {
+      "contextualDataDuration": "Datos contextuales (~1-2,5 min)"
+    },
+    "generic": "Genérico",
+    "images": "Imágenes",
+    "propertyBoundaries": "Contornos de propiedad",
+    "roads": "Carreteras",
+    "siteLimits": "Límites de emplazamiento",
+    "terrain": "Terreno",
+    "vegetation": "Vegetación",
+    "zones": "Zonas"
+  },
+  "layersTitle": "Capas",
+  "library": {
+    "addedToLibrary": "Se han añadido {name} a la biblioteca.",
+    "addToLibraryButton": "Añadir a la biblioteca"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "Dibujar restricciones",
+      "name": "Restricción",
+      "plural": "Restricciones",
+      "tooltip": "Cree un volumen para visualizar las restricciones del proyecto."
+    },
+    "siteLimit": {
+      "defineAsAction": "Definir como límite del emplazamiento",
+      "hotkeyDescription": "Dibujar límite del emplazamiento",
+      "name": "Límite del emplazamiento",
+      "tooltip": "Cree un límite del emplazamiento que se utilice para analizar las métricas del proyecto."
+    },
+    "title": "Límites",
+    "zone": {
+      "hotkeyDescription": "Dibujar zona",
+      "name": "Zona",
+      "tooltip": "Dibuje zonas para definir las áreas que se analizarán en el emplazamiento."
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "Salir del modo de dibujo"
+  },
+  "navbar": {
+    "addButton": "Añadir",
+    "quickActionsButton": "Acciones rápidas",
+    "settingsButton": "Configuración"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "¿Confirma que desea suprimir {name}?",
+      "descriptionParagraph1": "Una base incluye objetos que se reutilizan en todas las propuestas. Puede crear varias bases e intercambiarlas entre sí.",
+      "descriptionParagraph2": "Para añadir un objeto existente, haga clic con el botón derecho en él y seleccione Mover a base. Para dibujar un objeto nuevo, haga clic en Editar."
+    },
+    "dataOrderProcessing": "Se está procesando un pedido de datos. Se añadirá a la propuesta una vez que se haya completado."
+  },
+  "pendingOperation": {
+    "defaultDescription": "Esperando a que finalice la automatización..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} geometrías se han añadido a {layerType}",
+    "geometriesSelectedLabel": "Geometrías seleccionadas",
+    "updateTerrainAction": "Actualizar terreno",
+    "updateTerrainDescription": "Reemplaza el terreno actual por un nuevo terreno de la biblioteca."
+  },
+  "properties": {
+    "color": "Color",
+    "elevation": "Alzado",
+    "height": "Altura",
+    "length": "Longitud",
+    "mixed": "Mixto",
+    "name": "Nombre",
+    "position": "Posición",
+    "radius": "Radio",
+    "width": "Anchura"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "No se han podido descargar todos los objetos.",
+      "downloadElementsRecovery": "o inténtelo de nuevo más tarde. Estará en el modo de vista hasta que se resuelva la incidencia.",
+      "flatteningGroups": "Se aplanarán los grupos de la propuesta, ya que no se admiten.",
+      "ignoringOldElements": "Ignorando elementos anteriores",
+      "knownCriticalHeader": "No se han podido procesar los elementos.",
+      "knownCriticalMessage": "Actualice la página para intentarlo de nuevo.",
+      "missingGeoLocation": "Falta la ubicación geográfica del proyecto para realizar la acción.",
+      "notFoundHeader": "Propuesta no encontrada",
+      "notFoundMessage": "No se puede encontrar la propuesta a la que intenta acceder.",
+      "terrainNotFoundHeader": "Falta el modelo de terreno",
+      "terrainNotFoundMessage": "Se ha producido un error inesperado con la propuesta actual.",
+      "tooManyRequestsHeader": "Se ha detectado una actividad excesiva.",
+      "tooManyRequestsMessage": "Hemos recibido más solicitudes de la red de las que podemos gestionar. Intente cargar esta página más tarde o cambie a otra red, por ejemplo, a través de un punto de acceso personal."
+    },
+    "noProposalLayersText": "Aquí se mostrarán los elementos exclusivos de una propuesta."
+  },
+  "proposalHistory": {
+    "branchFailed": "No se ha podido crear una nueva propuesta a partir de la revisión anterior.",
+    "branchRevisionButton": "Crear una nueva propuesta",
+    "branchSuccess": "Se ha creado una nueva propuesta a partir de la versión elegida con el nombre \"{name}\".",
+    "contributors": "Colaboradores: {count}",
+    "copyLinkButton": "Copiar vínculo",
+    "currentVersionLabel": "Versión actual",
+    "filter": {
+      "byAnalysis": "Por análisis",
+      "byDate": "Por fecha",
+      "from": "De",
+      "onlyYours": "Solo suyo",
+      "pinned": "Bloqueado(s)",
+      "selectDates": "Seleccionar fechas",
+      "title": "Filtro",
+      "to": "A"
+    },
+    "linkToVersionCopied": "Vínculo a {time} copiado",
+    "nameThisVersionAction": "Asigne un nombre a esta versión.",
+    "pinVersionAction": "Bloquear versión",
+    "unpinVersionAction": "Desbloquear versión",
+    "untitledVersionLabel": "Versión sin título",
+    "viewingVersionLabel": "Visualizando versión"
+  },
+  "quickAccess": {
+    "actionsLabel": "Acciones",
+    "noSuggestions": "No hay sugerencias",
+    "openHotkeyList": "Abrir lista de teclas de acceso directo",
+    "repeatLastTool": "Repetir la última herramienta",
+    "search": "Buscar",
+    "title": "Acceso rápido"
+  },
+  "requestInvite": {
+    "button": "Solicitar invitación",
+    "homeLink": "Ir a la página de inicio",
+    "projectLink": "Ir al proyecto",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "Ya es un miembro",
+        "message": "Ya es miembro de este proyecto."
+      },
+      "ALREADY_REQUESTED": {
+        "header": "Ya se ha solicitado la invitación",
+        "message": "Ya tiene una solicitud de invitación pendiente para este proyecto. Si el administrador aprueba la solicitud, recibirá una invitación para este proyecto en su correo electrónico."
+      },
+      "CAN_JOIN": {
+        "header": "Puede unirse",
+        "message": "Puede unirse a este proyecto. Vaya al proyecto y haga clic en el botón \"Unirse al proyecto\"."
+      },
+      "ERROR": {
+        "header": "Se ha producido un error; inténtelo de nuevo."
+      },
+      "NOT_FOUND": {
+        "header": "Error: no se puede encontrar el proyecto",
+        "message": "La URL que ha introducido no señala a ningún proyecto existente."
+      },
+      "REQUEST_LIMIT": {
+        "header": "Demasiadas solicitudes",
+        "message": "Tienes demasiadas solicitudes de invitación pendientes. Inténtelo de nuevo más adelante."
+      },
+      "SUCCESS": {
+        "header": "La solicitud se ha enviado correctamente",
+        "message": "Si el administrador aprueba la solicitud, recibirá una invitación para este proyecto en su correo electrónico."
+      }
+    },
+    "statusFallback": {
+      "header": "No tiene acceso a este proyecto de Forma",
+      "message": "Para obtener acceso al proyecto, debe recibir una invitación de uno de los administradores. Solicite una invitación a los administradores con el botón mostrado a continuación."
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "Por defecto en carpeta: Mi carpeta de archivos de proyecto"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "Alinear al centro",
+      "left": "Alinear a la izquierda",
+      "right": "Alinear a la derecha"
+    },
+    "buildingLabel": "Edificio",
+    "createNew": "Crear nuevo",
+    "layoutLabel": "Diseño",
+    "loading": "Cargando",
+    "name": "Casa",
+    "parcelLabel": "Parcela",
+    "plural": "Casas",
+    "publish": "Publicar",
+    "tooltip": "Dibuje una única casa o casas estructuradas alrededor de una línea. Cree y reutilice tipos de casas desde el panel Propiedades.",
+    "tooltips": {
+      "buffer": "Búfer",
+      "flatRoof": "Cubierta plana",
+      "gableRoof": "Cubierta a dos aguas",
+      "length": "Longitud",
+      "numberOfFloors": "Número de suelos",
+      "ridgeDirection": "Dirección del caballete",
+      "roofAngle": "Ángulo de cubierta",
+      "shedRoof": "Cubierta a un agua",
+      "storyHeight": "Altura de planta",
+      "width": "Anchura"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "Suprimir caja de sección",
+    "enableButton": "Activar caja de sección",
+    "saveButton": "Guardar caja de sección",
+    "title": "Caja de sección",
+    "toggleButton": "Mostrar/ocultar contorno de caja"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "Esta propuesta se ha modificado mientras la estaba editando (por ejemplo, es posible que otro miembro del equipo haya estado trabajando en ella). ¿Desea guardar su versión como una nueva propuesta?",
+      "discardEdits": "Descartar modificaciones",
+      "saveAsNew": "Guardar como nueva propuesta",
+      "title": "Conflicto de edición de propuesta"
+    },
+    "error": {
+      "body": "No se ha podido guardar la última modificación. Actualice la página para continuar con la edición.",
+      "ok": "Aceptar",
+      "title": "Error al guardar"
+    }
+  },
+  "shapes": {
+    "arc": "Arco por tres puntos",
+    "circle": "Círculo",
+    "cube": "Cubo",
+    "cuboid": "Ortoedro",
+    "cylinder": "Cilindro",
+    "dome": "Cúpula",
+    "freeform": "Forma libre",
+    "pyramid": "Pirámide",
+    "rectangle": "Rectángulo",
+    "roof": "Cubierta",
+    "shapes3d": "Formas 3D",
+    "spline": "Spline",
+    "title": "Primitivas"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "Active las directrices desplazando los bordes; mantenga pulsada la tecla ⇧ Mayús para seguir las directrices. Mantenga pulsada la tecla {key} para evitar el forzado de cursor.",
+      "affineInstructions": "Mantenga pulsada la tecla {key} para evitar el forzado de cursor. Pulse la tecla Tab para alternar entre los modos horizontal, vertical y de terreno.",
+      "clickToAddSubtract": "Añada un punto a una línea o reste puntos haciendo clic.",
+      "editModeStartFinishMac": "Mantenga pulsada la tecla ⌥ Opción para añadir/quitar puntos. Pulse ↵ Intro para finalizar la edición.",
+      "editModeStartFinishWindows": "Mantenga pulsada la tecla Alt para añadir/quitar puntos. Pulse ↵ Intro para finalizar la edición.",
+      "finishEditing": "Pulse ↵ Intro para finalizar la edición.",
+      "finishPolygon": "Pulse ↵ Intro para completar la creación del polígono.",
+      "preciseMoveVertical": "Pulse {key} para activar o desactivar el modo vertical.",
+      "specifyDistance": "Escriba para definir una distancia específica. Haga clic para colocar."
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "Los edificios de Boceto 3D no admiten la supresión, la copia, el corte ni el pegado de suelos. Intente realizar la edición en Boceto 3D."
+  },
+  "snapping": {
+    "cursorElevation": "Elevación en el cursor",
+    "guidesAndMeasurements": "Guías y medidas",
+    "snapToGuides": "Forzar a guías",
+    "snapToObjects": "Forzar a objetos"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "Introduzca el nombre de espacio o déjelo vacío como valor por defecto"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "Conectar al escenario",
+      "connectToScenarioDesc": "Un escenario es un contenedor de diseño compartido en el proyecto que conecta modelos, herramientas y datos geométricos y de otro tipo de varias aplicaciones de software."
+    }
+  },
+  "relativeTime": {
+    "today": "Hoy"
+  },
+  "terrain": {
+    "elevation": "Alzado",
+    "errors": {
+      "loadMapImageFailed": "No se ha podido cargar la imagen del mapa.",
+      "loadSatelliteTextureFailed": "Error al cargar la textura de satélite.",
+      "loadTextureFailed": "Error al cargar la textura del terreno."
+    },
+    "labels": {
+      "numberOfSelectedPads": "Volumen de plataformas",
+      "padVolume": "Volumen de la plataforma",
+      "padsVolume": "Volumen de plataformas",
+      "showAsPercentage": "Mostrar como porcentaje",
+      "showAsRatio": "Mostrar como proporción",
+      "totalMassBalance": "Balance de masa total"
+    },
+    "massBalanceHover": "Volumen neto de cambio de masa en todo el terreno.",
+    "metricsHeader": "Métricas",
+    "pad": {
+      "header": "Plataforma de terreno",
+      "name": "Plataforma de terreno",
+      "tooltip": "Lleve a cabo el desmonte/terraplén de terreno, el ajuste de la elevación y el talud y la evaluación del equilibrio de masas."
+    },
+    "padVolumeHover": "Volumen añadido o sustraído del terreno por las plataformas seleccionadas.",
+    "padsHeader": "Plataformas de terreno",
+    "slope": "Pendiente"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "No se puede alternar entre capa base/propuesta mientras se carga la automatización.",
+    "pendingSelectionBlockedMessage": "No se puede cambiar la selección mientras se carga la automatización.",
+    "pendingToolSwitchBlockedMessage": "Herramientas no disponibles mientras se carga la automatización",
+    "transform": {
+      "redefineReferencePointsButton": "Redefinir puntos de referencia"
+    }
+  },
+  "transform": {
+    "cover": "Recubrimiento",
+    "fillet": "Empalme",
+    "intersect": {
+      "name": "Intersección",
+      "tooltip": "Cree una intersección de dos o más objetos. La huella del primer objeto seleccionado cambiará en consecuencia."
+    },
+    "loft": "Solevado",
+    "move": {
+      "name": "Mover",
+      "tooltip": "Desplace un objeto mediante la definición de un punto de referencia y uno final. "
+    },
+    "offset": {
+      "apply": "Aplicar desfase",
+      "name": "Desfase",
+      "tooltip": "Extienda la huella de un objeto hacia fuera o redúzcala hacia dentro con una determinada distancia."
+    },
+    "rotate": {
+      "name": "Rotar",
+      "tooltip": "Gire los objetos de la escena en torno a un punto de referencia definido."
+    },
+    "shell": "Vaciado",
+    "split": {
+      "name": "Dividir",
+      "tooltip": "Divida uno o más objetos mediante una línea."
+    },
+    "subtract": {
+      "name": "Sustraer",
+      "tooltip": "Sustraiga una forma de un objeto mediante otro objeto. La huella del primer objeto seleccionado cambiará en consecuencia."
+    },
+    "sweep": "Barrido",
+    "title": "Transformar",
+    "union": {
+      "name": "Unión",
+      "tooltip": "Fusione dos o más objetos. El primer objeto seleccionado definirá la categoría y la altura del objeto resultante."
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "El radio de esquina es un valor dinámico que optimiza las curvas de carretera en función del diseño.",
+      "tight": "El radio de esquina es un valor fijo reducido igual a la mitad de la anchura de la carretera."
+    },
+    "railroads": {
+      "hotkeyDescription": "Dibujar raíles",
+      "name": "Ferrocarriles",
+      "toolButton": "Ferrocarriles",
+      "tooltip": "Cree vías férreas y ajuste las anchuras mediante el panel derecho.",
+      "typeLabel": "Tipo de raíl",
+      "typePlaceholder": "Seleccionar tipo de raíl"
+    },
+    "roads": {
+      "hotkeyDescription": "Dibujar carretera",
+      "name": "Carreteras",
+      "toolButton": "Carreteras",
+      "tooltip": "Cree carreteras y ajuste las anchuras mediante el panel derecho.",
+      "widthLabel": "Anchura de carretera",
+      "withGraphToolButton": "Carreteras (con gráfico)"
+    },
+    "title": "Transporte",
+    "trafficData": {
+      "addButton": "Añadir datos de tráfico",
+      "adtTooltip": "Tráfico diario medio",
+      "advancedSettingsLabel": "Configuración avanzada",
+      "dailyDistributionLabel": "Distribución diaria de tráfico",
+      "dayTimeTooltip": "Día: 06:00 - 18:00",
+      "eveningTimeTooltip": "Tarde: 18:00 - 22:00",
+      "heavyVehicleLabel": "Tráfico intenso",
+      "nightTimeTooltip": "Noche: 22:00 - 06:00",
+      "railRequiredInputsMessage": "Se deben proporcionar todas las entradas para que el ferrocarril se tenga en cuenta en el análisis de ruido.",
+      "removeButton": "Eliminar datos de tráfico",
+      "roadRequiredInputsMessage": "Se deben proporcionar todas las entradas para que la carretera se tenga en cuenta en el análisis de ruido.",
+      "speedLimitTooltip": "Límite de velocidad",
+      "title": "Datos de ruido del tráfico"
+    }
+  },
+  "ui": {
+    "add": "Añadir",
+    "area": "Área",
+    "areaSum": "Área (suma)",
+    "automationLabel": "AUTOMATIZACIÓN",
+    "beta": "Beta",
+    "browsePluginsDescription": "Examine los módulos de extensión existentes de otros proveedores o añada los suyos propios; estos aparecerán aquí.",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "color": "Color",
+    "delete": "Suprimir",
+    "detach": "Desenlazar",
+    "duplicate": "Duplicar",
+    "edit": "Editar",
+    "gridSettings": "Configuración de rejilla",
+    "hide": "Ocultar",
+    "length": "Longitud",
+    "lengthSum": "Longitud (suma)",
+    "newVersionAvailable": "Nueva versión disponible.",
+    "redo": "Rehacer",
+    "refresh": "Actualizar",
+    "remove": "Eliminar",
+    "rename": "Cambiar nombre",
+    "repair": "Reparar",
+    "retry": "Reintentar",
+    "show": "Mostrar",
+    "siteLabel": "Emplazamiento",
+    "surroundings": "Alrededores",
+    "textAlignment": "Alineación de texto",
+    "undo": "Deshacer",
+    "update": "Actualizar",
+    "videoNotSupported": "El navegador no admite la etiqueta de vídeo.",
+    "xyzAxes": "Ejes XYZ"
+  },
+  "performanceStats": {
+    "currentSnapshot": "Instantánea actual",
+    "remainingFromPastSnapshots": "Restantes de instantáneas anteriores",
+    "title": "Estadísticas de rendimiento {status}"
+  },
+  "units": {
+    "asl": "asl",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "Alinear al centro",
+      "left": "Alinear a la izquierda",
+      "right": "Alinear a la derecha",
+      "spacing": "Espaciado"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "Dibujar área con árboles",
+      "name": "Área con árboles",
+      "tooltip": "Cree un área rellenada con árboles y edite su tamaño y densidad. Todos los árboles afectarán a los análisis."
+    },
+    "header": "Árboles",
+    "landscapingTitle": "Paisajismo",
+    "properties": {
+      "bufferTooltip": "Búfer",
+      "gridLengthLabel": "Longitud de rejilla",
+      "gridWidthLabel": "Anchura de rejilla",
+      "heightTooltip": "Altura del árbol",
+      "offsetTooltip": "Desfase"
+    },
+    "title": "Vegetación",
+    "tooltips": {
+      "averageDistanceLabel": "Distancia media entre copas de árboles",
+      "heightLabel": "Altura de cada árbol"
+    },
+    "treeLine": {
+      "hotkeyDescription": "Dibujar línea de árboles",
+      "name": "Hilera de árboles",
+      "tooltip": "Cree una línea rellenada con árboles y edite su tamaño y densidad. Todos los árboles afectarán a los análisis."
+    },
+    "trees": "Árboles"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "No se ha proporcionado un analysisId",
+      "unsupportedAnalysisType": "Tipo de análisis no admitido: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "Dispone de acceso de solo vista a este emplazamiento."
+  },
+  "windAnalysis": {
+    "analyzing": "Analizando...",
+    "atCapacity": "Actualmente estamos llevando a cabo un gran número de análisis detallados de viento. Es posible que el análisis tarde más en completarse. Gracias por su paciencia.",
+    "circleOutsideBoundingBox": "El área de análisis está fuera del área del mapa.",
+    "concurrentQuotaReached": "Se ha alcanzado el límite de análisis de viento simultáneos.",
+    "concurrentQuotaReachedDescription": "Se están ejecutando demasiados análisis de viento simultáneos. Espere a que se completen algunos de ellos.",
+    "concurrentQuotaWarning": "Límite de análisis simultáneos",
+    "concurrentQuotaWarningDescription": "Le quedan {remaining} análisis de viento detallados antes de alcanzar el límite de {limit} análisis simultáneos.",
+    "dailyQuotaReached": "Se ha alcanzado el límite de análisis.",
+    "dailyQuotaReachedDescription": "Ha alcanzado el límite diario de análisis de viento.",
+    "dailyQuotaReachedDescriptionRetry": "Ha alcanzado el límite diario de análisis de viento. Inténtelo de nuevo en {nextAvailableAt}.",
+    "loadingData": "Cargando datos",
+    "loadingDataTooltip": "Cargando...",
+    "runAnalysis": "Analizar (~{min}-{max} min)",
+    "seeAnalysisButton": "Ver análisis detallado",
+    "stoppedOrFailed": "El análisis se ha detenido o ha fallado.",
+    "viewerAccessDisableTooltip": "No se pueden ejecutar análisis como espectador."
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "Herramientas avanzadas de modelado",
+      "editIn": "Editar en Boceto 3D",
+      "howToStartEditingMessage": "Pulse ⏎ o haga doble clic para editar en Boceto 3D.",
+      "launch": "Nuevo boceto 3D",
+      "sketch": "Boceto",
+      "updateProperties": "Actualizar propiedades"
+    },
+    "advancedModeling": {
+      "cover": "Recubrimiento",
+      "fillet": "Empalme",
+      "intersect": "Intersección",
+      "loft": "Solevado",
+      "offset": "Desfase",
+      "shell": "Vaciado",
+      "subtract": "Sustraer",
+      "sweep": "Barrido",
+      "union": "Unión"
+    },
+    "axes": {
+      "reset": "Restablecer ejes",
+      "set": "Establecer ejes XYZ"
+    },
+    "buildingType": {
+      "draw": "Dibujar edificio de Boceto 3D",
+      "name": "Edificio de Boceto 3D"
+    },
+    "buttons": {
+      "apply": "Aplicar",
+      "cancel": "Cancelar",
+      "ok": "Aceptar"
+    },
+    "convert": {
+      "externalMessage": "Convierta un objeto a Boceto 3D para modificar los vértices, los bordes y las caras exteriores.\n\nUna vez convertido el elemento, dejará de estar conectado al elemento en la fuente original; los cambios no se sincronizarán.",
+      "message": "Convierta un objeto a Boceto 3D para modificar las caras, los bordes y los vértices exteriores.",
+      "title": "Convertir a Boceto 3D"
+    },
+    "dialogs": {
+      "arrayButtonArray": "Matriz",
+      "arrayButtonCancel": "Cancelar",
+      "arrayDistanceBetween2Points": "Longitud entre dos puntos",
+      "arrayDistanceTotalLength": "Longitud total",
+      "arraySubtitleDistance": "Distancia",
+      "arraySubtitleQuantity": "Cantidad",
+      "arraySubtitleType": "Tipo",
+      "arrayTitle": "Matriz",
+      "arrayTypeLinear": "Matriz lineal",
+      "arrayTypeRadial": "Matriz radial",
+      "corruptedElementsDeleted": "Algunos elementos no se ha podido guardar y se han dañado. Estos elementos se han suprimido automáticamente.",
+      "editDimensionTitle": "Editar cota",
+      "recoveryClosedWithoutSaving": "Boceto 3D se ha cerrado sin guardarse correctamente.",
+      "recoveryQuestion": "¿Desea recuperar los cambios no guardados?",
+      "recoveryTitle": "Se han encontrado cambios en el modelo sin guardar."
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "Aplanar las caras no horizontales más bajas"
+    },
+    "finishSelection": {
+      "back": "Atrás (B)",
+      "cancel": "Cancelar (Esc)",
+      "confirm": "Finalizar (F)",
+      "next": "Siguiente (N)"
+    },
+    "floors": {
+      "addFloor": "Añadir suelo",
+      "addFloors": "Añadir suelos",
+      "floorHeight": "Altura del suelo",
+      "floors": "Suelos",
+      "floorWithNumberLabel": "Suelo {level}",
+      "moreOptions": "Más",
+      "numberOfFloors": "Número de suelos",
+      "removeFloors": "Eliminar suelos",
+      "resetFloors": "Restablecer suelos",
+      "title": "Detalles del suelo"
+    },
+    "groupEditing": {
+      "redo": "Rehacer",
+      "undo": "Deshacer"
+    },
+    "grouping": {
+      "toolbarTitle": "GRUPOS"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "Medir ángulo",
+      "measureDistance": "Medir distancia",
+      "menuTitle": "Guías y medidas",
+      "title": "Guías y medidas"
+    },
+    "mesh": {
+      "convertHintMessage": "Haga doble clic para activar herramientas de edición adicionales al convertir mallas en objetos.",
+      "importExceededLimitsMessage": "La importación supera los {limit} triángulos de malla y permanecerá sin cambios para mejorar el rendimiento.\n\nPara acceder a más herramientas de edición, seleccione mallas individuales y haga doble clic para convertirlas en objetos editables.",
+      "importExceededLimitsTitle": "La importación supera el límite de triángulos de malla"
+    },
+    "pasteInPlaceAction": "Pegar en su lugar",
+    "properties": {
+      "mixed": "Mixto",
+      "objectWithIdLabel": "Objeto {id}"
+    },
+    "scaleTitle": "ESCALA",
+    "selection": {
+      "areaSelectionOptions": "Opciones de selección de área",
+      "filterEdges": "Bordes",
+      "filterFaces": "Caras",
+      "filterGroups": "Grupos",
+      "filterMeshes": "Mallas",
+      "filterSolids": "Sólidos",
+      "filterVertices": "Vértices",
+      "selection": "Selección",
+      "selectionTools": "Herramientas de selección"
+    },
+    "tools": {
+      "array": "Matriz",
+      "editArcCircle": "Editar arco o círculo",
+      "editSpline": "Editar spline",
+      "extrudeEdges": "Extruir bordes",
+      "extrudeFace": "Extruir cara",
+      "facetFace": "Facetar cara",
+      "flattenFace": "Aplanar caras",
+      "group": "Grupo",
+      "groupDetach": "Desenlazar",
+      "meshToObjects": "Convertir malla",
+      "mirror": "Reflejar",
+      "move": "Mover",
+      "offsetEdges": "Desfasar bordes",
+      "offsetFace": "Desfasar cara",
+      "reverseFace": "Invertir cara",
+      "rotate": "Rotar",
+      "scale": "Escala",
+      "scaleNonUniform": "Escala no uniforme",
+      "smoothEdges": "Suavizar bordes",
+      "tiltFace": "Inclinar cara",
+      "ungroup": "Desagrupar"
+    },
+    "tooltips": {
+      "building": "Edificios 3D complejos con posibilidades ilimitadas, como tejados a dos aguas, muros inclinados y mucho más.",
+      "editIn": "Convierta objetos para modificar vértices, bordes y caras en Boceto 3D.",
+      "launch": "Utilice los bocetos 3D para modelar e iterar conceptos de diseño arquitectónico en las primeras fases."
+    },
+    "zoom": {
+      "fitProposal": "Zoom para ajustarse a la propuesta",
+      "fitSelection": "Zoom para ajustarse a la selección"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "Guías de inicio rápido",
+    "allTutorialsDescription": "Complete estas guías interactivas para configurar el sitio y empezar a trabajar en Emplazamiento Design. ",
+    "completionMessage": "¡Excelente! Ha completado la guía {header}.",
+    "completionText": "{percent}% completado",
+    "completedTitle": "Completado",
+    "continueButton": "Continuar",
+    "stepsTotal": "{count} pasos en total",
+    "timeLabel": "{time} min",
+    "stepProgress": "{current} de {total}",
+    "nextButton": "Siguiente",
+    "doneButton": "Listo",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "Guías de inicio rápido",
+    "upNextTitle": "A continuación"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "Configurar el sitio",
+      "description": "Añada datos contextuales antes de empezar a modelar y analizar el emplazamiento y los edificios.",
+      "reviewHeader": "Se ha completado la configuración del Emplazamiento",
+      "reviewText": "Ha añadido correctamente los datos contextuales y un límite del emplazamiento.{ 0}{br}Buen trabajo. Ahora puede explorar nuestras herramientas de modelado y funciones de importación, o continuar con otra guía.",
+      "steps": {
+        "openContextualTab": {
+          "header": "Abrir ficha de datos contextuales",
+          "text": "Abra primero la ficha <bold>Datos contextuales</bold>."
+        },
+        "browseAndOrder": {
+          "header": "Examinar datos para la ubicación del sitio",
+          "text": "Haga clic en <bold>Examinar datos contextuales</bold> para ver qué paquetes de datos están disponibles para la ubicación del sitio.{ 0}{br}Los datos pueden incluir los edificios circundantes, las carreteras y el terreno. "
+        },
+        "orderStarterPackage": {
+          "header": "Pedir paquete de datos de arranque",
+          "text": "Haga clic en <bold>Añadir</bold> para revisar lo que se incluye en este paquete de datos. Estos datos son gratuitos. "
+        },
+        "orderData": {
+          "header": "Paquete de datos de pedidos",
+          "text": "Seleccione el orden para iniciar la descarga de datos contextuales 3D en su sitio."
+        },
+        "drawSiteLimit": {
+          "header": "Dibujar límite del emplazamiento",
+          "text": "Active esta herramienta de dibujo para definir los límites del emplazamiento. Una vez activada, dibuje puntos alrededor del emplazamiento y cierre la forma.{br}{br}Tener un límites del emplazamiento definido es una requisito previo ejecutar análisis en Forma Emplazamiento Design."
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "Añadir edificios",
+      "description": "Cree edificios con nuestras herramientas de modelado o importe modelos existentes. ",
+      "reviewHeader": "Edificios añadidos al emplazamiento",
+      "reviewText": "Ha dibujado correctamente edificios e importado activos a su emplazamiento. ¡Buen trabajo! Ahora puede evaluar las condiciones ambientales mediante la ejecución de análisis o continuar con otra guía.",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "Dibuje un edificio básico",
+          "text": "Haga clic en <bold>Edificio básico</bold> para activar la herramienta de construcción. Una vez activada, dibuje la forma del edificio y seleccione el último punto para terminar de dibujar la huella."
+        },
+        "exploreParametricOptions": {
+          "header": "Explorar opciones paramétricas",
+          "text": "Explore las opciones paramétricas disponibles para modificar el modelo de construcción."
+        },
+        "importModel": {
+          "header": "Importar un modelo o un archivo",
+          "text": "Haga clic en <bold>Importar</bold> para cargar un modelo o una imagen ráster desde el dispositivo local."
+        },
+        "placeInScene": {
+          "header": "Colocar en la escena",
+          "text": "Haga clic en el elemento que acaba de importar de la biblioteca. Una vez seleccionado, haga clic en él y arrástrelo para colocarlo en el emplazamiento. El aprendizaje avanzará automáticamente una vez que se haya colocado el elemento."
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "Evaluar las condiciones medioambientales",
+      "description": "Realice un análisis de las horas de sol para fundamentar las decisiones de diseño iniciales.",
+      "reviewHeader": "Análisis de horas de sol terminado.",
+      "reviewText": "Ha ejecutado correctamente un análisis de horas de sol en su sitio.{ 0}{br}Ahora puede seguir creando nuevas propuestas, comparando análisis o profundizando en Emplazamiento Design.",
+      "steps": {
+        "selectAnalysis": {
+          "header": "Seleccione el análisis",
+          "text": "Haga clic en el icono resaltado para seleccionar el análisis de horas de sol."
+        },
+        "selectDate": {
+          "header": "Seleccione una fecha",
+          "text": "Utilice el menú desplegable para establecer una fecha en la que le gustaría analizar las horas de sol del emplazamiento."
+        },
+        "runAnalysis": {
+          "header": "Ejecutar análisis",
+          "text": "Haga clic en el botón para iniciar el análisis. Solo tardará unos segundos en completarse.{br}{br}La guía se reanudará automáticamente una vez finalizado el análisis."
+        },
+        "openAnalysisResults": {
+          "header": "Abrir resultados",
+          "text": "Una vez que se haya completado, los resultados del análisis se mostrarán en la lista aquí. Haga clic en los últimos resultados para revisarlos en detalle. Se abrirá una nueva ventana.",
+          "altText": "Ventana de resultados de análisis"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "¿Cómo solucionar un error \"WebGL no admitido\"?",
+      "text": "El equipo no parece ser compatible con WebGL, que es un requisito para utilizar Forma.",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

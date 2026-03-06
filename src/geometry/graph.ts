@@ -1,30 +1,61 @@
 /**
- * Corridor graph construction and shortest-path for egress validation.
+ * @fileoverview Corridor graph construction and shortest-path computation.
  *
- * The corridor in a multi-wing building is a polyline that turns at
- * intersections. To validate dead-end and travel distances we model
- * the corridor as a small weighted graph and run Dijkstra.
+ * Models the corridor network of a multi-wing building as a weighted graph:
+ * nodes at wing endpoints and intersections, edges weighted by corridor length.
+ * Used for egress validation: dead-end limits and travel distance to nearest
+ * core (stairwell/elevator). Implements Dijkstra for shortest paths.
+ *
+ * **Architecture Role**: Called by egress validation logic after multi-wing
+ * generation. Wing centerlines and intersection points are converted to a
+ * graph; core positions mark exit nodes. Distances are in feet.
+ *
+ * **Graph Construction**: Wing endpoints are merged within MERGE_DIST (1.0 ft).
+ * Intersection points that don't coincide with endpoints trigger edge-splitting:
+ * the closest corridor edge is split so the intersection node is reachable.
  */
 
 import { Point } from '../types/geometry';
 import { distance } from './point';
 
+/**
+ * A node in the corridor graph.
+ */
 export interface CorridorGraphNode {
+  /** Spatial position of the node */
   point: Point;
+  /** True if this node represents a core (exit/stairwell) */
   isCore: boolean;
 }
 
+/**
+ * Corridor graph: nodes and weighted edges.
+ *
+ * Edges are stored as [nodeA index, nodeB index, weight]. Graph is undirected.
+ */
 export interface CorridorGraph {
   nodes: CorridorGraphNode[];
-  /** [nodeA index, nodeB index, weight (distance)] */
+  /** [nodeA index, nodeB index, weight (distance in feet)] */
   edges: [number, number, number][];
 }
 
 /**
- * Build a corridor graph from wing centerlines, intersection points, and core positions.
+ * Builds a corridor graph from wing centerlines, intersection points, and core positions.
  *
- * Each wing contributes two endpoint nodes (its far tip and its intersection tip).
- * Intersection points merge nearby endpoints. Core positions flag the nearest node.
+ * Creates nodes at wing endpoints (merged within 1.0 ft) and intersection points.
+ * Edges follow wing centerlines. Intersection points that fall mid-edge (>1.0 ft
+ * from endpoints) trigger edge-splitting so they are reachable. Core positions
+ * mark exit nodes for egress distance computation.
+ *
+ * @param wingCenterlines - Line segments for each wing (start/end of centerline)
+ * @param intersectionPoints - Points where wings meet
+ * @param corePositions - Core (exit) locations
+ * @returns CorridorGraph with nodes and weighted edges
+ *
+ * @remarks
+ * MERGE_DIST (1.0) and SPLIT_DIST (3.0) are tuning constants. Intersection
+ * points > SPLIT_DIST from any edge remain isolated; t ∈ (0.01, 0.99) avoids
+ * splitting at endpoints.
  */
 export function buildCorridorGraph(
   wingCenterlines: { start: Point; end: Point }[],
@@ -35,7 +66,7 @@ export function buildCorridorGraph(
   const edges: [number, number, number][] = [];
 
   const findOrAddNode = (p: Point, isCore: boolean): number => {
-    const MERGE_DIST = 1.0;
+    const MERGE_DIST = 1.0; // Merge endpoints within 1.0 ft
     for (let i = 0; i < nodes.length; i++) {
       if (distance(nodes[i].point, p) < MERGE_DIST) {
         if (isCore) nodes[i].isCore = true;
@@ -46,39 +77,32 @@ export function buildCorridorGraph(
     return nodes.length - 1;
   };
 
-  // Add wing centerline edges
   for (const cl of wingCenterlines) {
     const a = findOrAddNode(cl.start, false);
     const b = findOrAddNode(cl.end, false);
     edges.push([a, b, distance(cl.start, cl.end)]);
   }
 
-  // Add intersection points — then split any nearby edges to ensure connectivity.
-  // Without splitting, an intersection point >1.0m from both endpoints becomes
-  // an isolated node (Dijkstra returns Infinity, breaking egress validation).
   for (const ip of intersectionPoints) {
     const ipNode = findOrAddNode(ip, false);
 
-    // Check if this intersection node was newly created (not merged into an existing endpoint).
-    // If so, find the closest edge and split it at this point.
-    const SPLIT_DIST = 3.0; // max distance from edge to consider splitting
+    const SPLIT_DIST = 3.0; // Max distance from edge to consider splitting
     let bestEdgeIdx = -1;
     let bestT = 0;
     let bestDistToEdge = SPLIT_DIST;
 
     for (let ei = 0; ei < edges.length; ei++) {
       const [aIdx, bIdx] = edges[ei];
-      // Skip edges that already touch this node
       if (aIdx === ipNode || bIdx === ipNode) {
         bestEdgeIdx = -1;
-        break;
+        break; // ipNode already an endpoint of this edge; no split
       }
       const a = nodes[aIdx].point;
       const b = nodes[bIdx].point;
       const dx = b.x - a.x, dy = b.y - a.y;
       const lenSq = dx * dx + dy * dy;
-      if (lenSq < 1e-9) continue;
-      const t = Math.max(0, Math.min(1, ((ip.x - a.x) * dx + (ip.y - a.y) * dy) / lenSq));
+      if (lenSq < 1e-9) continue; // Degenerate edge
+      const t = Math.max(0, Math.min(1, ((ip.x - a.x) * dx + (ip.y - a.y) * dy) / lenSq)); // Projection param
       const projX = a.x + t * dx, projY = a.y + t * dy;
       const d = Math.sqrt((ip.x - projX) ** 2 + (ip.y - projY) ** 2);
       if (d < bestDistToEdge) {
@@ -92,7 +116,6 @@ export function buildCorridorGraph(
       const [aIdx, bIdx] = edges[bestEdgeIdx];
       const dA = distance(nodes[aIdx].point, ip);
       const dB = distance(nodes[bIdx].point, ip);
-      // Replace the original edge with two sub-edges through the intersection node
       edges[bestEdgeIdx] = [aIdx, ipNode, dA];
       edges.push([ipNode, bIdx, dB]);
     }
@@ -106,8 +129,15 @@ export function buildCorridorGraph(
 }
 
 /**
- * Shortest distance from a given node to the nearest core node via Dijkstra.
- * Returns Infinity if no core is reachable.
+ * Computes shortest distance from a node to the nearest core via Dijkstra.
+ *
+ * Runs single-source shortest path. Returns as soon as any core node is
+ * reached (first core popped from priority queue), or scans all nodes and
+ * returns minimum core distance (or Infinity if unreachable).
+ *
+ * @param graph - Corridor graph (nodes and edges)
+ * @param fromNode - Starting node index
+ * @returns Distance in feet to nearest core; Infinity if none reachable
  */
 export function shortestPathToCore(
   graph: CorridorGraph,

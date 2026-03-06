@@ -1,0 +1,58 @@
+name: Build docs
+on: [push]
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_GITHUB_PACKAGES_TOKEN }}
+        with:
+          node-version: "22"
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@spacemakerai"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build:packages
+      - run: pnpm build-docs
+      - uses: actions/upload-artifact@v5
+        if: github.ref == 'refs/heads/master'
+        with:
+          name: docs
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/download-artifact@v6
+        with:
+          name: docs
+          path: docs
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

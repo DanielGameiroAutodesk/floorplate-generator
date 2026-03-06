@@ -1,0 +1,29 @@
+.Panel {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.HeightRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  align-items: stretch;
+
+  & > label {
+    font: var(--12-regular);
+    vertical-align: center;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.HeightInput {
+  padding: 0.3em;
+  border-color: var(--background-color-ghost-high-pressed);
+  border-style: solid;
+  border-width: 1px;
+  flex: 0;
+  min-width: 3em;
+  margin: 0 6px;
+}

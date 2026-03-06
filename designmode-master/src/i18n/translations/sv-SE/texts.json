@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "Kom igång med att designa",
+    "body": "När du väljer <bold>Fortsätt</bold> slutför vi automatiskt två viktiga konfigurationssteg åt dig. Ingen åtgärd krävs från din sida. När stegen har slutförts är du redo att börja designa i Forma Site Design.",
+    "contextual": {
+      "header": "Läsa in platsspecifik kontext",
+      "body": "Vi läser in kostnadsfria kontextuella data för din plats, inklusive terräng och omgivande byggnader."
+    },
+    "sunAnalysis": {
+      "header": "Få insikter om platsförhållanden",
+      "body": "Vi kör en analys av soltimmar på din plats och omgivning för att informera dina designbeslut."
+    },
+    "continueButton": "Fortsätt",
+    "sunAnalysisCoachmark": {
+      "header": "Analys av soltimmar",
+      "body": "Vi har automatiskt startat en analys av soltimmar på din plats.{br}{br}När indikatorn lyser grönt eller en banderoll visas högst upp på canvaset så kan du granska resultaten."
+    },
+    "finalModal": {
+      "title": "Din webbplats är nu konfigurerad",
+      "subTitle": "Fortsätt med något av de rekommenderade stegen nedan:",
+      "suggestedAction1": {
+        "header": "Rita en byggnad",
+        "body": "Aktivera ett av byggverktygen i verktygsfältet."
+      },
+      "suggestedAction2": {
+        "header": "Importera en modell",
+        "body": "Klicka på importikonen i verktygsfältet och följ de föreslagna stegen."
+      },
+      "suggestedAction3": {
+        "header": "Jämför analyser",
+        "body": "Gör en andra analys och öppna Jämför-läget i det övre vänstra hörnet av skärmen."
+      },
+      "showMeHow": "Visa fler alternativ",
+      "finalButton": "Ok"
+    },
+    "sunAnalysisTriggerError": "Det gick inte att utlösa solanalysen"
+  },
+  "alignment": {
+    "center": "Centrera",
+    "left": "Vänsterjustera",
+    "right": "Högerjustera"
+  },
+  "analysis": {
+    "alertsLabel": "Aviseringar",
+    "analyzeTitle": "Analysera",
+    "analysisParameters": "Analytiska parametrar",
+    "areaRadius": "Områdets radie",
+    "areaTitle": "Analysområde",
+    "customCircle": "Anpassad cirkel",
+    "daylightAnalysisIllustrationAlt": "Illustration av dagsljusanalys",
+    "failedToOrder": "Analys av misslyckad beställning: {error}",
+    "learnMore": "Läs mer",
+    "microclimateAreaRadius": "Radie för mikroklimatområde",
+    "noisePredictionUnavailable": "Bullerförutsägelse är inte tillgänglig",
+    "radiusLabel": "Radie",
+    "selectAreaToRunAnalysis": "Välj en platsbegränsning eller zon för att köra en analys",
+    "disabledTooltips": {
+      "addRoadsOrRails": "Lägg till vägar och/eller järnvägar med trafikdata för att köra en analys",
+      "analysisAreaOutsideMap": "Analysområdet ligger utanför kartområdet",
+      "concurrentQuotaReached": "Gränsen för samtidiga vindanalyser uppnådd",
+      "dailyQuotaReached": "Kvoten för daglig vindanalys har uppnåtts",
+      "geometryAlertsDetected": "Geometriproblem har identifierats",
+      "geometryTooComplex": "Geometrin är för komplex",
+      "invalidParameters": "Ogiltiga parametrar",
+      "loadingData": "Läser in data",
+      "notAvailable": "Inte tillgänglig",
+      "notAbleAsViewer": "Det går inte att köra analyser som deltagare",
+      "pleaseWait": "Vänta...",
+      "savingInProgress": "Sparar...",
+      "selectSiteLimitOrZone": "Välj en platsbegränsning eller zon för att köra en analys"
+    },
+    "emptyStateZoneExplanation": "Som standard körs analysen på byggnader och andra objekt som du har lagt till. Lägg till en platsbegränsning eller zoner för att få fullständiga analysresultat för ett visst område.",
+    "entireModel": "Hela modellen",
+    "missingTrafficData": {
+      "description": "Lägg till trafikdata för vägar eller järnvägsspår för att förutsäga verkliga bullerförhållanden.",
+      "startGuideButton": "Starta guiden",
+      "title": "Trafikdata saknas"
+    },
+    "noiseAreaRadius": "Bullerområdets radie",
+    "properties": {
+      "radiusLabel": "Radie"
+    },
+    "seeResultButton": "Se analysresultat",
+    "seeResultsButton": "Se analysresultat",
+    "selectionTitle": "Välj analysområden",
+    "selectAllAreasButton": "Markera alla områden",
+    "deselectAllAreasButton": "Avmarkera alla områden",
+    "skyComponent": {
+      "potentialDescription": "Vår <strong>dagsljusanalys</strong> identifierar delar av fasaden med liten tillgång till dagsljus med hjälp av Vertical Sky Component-poäng. Välj områden som du vill analysera."
+    },
+    "sun": {
+      "removeDateButton": "Ta bort datum"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "Byggnader med fullt stöd",
+      "buildingsPartialSupport": "Byggnader/annat med partiellt stöd",
+      "iconAlt": "Stödnivå för analys",
+      "title": "Stöd för analys"
+    },
+    "windAreaRadius": "Vindområdets radie",
+    "windRoseUnavailable": {
+      "description": "Vår leverantör av vindrosdata har problem. Du kan fortfarande analysera för mikroklimatmönster, men utan historiska data för att undersöka sannolikheten för vindförhållanden. Vi arbetar med att återställa data.",
+      "title": "Vindros för närvarande inte tillgänglig",
+      "windDescription": "Vår leverantör av vindrosdata har problem. Du kan fortfarande analysera för allmänna vindmönster och justera vindhastigheterna manuellt. Snabb vind är inte tillgänglig. Vi arbetar med att återställa data."
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "Det finns redan en analys med den här konfigurationen. ",
+    "concurrentAnalysesReached": "Gränsen för samtidiga analyser har nåtts",
+    "concurrentNoiseAnalysesReached": "Gränsen för samtidiga bulleranalyser har nåtts",
+    "dailyNoiseQuotaReached": "Maximalt antal bulleranalyser inom 24 timmar uppnås",
+    "dailyQuotaReached": "Den dagliga analyskvoten har uppnåtts",
+    "nothingToAnalyze": "Inget att analysera",
+    "somethingWentWrong": "Någonting gick fel"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "Detaljerad vindanalys är inte tillgänglig. Försök att köra analysen senare.",
+      "rapidWindUnavailable": "Snabb vindanalys är inte tillgänglig. Försök att köra analysen senare.",
+      "rapidWindUnavailableToast": "Snabb vindanalys är inte tillgänglig. Vårt team har meddelats. Försök att köra analysen senare."
+    },
+    "types": {
+      "microclimate": {
+        "description": "Vår mikroklimatanalys beräknar den upplevda temperaturen på din plats, med hänsyn till sol, vind och dagsljusförhållanden. Vi rekommenderar att du väntar tills vindanalysen är klar för mer exakta resultat.",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "Mikroklimat",
+        "text": "Mikroklimatanalys"
+      },
+      "noise": {
+        "description": "Förstå hur din design påverkar miljöbullerförhållandena genom en förutsägelse i realtid i den snabba bulleranalysen. Kör en detaljerad bulleranalys för att få en mer exakt simulering av bullerförhållandena, samt en analys av förhållandena på byggnadsfasader.",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "Buller",
+        "text": "Bulleranalys"
+      },
+      "sky-component": {
+        "description": "Bedöm vilka delar av byggnadens fasader som får liten tillgång till dagsljus med hjälp av Vertical Sky Component-poängen. För att köra analysen måste du lägga till en platsbegränsning.",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "Dagsljusanalys",
+        "text": "Dagsljusanalys"
+      },
+      "solar-panel": {
+        "name": "Solenergi"
+      },
+      "sun": {
+        "description": "Utvärdera hur många timmars solljus din tomt och dina byggnader kommer att få. För att köra analysen måste du lägga till en platsbegränsning och välja ett datum.",
+        "link": "https://help.autodeskforma.com/en/articles/6951253",
+        "name": "Soltimmar",
+        "text": "Analys av soltimmar"
+      },
+      "wind": {
+        "description": "Få en förståelse för hur designändringarna påverkar vindförhållandena genom att göra förutsägelser i realtid i den snabba vindanalysen. Kör en detaljerad analys av vindflöden och vindkomfort för att få en mer exakt simulering av olika vindriktningar och vindhastigheter.",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "Vind",
+        "text": "Vindanalys"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "Lägg till nod",
+      "buildingWidth": "Byggnadens bredd",
+      "cityBlocks": "Kvarter",
+      "editGridOrientationButton": "Redigera rutnätsorientering",
+      "explanation": "Ett pågående arbete med att utveckla verktyg som kan hjälpa dig att utforska massapotentialen på din plats. Följ utvecklingen i vårt forum.",
+      "floors": "Våningar",
+      "headerTitle": "Utforska",
+      "iterativeExplanation": "Designautomatiseringsverktyg som gör det möjligt att snabbt generera och utforska plats- och byggnadslayouter.",
+      "layoutTitle": "Layout",
+      "layouts": "Layouter",
+      "linearBuildings": "Linjära byggnader",
+      "mixed": "Blandat",
+      "name": "Utforska",
+      "siteAutomation": "Anläggningsautomatisering",
+      "storyHeight": "Våningshöjd",
+      "towerBuildings": "Tornbyggnader",
+      "towerWidth": "Tornets bredd"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "Lägg till en ny bas",
+    "changeIndicatorLabel": "Ändra indikator",
+    "editBaseButton": "Redigera bas",
+    "editBaseDoneButton": "Klar",
+    "editBaseRightMenuMessage": "Redigera bas för att göra ändringar",
+    "editBaseRightMenuMixedSelectionMessage": "Ditt urval inkluderar basobjekt. Du kan inte göra ändringar med en blandad markering.",
+    "editing": {
+      "changesWillAffect": "Ändringarna kommer att påverka",
+      "proposals": "förslag",
+      "title": "Redigering"
+    },
+    "errors": {
+      "deleteFailed": "Det gick inte att ta bort basen.",
+      "duplicateFailed": "Det gick inte att duplicera basen.",
+      "fetchFailed": "Det gick inte att hämta baser.",
+      "renameIndicatorFailed": "Det gick inte att byta namn på basindikatorn.",
+      "renameFailed": "Det gick inte att byta namn på basen.",
+      "switchFailed": "Det gick inte att byta bas."
+    },
+    "noBaseLayersText": "Element som du vill återanvända i olika förslag kan läggas till i en bas.",
+    "strategy": {
+      "description": "Förslaget använder en grund som är föråldrad. Du måste välja om du vill uppdatera till den senaste versionen av basen eller duplicera den äldre versionen av basen.",
+      "duplicateOld": "Duplicera gammal version av basen",
+      "header": "Din bas är föråldrad",
+      "useLatest": "Använd den senaste versionen av basen"
+    },
+    "swapBaseButton": "Växla bas",
+    "swapButton": "Byta",
+    "untitledBaseLabel": "Namnlös bas"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "Rita generisk linje",
+        "name": "Linje",
+        "tooltip": "Skapa allmänna linjer för att kommunicera konstruktionsidén. De kommer inte att beaktas i analyserna."
+      },
+      "surface": {
+        "draw": "Rita generisk yta",
+        "name": "Yta",
+        "tooltip": "Skapa en allmän yta för att kommunicera konstruktionsidé. De kommer inte att beaktas i analyserna."
+      },
+      "title": "Generiskt",
+      "volume": {
+        "draw": "Rita generisk volym",
+        "name": "Volym",
+        "tooltip": "Generiska volymer analyseras, men deras area beaktas inte i områdesmätvärdena."
+      }
+    }
+  },
+  "building": {
+    "addFloor": "Lägg till våning",
+    "addFloorsAction": "Lägg till våningar",
+    "buildingColorsLabel": "Byggnadens färger",
+    "buildingDesignButton": "Öppna i Building Design",
+    "buildingDesignDescription": "Den här byggnaden är designad i Building Design, öppna Building Design för att redigera den.",
+    "buildingDesignGeometry": "Building Design-geometri",
+    "buildingsTitle": "Byggnader",
+    "buildingWidthLabel": "Byggnadens bredd",
+    "divisionWidth": "Bredd på divisionen",
+    "roadWidthLabel": "Vägens bredd",
+    "towerBlockWidthLabel": "Tornblockets bredd",
+    "typesTitle": "Typer",
+    "upgradingFor3DSketchBuilding": "Uppgradering av 3D-skissbyggnad för förkroppsligat kol",
+    "variationsTitle": "Variationer",
+    "errors": {
+      "failedToLoadFunctions": "Det gick inte att läsa in anpassade byggnadsfunktioner",
+      "failedToLoadSettings": "Det gick inte att läsa in inställningarna"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "Lägg till i bibliotek",
+      "addToLibraryTooltip": "Lägg till i bibliotek",
+      "emptyFloors": "Tomma våningar",
+      "parking": "Parkering",
+      "popupTitle": "Planlösningar",
+      "title": "Planlösningar",
+      "cannotDrawCornerDescription": "Du kan ännu inte rita hörnritningar",
+      "cannotDrawSplitDescription": "Du kan ännu inte rita delade planer",
+      "finishDrawingTooltip": "Slutför ritningen för att lägga till planlösningar",
+      "mixedSelectionDescription": "Blandade planlösningar har valts",
+      "noLibraryDescription": "Det finns inga planritningar i biblioteket med den här yttre formen",
+      "noSelectionDescription": "Ingen planlösning i valet",
+      "rightClickToAddDescription": "Högerklicka på en våning i ett av dina förslag för att lägga till den i biblioteket",
+      "selectSectionsDescription": "Välj sektioner som är tomma eller har planritningar"
+    },
+    "floors": {
+      "seeAllButton": "Se alla våningar"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "Lägg till ny",
+      "addSectionCutButton": "Lägg till sektionsskärning",
+      "apartmentBuildingStories": "Lägenheter i flerbostadshus",
+      "apartmentBuildingStoryHeight": "Våningshöjd för flerbostadshus",
+      "apartmentBuildingWidth": "Bredd på flerbostadshus",
+      "circulationTitle": "Cirkulation",
+      "headerTitle": "Linjebyggnad",
+      "outdatedLabel": "utdaterad",
+      "targetSectionLength": "Målsektionens längd",
+      "circulation": {
+        "sectionCountText": "Antal sektioner: {count}",
+        "widthLabel": "Korridorens bredd",
+        "widthText": "Bredd: {width}"
+      },
+      "divisionWidthLabel": "Bredd på divisionen",
+      "releaseToBasicAnimationAlt": "Släpp till grundläggande animering",
+      "releaseToBasicExplanation": "Genom att släppa linjeautomatiseringen skapas en basbyggnad där du kan lägga till funktioner eller parkering på enskilda våningar. Efter frisläppning går det inte att återfå linjeautomatiseringen.",
+      "releaseToFloorPlanAction": "Släpp till planritning",
+      "releaseToFloorPlanAnimationAlt": "Släpp till animering av planritning",
+      "releaseToFloorPlanExplanation": "När du släpper cirkulationsautomatiseringen skapas en planlösning så att du kan designa layouterna manuellt. Efter frisläppning kan cirkulationsautomatiseringen inte återfås.",
+      "towerWidthLabel": "Tornblockets bredd"
+    },
+    "properties": {
+      "lengthLabel": "Längd",
+      "numberOfFloorsLabel": "Antal våningar",
+      "numberOfStoriesLabel": "SiteStudy antal våningar",
+      "stories": "Våningar",
+      "storyHeight": "Våningshöjd",
+      "storyHeightLabel": "Våningshöjd",
+      "widthLabel": "Bredd"
+    },
+    "toolbar": {
+      "title": "Byggnader"
+    },
+    "tooltips": {
+      "addBuildingsButton": "Lägg till byggnader",
+      "clampToTerrainButton": "Fäst byggnader till terrängen",
+      "numberOfFloorsLabel": "Antal våningar",
+      "parkingEditDescription": "Redigering av parkering görs nu i planritningsredigeraren",
+      "releaseToBasicButton": "Släpp till basbyggnad",
+      "releaseToZonesButton": "Släpp till zoner",
+      "removeBuildingsButton": "Ta bort byggnader",
+      "storyHeightLabel": "Våningshöjd",
+      "swapFloorPlansButton": "Växla planlösningar",
+      "targetSectionLengthLabel": "Målsektionens längd",
+      "towerWidthLabel": "Tornets bredd",
+      "widthLabel": "Byggnadens bredd"
+    },
+    "types": {
+      "basic": {
+        "draw": "Rita basbyggnad",
+        "name": "Basbyggnad",
+        "tooltip": "Rita byggnader med våningar i alla former med kontroll och precision. Visa byggnadsstatistik i Områdesmätvärden."
+      },
+      "line": {
+        "draw": "Rita linjebyggnad",
+        "name": "Linjebyggnad",
+        "tooltip": "Rita en byggnadsstruktur runt en linje. Justera dess parametrar, t.ex. sektioner och våningar. Visa byggnadsstatistik i Områdesmätvärden."
+      }
+    }
+  },
+  "camera": {
+    "compass": "Visa nord upp",
+    "lookAt": {
+      "title": "Titta på",
+      "tooltip": "Flytta musen över ett ansikte för att rikta in kameran. Klicka för att zooma och anpassa ansiktet eller dra för att justera zoomområdet."
+    },
+    "lookFrom": {
+      "title": "Titta från punkt",
+      "tooltip": "Klicka på en punkt på en fasad för att titta från. Du kan också klicka och dra för att välja punkt och visningsriktning."
+    },
+    "optionsLabel": "Alternativ för kameran",
+    "optionsTitle": "Alternativ för kameran",
+    "switchCameraMode": "Växla kameraläge",
+    "vectorExport": {
+      "exportSuccessful": "Exporten lyckades",
+      "title": "Export av vektor"
+    },
+    "switchTo2d": "Växla till 2D-läge (ortografiskt)",
+    "switchTo3d": "Växla till 3D-läge",
+    "zoom": {
+      "toFitProposal": "Zooma för att passa förslag",
+      "toFitSelection": "Zooma för att passa markering"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "Kant"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "Flera på linjen",
+      "placeSinglesButton": "Placera singlar"
+    }
+  },
+  "contextualData": {
+    "description": "Se och hantera kontextuella data som är tillgängliga för ditt projekt. Du kan också beställa mer data här.",
+    "title": "Kontextuella data"
+  },
+  "contextMenu": {
+    "copy": "Kopiera",
+    "cut": "Klipp ut",
+    "delete": "Ta bort",
+    "exportTerrainAsObj": "Exportera terräng som mål",
+    "moveToBack": "Flytta längst bak",
+    "moveToBase": "Flytta till basen",
+    "moveToFront": "Flytta längst fram",
+    "moveToProposal": "Gå till förslag",
+    "paste": "Klistra in",
+    "pasteInPlace": "Klistra in på plats",
+    "terrainPad": {
+      "moveToBack": "Flytta terrängplattan bakåt",
+      "moveToFront": "Flytta terrängplattan framåt"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "Det går inte att kopiera element mellan projekt eller hubbar.",
+    "failedToCopyElementMessage": "Det gick inte att kopiera elementet."
+  },
+  "dataOrders": {
+    "completed": "Följande databeställning är slutförd: {name}. Det läggs till i ditt förslag och du kan se det i lager om några sekunder.",
+    "completedAll": "{names} har lästs in och lagts till i din förslagsbas. Du kan bläddra och beställa mer data under Kontextuella data.",
+    "failed": "{name} misslyckades",
+    "failedToAdd": "Det gick inte att lägga till \"{name}\" i förslaget, men data finns fortfarande tillgängliga i biblioteket.",
+    "processing": "Följande databeställning bearbetas: {name}. Den kommer att läggas till i ditt förslag när det är klart.",
+    "statusTitle": "Status för databeställning"
+  },
+  "demoSite": {
+    "badge": "demo",
+    "flyout": {
+      "content": "Vi har skapat den här webbplatsen för att demonstrera funktionerna i Forma. Starta en guide nedan för att följa stegen i ett enkelt arbetsflöde och skapa dina egna webbplatser när du är klar.",
+      "createSiteButton": "Skapa ny plats",
+      "createSiteTooltip": "Du måste ha en aktiv licens och ha behörighet att skapa platser i det här projektet",
+      "header": "Det här är en demo-plats",
+      "startGuideButton": "Starta guiden"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "KOM IGÅNG MED",
+    "titleFormaSiteDesign": "En webbplats för demo",
+    "description": "Det här är en fördesignad exempelwebbplats där du kan utforska Forma Plats Design. Oroa dig inte för att ha sönder något - se det som ett säkert utrymme för att experimentera utan att det påverkar dina verkliga projekt.",
+    "callToAction": "Klicka på {bold} för att utforska den demo webbplatsen.",
+    "callToActionBold": "Fortsätt",
+    "buttonContinue": "Fortsätt",
+    "buttonGoToHome": "Gå till startsidan för Forma",
+    "imageAlt": "Forma Plats designvisualisering"
+  },
+  "drawing": {
+    "traceShape": "Spåra befintlig form"
+  },
+  "hotkeys": {
+    "addNode": "Lägg till nod",
+    "cancelDrawingPoint": "Avbryt ritpunkt",
+    "clickAndMoveGrip": "Klicka och flytta ett handtag för att skala åt det hållet.",
+    "complete": "Slutförd",
+    "copy": "Kopiera",
+    "cut": "Klipp ut",
+    "deleteSelected": "Radering markerad",
+    "drawHouse": "Rita hus",
+    "drawHousesWithLine": "Rita hus med linje",
+    "drawLine": "Rita linje",
+    "drawRoad": "Rita väg",
+    "edit": "Redigera",
+    "exitContext": "Avsluta kontext",
+    "exitEditGraph": "Avsluta redigera graf",
+    "exitGraphTool": "Avsluta grafverktyg",
+    "exitHouseTool": "Avsluta husverktyg",
+    "exitSiteStudyAndApply": "Avsluta platsstudieverktyget och tillämpa studien på förslaget",
+    "exitTool": "Avsluta verktyg",
+    "exitTransportationTool": "Avsluta infrastrukturverktyget",
+    "finishEditing": "Slutför redigeringen",
+    "freeform": "Friform",
+    "measureDistance": "Mät avstånd",
+    "paste": "Klistra in",
+    "placeSingleHouses": "Placera enskilda hus",
+    "redo": "Gör om",
+    "remove": "Ta bort",
+    "resetGraph": "Återställ graf",
+    "selectAll": "Markera alla",
+    "selectSomethingToModify": "Välj något att ändra med {toolName}",
+    "switchHouseCorner": "Byt hushörn",
+    "switchHousePlacementSide": "Växla husplaceringssida",
+    "toggleSidebar": "Växla sidofält",
+    "undo": "Ångra"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "Medan du flyttar kompasspositionen håller du ned Skift för att justera rotationsaxeln med geometrin under markören.",
+    "editSiteLayout": "Redigera situationslayouten eller välj enskilda zoner att ange byggnadstypologi för.",
+    "freeMode": "Fritt läge. Tryck på ↹ Tabbtangenten för horisontellt läge.",
+    "horizontalMode": "Horisontellt läge. Tryck på ↹ Tabb för fritt läge.",
+    "mode2D": "2D-läge. Alla verktyg är begränsade till horisontellt plan.",
+    "rotateMoveText": "{moveModeText} Flytta ({inputModeText}). Tryck på ↹ Tabb för {nextMoveModeText} Flytta ({nextInputModeText}).",
+    "selectAreaToExplore": "Välj det område som du vill utforska alternativ för platslayout för.",
+    "snappingAxesHint": " Tryck på Alt om du vill dölja fästaxlarna. Alt + C för att ta bort dem.",
+    "straightAction": "Raka {action}. Tryck på ↹ Tabb för avsmalnande {action}.",
+    "switchHouseCornerAndRotate": "Tryck på tabbtangenten för att byta hushörn. Håll ned och dra musen för att rotera",
+    "switchHousePlacementSide": "Tryck på tabbtangenten för att byta husplaceringssida",
+    "taperAction": "Avsmalnande {action}. Tryck på ↹ Tabb för avsmalnande {action}."
+  },
+  "menus": {
+    "generatorsByExtensions": "Generatorer efter tillägg"
+  },
+  "messages": {
+    "elementAddedTo": "Element lades till i {location}"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "Sparar..."
+    },
+    "camera": {
+      "lookAt": "Titta på"
+    },
+    "lineWidth": "Linjebredd",
+    "settings": "Inställningar",
+    "templates": {
+      "updatesAvailable": "Tillgängliga uppdateringar"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "Det gick inte att utföra byggnadens högerklicksalternativ",
+      "failedToConvertVolumes": "Det gick inte att konvertera volymer till basbyggnad",
+      "failedToDraw": "Det gick inte att rita basbyggnaden",
+      "failedToEdit": "Det gick inte att redigera ny basbyggnad",
+      "failedToPushPull": "Det gick inte att flytta/dra basbyggnad"
+    },
+    "failedToLoadContextualData": "Det gick inte att läsa in kontextuella data",
+    "import": {
+      "largeScale": "Importen innehåller element som är stora i skala ({size}). Importen kanske inte fungerar som förväntat. Tryck på ESC för att avbryta.",
+      "resultingShapeInvalid": "Den resulterande formen är ogiltig."
+    },
+    "modelNotGeolocated": "Site Design-modellen är inte geolokaliserad. Beställ kontextuella data för att geolokalisera den",
+    "terrain": {
+      "boundingBoxTooLarge": "Avgränsningsramen för elementgeometri är för stor för att den ska kunna användas som terräng. Max storlek: 4 km². Faktisk storlek: {size}km²"
+    },
+    "library": {
+      "couldNotFindElement": "Det gick inte att hitta bibliotekselementet",
+      "elementNotAvailable": "Bibliotekselementet är inte tillgängligt",
+      "failedToConvertTerrain": "Det gick inte att konvertera till terrängelement",
+      "failedToDownloadFloorPlans": "Det gick inte att hämta planlösningar",
+      "failedToSaveFloorPlans": "Det gick inte att spara planritningar på projektnivå. Uppdatera sidan",
+      "failedToUpdateLibrary": "Det gick inte att uppdatera biblioteket"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "Fel i menyn för linjebyggnad",
+      "failedToDraw": "Det gick inte att rita linjebyggnader",
+      "failedToEdit": "Misslyckades med att redigera linjebyggnad",
+      "failedToolbarAction": "Misslyckad åtgärd för verktygsfält för linjebyggnad"
+    },
+    "siteStudy": {
+      "errorInExplore": "Fel i Utforska. Försök igen!",
+      "errorOccurred": "Ett fel inträffade. Våra tekniker meddelas.",
+      "failedToLoadPicker": "Det gick inte att läsa in utforskningsväljaren. Försök igen."
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "Bläddra bland alla plugins",
+    "browseDescription": "Bläddra bland befintliga tillägg eller generatorer från tredjepartsleverantörer eller lägg till dina egna - de kommer att visas här.",
+    "downloadButton": "Ladda ned tillägg",
+    "downloadDescription": "för att importera modeller från Revit eller Rhino.",
+    "importModelTitle": "Importera modell från tillägg",
+    "noDescriptionAvailable": "Ingen beskrivning tillgänglig.",
+    "plugins": "Insticksprogram"
+  },
+  "errorBoundary": {
+    "componentCrashed": "Komponenten kraschade",
+    "retryButton": "Försök igen",
+    "unexpectedError": "Ett oväntat fel inträffade. Försök igen eller läs in sidan igen för att försöka igen"
+  },
+  "guides": {
+    "closeMenu": "Stäng menyn för guider och mått"
+  },
+  "geometryAlerts": {
+    "dismiss": "Stäng",
+    "header": "Varningar om geometri",
+    "review": "Granska",
+    "title": "Geometrivarningar ({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "Ta bort eller ändra för att köra analyser.",
+      "title": "Duplicerade geometrier"
+    },
+    "invalidBbox": {
+      "subTitle": "Ta bort eller ändra för att köra analyser.",
+      "title": "Element med geometri för långt bort"
+    },
+    "outOfBounds": {
+      "subTitle": "Ta bort eller ändra för att köra analyser.",
+      "title": "Element utanför terrängen"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "Den första våningen har 0 område. Fäst undersidan vågrätt för att reparera.",
+      "title": "Första våningen utan område har detekterats"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "Den här byggnaden har en eller flera våningar med 0 yta och kan inte göras till en giltig byggnad.",
+      "title": "Våningar utan yta har detekterats"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "Denna byggnad har <a>en icke-vattentät geometri</a> och kan bli en generisk modell utan våningar när man lämnar en 3D-skiss",
+      "title": "Byggnaden är inte vattentät"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "Den här modellen har <a>en icke-vattentät geometri</a> som kan påverka verktyget och skärmens beteende.",
+      "title": "Geometrin är inte vattentät"
+    }
+  },
+  "importToolbar": {
+    "title": "Importera modell"
+  },
+  "labels": {
+    "addLabelButton": "Lägg till etikett",
+    "category": "Etiketter",
+    "description": "Lägg till etiketter för att markera specifika punkter på 3D-canvaset med en kort textbeskrivning. Du kan lägga till upp till {count} textrader. ",
+    "label": "Etikett",
+    "placeholder": "Infoga text..."
+  },
+  "layerList": {
+    "buildings": "Byggnader",
+    "category": {
+      "contextualDataDuration": "Kontextuella data (~1–2,5 min)"
+    },
+    "generic": "Generisk",
+    "images": "Bilder",
+    "propertyBoundaries": "Fastighetsgränser",
+    "roads": "Vägar",
+    "siteLimits": "Platsbegränsningar",
+    "terrain": "Terräng",
+    "vegetation": "Vegetation",
+    "zones": "Zoner"
+  },
+  "layersTitle": "Lager",
+  "library": {
+    "addedToLibrary": "Lade till {name} i biblioteket.",
+    "addToLibraryButton": "Lägg till i bibliotek"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "Rita begränsningar",
+      "name": "Begränsning",
+      "plural": "Begränsningar",
+      "tooltip": "Skapa en volym för att visualisera projektets begränsningar."
+    },
+    "siteLimit": {
+      "defineAsAction": "Definiera som platsbegränsning",
+      "hotkeyDescription": "Rita platsbegränsning",
+      "name": "Platsbegränsning",
+      "tooltip": "Skapa en platsbegränsning som används för att analysera mätvärdena för ditt projekt."
+    },
+    "title": "Gränser",
+    "zone": {
+      "hotkeyDescription": "Rita zon",
+      "name": "Zon",
+      "tooltip": "Rita zoner för att definiera områden att analysera på din plats."
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "Avsluta ritningsläget"
+  },
+  "navbar": {
+    "addButton": "Lägg till",
+    "quickActionsButton": "Snabba åtgärder",
+    "settingsButton": "Inställningar"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "Vill du ta bort {name}?",
+      "descriptionParagraph1": "En bas innehåller objekt som återanvänds i dina förslag. Du kan skapa flera baser och växla mellan dem.",
+      "descriptionParagraph2": "Om du vill lägga till ett befintligt objekt högerklickar du på det och väljer Flytta till bas. Om du vill rita ett nytt objekt klickar du på Redigera."
+    },
+    "dataOrderProcessing": "En databeställning bearbetas. Det kommer att läggas till i ditt förslag när det är klart."
+  },
+  "pendingOperation": {
+    "defaultDescription": "Väntar på att automatiseringen ska slutföras..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} geometrier som har lagts till i {layerType}",
+    "geometriesSelectedLabel": "Markerade geometrier",
+    "updateTerrainAction": "Uppdatera terräng",
+    "updateTerrainDescription": "Ersätter nuvarande terräng med ny terräng från biblioteket"
+  },
+  "properties": {
+    "color": "Färg",
+    "elevation": "Höjd",
+    "height": "Höjd",
+    "length": "Längd",
+    "mixed": "Blandat",
+    "name": "Namn",
+    "position": "Position",
+    "radius": "Radie",
+    "width": "Bredd"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "Det gick inte att hämta alla objekt.",
+      "downloadElementsRecovery": "eller försök igen senare. Du är i visningsläge tills ärendet har lösts",
+      "flatteningGroups": "Platta ut grupper på förslag eftersom de inte längre stöds",
+      "ignoringOldElements": "Ignorera gamla element",
+      "knownCriticalHeader": "Det gick inte att bearbeta element",
+      "knownCriticalMessage": "Uppdatera sidan och försök igen.",
+      "missingGeoLocation": "Projektets geografiska plats saknas för att utföra åtgärden.",
+      "notFoundHeader": "Förslaget hittades inte",
+      "notFoundMessage": "Vi kan inte hitta förslaget som du försöker komma åt.",
+      "terrainNotFoundHeader": "Terrängmodell saknas",
+      "terrainNotFoundMessage": "Det har inträffat ett oväntat fel i det aktuella förslaget.",
+      "tooManyRequestsHeader": "Någon har varit FÖR aktiv!",
+      "tooManyRequestsMessage": "Vi fick fler förfrågningar från ditt nätverk än vi kunde hantera. Försök att läsa in den här sidan senare eller byt till ett annat nätverk, till exempel via en personlig hotspot."
+    },
+    "noProposalLayersText": "Element som är unika för ett förslag kommer att listas här."
+  },
+  "proposalHistory": {
+    "branchFailed": "Det gick inte att skapa ett nytt förslag från den gamla revisionen.",
+    "branchRevisionButton": "Skapa nytt förslag",
+    "branchSuccess": "Nytt förslag har skapats från den valda versionen, med namnet \"{name}\"",
+    "contributors": "Medverkande: {count}",
+    "copyLinkButton": "Kopiera länk",
+    "currentVersionLabel": "Aktuell version",
+    "filter": {
+      "byAnalysis": "Efter analys",
+      "byDate": "Efter datum",
+      "from": "Från",
+      "onlyYours": "Bara din",
+      "pinned": "Fäst",
+      "selectDates": "Välj datum",
+      "title": "Filtrera",
+      "to": "Till"
+    },
+    "linkToVersionCopied": "Länk till {time} kopierad",
+    "nameThisVersionAction": "Namnge den här versionen",
+    "pinVersionAction": "Fäst version",
+    "unpinVersionAction": "Avfäst version",
+    "untitledVersionLabel": "Namnlös version",
+    "viewingVersionLabel": "Visar version"
+  },
+  "quickAccess": {
+    "actionsLabel": "Åtgärder",
+    "noSuggestions": "Inga förslag",
+    "openHotkeyList": "Öppna snabbtangentslista",
+    "repeatLastTool": "Upprepa det senaste verktyget",
+    "search": "Sök",
+    "title": "Snabbåtkomst"
+  },
+  "requestInvite": {
+    "button": "Begär inbjudan",
+    "homeLink": "Gå till startsidan",
+    "projectLink": "Gå till projektet",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "Redan medlem",
+        "message": "Du är redan medlem i projektet."
+      },
+      "ALREADY_REQUESTED": {
+        "header": "Inbjudan har redan begärts",
+        "message": "Du har redan en väntande inbjudan till det här projektet. Om din administratör godkänner din begäran får du en inbjudan till projektet i din e-post."
+      },
+      "CAN_JOIN": {
+        "header": "Du kan gå med",
+        "message": "Du kan gå med i det här projektet. Gå till projektet och klicka på knappen \"gå med i projektet\"."
+      },
+      "ERROR": {
+        "header": "Något gick fel, försök igen"
+      },
+      "NOT_FOUND": {
+        "header": "Fel, det går inte att hitta projektet",
+        "message": "Den URL du har angett pekar inte på ett befintligt projekt."
+      },
+      "REQUEST_LIMIT": {
+        "header": "För många begäranden",
+        "message": "Du har för många väntande inbjudningsförfrågningar. Försök igen i ett senare skede."
+      },
+      "SUCCESS": {
+        "header": "Din förfrågan har skickats!",
+        "message": "Om din administratör godkänner din begäran får du en inbjudan till projektet i din e-post."
+      }
+    },
+    "statusFallback": {
+      "header": "Du har inte åtkomst till detta Forma-projekt",
+      "message": "För att få åtkomst till projektet måste du bli inbjuden av en av administratörerna. Begär en inbjudan från administratörer med knappen nedan."
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "Standard till mapp: Min projektfilsmapp"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "Centrera",
+      "left": "Vänsterjustera",
+      "right": "Högerjustera"
+    },
+    "buildingLabel": "Byggnad",
+    "createNew": "Skapa ny",
+    "layoutLabel": "Layout",
+    "loading": "Läser in",
+    "name": "Hus",
+    "parcelLabel": "Paket",
+    "plural": "Hus",
+    "publish": "Publicera",
+    "tooltip": "Rita ett eller flera hus som är strukturerade runt en linje. Skapa och återanvänd hustyper från egenskapspanelen.",
+    "tooltips": {
+      "buffer": "Buffert",
+      "flatRoof": "Platt tak",
+      "gableRoof": "Sadeltak",
+      "length": "Längd",
+      "numberOfFloors": "Antal våningar",
+      "ridgeDirection": "Riktning på åsen",
+      "roofAngle": "Takets vinkel",
+      "shedRoof": "Skjultak",
+      "storyHeight": "Våningshöjd",
+      "width": "Bredd"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "Ta bort sektionsruta",
+    "enableButton": "Aktivera sektionsruta",
+    "saveButton": "Spara sektionsruta",
+    "title": "Sektionsruta",
+    "toggleButton": "Visa/dölj rutans kontur"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "Det här förslaget ändrades medan du gjorde ändringar (det kan till exempel vara en annan teammedlem som arbetar med det). Vill du spara din version som ett nytt förslag?",
+      "discardEdits": "Ta bort ändringar",
+      "saveAsNew": "Spara som ett nytt förslag",
+      "title": "Konflikt vid redigering av förslag"
+    },
+    "error": {
+      "body": "Det gick inte att spara den senaste redigeringen. Uppdatera sidan för att fortsätta redigera.",
+      "ok": "OK",
+      "title": "Det gick inte att spara"
+    }
+  },
+  "shapes": {
+    "arc": "Båge med tre punkter",
+    "circle": "Cirkel",
+    "cube": "Kub",
+    "cuboid": "Rätblock",
+    "cylinder": "Cylinder",
+    "dome": "Kupol",
+    "freeform": "Friform",
+    "pyramid": "Pyramid",
+    "rectangle": "Rektangel",
+    "roof": "Tak",
+    "shapes3d": "3D-former",
+    "spline": "Spline",
+    "title": "Primitiver"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "Aktivera stödlinjer genom att hålla muspekaren över kanterna, håll ned ⇧ Skift för att följa riktlinjerna. Håll ned {key} för att förhindra fästning.",
+      "affineInstructions": "Håll ned {key} för att förhindra fästning. Tryck på tabbtangenten för att växla mellan horisontellt, vertikalt och terrängläge.",
+      "clickToAddSubtract": "Lägg till punkt i linje eller subtrahera punkter genom att klicka.",
+      "editModeStartFinishMac": "Håll ned ⌥ Alternativ för att addera/subtrahera punkter. Tryck på ↵ Retur för att avsluta redigeringen.",
+      "editModeStartFinishWindows": "Håll ned Alt för att addera/subtrahera punkter. Tryck på ↵ Retur för att avsluta redigeringen.",
+      "finishEditing": "Tryck på ↵ Retur för att avsluta redigeringen.",
+      "finishPolygon": "Tryck på ↵ Enter för att slutföra skapandet av polygonen.",
+      "preciseMoveVertical": "Tryck på {key} för att växla vertikalt läge.",
+      "specifyDistance": "Skriv för att ange ett specifikt avstånd. Klicka för att placera."
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "Att ta bort, kopiera, klippa ut och klistra in våningar stöds inte för 3D-skissbyggnader. Prova att redigera i 3D-skiss istället."
+  },
+  "snapping": {
+    "cursorElevation": "Uppställningar vid markören",
+    "guidesAndMeasurements": "Guider och mått",
+    "snapToGuides": "Snappa till stödlinjer",
+    "snapToObjects": "Snappa till objekt"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "Ange utrymmesnamn eller lämna tomt som standard"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "Anslut till scenario",
+      "connectToScenarioDesc": "Ett scenario är en delad designbehållare i ditt projekt som kopplar samman modeller, verktyg, geometriska data och andra data från flera programvaror."
+    }
+  },
+  "relativeTime": {
+    "today": "Idag"
+  },
+  "terrain": {
+    "elevation": "Höjd",
+    "errors": {
+      "loadMapImageFailed": "Det gick inte att läsa in kartbilden",
+      "loadSatelliteTextureFailed": "Det gick inte att läsa in satellittextur.",
+      "loadTextureFailed": "Det gick inte att läsa in terrängstrukturen."
+    },
+    "labels": {
+      "numberOfSelectedPads": "Plattornas volym",
+      "padVolume": "Plattans volym",
+      "padsVolume": "Plattornas volym",
+      "showAsPercentage": "Visa som procentsats",
+      "showAsRatio": "Visa som förhållande",
+      "totalMassBalance": "Total massbalans"
+    },
+    "massBalanceHover": "Massförändring i hela terrängen.",
+    "metricsHeader": "Mätvärden",
+    "pad": {
+      "header": "Terrängplatta",
+      "name": "Terrängplatta",
+      "tooltip": "Schakta/fyll terrängen, justera höjd och lutning och bedöm massbalansen."
+    },
+    "padVolumeHover": "Volym som läggs till/dras bort från terrängen av de valda dynorna.",
+    "padsHeader": "Terrängplattor",
+    "slope": "Lutning"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "Du kan inte växla mellan baslager/förslag medan automatiseringen läses in",
+    "pendingSelectionBlockedMessage": "Du kan inte ändra markeringen medan automatiseringen läses in",
+    "pendingToolSwitchBlockedMessage": "Verktyg är inte tillgängliga när automatiseringen läses in",
+    "transform": {
+      "redefineReferencePointsButton": "Omdefiniera referenspunkter"
+    }
+  },
+  "transform": {
+    "cover": "Täckning",
+    "fillet": "Avrundning",
+    "intersect": {
+      "name": "Skärning",
+      "tooltip": "Skapa en skärningspunkt mellan två eller flera objekt. Fotavtrycket för det första valda objektet kommer att ändras i enlighet med detta."
+    },
+    "loft": "Loft",
+    "move": {
+      "name": "Flytta",
+      "tooltip": "Flytta ett objekt genom att definiera en referens- och slutpunkt. "
+    },
+    "offset": {
+      "apply": "Tillämpa förskjutning",
+      "name": "Förskjutning",
+      "tooltip": "Förläng ett objekts fotavtryck utåt eller minska det inåt med ett visst avstånd."
+    },
+    "rotate": {
+      "name": "Rotera",
+      "tooltip": "Rotera objekt i scenen runt en definierad referenspunkt."
+    },
+    "shell": "Skal",
+    "split": {
+      "name": "Dela",
+      "tooltip": "Dela ett eller flera objekt med hjälp av en linje."
+    },
+    "subtract": {
+      "name": "Subtrahera",
+      "tooltip": "Subtrahera en form från ett objekt med hjälp av ett annat objekt. Fotavtrycket för det första valda objektet kommer att ändras i enlighet med detta."
+    },
+    "sweep": "Svep",
+    "title": "Omvandla",
+    "union": {
+      "name": "Förena",
+      "tooltip": "Sammanfoga två eller flera objekt. Det första markerade objektet definierar kategorin och höjden för det resulterande objektet."
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "Hörnradie är ett dynamiskt värde som optimerar vägkurvor baserat på layout.",
+      "tight": "Hörnradie är ett litet fast värde som är lika med 1/2 av vägens bredd."
+    },
+    "railroads": {
+      "hotkeyDescription": "Rita skenor",
+      "name": "Järnvägar",
+      "toolButton": "Järnvägar",
+      "tooltip": "Skapa räls och justera bredderna via den högra panelen.",
+      "typeLabel": "Typ av skena",
+      "typePlaceholder": "Välj typ av skena"
+    },
+    "roads": {
+      "hotkeyDescription": "Rita väg",
+      "name": "Vägar",
+      "toolButton": "Vägar",
+      "tooltip": "Skapa vägar och justera bredden via den högra panelen.",
+      "widthLabel": "Vägens bredd",
+      "withGraphToolButton": "Vägar (med diagram)"
+    },
+    "title": "Infrastruktur",
+    "trafficData": {
+      "addButton": "Lägg till trafikdata",
+      "adtTooltip": "Genomsnittlig dygnstrafik",
+      "advancedSettingsLabel": "Avancerade inställningar",
+      "dailyDistributionLabel": "Daglig trafikfördelning",
+      "dayTimeTooltip": "Dag : 06.00-18.00",
+      "eveningTimeTooltip": "Kväll: 18.00-22.00",
+      "heavyVehicleLabel": "Tung trafik",
+      "nightTimeTooltip": "Kväll : 22.00-06.00",
+      "railRequiredInputsMessage": "Alla indata krävs för att järnvägen ska beaktas i bulleranalysen",
+      "removeButton": "Ta bort trafikdata",
+      "roadRequiredInputsMessage": "Alla indata krävs för att vägen ska beaktas i bulleranalysen",
+      "speedLimitTooltip": "Hastighetsbegränsning",
+      "title": "Uppgifter om trafikbuller"
+    }
+  },
+  "ui": {
+    "add": "Lägg till",
+    "area": "Område",
+    "areaSum": "Område (summa)",
+    "automationLabel": "AUTOMATISERING",
+    "beta": "Beta",
+    "browsePluginsDescription": "Bläddra bland befintliga plugins från tredjepartsleverantörer eller lägg till dina egna – de kommer att visas här.",
+    "cancel": "Avbryt",
+    "close": "Stäng",
+    "color": "Färg",
+    "delete": "Ta bort",
+    "detach": "Koppla loss",
+    "duplicate": "Duplicera",
+    "edit": "Redigera",
+    "gridSettings": "Rutnätsinställningar",
+    "hide": "Dölj",
+    "length": "Längd",
+    "lengthSum": "Längd (summa)",
+    "newVersionAvailable": "Ny version tillgänglig.",
+    "redo": "Gör om",
+    "refresh": "Uppdatera",
+    "remove": "Ta bort",
+    "rename": "Byt namn",
+    "repair": "Reparera",
+    "retry": "Försök igen",
+    "show": "Visa",
+    "siteLabel": "Plats",
+    "surroundings": "Omgivning",
+    "textAlignment": "Textjustering",
+    "undo": "Ångra",
+    "update": "Uppdatera",
+    "videoNotSupported": "Din webbläsare saknar stöd för den här videotaggen.",
+    "xyzAxes": "XYZ-axlar"
+  },
+  "performanceStats": {
+    "currentSnapshot": "Aktuell ögonblicksbild",
+    "remainingFromPastSnapshots": "Återstående från tidigare ögonblicksbilder",
+    "title": "Prestandastatistik {status}"
+  },
+  "units": {
+    "asl": "asl",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "Centrera",
+      "left": "Vänsterjustera",
+      "right": "Högerjustera",
+      "spacing": "Avstånd"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "Rita område med träd",
+      "name": "Område med träd",
+      "tooltip": "Skapa ett område med träd och redigera deras storlek och densitet. Alla träd kommer att påverka analyserna."
+    },
+    "header": "Träd",
+    "landscapingTitle": "Landskapsarkitektur",
+    "properties": {
+      "bufferTooltip": "Buffert",
+      "gridLengthLabel": "Rutnätets längd",
+      "gridWidthLabel": "Rutnätets bredd",
+      "heightTooltip": "Trädets höjd",
+      "offsetTooltip": "Förskjutning"
+    },
+    "title": "Vegetation",
+    "tooltips": {
+      "averageDistanceLabel": "Genomsnittligt avstånd mellan trädkronor",
+      "heightLabel": "Höjden på varje träd"
+    },
+    "treeLine": {
+      "hotkeyDescription": "Rita linje av träd",
+      "name": "Trädlinje",
+      "tooltip": "Skapa en linje fylld med träd och redigera deras storlek och densitet. Alla träd kommer att påverka analyserna."
+    },
+    "trees": "Träd"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "Inget analysisId har angetts",
+      "unsupportedAnalysisType": "Inte en analystyp som stöds: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "Du har skrivskyddad åtkomst till den här platsen"
+  },
+  "windAnalysis": {
+    "analyzing": "Analyserar...",
+    "atCapacity": "Vi håller just nu på med ett stort antal detaljerade vindanalyser. Det kan ta längre tid att slutföra analysen. Tack för ditt tålamod!",
+    "circleOutsideBoundingBox": "Analysområdet ligger utanför kartområdet",
+    "concurrentQuotaReached": "Gränsen för samtidiga vindanalyser har uppnåtts",
+    "concurrentQuotaReachedDescription": "Du har för många samtidiga vindanalyser igång. Vänta tills några av dem har slutförts.",
+    "concurrentQuotaWarning": "Gräns för samtidig analys",
+    "concurrentQuotaWarningDescription": "Du har {remaining} detaljerade vindanalyser kvar innan du når gränsen för {limit} samtidiga analyser.",
+    "dailyQuotaReached": "Analysgränsen uppnådd",
+    "dailyQuotaReachedDescription": "Du har nått den dagliga gränsen för vindanalyser.",
+    "dailyQuotaReachedDescriptionRetry": "Du har nått den dagliga gränsen för vindanalyser. Försök igen vid {nextAvailableAt}.",
+    "loadingData": "Läser in data",
+    "loadingDataTooltip": "Läser in...",
+    "runAnalysis": "Analysera (~{min}{max} minuter)",
+    "seeAnalysisButton": "Se detaljerad analys",
+    "stoppedOrFailed": "Analysen avbröts eller misslyckades!",
+    "viewerAccessDisableTooltip": "Det går inte att köra analyser som deltagare"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "Avancerade modelleringsverktyg",
+      "editIn": "Redigera i 3D-skiss",
+      "howToStartEditingMessage": "Tryck på ⏎ eller dubbelklicka för att redigera i 3D-skiss.",
+      "launch": "Ny 3D-skiss",
+      "sketch": "Skiss",
+      "updateProperties": "Uppdatera egenskaper"
+    },
+    "advancedModeling": {
+      "cover": "Täckning",
+      "fillet": "Avrundning",
+      "intersect": "Skärning",
+      "loft": "Loft",
+      "offset": "Förskjutning",
+      "shell": "Skal",
+      "subtract": "Subtrahera",
+      "sweep": "Svep",
+      "union": "Förena"
+    },
+    "axes": {
+      "reset": "Återställ axlar",
+      "set": "Ange XYZ-axlar"
+    },
+    "buildingType": {
+      "draw": "Rita 3D-skissbyggnad",
+      "name": "3D-skissbyggnad"
+    },
+    "buttons": {
+      "apply": "Använd",
+      "cancel": "Avbryt",
+      "ok": "OK"
+    },
+    "convert": {
+      "externalMessage": "Konvertera ett objekt till 3D-skiss för att ändra exteriöra ytor, kanter och punkter.\n\nNär elementet väl har konverterats kommer det inte längre att vara anslutet till elementet i den ursprungliga källan och ändringarna kommer inte att synkroniseras.",
+      "message": "Konvertera ett objekt till 3D-skiss för att ändra exteriöra ytor, kanter och punkter.",
+      "title": "Konvertera till 3D-skiss"
+    },
+    "dialogs": {
+      "arrayButtonArray": "Matris",
+      "arrayButtonCancel": "Avbryt",
+      "arrayDistanceBetween2Points": "Längd mellan 2 punkter",
+      "arrayDistanceTotalLength": "Total längd",
+      "arraySubtitleDistance": "Avstånd",
+      "arraySubtitleQuantity": "Kvantitet",
+      "arraySubtitleType": "Typ",
+      "arrayTitle": "Matris",
+      "arrayTypeLinear": "Linjär matris",
+      "arrayTypeRadial": "Radiell matris",
+      "corruptedElementsDeleted": "Vissa element misslyckades med att spara och blev korrupta. Dessa element togs bort automatiskt.",
+      "editDimensionTitle": "Redigera mått",
+      "recoveryClosedWithoutSaving": "3D-skissen stängdes utan att sparas ordentligt.",
+      "recoveryQuestion": "Vill du återställa ändringarna som inte har sparats?",
+      "recoveryTitle": "Ej sparade modelländringar påträffades"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "Förenkla de lägsta icke-vågräta ytorna"
+    },
+    "finishSelection": {
+      "back": "Bakåt (B)",
+      "cancel": "Avbryt (Esc)",
+      "confirm": "Slutför (F)",
+      "next": "Nästa (N)"
+    },
+    "floors": {
+      "addFloor": "Lägg till våning",
+      "addFloors": "Lägg till våningar",
+      "floorHeight": "Våningshöjd",
+      "floors": "Våningar",
+      "floorWithNumberLabel": "Våning {level}",
+      "moreOptions": "Mer",
+      "numberOfFloors": "Antal våningar",
+      "removeFloors": "Ta bort våningar",
+      "resetFloors": "Återställ våningar",
+      "title": "Våningsdetaljer"
+    },
+    "groupEditing": {
+      "redo": "Gör om",
+      "undo": "Ångra"
+    },
+    "grouping": {
+      "toolbarTitle": "Grupper"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "Mät vinkel",
+      "measureDistance": "Mät avstånd",
+      "menuTitle": "Guider och mått",
+      "title": "Guider och mått"
+    },
+    "mesh": {
+      "convertHintMessage": "Dubbelklicka om du vill aktivera ytterligare redigeringsverktyg genom att konvertera mesher till objekt.",
+      "importExceededLimitsMessage": "Importen överskrider {limit} nättrianglar och förblir oförändrad för bättre prestanda.\n\nDu får tillgång till fler redigeringsverktyg genom att markera enskilda mesher och dubbelklicka för att konvertera dem till redigerbara objekt.",
+      "importExceededLimitsTitle": "Importen överskrider gränsen för nättrianglar"
+    },
+    "pasteInPlaceAction": "Klistra in på plats",
+    "properties": {
+      "mixed": "Blandat",
+      "objectWithIdLabel": "Objekt {id}"
+    },
+    "scaleTitle": "SKALA",
+    "selection": {
+      "areaSelectionOptions": "Alternativ för områdesval",
+      "filterEdges": "Kanter",
+      "filterFaces": "Ytor",
+      "filterGroups": "Grupper",
+      "filterMeshes": "Nät",
+      "filterSolids": "Fasta ytor",
+      "filterVertices": "Hörn",
+      "selection": "Markering",
+      "selectionTools": "Markeringsverktyg"
+    },
+    "tools": {
+      "array": "Matris",
+      "editArcCircle": "Redigera båge eller cirkel",
+      "editSpline": "Redigera spline",
+      "extrudeEdges": "Extrudera kanter",
+      "extrudeFace": "Extrudera yta",
+      "facetFace": "Fasettyta",
+      "flattenFace": "Platta till ytor",
+      "group": "Gruppera",
+      "groupDetach": "Koppla loss",
+      "meshToObjects": "Konvertera nät",
+      "mirror": "Spegla",
+      "move": "Flytta",
+      "offsetEdges": "Förskjut kanter",
+      "offsetFace": "Förskjut yta",
+      "reverseFace": "Vänd yta",
+      "rotate": "Rotera",
+      "scale": "Skala",
+      "scaleNonUniform": "Ojämn skala",
+      "smoothEdges": "Utjämna kanter",
+      "tiltFace": "Luta yta",
+      "ungroup": "Avgruppera"
+    },
+    "tooltips": {
+      "building": "Komplexa 3D-byggnader med obegränsade möjligheter som lutande tak, lutande väggar och mycket mer.",
+      "editIn": "Konvertera objekt för att ändra hörn, kanter och ytor i 3D-skiss.",
+      "launch": "Använd 3D-skisser för att modellera och iterera tidiga byggnadsdesignkoncept."
+    },
+    "zoom": {
+      "fitProposal": "Zooma för att passa förslag",
+      "fitSelection": "Zooma för att passa markering"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "Guider för snabbstart",
+    "allTutorialsDescription": "Fyll i dessa interaktiva guider för att konfigurera din byggarbetsplats och börja arbeta i Plats Design. ",
+    "completionMessage": "Bra gjort! Du har slutfört guiden {header}!",
+    "completionText": "{percent}% slutfört",
+    "completedTitle": "Slutförda",
+    "continueButton": "Fortsätt",
+    "stepsTotal": "{count} steg totalt",
+    "timeLabel": "{time} min",
+    "stepProgress": "{current} av {total}",
+    "nextButton": "Nästa",
+    "doneButton": "Klar",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "Guider för snabbstart",
+    "upNextTitle": "Nästa gång"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "Konfigurera din webbplats",
+      "description": "Lägg till kontextuella data innan du börjar modellera och analysera objekt och byggnader.",
+      "reviewHeader": "Plats-konfigurationen är slutförd",
+      "reviewText": "Du har lagt till kontextuella data och en platsbegränsning.{ 0}{br}Bra jobbat! Nu kan du utforska våra modelleringsverktyg och importfunktioner, eller fortsätta med en annan guide.",
+      "steps": {
+        "openContextualTab": {
+          "header": "Öppna fliken kontextuella data",
+          "text": "Börja med att öppna fliken <bold>Kontextuella data</bold>."
+        },
+        "browseAndOrder": {
+          "header": "Bläddra bland data efter platsens plats",
+          "text": "Klicka på <bold>Bläddra bland kontextuella data</bold> för att se vilka datapaket som finns tillgängliga för din plats.{ 0}{br}Data kan omfatta omgivande byggnader, vägar och terräng. "
+        },
+        "orderStarterPackage": {
+          "header": "Beställ startdatapaket",
+          "text": "Klicka på <bold>Lägg till</bold> för att granska vad som ingår i det här datapaketet. Denna information är kostnadsfri. "
+        },
+        "orderData": {
+          "header": "Beställ datapaket",
+          "text": "Välj beställning för att starta nedladdningen av kontextuella data i 3D till din webbplats."
+        },
+        "drawSiteLimit": {
+          "header": "Rita platsbegränsning",
+          "text": "Aktivera det här ritverktyget för att definiera din platsbegränsningar. När du är aktiv ritar du punkter runt om på platsen och omger formen.{br}{br}En definierad platsbegränsningar är en förutsättning för att kunna utföra analyser i Forma Plats Design."
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "Lägg till byggnader",
+      "description": "Skapa byggnader med våra modelleringsverktyg eller importera befintliga modeller. ",
+      "reviewHeader": "Byggnader som har lagts till på platsen",
+      "reviewText": "Du har ritat byggnader och importerat tillgångar till din webbplats. Bra jobbat! Nu kan du utvärdera miljöförhållanden genom att köra analyser, eller fortsätta med en annan guide.",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "Rita en basbyggnad",
+          "text": "Klicka på <bold>Grundläggande byggnad</bold> för att aktivera byggverktyget. När den är aktiv ritar du byggnadens form och väljer den sista punkten för att slutföra ritningen av fotavtrycket."
+        },
+        "exploreParametricOptions": {
+          "header": "Utforska parametriska alternativ",
+          "text": "Utforska de parametriska alternativ som finns tillgängliga för att ändra din byggnadsmodell."
+        },
+        "importModel": {
+          "header": "Importera en modell eller fil",
+          "text": "Klicka på <bold>Importera</bold> för att överföra en modell eller rasterbild från din lokala enhet."
+        },
+        "placeInScene": {
+          "header": "Placera i scenen",
+          "text": "Klicka på det objekt som du just har importerat från biblioteket. När du har valt det placerar du det på din plats genom att klicka och dra. Självstudien går framåt automatiskt när elementet har placerats."
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "Utvärdera miljöförhållanden",
+      "description": "Kör en analys av soltimmar för att få underlag till tidiga designbeslut.",
+      "reviewHeader": "Analysen av soltimmar är klar!",
+      "reviewText": "Du har genomfört en analys av soltimmar på din plats.{ 0}{br}Nu kan du fortsätta skapa nya förslag, jämföra analyser eller utforska mer av Plats Design.",
+      "steps": {
+        "selectAnalysis": {
+          "header": "Välj analysen",
+          "text": "Klicka på den markerade ikonen för att välja analysen av soltimmar."
+        },
+        "selectDate": {
+          "header": "Välj ett datum",
+          "text": "Använd listrutan för att ange ett datum då du vill analysera soltimmar på din plats."
+        },
+        "runAnalysis": {
+          "header": "Kör analys",
+          "text": "Klicka på knappen för att starta analysen. Det tar bara några sekunder att slutföra.{br}{br}Guiden återupptas automatiskt när analysen är klar."
+        },
+        "openAnalysisResults": {
+          "header": "Öppna resultat",
+          "text": "När de är klara kommer analysresultaten att visas i listan här. Klicka på de senaste resultaten för att granska dem i detalj. Ett nytt fönster öppnas.",
+          "altText": "Fönstret Analysresultat"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "Hur fixar jag \"WebGL stöds inte\"?",
+      "text": "Din dator verkar inte ha stöd för WebGL, vilket är ett krav för att använda Forma",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

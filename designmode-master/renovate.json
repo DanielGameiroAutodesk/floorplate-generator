@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>spacemakerai/renovate-config:app",
+    "local>spacemakerai/renovate-config:initial",
+    "local>spacemakerai/renovate-config:automated"
+  ],
+  "packageRules": [
+    {
+      "groupName": "eslint",
+      "matchPackageNames": ["/^eslint/", "typescript-eslint"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "This is handled manually every time for now",
+      "matchPackageNames": ["@spacemakerai/adsk-formit-core-standalone", "@spacemakerai/web-sketch-renderer"],
+      "enabled": false
+    },
+    {
+      "groupName": "playwright",
+      "description": "Update playwright packages together",
+      "matchPackageNames": ["@playwright/test", "mcr.microsoft.com/playwright"]
+    },
+    {
+      "description": "Automerge playwright updates",
+      "matchPackageNames": ["@playwright/test", "mcr.microsoft.com/playwright"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}

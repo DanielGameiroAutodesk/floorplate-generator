@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "비교",
+    "headerText": "설계안 선택",
+    "maxProposalsWarning": "한 번에 최대 {max}개의 설계안만 비교할 수 있습니다.",
+    "minProposalsWarning": "비교하려면 최소 {min} 개 이상을 선택하십시오."
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "이 설계안을 삭제하시겠습니까?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "삭제",
+    "duplicateMenuItem": "복제",
+    "exportAsIfcBetaMenuItem": "IFC로 내보내기(베타)",
+    "exportAsIfcToDocs": "IFC로 Docs에 내보내기(베타)",
+    "exportAsObjMenuItem": "OBJ로 내보내기",
+    "exportSubmenu": "내보내기...",
+    "renameMenuItem": "이름 바꾸기",
+    "revitDownloadAddinMenuItem": "Revit 애드인 다운로드",
+    "revitSendToBetaMenuItem": "Revit 애드인으로 보내기(베타)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "설계안 내역 표시"
+  },
+  "createProposal": {
+    "buttonTooltip": "새 설계안 추가"
+  },
+  "error": {
+    "couldNotLoadProposals": "설계안을 로드할 수 없습니다. 다시 시도하십시오.",
+    "retryButton": "재시도"
+  },
+  "exportModal": {
+    "exportingMessage": "내보내는 중...",
+    "exportPrimaryButtonTitle": "내보내기",
+    "title": "Docs에 Forma 설계안 내보내기"
+  },
+  "filter": {
+    "buttonTooltip": "필터",
+    "closeButtonTooltip": "닫기",
+    "emptyBasesMessage": "프로젝트에 베이스 레이어가 없습니다. 레이어 섹션으로 이동하여 생성하십시오.",
+    "sortByHeader": "정렬 기준",
+    "title": "필터"
+  },
+  "proposalItem": {
+    "baseTooltip": "베이스 {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "비교할 다른 설계안 작성",
+    "headerText": "설계안",
+    "selectProposalsToCompare": "비교할 설계안 선택"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A-Z",
+    "alphabeticalDescending": "Z-A",
+    "lastEdited": "마지막으로 편집"
+  },
+  "toast": {
+    "exportAccessDeniedText": "이 폴더 또는 파일에 액세스할 수 있는 권한이 없습니다. 도움이 필요하면 관리자에게 문의하십시오.",
+    "exportAccessDeniedTitle": "액세스가 거부됨",
+    "exportDownloaded": "다운로드한 파일 내보내기",
+    "exportErrorText": "설계안을 내보낼 수 없습니다. 다시 시도하십시오. 문제가 지속되면 지원 부서에 문의하여 도움을 받으십시오.",
+    "exportErrorTitle": "Docs로 내보내지 못함",
+    "exportGenericError": "설계안을 내보내지 못함",
+    "exportInProgress": "설계안을 내보내는 중...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "프로젝트 설계안을 Autodesk Docs로 내보냈습니다. 이제 이를 사용하여 Forma 데이터를 Revit 프로젝트에 링크할 수 있습니다.",
+    "exportSuccessTitle": "Docs로 성공적으로 내보냈습니다.",
+    "exportTimeoutText": "Docs로 내보내기를 생성하는 동안 시스템이 시간 초과되었습니다. 프로젝트가 매우 큰 경우나 매우 복잡한 형상을 포함하는 경우 이 문제가 발생할 수 있습니다.",
+    "exportTimeoutTitle": "Docs로 내보내지 못함",
+    "exportTooLargeError": "내보내기에 실패했습니다. 이는 현재 내보내기에 지원되는 용량에 비해 설계안이 너무 크기 때문일 수 있습니다.",
+    "ifcExportFailed": "내보내기에 실패했습니다. 오류가 보고되었습니다.",
+    "ifcExportStarted": "IFC 파일 내보내기가 시작되었습니다. 완료되면 자동으로 다운로드됩니다.",
+    "proposalRenamedWarning": "설계안 이름이 이미 있습니다. {name}(으)로 이름이 변경되었습니다.",
+    "revitSendFailed": "설계안을 Revit으로 전송하지 못했습니다.",
+    "revitSendSuccess": "설계안이 Revit으로 전송되었습니다.",
+    "sessionExpired": "세션이 만료되었습니다. 페이지를 다시 로드하십시오."
+  }
+}

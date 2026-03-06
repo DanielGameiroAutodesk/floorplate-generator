@@ -1,0 +1,112 @@
+.LayerItem {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  cursor: default;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  font: var(--11-regular);
+  box-sizing: border-box;
+  margin-bottom: 2px;
+
+  --color-icon: var(--icon-color-medium);
+  --color-button: var(--icon-color-medium);
+  --color-text: var(--text-color-medium-default);
+  --background-color-hovered: var(--background-color-selected-default);
+  --background-color-selected: var(--background-color-selected-default);
+  --border-color-selected: var(--border-color-selected);
+
+  &.BaseLayer {
+    --background-color-hovered: var(--scenario-purple-15);
+    --background-color-selected: var(--scenario-purple-15);
+    --border-color-selected: var(--scenario-purple-30);
+    --color-icon: var(--scenario-purple);
+    padding-left: 32px;
+  }
+
+  .Icon,
+  .Arrow {
+    height: 16px;
+    margin-right: 8px;
+    color: var(--color-icon);
+  }
+  .Arrow {
+    display: none;
+  }
+
+  .Title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .Buttons {
+    display: flex;
+    height: 16px;
+    gap: 8px;
+
+    .VisibilityToggle,
+    .DisplayOptionsToggle,
+    .LockToggle {
+      visibility: hidden;
+    }
+  }
+
+  &.locked .LockToggle {
+    visibility: visible;
+  }
+
+  &.hidden .VisibilityToggle {
+    visibility: visible;
+  }
+
+  &.hidden,
+  &.disabled {
+    & button,
+    & .Buttons > :not(weave-tooltip),
+    & .Buttons > weave-tooltip > *,
+    & .Name,
+    & .Icon {
+      opacity: 0.5;
+    }
+  }
+
+  &.disabled {
+    & .Title {
+      opacity: 0.5;
+    }
+  }
+
+  &:hover,
+  &.Hovered {
+    background-color: var(--background-color-hovered);
+
+    .VisibilityToggle,
+    .DisplayOptionsToggle,
+    .LockToggle {
+      visibility: visible;
+    }
+
+    &.HasSubLayers .Arrow {
+      display: block;
+    }
+  }
+
+  &.Selected {
+    border: 1px solid var(--border-color-selected);
+    background-color: var(--background-color-selected);
+  }
+}
+
+.VisibilityToggle,
+.DisplayOptionsToggle,
+.LockToggle {
+  color: var(--color-button);
+  border: none;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+  background: transparent;
+  width: 16px;
+}

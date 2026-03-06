@@ -1,0 +1,33 @@
+{
+  "name": "@spacemakerai/line-buildings-shared",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spacemakerai/designmode.git",
+    "directory": "packages/line-buildings-shared"
+  },
+  "version": "1.0.2",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prepack": "rm -rf dist && pnpm build"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "exports": {
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "uuid": "^11.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

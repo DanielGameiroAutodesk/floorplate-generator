@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "Összehasonlítás",
+    "headerText": "Ajánlatok kiválasztása",
+    "maxProposalsWarning": "Egyszerre legfeljebb {max} ajánlatot hasonlíthat össze",
+    "minProposalsWarning": "Válasszon ki legalább {min} ajánlatot az összehasonlításhoz"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "Biztosan törli ezt az ajánlatot?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "Törlés",
+    "duplicateMenuItem": "Megkettőzés",
+    "exportAsIfcBetaMenuItem": "Exportálás IFC-fájlként (béta)",
+    "exportAsIfcToDocs": "Exportálás a Docsba IFC-fájlként (béta)",
+    "exportAsObjMenuItem": "Exportálás OBJ-fájlként",
+    "exportSubmenu": "Exportálás...",
+    "renameMenuItem": "Átnevezés",
+    "revitDownloadAddinMenuItem": "Revit-bővítmény letöltése",
+    "revitSendToBetaMenuItem": "Küldés a Revit-bővítménybe (béta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "Ajánlatelőzmények megjelenítése"
+  },
+  "createProposal": {
+    "buttonTooltip": "Új ajánlat hozzáadása"
+  },
+  "error": {
+    "couldNotLoadProposals": "Nem sikerült betölteni az ajánlatokat. Próbálkozzon újra.",
+    "retryButton": "Újra"
+  },
+  "exportModal": {
+    "exportingMessage": "Exportálás...",
+    "exportPrimaryButtonTitle": "Exportálás",
+    "title": "Forma-ajánlat exportálása a Docsba"
+  },
+  "filter": {
+    "buttonTooltip": "Szűrő",
+    "closeButtonTooltip": "Bezárás",
+    "emptyBasesMessage": "A projekt nem tartalmaz bázisokat. Hozzon létre egyet a Fóliák szakaszban.",
+    "sortByHeader": "Rendezési szempont",
+    "title": "Szűrő"
+  },
+  "proposalItem": {
+    "baseTooltip": "Bázis {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "Újabb jelentés létrehozása az összehasonlításhoz",
+    "headerText": "Ajánlatok",
+    "selectProposalsToCompare": "Összehasonlítani kívánt ajánlatok kiválasztása"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A–Z",
+    "alphabeticalDescending": "Z–A",
+    "lastEdited": "Utoljára szerkesztve"
+  },
+  "toast": {
+    "exportAccessDeniedText": "Nincs jogosultsága a mappa vagy fájl eléréséhez. Forduljon a rendszergazdához segítségért.",
+    "exportAccessDeniedTitle": "Hozzáférés megtagadva",
+    "exportDownloaded": "Exportálás letöltve",
+    "exportErrorText": "Nem sikerült exportálni az ajánlatot. Próbálkozzon újra. Ha a probléma továbbra is fennáll, forduljon az ügyfélszolgálathoz segítségért.",
+    "exportErrorTitle": "Nem sikerült exportálni a Docsba",
+    "exportGenericError": "Nem sikerült exportálni az ajánlatot",
+    "exportInProgress": "Ajánlat exportálása...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "A program exportálta a projektajánlatot az Autodesk Docsba. Mostantól használhatja arra, hogy Forma-adatokat kapcsoljon a Revit-projektjeihez.",
+    "exportSuccessTitle": "Sikeresen exportálva a Docsba",
+    "exportTimeoutText": "Időtúllépés történt a Docsba történő exportálás létrehozása során. Ez akkor fordulhat elő, ha a projekt nagyon nagy méretű és/vagy nagyon összetett geometriákat tartalmaz.",
+    "exportTimeoutTitle": "Nem sikerült exportálni a Docsba",
+    "exportTooLargeError": "Az exportálás sikertelen volt. Ennek az lehet az oka, hogy az ajánlat mérete túl nagy a jelenleg támogatott exportálási méretekhez képest.",
+    "ifcExportFailed": "Az exportálás meghiúsult. Jelentettük a hibát.",
+    "ifcExportStarted": "Az IFC-fájl exportálása megkezdődött – a fájl automatikusan letöltődik, amint az exportálás befejeződik.",
+    "proposalRenamedWarning": "Már van ilyen nevű ajánlat; át lett nevezve a következőre: {name}",
+    "revitSendFailed": "Nem sikerült elküldeni az ajánlatot a Revitnek.",
+    "revitSendSuccess": "Az ajánlat el lett küldve a Revitnek",
+    "sessionExpired": "A munkamenet lejárt. Töltse be újra az oldalt."
+  }
+}

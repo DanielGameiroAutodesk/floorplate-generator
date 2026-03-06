@@ -1,0 +1,185 @@
+.PanelContent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 16px;
+}
+
+.ActivePanelHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.PanelTitleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.BackButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-medium-default);
+  flex-shrink: 0;
+}
+
+.BackButton:hover {
+  color: var(--text-color-link-default);
+}
+
+.PanelTitle {
+  font: var(--14-bold);
+  color: var(--text-color-medium-default);
+  margin: 0;
+}
+
+.CloseButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-light);
+  flex-shrink: 0;
+}
+
+.CloseButton:hover {
+  color: var(--text-color-medium-default);
+}
+
+.PanelDescription {
+  font: var(--14-regular);
+  color: var(--text-color-light);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Progress Section */
+.ProgressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ProgressHeader {
+  text-align: center;
+}
+
+.ProgressLabel {
+  font: var(--14-medium);
+  color: var(--text-color-medium-default);
+}
+
+.ProgressPercent {
+  font: var(--12-regular);
+  color: var(--text-color-medium-default);
+}
+
+.ProgressBar {
+  height: 6px;
+  background: var(--background-color-surface-300);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ProgressBarFill {
+  height: 100%;
+  background: var(--status-color-success);
+  border-radius: 8px;
+  transition: width 0.3s ease;
+}
+
+.Divider {
+  height: 1px;
+  width: 100%;
+  background: var(--border-color-divider-light);
+}
+
+/* Steps Section */
+.StepsSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.StepsHeading {
+  font: var(--14-medium);
+  color: var(--text-color-medium-default);
+  margin: 0;
+}
+
+.StepList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.StepItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.StepItemActive {
+  background: var(--background-color-surface-200);
+  border-radius: 2px;
+}
+
+.StepItemCompleted .StepText {
+  color: var(--text-color-light);
+  text-decoration: line-through;
+}
+
+.StepIndicator {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.StepNumber {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--12-medium);
+  color: var(--text-color-medium-default);
+  background: var(--background-color-surface-250);
+}
+
+.StepNumberActive {
+  background: var(--background-color-surface-300);
+}
+
+.StepCheck {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--status-color-success);
+  color: var(--text-color-medium-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.StepText {
+  font: var(--12-bold);
+  color: var(--text-color-medium-default);
+  flex: 1;
+}

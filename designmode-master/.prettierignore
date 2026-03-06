@@ -1,0 +1,9 @@
+# Ignore fixtures for tests
+src/api/tests/fixtures/**/*.json
+
+checkly/playwright-report/
+checkly/test-results/
+src/app/debug-ui/state-for-test.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
+/ops/.terraform/

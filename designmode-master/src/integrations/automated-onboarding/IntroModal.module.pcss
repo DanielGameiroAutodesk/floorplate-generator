@@ -1,0 +1,102 @@
+.Modal {
+  border-radius: 8px;
+  border: none;
+  box-shadow: var(--effect-shadow-high);
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin: auto;
+  min-height: 510px;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: 800px;
+
+  &::backdrop {
+    background: rgba(34, 34, 34, 0.25);
+  }
+}
+
+.LeftSide {
+  background: var(--background-color-surface-100);
+  padding: 48px;
+  position: relative;
+}
+
+.RightSide {
+  background: var(--background-color-surface-200);
+  display: flex;
+  align-items: center;
+}
+
+.Header {
+  font: var(--24-bold);
+  margin: 0 0 8px 0;
+  color: var(--text-primary, #3c3c3c);
+}
+
+.Body {
+  font: var(--12-regular);
+  color: var(--text-primary, #3c3c3c);
+  line-height: 20px;
+  margin: 0 0 24px 0;
+}
+
+.Expandable {
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.ExpandableHeader {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font: var(--14-medium);
+  gap: 16px;
+  margin: 0;
+  &::before {
+    align-items: center;
+    background: var(--background-color-surface-200);
+    border-radius: 100%;
+    content: attr(data-number);
+    display: flex;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+  }
+  > *:last-child {
+    margin-left: auto;
+  }
+}
+
+.ExpandableBody {
+  font: var(--12-regular);
+  margin: 4px 0 0 46px;
+  color: var(--text-primary, #3c3c3c);
+  line-height: 20px;
+}
+
+.ButtonContainer {
+  position: absolute;
+  bottom: 48px;
+  right: 48px;
+}
+
+.CloseButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  outline: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.AnalysisImage {
+  height: 100%;
+  object-fit: cover;
+}

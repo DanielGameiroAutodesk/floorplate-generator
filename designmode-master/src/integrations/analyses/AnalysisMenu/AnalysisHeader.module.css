@@ -1,0 +1,46 @@
+.AnalysisHeader {
+  display: flex;
+  justify-content: space-between;
+  height: 48px;
+  align-items: center;
+}
+
+.HeaderSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.AnalysisTitle {
+  font: var(--12-bold);
+}
+
+.AnalysisTooltip {
+  margin-left: 8px;
+  display: flex;
+}
+
+.HelpButton {
+  display: flex;
+  background-color: transparent;
+  color: var(--icon-color-medium);
+  cursor: pointer;
+  border: none;
+}
+
+.HelpButton {
+  color: var(--icon-color-medium);
+}
+
+.HelpButton:focus {
+  color: var(--icon-color-control-focus);
+}
+
+.HelpButton:hover {
+  color: var(--icon-color-control-hover);
+}
+
+.HelpButton:active {
+  color: var(--icon-color-selected-pressed);
+}

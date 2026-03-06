@@ -1,0 +1,54 @@
+.RowButton {
+  display: flex;
+  flex: 1 1 0;
+  gap: 1rem;
+  outline: inherit;
+  border: none;
+  font: var(--11-regular);
+  color: var(--text-color-medium-default);
+  padding: 0.2rem 1.6rem;
+  background: none;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  > button {
+    visibility: hidden;
+  }
+  &:hover {
+    background-color: var(--background-color-ghost-high-hover);
+    > button {
+      visibility: visible;
+    }
+  }
+}
+
+.RowItemIcon {
+  display: flex;
+}
+
+.Button {
+  border: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.25rem;
+  background: none;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.EditableInput {
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.DisplayText {
+  composes: EditableInput;
+  width: 19.8rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.UncheckedRowItem {
+  width: 1.6rem;
+  height: 1.6rem;
+}

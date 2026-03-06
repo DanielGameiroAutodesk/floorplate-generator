@@ -1,0 +1,21 @@
+.AddBtn {
+  width: 28px;
+  height: 28px;
+  padding: 6px;
+  border-radius: 2px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  display: inline-block;
+  outline: none;
+  background: none;
+}
+
+.AddBtn:hover,
+.AddBtn:focus {
+  background-color: var(--background-color-ghost-high-hover);
+}
+
+.AddBtn:active {
+  background-color: var(--background-color-ghost-high-pressed);
+}

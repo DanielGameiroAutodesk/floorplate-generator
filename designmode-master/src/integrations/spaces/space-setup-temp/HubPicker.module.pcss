@@ -1,0 +1,147 @@
+.HubPickerContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background: var(--background-color-primary, #ffffff);
+  border: 1px solid var(--border-color-divider-light, #e0e0e0);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  min-width: 320px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.HubPickerTitle {
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--text-color-primary, #000000);
+}
+
+.HubPickerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.DropdownContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.DropdownGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.DropdownLabel {
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color-primary, #000000);
+}
+
+.DropdownSelect {
+  padding: 12px 16px;
+  border: 1px solid var(--border-color-divider-light, #e0e0e0);
+  border-radius: 6px;
+  background: var(--background-color-primary, #ffffff);
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 14px;
+  color: var(--text-color-primary, #000000);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  min-width: 280px;
+}
+
+.DropdownSelect:hover {
+  border-color: var(--border-color-focus, #007acc);
+}
+
+.DropdownSelect:focus {
+  border-color: var(--border-color-focus, #007acc);
+  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+}
+
+.DropdownSelect:disabled {
+  background: var(--background-color-disabled, #f5f5f5);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.CreateSpaceButton {
+  padding: 12px 24px;
+  background: var(--color-primary, #007acc);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+  align-self: center;
+}
+
+.CreateSpaceButton:hover {
+  background: var(--color-primary-hover, #005a9e);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 122, 204, 0.3);
+}
+
+.CreateSpaceButton:active {
+  transform: translateY(0);
+}
+
+.CreateSpaceButton:disabled {
+  background: var(--background-color-disabled, #cccccc);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.LoadingMessage {
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 14px;
+  color: var(--text-color-secondary, #666666);
+  text-align: center;
+  padding: 20px;
+}
+
+.ErrorMessage {
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 14px;
+  color: var(--text-color-error, #d32f2f);
+  text-align: center;
+  padding: 20px;
+}

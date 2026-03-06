@@ -1,0 +1,193 @@
+name: Build and deploy
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      lint-windows:
+        type: boolean
+        default: false
+        description: "Run ESLint on Windows too (slow) - useful if doing ESLint changes that might break for Windows users, to avoid issues like https://spacemakercore.slack.com/archives/CAHV80VLP/p1727212108419299"
+      stg-deploy:
+        type: boolean
+        description: Deploy to stg from any branch
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/master' || inputs.stg-deploy
+    needs: [prettier, lint, test, build]
+    uses: spacemakerai/github-workflows/.github/workflows/deploy-webapp.yml@v2
+    permissions:
+      actions: read
+      deployments: write
+      id-token: write
+    secrets: inherit
+    with:
+      artifact-name: dist
+      include-targets: ${{ inputs.stg-deploy && 'stg,chaos' || '' }}
+
+  prettier:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NODE_OPTIONS: "--max-old-space-size=8192"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_GITHUB_PACKAGES_TOKEN }}
+        with:
+          node-version: "22"
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@spacemakerai"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build:packages
+      - run: pnpm prettier:check
+
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NODE_OPTIONS: "--max-old-space-size=8192"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_GITHUB_PACKAGES_TOKEN }}
+        with:
+          node-version: "22"
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@spacemakerai"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build:packages
+      - run: pnpm lint
+        env:
+          TIMING: "1"
+
+  lint-windows:
+    if: inputs.lint-windows
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    env:
+      NODE_OPTIONS: "--max-old-space-size=8192"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_GITHUB_PACKAGES_TOKEN }}
+        with:
+          node-version: "22"
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@spacemakerai"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+        env:
+          TIMING: "1"
+
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NODE_OPTIONS: "--max-old-space-size=8192"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_GITHUB_PACKAGES_TOKEN }}
+        with:
+          node-version: "22"
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@spacemakerai"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build:packages
+      - run: pnpm test
+
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NODE_OPTIONS: "--max-old-space-size=8192"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_GITHUB_PACKAGES_TOKEN }}
+        with:
+          node-version: "22"
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@spacemakerai"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build:packages
+      - run: pnpm tsc
+      - run: pnpm tsc -p .eslint-plugin-local
+      - run: pnpm build
+      - uses: actions/upload-artifact@v5
+        if: github.ref == 'refs/heads/master' || inputs.stg-deploy
+        with:
+          name: dist
+          path: |
+            dist
+            package.json
+      - run: pnpm run sentry-release
+        if: github.ref == 'refs/heads/master'
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+  playwright:
+    uses: spacemakerai/github-workflows/.github/workflows/run-playwright-tests.yml@v2
+    permissions:
+      contents: read
+    secrets: inherit
+    with:
+      node-version: "22"
+      playwright-image: mcr.microsoft.com/playwright:v1.56.1-jammy
+
+  notify-failure-slack:
+    needs: [prettier, lint, test, build, deploy]
+    if: failure() && github.ref == 'refs/heads/master'
+    uses: spacemakerai/github-workflows/.github/workflows/notify-failure-slack.yml@v2
+    permissions: {}
+    secrets: inherit
+    with:
+      override-channel: squad-design-mode-ops
+
+  release-packages:
+    if: github.ref == 'refs/heads/master'
+    needs: [prettier, lint, test, build]
+
+    permissions:
+      contents: read # publish GitHub release
+      packages: write # publish GitHub NPM package
+
+    concurrency:
+      group: release-${{ github.ref }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_GITHUB_PACKAGES_TOKEN }}
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@spacemakerai"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm publish -r
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

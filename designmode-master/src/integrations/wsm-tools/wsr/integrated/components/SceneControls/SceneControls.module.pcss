@@ -1,0 +1,97 @@
+.ToolsWrapperContainer {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  z-index: 2;
+  pointer-events: all;
+}
+
+.SceneToolsToolbar {
+  display: flex;
+  background-color: var(--background-color-surface-100);
+  box-shadow: var(--effect-shadow-high);
+  border: none;
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+.SceneToolButton {
+  display: flex;
+  padding: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--icon-color-medium);
+  &:hover {
+    color: var(--icon-color-control-hover);
+  }
+}
+
+.ToolContainer {
+  position: relative;
+}
+
+.MenuItem {
+  position: relative;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 12px;
+  lineheight: 17px;
+  color: #2a333d;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f3f4f6;
+  }
+}
+
+.MenuHeader {
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+  color: gray20;
+  padding: 5px 10px 5px 20px;
+}
+
+.Divider {
+  border-top: 1px solid #e7ecf2;
+}
+
+.DividerContainer {
+  display: flex;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  flex-direction: column;
+}
+
+.IconWrapper {
+  width: 10px;
+}
+
+.LabelContainer {
+  display: flex;
+  align-items: center;
+
+  > span {
+    margin-left: 10px;
+  }
+}
+
+.Acronym {
+  color: rgba(60, 60, 60, 0.7);
+}

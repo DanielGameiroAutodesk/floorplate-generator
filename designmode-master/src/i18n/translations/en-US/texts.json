@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "Get set up to start designing",
+    "body": "When you select <bold>Continue</bold>, we'll automatically run two setup steps for you. No action is required from you. Once the steps are completed, you'll be ready to start designing in Forma Site Design.",
+    "contextual": {
+      "header": "Load site-specific context",
+      "body": "We’ll load free contextual data for your site, including terrain and surrounding buildings."
+    },
+    "sunAnalysis": {
+      "header": "Get insight into site conditions",
+      "body": "We’ll run a sun hours analysis on your site and surroundings to inform your design decisions."
+    },
+    "continueButton": "Continue",
+    "sunAnalysisCoachmark": {
+      "header": "Sun hours analysis",
+      "body": "We’ve automatically started a sun hours analysis on your site.{br}{br}Once the indicator is green or a banner is displayed at the top of the canvas, you can review the results."
+    },
+    "finalModal": {
+      "title": "Your site is now set up",
+      "subTitle": "Continue with one of the recommended steps below:",
+      "suggestedAction1": {
+        "header": "Draw a building",
+        "body": "Activate one of the building tools in the toolbar."
+      },
+      "suggestedAction2": {
+        "header": "Import a model",
+        "body": "Click the import icon in the toolbar and follow the suggested steps."
+      },
+      "suggestedAction3": {
+        "header": "Compare analyses",
+        "body": "Run a second analysis and open the Compare mode from the top left corner of the screen."
+      },
+      "showMeHow": "Show more options",
+      "finalButton": "Got it"
+    },
+    "sunAnalysisTriggerError": "Failed to trigger the sun analysis"
+  },
+  "alignment": {
+    "center": "Align center",
+    "left": "Align left",
+    "right": "Align right"
+  },
+  "analysis": {
+    "alertsLabel": "Alerts",
+    "analyzeTitle": "Analyze",
+    "analysisParameters": "Analysis parameters",
+    "areaRadius": "Area radius",
+    "areaTitle": "Analysis area",
+    "customCircle": "Custom circle",
+    "daylightAnalysisIllustrationAlt": "Daylight analysis illustration",
+    "failedToOrder": "Failed to order analysis: {error}",
+    "learnMore": "Learn more",
+    "microclimateAreaRadius": "Microclimate area radius",
+    "noisePredictionUnavailable": "Noise Prediction Unavailable",
+    "radiusLabel": "Radius",
+    "selectAreaToRunAnalysis": "Select a Site limit or Zone to run an analysis",
+    "disabledTooltips": {
+      "addRoadsOrRails": "Add roads and/or rails with traffic data to run an analysis",
+      "analysisAreaOutsideMap": "Analysis area is outside of map area",
+      "concurrentQuotaReached": "Limit of concurrent wind analyses reached",
+      "dailyQuotaReached": "Daily wind analysis quota has been reached",
+      "geometryAlertsDetected": "Geometry issues detected",
+      "geometryTooComplex": "Geometry too complex",
+      "invalidParameters": "Invalid parameters",
+      "loadingData": "Loading data",
+      "notAvailable": "Not available",
+      "notAbleAsViewer": "Not able to run analyses as a viewer",
+      "pleaseWait": "Please wait...",
+      "savingInProgress": "Saving in progress...",
+      "selectSiteLimitOrZone": "Select a Site limit or Zone to run an analysis"
+    },
+    "emptyStateZoneExplanation": "By default, the analysis is run on buildings and other objects you've added. Add a site limit or zones to get full analysis results for a specific area.",
+    "entireModel": "Entire model",
+    "missingTrafficData": {
+      "description": "Add roads or rail tracks with traffic data in order to predict real world noise conditions.",
+      "startGuideButton": "Start guide",
+      "title": "Missing traffic data"
+    },
+    "noiseAreaRadius": "Noise area radius",
+    "properties": {
+      "radiusLabel": "Radius"
+    },
+    "seeResultButton": "See analysis result",
+    "seeResultsButton": "See analysis results",
+    "selectionTitle": "Select analysis areas",
+    "selectAllAreasButton": "Select all areas",
+    "deselectAllAreasButton": "Deselect all areas",
+    "skyComponent": {
+      "potentialDescription": "Our <strong>daylight potential analysis</strong> identifies parts of the facade with little access to daylight with the help of Vertical Sky Component score. Choose areas you'd like to analyze."
+    },
+    "sun": {
+      "removeDateButton": "Remove date"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "Buildings with full support",
+      "buildingsPartialSupport": "Buildings/other with partial support",
+      "iconAlt": "Analysis support level",
+      "title": "Analysis support"
+    },
+    "windAreaRadius": "Wind area radius",
+    "windRoseUnavailable": {
+      "description": "Our wind rose data provider is experiencing issues. You may still analyze for microclimate patterns, but without historical data to examine the likelihood of wind conditions. We are working on restoring the data.",
+      "title": "Wind rose currently unavailable",
+      "windDescription": "Our wind rose data provider is experiencing issues. You may still analyze for general wind patterns and manually adjust wind speeds. Rapid wind is unavailable. We are working on restoring the data."
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "An analysis with this configuration already exists. ",
+    "concurrentAnalysesReached": "The limit of concurrent analyses has been reached",
+    "concurrentNoiseAnalysesReached": "The limit of concurrent noise analyses has been reached",
+    "dailyNoiseQuotaReached": "Maximum number of noise analyses within 24 hours is met",
+    "dailyQuotaReached": "Daily analysis quota has been reached",
+    "nothingToAnalyze": "Nothing to analyze",
+    "somethingWentWrong": "Something went wrong"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "Detailed wind analysis is unavailable. Please try running the analysis later.",
+      "rapidWindUnavailable": "Rapid wind analysis is unavailable. Please try running the analysis later.",
+      "rapidWindUnavailableToast": "Rapid wind analysis is unavailable. Our team has been notified. Please try running the analysis later."
+    },
+    "types": {
+      "microclimate": {
+        "description": "Our microclimate analysis calculates perceived temperature on your site, taking sun, wind and daylight conditions into account. We recommend waiting until the wind analysis is completed for more accurate results.",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "Microclimate",
+        "text": "Microclimate analysis"
+      },
+      "noise": {
+        "description": "Understand how your design impacts environmental noise conditions through a real-time prediction in the rapid noise analysis. Run a detailed noise analysis to get a more accurate simulation of noise conditions, as well as an analysis of the conditions on building facades.",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "Noise",
+        "text": "Noise analysis"
+      },
+      "sky-component": {
+        "description": "Assess which parts of the building facades get little access to daylight with the help of Vertical Sky Component score. To run the analysis, you need to add a site limit.",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "Daylight potential",
+        "text": "Daylight potential analysis"
+      },
+      "solar-panel": {
+        "name": "Solar energy"
+      },
+      "sun": {
+        "description": "Assess how many hours of sunlight your site and buildings will get. To run the analysis, you need to add a site limit and choose a date.",
+        "link": "https://help.autodeskforma.com/en/articles/6951253",
+        "name": "Sun hours",
+        "text": "Sun hours analysis"
+      },
+      "wind": {
+        "description": "Understand how your design changes impact wind conditions through a real-time prediction in the rapid wind analysis. Run a detailed wind flow and wind comfort analysis to get a more accurate simulation of different wind directions and speeds.",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "Wind",
+        "text": "Wind analysis"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "Add node",
+      "buildingWidth": "Building width",
+      "cityBlocks": "City blocks",
+      "editGridOrientationButton": "Edit grid orientation",
+      "explanation": "An ongoing effort in developing tools that can help you explore the massing potential of your site. Follow the development in our forum.",
+      "floors": "Floors",
+      "headerTitle": "Explore",
+      "iterativeExplanation": "Design automation tool that lets you quickly generate and explore site and building layouts.",
+      "layoutTitle": "Layout",
+      "layouts": "Layouts",
+      "linearBuildings": "Linear buildings",
+      "mixed": "Mixed",
+      "name": "Explore",
+      "siteAutomation": "Site automation",
+      "storyHeight": "Story height",
+      "towerBuildings": "Tower buildings",
+      "towerWidth": "Tower width"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "Add new base",
+    "changeIndicatorLabel": "Change indicator",
+    "editBaseButton": "Edit base",
+    "editBaseDoneButton": "Done",
+    "editBaseRightMenuMessage": "Edit base to make changes",
+    "editBaseRightMenuMixedSelectionMessage": "Your selection includes base objects. You cannot make changes with a mixed selection.",
+    "editing": {
+      "changesWillAffect": "Changes will affect",
+      "proposals": "proposals",
+      "title": "Editing"
+    },
+    "errors": {
+      "deleteFailed": "Failed to delete base.",
+      "duplicateFailed": "Failed to duplicate base.",
+      "fetchFailed": "Failed to fetch bases.",
+      "renameIndicatorFailed": "Failed to rename base indicator.",
+      "renameFailed": "Failed to rename base.",
+      "switchFailed": "Failed to switch base."
+    },
+    "noBaseLayersText": "Elements you would like to reuse across proposals can be added to a base.",
+    "strategy": {
+      "description": "The proposal uses a base that is outdated. You have to choose whether to update to the latest version of the base, or duplicate the older version of the base.",
+      "duplicateOld": "Duplicate old version of base",
+      "header": "Your base is outdated",
+      "useLatest": "Use latest version of base"
+    },
+    "swapBaseButton": "Swap base",
+    "swapButton": "Swap",
+    "untitledBaseLabel": "Untitled base"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "Draw generic line",
+        "name": "Line",
+        "tooltip": "Create generic lines to communicate design intent. They will not be taken into account in Analyses."
+      },
+      "surface": {
+        "draw": "Draw generic surface",
+        "name": "Surface",
+        "tooltip": "Create a generic surface to communicate design intent. They will not be taken into account in Analyses."
+      },
+      "title": "Generic",
+      "volume": {
+        "draw": "Draw generic volume",
+        "name": "Volume",
+        "tooltip": "While generic volumes will be analyzed, their area will not be taken into account in the Area metrics."
+      }
+    }
+  },
+  "building": {
+    "addFloor": "Add floor",
+    "addFloorsAction": "Add floors",
+    "buildingColorsLabel": "Building colors",
+    "buildingDesignButton": "Open in Building Design",
+    "buildingDesignDescription": "This building is designed in Building Design, open Building Design to edit it.",
+    "buildingDesignGeometry": "Building Design geometry",
+    "buildingsTitle": "Buildings",
+    "buildingWidthLabel": "Building width",
+    "divisionWidth": "Division width",
+    "roadWidthLabel": "Road width",
+    "towerBlockWidthLabel": "Tower block width",
+    "typesTitle": "Types",
+    "upgradingFor3DSketchBuilding": "Upgrading 3D Sketch building for Embodied Carbon",
+    "variationsTitle": "Variations",
+    "errors": {
+      "failedToLoadFunctions": "Failed to load custom building functions",
+      "failedToLoadSettings": "Failed to load settings"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "Add to library",
+      "addToLibraryTooltip": "Add to library",
+      "emptyFloors": "Empty floors",
+      "parking": "Parking",
+      "popupTitle": "Floor plans",
+      "title": "Floor plans",
+      "cannotDrawCornerDescription": "You can not yet draw corner plans",
+      "cannotDrawSplitDescription": "You can not yet draw split plans",
+      "finishDrawingTooltip": "Finish drawing to add floor plans",
+      "mixedSelectionDescription": "Mixed floor plans selected",
+      "noLibraryDescription": "There are no floor plans in the library with this exterior shape",
+      "noSelectionDescription": "No floor plan in selection",
+      "rightClickToAddDescription": "Right click a floor in one of your proposals to add it to the library",
+      "selectSectionsDescription": "Please select sections that are empty or have floor plans"
+    },
+    "floors": {
+      "seeAllButton": "See all floors"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "Add new",
+      "addSectionCutButton": "Add section cut",
+      "apartmentBuildingStories": "Apartment building stories",
+      "apartmentBuildingStoryHeight": "Apartment building story height",
+      "apartmentBuildingWidth": "Apartment building width",
+      "circulationTitle": "Circulation",
+      "headerTitle": "Line building",
+      "outdatedLabel": "outdated",
+      "targetSectionLength": "Target section length",
+      "circulation": {
+        "sectionCountText": "Nr of sections: {count}",
+        "widthLabel": "Corridor width",
+        "widthText": "Width: {width}"
+      },
+      "divisionWidthLabel": "Division width",
+      "releaseToBasicAnimationAlt": "Release to basic animation",
+      "releaseToBasicExplanation": "Releasing the line automation creates a basic building allowing you to add functions or parking to individual floors. After releasing, the line automation cannot be regained.",
+      "releaseToFloorPlanAction": "Release to floor plan",
+      "releaseToFloorPlanAnimationAlt": "Release to floor plan animation",
+      "releaseToFloorPlanExplanation": "Releasing the circulation automation creates a floor plan allowing you to manually design the layouts. After releasing, the circulation automation cannot be regained.",
+      "towerWidthLabel": "Tower block width"
+    },
+    "properties": {
+      "lengthLabel": "Length",
+      "numberOfFloorsLabel": "Number of floors",
+      "numberOfStoriesLabel": "SiteStudy number of stories",
+      "stories": "Stories",
+      "storyHeight": "Story height",
+      "storyHeightLabel": "Story height",
+      "widthLabel": "Width"
+    },
+    "toolbar": {
+      "title": "Buildings"
+    },
+    "tooltips": {
+      "addBuildingsButton": "Add buildings",
+      "clampToTerrainButton": "Clamp buildings to terrain",
+      "numberOfFloorsLabel": "Number of floors",
+      "parkingEditDescription": "Editing parking is now done in the floor plan editor",
+      "releaseToBasicButton": "Release to basic building",
+      "releaseToZonesButton": "Release to zones",
+      "removeBuildingsButton": "Remove buildings",
+      "storyHeightLabel": "Story height",
+      "swapFloorPlansButton": "Swap floor plans",
+      "targetSectionLengthLabel": "Target section length",
+      "towerWidthLabel": "Tower width",
+      "widthLabel": "Building width"
+    },
+    "types": {
+      "basic": {
+        "draw": "Draw basic building",
+        "name": "Basic building",
+        "tooltip": "Draw buildings with floors of any shape with control and precision. View building stats in Area metrics."
+      },
+      "line": {
+        "draw": "Draw line building",
+        "name": "Line building",
+        "tooltip": "Draw a building structure around a line. Adjust its parameters such as sections and floors. View building stats in Area metrics."
+      }
+    }
+  },
+  "camera": {
+    "compass": "Show north up",
+    "lookAt": {
+      "title": "Look at",
+      "tooltip": "Move the mouse over a face to align the camera. Click to zoom fit the face or drag to adjust the zoom area."
+    },
+    "lookFrom": {
+      "title": "Look from point",
+      "tooltip": "Click a point on a facade to look from. Or click and drag to pick the point and the view direction."
+    },
+    "optionsLabel": "Camera options",
+    "optionsTitle": "Camera options",
+    "switchCameraMode": "Switch camera mode",
+    "vectorExport": {
+      "exportSuccessful": "Export Successful",
+      "title": "Vector export"
+    },
+    "switchTo2d": "Switch to 2D (orthographic) mode",
+    "switchTo3d": "Switch to 3D mode",
+    "zoom": {
+      "toFitProposal": "Zoom to fit proposal",
+      "toFitSelection": "Zoom to fit selection"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "Edge"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "Multiple on line",
+      "placeSinglesButton": "Place singles"
+    }
+  },
+  "contextualData": {
+    "description": "See and manage the contextual data available for your project. You can also order more data here.",
+    "title": "Contextual Data"
+  },
+  "contextMenu": {
+    "copy": "Copy",
+    "cut": "Cut",
+    "delete": "Delete",
+    "exportTerrainAsObj": "Export terrain as obj",
+    "moveToBack": "Move to back",
+    "moveToBase": "Move to base",
+    "moveToFront": "Move to front",
+    "moveToProposal": "Move to proposal",
+    "paste": "Paste",
+    "pasteInPlace": "Paste in place",
+    "terrainPad": {
+      "moveToBack": "Move terrain pad to back",
+      "moveToFront": "Move terrain pad to front"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "It's not possible to copy elements between projects or hubs.",
+    "failedToCopyElementMessage": "Failed to copy element."
+  },
+  "dataOrders": {
+    "completed": "The following data order is completed: {name}. It is being added to your proposal, and you can see it in Layers in a few seconds.",
+    "completedAll": "{names} have been loaded and added to your proposal base. You can browse and order more data under Contextual Data.",
+    "failed": "{name} failed",
+    "failedToAdd": "Failed to add \"{name}\" to the proposal, but data is still available in the library.",
+    "processing": "The following data order is being processed: {name}. It will be added to your proposal once completed.",
+    "statusTitle": "Data order status"
+  },
+  "demoSite": {
+    "badge": "demo",
+    "flyout": {
+      "content": "We've created this site to demonstrate Forma capabilities. Start a guide below to follow steps of a simple workflow, and create your own sites once you're ready.",
+      "createSiteButton": "Create new site",
+      "createSiteTooltip": "You must have an active license and have permission to create sites in this project",
+      "header": "This is a demo site",
+      "startGuideButton": "Start guide"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "GET STARTED WITH",
+    "titleFormaSiteDesign": "A demo site",
+    "description": "This is a pre-designed sample site for you to explore Forma Site Design. Don't worry about breaking anything - see it as a safe space for experimenting without any impact on your real projects.",
+    "callToAction": "Click {bold} to explore the demo site.",
+    "callToActionBold": "Continue",
+    "buttonContinue": "Continue",
+    "buttonGoToHome": "Go to Forma Home",
+    "imageAlt": "Forma Site Design Visualization"
+  },
+  "drawing": {
+    "traceShape": "Trace existing shape"
+  },
+  "hotkeys": {
+    "addNode": "Add node",
+    "cancelDrawingPoint": "Cancel drawing point",
+    "clickAndMoveGrip": "Click and move a grip to scale in that direction.",
+    "complete": "Complete",
+    "copy": "Copy",
+    "cut": "Cut",
+    "deleteSelected": "Delete selected",
+    "drawHouse": "Draw house",
+    "drawHousesWithLine": "Draw houses with Line",
+    "drawLine": "Draw line",
+    "drawRoad": "Draw road",
+    "edit": "Edit",
+    "exitContext": "Exit context",
+    "exitEditGraph": "Exit edit graph",
+    "exitGraphTool": "Exit graph tool",
+    "exitHouseTool": "Exit house tool",
+    "exitSiteStudyAndApply": "Exit Site Study tool and apply study to proposal",
+    "exitTool": "Exit tool",
+    "exitTransportationTool": "Exit transportation tool",
+    "finishEditing": "Finish editing",
+    "freeform": "Freeform",
+    "measureDistance": "Measure Distance",
+    "paste": "Paste",
+    "placeSingleHouses": "Place single houses",
+    "redo": "Redo",
+    "remove": "Remove",
+    "resetGraph": "Reset graph",
+    "selectAll": "Select all",
+    "selectSomethingToModify": "Select something to modify with {toolName}",
+    "switchHouseCorner": "Switch house corner",
+    "switchHousePlacementSide": "Switch house placement side",
+    "toggleSidebar": "Toggle sidebar",
+    "undo": "Undo"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "While moving the compass position, hold Shift to align the rotation axis with geometry below the cursor.",
+    "editSiteLayout": "Edit the site layout, or select individual zones to set building typology for.",
+    "freeMode": "Free mode. Press ↹ Tab for horizontal mode.",
+    "horizontalMode": "Horizontal mode. Press ↹ Tab for free mode.",
+    "mode2D": "2D mode. All tools constrained to horizontal plane.",
+    "rotateMoveText": "{moveModeText} Move ({inputModeText}). Press ↹ Tab for {nextMoveModeText} Move ({nextInputModeText}).",
+    "selectAreaToExplore": "Select which area to explore site layout options for.",
+    "snappingAxesHint": " Press Alt to hide snapping axes. Alt + C to clear them.",
+    "straightAction": "Straight {action}. Press ↹ Tab for Taper {action}.",
+    "switchHouseCornerAndRotate": "Press Tab to switch house corner. Hold and drag mouse to rotate",
+    "switchHousePlacementSide": "Press Tab to switch house placement side",
+    "taperAction": "Taper {action}. Press ↹ Tab for Taper {action}."
+  },
+  "menus": {
+    "generatorsByExtensions": "Generators by extensions"
+  },
+  "messages": {
+    "elementAddedTo": "Element added to {location}"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "Saving in progress..."
+    },
+    "camera": {
+      "lookAt": "Look at"
+    },
+    "lineWidth": "Line width",
+    "settings": "Settings",
+    "templates": {
+      "updatesAvailable": "Updates available"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "Failed to perform building right click option",
+      "failedToConvertVolumes": "Failed to convert volumes to basic building",
+      "failedToDraw": "Failed to draw basic building",
+      "failedToEdit": "Failed editing new basic building",
+      "failedToPushPull": "Failed to push/pull basic building"
+    },
+    "failedToLoadContextualData": "Failed to load contextual data",
+    "import": {
+      "largeScale": "Import contains element(s) that are large in scale ({size}). Import may not behave like expected. Hit ESC to cancel.",
+      "resultingShapeInvalid": "Resulting shape is invalid."
+    },
+    "modelNotGeolocated": "The Site Design model is not geolocated. Please order contextual data to geolocate it",
+    "terrain": {
+      "boundingBoxTooLarge": "Element geometry bounding box is too large for it to be used as terrain. Max size: 4km². Actual size: {size}km²"
+    },
+    "library": {
+      "couldNotFindElement": "Could not find library element",
+      "elementNotAvailable": "Library element not available",
+      "failedToConvertTerrain": "Failed to convert to terrain element",
+      "failedToDownloadFloorPlans": "Failed to download floor plans",
+      "failedToSaveFloorPlans": "Failed to save project level floor plans. Please refresh page",
+      "failedToUpdateLibrary": "Failed to update library"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "Error in line building menu",
+      "failedToDraw": "Failed to draw line buildings",
+      "failedToEdit": "Failed editing line building",
+      "failedToolbarAction": "Failed line building toolbar action"
+    },
+    "siteStudy": {
+      "errorInExplore": "Error in Explore. Try again!",
+      "errorOccurred": "An error occured, our engineers are notified.",
+      "failedToLoadPicker": "Failed to load explore picker. Try action again."
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "Browse all plugins",
+    "browseDescription": "Browse existing extensions or generators from third party providers or add your own - they will be displayed here.",
+    "downloadButton": "Download extensions",
+    "downloadDescription": "to import models from Revit or Rhino.",
+    "importModelTitle": "Import model from extension",
+    "noDescriptionAvailable": "No description available.",
+    "plugins": "Plugins"
+  },
+  "errorBoundary": {
+    "componentCrashed": "Component crashed",
+    "retryButton": "Retry",
+    "unexpectedError": "Unexpected error occurred. Please retry the action or reload the page to try again"
+  },
+  "guides": {
+    "closeMenu": "Close guides and measurements menu"
+  },
+  "geometryAlerts": {
+    "dismiss": "Dismiss",
+    "header": "Geometry alerts",
+    "review": "Review",
+    "title": "Geometry alerts ({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "Remove or modify to run analyses.",
+      "title": "Duplicated geometries"
+    },
+    "invalidBbox": {
+      "subTitle": "Remove or modify to run analyses.",
+      "title": "Elements with geometry too far away"
+    },
+    "outOfBounds": {
+      "subTitle": "Remove or modify to run analyses.",
+      "title": "Elements outside of terrain"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "The first floor has 0 area. Snap the bottom face horizontally to repair.",
+      "title": "Zero-area first floor detected"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "This building has one or more floors with 0 area and cannot be made into a valid building.",
+      "title": "Zero-area floor(s) detected"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "This building contains <a>non-watertight geometry</a> and may become a generic model without floors when exiting 3D Sketch",
+      "title": "Building is not watertight"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "This model contains <a>non-watertight geometry</a> which may impact tool and display behavior.",
+      "title": "Geometry is not watertight"
+    }
+  },
+  "importToolbar": {
+    "title": "Import model"
+  },
+  "labels": {
+    "addLabelButton": "Add label",
+    "category": "Labels",
+    "description": "Add labels to mark specific points in the 3D canvas with a short text description. You can add up to {count} lines of text. ",
+    "label": "Label",
+    "placeholder": "Insert text..."
+  },
+  "layerList": {
+    "buildings": "Buildings",
+    "category": {
+      "contextualDataDuration": "Contextual data (~1-2.5 min)"
+    },
+    "generic": "Generic",
+    "images": "Images",
+    "propertyBoundaries": "Property boundaries",
+    "roads": "Roads",
+    "siteLimits": "Site limits",
+    "terrain": "Terrain",
+    "vegetation": "Vegetation",
+    "zones": "Zones"
+  },
+  "layersTitle": "Layers",
+  "library": {
+    "addedToLibrary": "Added {name} to library.",
+    "addToLibraryButton": "Add to library"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "Draw constraints",
+      "name": "Constraint",
+      "plural": "Constraints",
+      "tooltip": "Create a volume to visualize the constraints of the project."
+    },
+    "siteLimit": {
+      "defineAsAction": "Define as Site Limit",
+      "hotkeyDescription": "Draw site limit",
+      "name": "Site limit",
+      "tooltip": "Create a site limit used to analyze the metrics of your project."
+    },
+    "title": "Limits",
+    "zone": {
+      "hotkeyDescription": "Draw zone",
+      "name": "Zone",
+      "tooltip": "Draw zones to define areas to analyze on your site."
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "Exit drawing mode"
+  },
+  "navbar": {
+    "addButton": "Add",
+    "quickActionsButton": "Quick actions",
+    "settingsButton": "Settings"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "Are you sure you want to delete {name}?",
+      "descriptionParagraph1": "A base includes objects that are reused across your proposals. You can create several bases and swap between them.",
+      "descriptionParagraph2": "To add an existing object, right-click it and choose Move to base. To draw a new object, click Edit."
+    },
+    "dataOrderProcessing": "A data order is being processed. It will be added to your proposal once completed."
+  },
+  "pendingOperation": {
+    "defaultDescription": "Waiting for automation to finish..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} geometries added to your {layerType}",
+    "geometriesSelectedLabel": "Geometries selected",
+    "updateTerrainAction": "Update terrain",
+    "updateTerrainDescription": "Replaces current terrain with new terrain from library"
+  },
+  "properties": {
+    "color": "Color",
+    "elevation": "Elevation",
+    "height": "Height",
+    "length": "Length",
+    "mixed": "Mixed",
+    "name": "Name",
+    "position": "Position",
+    "radius": "Radius",
+    "width": "Width"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "Failed to download all objects.",
+      "downloadElementsRecovery": "or try again later. You are in view mode until the issue is resolved",
+      "flatteningGroups": "Flattening groups on proposal since they are no longer supported",
+      "ignoringOldElements": "Ignoring old elements",
+      "knownCriticalHeader": "Failed to process elements",
+      "knownCriticalMessage": "Please refresh the page to try again.",
+      "missingGeoLocation": "Missing project geo location to perform action.",
+      "notFoundHeader": "Proposal not found",
+      "notFoundMessage": "We are unable to find the proposal that you are trying to access.",
+      "terrainNotFoundHeader": "Terrain model missing",
+      "terrainNotFoundMessage": "An unexpected error has occurred with the current proposal.",
+      "tooManyRequestsHeader": "Someone has been TOO active!",
+      "tooManyRequestsMessage": "We received more requests from your network than we could handle. Please try loading this page later or switch to another network - for example, through a personal hotspot."
+    },
+    "noProposalLayersText": "Elements that are unique for a proposal will be listed here."
+  },
+  "proposalHistory": {
+    "branchFailed": "Failed to create new proposal from old revision.",
+    "branchRevisionButton": "Create new proposal",
+    "branchSuccess": "New proposal has been created from the chosen version, with the name \"{name}\"",
+    "contributors": "Contributors: {count}",
+    "copyLinkButton": "Copy link",
+    "currentVersionLabel": "Current version",
+    "filter": {
+      "byAnalysis": "By analysis",
+      "byDate": "By date",
+      "from": "From",
+      "onlyYours": "Only yours",
+      "pinned": "Pinned",
+      "selectDates": "Select dates",
+      "title": "Filter",
+      "to": "To"
+    },
+    "linkToVersionCopied": "Link to {time} copied",
+    "nameThisVersionAction": "Name this version",
+    "pinVersionAction": "Pin version",
+    "unpinVersionAction": "Unpin version",
+    "untitledVersionLabel": "Untitled version",
+    "viewingVersionLabel": "Viewing version"
+  },
+  "quickAccess": {
+    "actionsLabel": "Actions",
+    "noSuggestions": "No suggestions",
+    "openHotkeyList": "Open hotkey list",
+    "repeatLastTool": "Repeat last tool",
+    "search": "Search",
+    "title": "Quick access"
+  },
+  "requestInvite": {
+    "button": "Request invite",
+    "homeLink": "Go to your Home page",
+    "projectLink": "Go to project",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "Already a member",
+        "message": "You're already a member of this project."
+      },
+      "ALREADY_REQUESTED": {
+        "header": "Invite already requested",
+        "message": "You have already a pending invite request for this project. If your admin approves your request, you will get an invitation to this project in your email."
+      },
+      "CAN_JOIN": {
+        "header": "You can join",
+        "message": "You can join this project. Go to project and click the 'join project' button."
+      },
+      "ERROR": {
+        "header": "Something went wrong, please try again"
+      },
+      "NOT_FOUND": {
+        "header": "Error, can't find the project",
+        "message": "The URL you have entered is not pointing to an existing project."
+      },
+      "REQUEST_LIMIT": {
+        "header": "Too many requests",
+        "message": "You have too many pending invite requests. Please try again at a later stage."
+      },
+      "SUCCESS": {
+        "header": "Your request has been successfully sent!",
+        "message": "If your admin approves your request, you will get an invitation to this project in your email."
+      }
+    },
+    "statusFallback": {
+      "header": "You don't have access to this Forma project",
+      "message": "To get access to the project you need to be invited by one of the admins. Request an invite from admins with the button below."
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "Default to folder: My project files folder"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "Align center",
+      "left": "Align left",
+      "right": "Align right"
+    },
+    "buildingLabel": "Building",
+    "createNew": "Create new",
+    "layoutLabel": "Layout",
+    "loading": "Loading",
+    "name": "House",
+    "parcelLabel": "Parcel",
+    "plural": "Houses",
+    "publish": "Publish",
+    "tooltip": "Draw a single house or houses structured around a line. Make and reuse house types from the properties panel.",
+    "tooltips": {
+      "buffer": "Buffer",
+      "flatRoof": "Flat roof",
+      "gableRoof": "Gable roof",
+      "length": "Length",
+      "numberOfFloors": "Number of floors",
+      "ridgeDirection": "Ridge direction",
+      "roofAngle": "Roof angle",
+      "shedRoof": "Shed roof",
+      "storyHeight": "Story height",
+      "width": "Width"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "Delete section box",
+    "enableButton": "Enable section box",
+    "saveButton": "Save section box",
+    "title": "Section box",
+    "toggleButton": "Show/hide box outline"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "This proposal was changed while you were making edits (for example, there could be another team member working on it). Would you like to save your version as a new proposal?",
+      "discardEdits": "Discard edits",
+      "saveAsNew": "Save as new proposal",
+      "title": "Proposal editing conflict"
+    },
+    "error": {
+      "body": "Failed to save your last edit. Refresh the page to continue editing.",
+      "ok": "OK",
+      "title": "Saving failed"
+    }
+  },
+  "shapes": {
+    "arc": "Arc By Three Points",
+    "circle": "Circle",
+    "cube": "Cube",
+    "cuboid": "Cuboid",
+    "cylinder": "Cylinder",
+    "dome": "Dome",
+    "freeform": "Freeform",
+    "pyramid": "Pyramid",
+    "rectangle": "Rectangle",
+    "roof": "Roof",
+    "shapes3d": "3D Shapes",
+    "spline": "Spline",
+    "title": "Primitives"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "Activate guidelines by hovering edges, Hold ⇧ Shift to follow guideline. Hold {key} to prevent snapping.",
+      "affineInstructions": "Hold {key} to prevent snapping. Press Tab to switch between horizontal, vertical, and terrain mode.",
+      "clickToAddSubtract": "Add point to line or subtract points with click.",
+      "editModeStartFinishMac": "Hold ⌥ Option to add/subtract points. Press  ↵ Enter to finish editing.",
+      "editModeStartFinishWindows": "Hold Alt to add/subtract points. Press  ↵ Enter to finish editing.",
+      "finishEditing": "Press  ↵ Enter to finish editing.",
+      "finishPolygon": "Press ↵ Enter to complete creation of the polygon.",
+      "preciseMoveVertical": "Press {key} to toggle vertical mode.",
+      "specifyDistance": "Type to set specific distance. Click to place."
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "Deleting, copying, cutting, and pasting floors is not supported for 3D Sketch buildings. Try editing in 3D Sketch instead."
+  },
+  "snapping": {
+    "cursorElevation": "Elevation at cursor",
+    "guidesAndMeasurements": "Guides and measurements",
+    "snapToGuides": "Snap to guides",
+    "snapToObjects": "Snap to objects"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "Enter space name or leave empty for default"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "Connect to scenario",
+      "connectToScenarioDesc": "A scenario is a shared design container in your project that connects models, tools, and geometric and other data from several software applications."
+    }
+  },
+  "relativeTime": {
+    "today": "Today"
+  },
+  "terrain": {
+    "elevation": "Elevation",
+    "errors": {
+      "loadMapImageFailed": "Failed to load map image",
+      "loadSatelliteTextureFailed": "Loading satellite texture failed.",
+      "loadTextureFailed": "Loading terrain texture failed."
+    },
+    "labels": {
+      "numberOfSelectedPads": "Pads volume",
+      "padVolume": "Pad volume",
+      "padsVolume": "Pads volume",
+      "showAsPercentage": "Show as percentage",
+      "showAsRatio": "Show as ratio",
+      "totalMassBalance": "Total mass balance"
+    },
+    "massBalanceHover": "Net volume of mass change in the whole terrain.",
+    "metricsHeader": "Metrics",
+    "pad": {
+      "header": "Terrain pad",
+      "name": "Terrain pad",
+      "tooltip": "Cut/fill terrain, adjust elevation and slope, and assess mass balance."
+    },
+    "padVolumeHover": "Volume added/subtracted from the terrain by the selected pads.",
+    "padsHeader": "Terrain pads",
+    "slope": "Slope"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "You cannot switch between base layer/proposal while automation is loading",
+    "pendingSelectionBlockedMessage": "You cannot change selection while automation is loading",
+    "pendingToolSwitchBlockedMessage": "Tooling unavailable while automation is loading",
+    "transform": {
+      "redefineReferencePointsButton": "Redefine reference points"
+    }
+  },
+  "transform": {
+    "cover": "Cover",
+    "fillet": "Fillet",
+    "intersect": {
+      "name": "Intersect",
+      "tooltip": "Create an intersect of two or more objects. The footprint of the first selected object will change accordingly."
+    },
+    "loft": "Loft",
+    "move": {
+      "name": "Move",
+      "tooltip": "Move an object by defining a reference- and end point. "
+    },
+    "offset": {
+      "apply": "Apply offset",
+      "name": "Offset",
+      "tooltip": "Extend the footprint of an object outwards or decrease it inwards with a certain distance."
+    },
+    "rotate": {
+      "name": "Rotate",
+      "tooltip": "Rotate objects in the scene around a defined reference point."
+    },
+    "shell": "Shell",
+    "split": {
+      "name": "Split",
+      "tooltip": "Split one or more objects by using a line."
+    },
+    "subtract": {
+      "name": "Subtract",
+      "tooltip": "Subtract a shape from an object using another object. The footprint of the first selected object will change accordingly."
+    },
+    "sweep": "Sweep",
+    "title": "Transform",
+    "union": {
+      "name": "Union",
+      "tooltip": "Merge two or more objects. The first selected object will define the category and height of the resulting object."
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "Corner radius is a dynamic value that optimizes road curves based on layout.",
+      "tight": "Corner radius is a small fixed value equal to 1/2 of road width."
+    },
+    "railroads": {
+      "hotkeyDescription": "Draw rails",
+      "name": "Railroads",
+      "toolButton": "Railroads",
+      "tooltip": "Create railroads and adjust the widths via the right panel.",
+      "typeLabel": "Rail Type",
+      "typePlaceholder": "Select rail type"
+    },
+    "roads": {
+      "hotkeyDescription": "Draw road",
+      "name": "Roads",
+      "toolButton": "Roads",
+      "tooltip": "Create roads and adjust the widths via the right panel.",
+      "widthLabel": "Road width",
+      "withGraphToolButton": "Roads (with graph)"
+    },
+    "title": "Transportation",
+    "trafficData": {
+      "addButton": "Add traffic data",
+      "adtTooltip": "Average Daily Traffic",
+      "advancedSettingsLabel": "Advanced settings",
+      "dailyDistributionLabel": "Daily traffic distribution",
+      "dayTimeTooltip": "Day : 06.00-18.00",
+      "eveningTimeTooltip": "Evening : 18.00-22.00",
+      "heavyVehicleLabel": "Heavy traffic",
+      "nightTimeTooltip": "Night : 22.00-06.00",
+      "railRequiredInputsMessage": "All inputs are required for the railway to be considered by the noise analysis",
+      "removeButton": "Remove traffic data",
+      "roadRequiredInputsMessage": "All inputs are required for the road to be considered by the noise analysis",
+      "speedLimitTooltip": "Speed limit",
+      "title": "Traffic noise data"
+    }
+  },
+  "ui": {
+    "add": "Add",
+    "area": "Area",
+    "areaSum": "Area (sum)",
+    "automationLabel": "AUTOMATION",
+    "beta": "Beta",
+    "browsePluginsDescription": "Browse existing plugins from third party providers or add your own - they will be displayed here.",
+    "cancel": "Cancel",
+    "close": "Close",
+    "color": "Color",
+    "delete": "Delete",
+    "detach": "Detach",
+    "duplicate": "Duplicate",
+    "edit": "Edit",
+    "gridSettings": "Grid settings",
+    "hide": "Hide",
+    "length": "Length",
+    "lengthSum": "Length (sum)",
+    "newVersionAvailable": "New version available.",
+    "redo": "Redo",
+    "refresh": "Refresh",
+    "remove": "Remove",
+    "rename": "Rename",
+    "repair": "Repair",
+    "retry": "Retry",
+    "show": "Show",
+    "siteLabel": "Site",
+    "surroundings": "Surroundings",
+    "textAlignment": "Text alignment",
+    "undo": "Undo",
+    "update": "Update",
+    "videoNotSupported": "Your browser does not support the video tag.",
+    "xyzAxes": "XYZ Axes"
+  },
+  "performanceStats": {
+    "currentSnapshot": "Current snapshot",
+    "remainingFromPastSnapshots": "Remaining from past snapshots",
+    "title": "Performance statistics {status}"
+  },
+  "units": {
+    "asl": "asl",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "Align center",
+      "left": "Align left",
+      "right": "Align right",
+      "spacing": "Spacing"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "Draw area with trees",
+      "name": "Area with trees",
+      "tooltip": "Create an area populated with trees and edit their size and density. All trees will impact the analyses."
+    },
+    "header": "Trees",
+    "landscapingTitle": "Landscaping",
+    "properties": {
+      "bufferTooltip": "Buffer",
+      "gridLengthLabel": "Grid length",
+      "gridWidthLabel": "Grid width",
+      "heightTooltip": "Tree height",
+      "offsetTooltip": "Offset"
+    },
+    "title": "Vegetation",
+    "tooltips": {
+      "averageDistanceLabel": "Average distance between tree crowns",
+      "heightLabel": "Height of each tree"
+    },
+    "treeLine": {
+      "hotkeyDescription": "Draw line of trees",
+      "name": "Tree line",
+      "tooltip": "Create a line populated with trees and edit their size and density. All trees will impact the analyses."
+    },
+    "trees": "Trees"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "No analysisId provided",
+      "unsupportedAnalysisType": "Not a supported analysis type: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "You have view-only access to this site"
+  },
+  "windAnalysis": {
+    "analyzing": "Analyzing...",
+    "atCapacity": "We are currently running a high number of detailed wind analyses. Your analysis might take longer to complete. Thank you for your patience!",
+    "circleOutsideBoundingBox": "Analysis area is outside of map area",
+    "concurrentQuotaReached": "Concurrent wind analyses limit reached",
+    "concurrentQuotaReachedDescription": "You have too many concurrent wind analyses running. Please wait for some of them to complete.",
+    "concurrentQuotaWarning": "Concurrent analysis limit",
+    "concurrentQuotaWarningDescription": "You have {remaining} detailed wind analyses left before reaching the limit of {limit} concurrent analyses.",
+    "dailyQuotaReached": "Analysis limit reached",
+    "dailyQuotaReachedDescription": "You have reached the daily limit of wind analyses.",
+    "dailyQuotaReachedDescriptionRetry": "You have reached the daily limit of wind analyses. Please try again at {nextAvailableAt}.",
+    "loadingData": "Loading data",
+    "loadingDataTooltip": "Loading...",
+    "runAnalysis": "Analyze (~{min}-{max} mins)",
+    "seeAnalysisButton": "See detailed analysis",
+    "stoppedOrFailed": "Analysis was stopped or failed!",
+    "viewerAccessDisableTooltip": "Not able to run analyses as a viewer"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "Advanced Modeling Tools",
+      "editIn": "Edit in 3D Sketch",
+      "howToStartEditingMessage": "Press ⏎ or double-click to edit in 3D Sketch.",
+      "launch": "New 3D Sketch",
+      "sketch": "Sketch",
+      "updateProperties": "Update properties"
+    },
+    "advancedModeling": {
+      "cover": "Cover",
+      "fillet": "Fillet",
+      "intersect": "Intersect",
+      "loft": "Loft",
+      "offset": "Offset",
+      "shell": "Shell",
+      "subtract": "Subtract",
+      "sweep": "Sweep",
+      "union": "Union"
+    },
+    "axes": {
+      "reset": "Reset axes",
+      "set": "Set XYZ axes"
+    },
+    "buildingType": {
+      "draw": "Draw 3D Sketch building",
+      "name": "3D Sketch building"
+    },
+    "buttons": {
+      "apply": "Apply",
+      "cancel": "Cancel",
+      "ok": "OK"
+    },
+    "convert": {
+      "externalMessage": "Convert an object to 3D Sketch to modify exterior faces, edges and vertices.\n\nOnce the element is converted, it will no longer be connected to the element in the original source and changes will not be synchronized.",
+      "message": "Convert an object to 3D Sketch to modify exterior faces, edges and vertices.",
+      "title": "Convert to 3D Sketch"
+    },
+    "dialogs": {
+      "arrayButtonArray": "Array",
+      "arrayButtonCancel": "Cancel",
+      "arrayDistanceBetween2Points": "Length between 2 points",
+      "arrayDistanceTotalLength": "Total Length",
+      "arraySubtitleDistance": "Distance",
+      "arraySubtitleQuantity": "Quantity",
+      "arraySubtitleType": "Type",
+      "arrayTitle": "Array",
+      "arrayTypeLinear": "Linear array",
+      "arrayTypeRadial": "Radial array",
+      "corruptedElementsDeleted": "Some elements failed to save and became corrupt. These elements were automatically deleted.",
+      "editDimensionTitle": "Edit Dimension",
+      "recoveryClosedWithoutSaving": "3D Sketch was closed without properly saving.",
+      "recoveryQuestion": "Do you want to recover the unsaved changes?",
+      "recoveryTitle": "Unsaved model changes found"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "Flatten lowest non-horizontal faces"
+    },
+    "finishSelection": {
+      "back": "Back (B)",
+      "cancel": "Cancel (Esc)",
+      "confirm": "Finish (F)",
+      "next": "Next (N)"
+    },
+    "floors": {
+      "addFloor": "Add floor",
+      "addFloors": "Add floors",
+      "floorHeight": "Floor Height",
+      "floors": "Floors",
+      "floorWithNumberLabel": "Floor {level}",
+      "moreOptions": "More",
+      "numberOfFloors": "Number of Floors",
+      "removeFloors": "Remove floors",
+      "resetFloors": "Reset floors",
+      "title": "Floor details"
+    },
+    "groupEditing": {
+      "redo": "Redo",
+      "undo": "Undo"
+    },
+    "grouping": {
+      "toolbarTitle": "GROUPS"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "Measure angle",
+      "measureDistance": "Measure distance",
+      "menuTitle": "Guides and measurements",
+      "title": "Guides and measurements"
+    },
+    "mesh": {
+      "convertHintMessage": "Double-click to enable additional editing tools by converting meshes to objects.",
+      "importExceededLimitsMessage": "Your import exceeds {limit} mesh triangles and remains unchanged for better performance.\n\nTo access more editing tools, select individual meshes and double-click to convert them to editable objects.",
+      "importExceededLimitsTitle": "Import exceeds mesh triangle limit"
+    },
+    "pasteInPlaceAction": "Paste in place",
+    "properties": {
+      "mixed": "Mixed",
+      "objectWithIdLabel": "Object {id}"
+    },
+    "scaleTitle": "SCALE",
+    "selection": {
+      "areaSelectionOptions": "Area selection options",
+      "filterEdges": "Edges",
+      "filterFaces": "Faces",
+      "filterGroups": "Groups",
+      "filterMeshes": "Meshes",
+      "filterSolids": "Solids",
+      "filterVertices": "Vertices",
+      "selection": "Selection",
+      "selectionTools": "Selection tools"
+    },
+    "tools": {
+      "array": "Array",
+      "editArcCircle": "Edit arc or circle",
+      "editSpline": "Edit spline",
+      "extrudeEdges": "Extrude Edges",
+      "extrudeFace": "Extrude Face",
+      "facetFace": "Facet Face",
+      "flattenFace": "Flatten Faces",
+      "group": "Group",
+      "groupDetach": "Detach",
+      "meshToObjects": "Convert Mesh",
+      "mirror": "Mirror",
+      "move": "Move",
+      "offsetEdges": "Offset Edges",
+      "offsetFace": "Offset Face",
+      "reverseFace": "Reverse Face",
+      "rotate": "Rotate",
+      "scale": "Scale",
+      "scaleNonUniform": "Non-Uniform Scale",
+      "smoothEdges": "Smooth Edges",
+      "tiltFace": "Tilt Face",
+      "ungroup": "Ungroup"
+    },
+    "tooltips": {
+      "building": "Complex 3D buildings with unlimited possibilities like pitched roofs, tilted walls, and more.",
+      "editIn": "Convert objects to modify vertices, edges, and faces in 3D Sketch.",
+      "launch": "Use 3D sketching to model and iterate early-stage architectural design concepts."
+    },
+    "zoom": {
+      "fitProposal": "Zoom to fit proposal",
+      "fitSelection": "Zoom to fit selection"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "Quick start guides",
+    "allTutorialsDescription": "Complete these interactive guides to set up your site and start working in Site Design. ",
+    "completionMessage": "Well done! You've completed the {header} guide!",
+    "completionText": "{percent}% completed",
+    "completedTitle": "Completed",
+    "continueButton": "Continue",
+    "stepsTotal": "{count} steps total",
+    "timeLabel": "{time} min",
+    "stepProgress": "{current} of {total}",
+    "nextButton": "Next",
+    "doneButton": "Done",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "Quick start guides",
+    "upNextTitle": "Up next"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "Set up your site",
+      "description": "Add contextual data before you start modeling and analyzing site and buildings.",
+      "reviewHeader": "Site set up completed",
+      "reviewText": "You’ve successfully added contextual data and a site limit.{br}{br}Great job! You can now explore our modeling tools and import capabilities, or continue with another guide.",
+      "steps": {
+        "openContextualTab": {
+          "header": "Open contextual data tab",
+          "text": "Start by opening the <bold>Contextual data</bold> tab."
+        },
+        "browseAndOrder": {
+          "header": "Browse data for site location",
+          "text": "Click <bold>Browse contextual data</bold> to see what data packages are available for your site location.{br}{br}Data may include surrounding buildings, roads and terrain. "
+        },
+        "orderStarterPackage": {
+          "header": "Order starter data package",
+          "text": "Click <bold>Add</bold> to review what’s include in this data package. This data is free. "
+        },
+        "orderData": {
+          "header": "Order data package",
+          "text": "Select order to initiate the download of 3D contextual data to your site."
+        },
+        "drawSiteLimit": {
+          "header": "Draw site limit",
+          "text": "Activate this drawing tool to define your site limit. Once active, draw points around the site and enclose the shape.{br}{br}Having a site limit defined is a prerequisite to running analyses in Forma Site Design."
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "Add buildings",
+      "description": "Create buildings with our modelling tools or import existing models. ",
+      "reviewHeader": "Buildings added to site",
+      "reviewText": "You’ve successfully drawn buildings and imported assets to your site. Great work! You can now assess environmental conditions by running analyses, or continue with another guide.",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "Draw a basic building",
+          "text": "Click <bold>Basic building</bold> to activate the building tool. Once active, draw the shape of your building and select the last point to complete drawing the footprint."
+        },
+        "exploreParametricOptions": {
+          "header": "Explore parametric options",
+          "text": "Explore the parametric options available to modify your building model."
+        },
+        "importModel": {
+          "header": "Import a model or file",
+          "text": "Click <bold>Import</bold> to upload a model or raster image from your local device."
+        },
+        "placeInScene": {
+          "header": "Place in scene",
+          "text": "Click on the item you just imported from the library. Once selected, place it on your site by clicking and dragging. The tutorial will advance automatically once the element is placed."
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "Assess environmental conditions",
+      "description": "Run sun hours analysis to inform your early design decisions.",
+      "reviewHeader": "Sun hours analysis done!",
+      "reviewText": "You’ve successfully ran a sun hours analysis on your site.{br}{br}You can now continue creating new proposals, comparing analysis or exploring more of Site Design.",
+      "steps": {
+        "selectAnalysis": {
+          "header": "Select the analysis",
+          "text": "Click the highlighted icon to select the sun hours analysis."
+        },
+        "selectDate": {
+          "header": "Select a date",
+          "text": "Use the dropdown to set a date for which you'd like to analyze sun hours on your site."
+        },
+        "runAnalysis": {
+          "header": "Run analysis",
+          "text": "Click the button to initiate the analysis. It will only take a few seconds to complete.{br}{br}The guide will resume automatically once the analysis is completed."
+        },
+        "openAnalysisResults": {
+          "header": "Open results",
+          "text": "Once completed, the analysis results will be displayed in the list here. Click the latest results to review them in detail. A new window will open.",
+          "altText": "Analysis result window"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "How to fix \"WebGL not supported\"?",
+      "text": "Your computer does not seem to support WebGL, which is a requirement for using Forma",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

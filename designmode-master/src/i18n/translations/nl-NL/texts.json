@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "We gaan alles instellen zodat u kunt gaan ontwerpen",
+    "body": "Wanneer u <bold>Doorgaan</bold> selecteert, voeren we automatisch twee configuratiestappen voor u uit. U hoeft niets te doen. Zodra de stappen zijn voltooid, kunt u gaan ontwerpen in Forma Site Design.",
+    "contextual": {
+      "header": "Locatiespecifieke context laden",
+      "body": "We laden gratis contextgegevens voor uw locatie, zoals terrein en omliggende gebouwen."
+    },
+    "sunAnalysis": {
+      "header": "Inzicht verkrijgen in de locatieomstandigheden",
+      "body": "Wij voeren een zonurenanalyse uit op uw locatie en omgeving om uw ontwerpbeslissingen te onderbouwen."
+    },
+    "continueButton": "Doorgaan",
+    "sunAnalysisCoachmark": {
+      "header": "Zonurenanalyse",
+      "body": "We hebben automatisch een zonurenanalyse op uw locatie gestart.{br}{br}Zodra de indicator groen is of er een banner wordt weergegeven aan de bovenkant van het canvas, kunt u de resultaten bekijken."
+    },
+    "finalModal": {
+      "title": "Uw locatie is nu ingesteld",
+      "subTitle": "Ga verder met een van de onderstaande aanbevolen stappen:",
+      "suggestedAction1": {
+        "header": "Een gebouw tekenen",
+        "body": "Activeer een van de bouwhulpmiddelen in de werkbalk."
+      },
+      "suggestedAction2": {
+        "header": "Een model importeren",
+        "body": "Klik op het importpictogram op de werkbalk en volg de voorgestelde stappen."
+      },
+      "suggestedAction3": {
+        "header": "Analyses vergelijken",
+        "body": "Voer een tweede analyse uit en open de modus Vergelijken vanuit de linkerbovenhoek van het scherm."
+      },
+      "showMeHow": "Meer opties weergeven",
+      "finalButton": "Begrepen"
+    },
+    "sunAnalysisTriggerError": "Kan de zonanalyse niet activeren"
+  },
+  "alignment": {
+    "center": "Middelpunt uitlijnen",
+    "left": "Links uitlijnen",
+    "right": "Rechts uitlijnen"
+  },
+  "analysis": {
+    "alertsLabel": "Waarschuwingen",
+    "analyzeTitle": "Analyseren",
+    "analysisParameters": "Analyseparameters",
+    "areaRadius": "Straal van gebied",
+    "areaTitle": "Analysegebied",
+    "customCircle": "Aangepaste cirkel",
+    "daylightAnalysisIllustrationAlt": "Illustratie daglichtanalyse",
+    "failedToOrder": "Kan analyse niet bestellen: {error}",
+    "learnMore": "Meer informatie",
+    "microclimateAreaRadius": "Straal van microklimaatgebied",
+    "noisePredictionUnavailable": "Geluidsvoorspelling niet beschikbaar",
+    "radiusLabel": "Straal",
+    "selectAreaToRunAnalysis": "Selecteer een locatiebeperking of zone om een analyse uit te voeren",
+    "disabledTooltips": {
+      "addRoadsOrRails": "Voeg wegen en/of rails toe met verkeersgegevens om een analyse uit te voeren",
+      "analysisAreaOutsideMap": "Het analysegebied ligt buiten het kaartgebied",
+      "concurrentQuotaReached": "Limiet van gelijktijdige windanalyses bereikt",
+      "dailyQuotaReached": "Dagelijks windanalysequotum is bereikt",
+      "geometryAlertsDetected": "Geometrieproblemen gedetecteerd",
+      "geometryTooComplex": "Geometrie te complex",
+      "invalidParameters": "Ongeldige parameters",
+      "loadingData": "Gegevens worden geladen",
+      "notAvailable": "Niet beschikbaar",
+      "notAbleAsViewer": "Kan analyses niet uitvoeren als kijker",
+      "pleaseWait": "Een ogenblik geduld...",
+      "savingInProgress": "Bezig met opslaan...",
+      "selectSiteLimitOrZone": "Selecteer een locatiebeperking of zone om een analyse uit te voeren"
+    },
+    "emptyStateZoneExplanation": "De analyse wordt standaard uitgevoerd op gebouwen en andere objecten die u hebt toegevoegd. Voeg een locatiebeperking of zones toe om volledige analyseresultaten voor een specifiek gebied te krijgen.",
+    "entireModel": "Gehele model",
+    "missingTrafficData": {
+      "description": "Voeg wegen of spoorwegen toe met verkeersgegevens om realistische geluidssituaties te voorspellen.",
+      "startGuideButton": "Handleiding starten",
+      "title": "Ontbrekende verkeersgegevens"
+    },
+    "noiseAreaRadius": "Straal geluidsgebied",
+    "properties": {
+      "radiusLabel": "Straal"
+    },
+    "seeResultButton": "Analyseresultaat weergeven",
+    "seeResultsButton": "Analyseresultaten weergeven",
+    "selectionTitle": "Analysegebieden selecteren",
+    "selectAllAreasButton": "Alle gebieden selecteren",
+    "deselectAllAreasButton": "Alle gebieden deselecteren",
+    "skyComponent": {
+      "potentialDescription": "Onze <strong>daglichtpotentie-analyse</strong> identificeert delen van de gevel met weinig toegang tot daglicht met behulp van de Vertical Sky Component-score. Kies gebieden die u wilt analyseren."
+    },
+    "sun": {
+      "removeDateButton": "Datum verwijderen"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "Gebouwen met volledige ondersteuning",
+      "buildingsPartialSupport": "Gebouwen/overige met gedeeltelijke ondersteuning",
+      "iconAlt": "Ondersteuningsniveau voor analyse",
+      "title": "Ondersteuning voor analyses"
+    },
+    "windAreaRadius": "Straal windgebied",
+    "windRoseUnavailable": {
+      "description": "Onze leverancier van windroosgegevens ondervindt problemen. U kunt nog steeds analyseren op microklimaatpatronen, maar zonder historische gegevens om de waarschijnlijkheid van windomstandigheden te onderzoeken. We werken aan het herstellen van de gegevens.",
+      "title": "Windroos momenteel niet beschikbaar",
+      "windDescription": "Onze leverancier van windroosgegevens ondervindt problemen. U kunt nog steeds analyseren op algemene windpatronen en handmatig de windsnelheden aanpassen. Snelle wind is niet beschikbaar. We werken aan het herstellen van de gegevens."
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "Er bestaat al een analyse met deze configuratie. ",
+    "concurrentAnalysesReached": "De limiet van gelijktijdige analyses is bereikt",
+    "concurrentNoiseAnalysesReached": "De limiet van gelijktijdige geluidsanalyses is bereikt",
+    "dailyNoiseQuotaReached": "Maximaal aantal geluidsanalyses binnen 24 uur is bereikt",
+    "dailyQuotaReached": "Dagelijkse analysequotum is bereikt",
+    "nothingToAnalyze": "Niets om te analyseren",
+    "somethingWentWrong": "Er is iets misgegaan"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "Gedetailleerde windanalyse is niet beschikbaar. Probeer de analyse later uit te voeren.",
+      "rapidWindUnavailable": "Snelle windanalyse is niet beschikbaar. Probeer de analyse later uit te voeren.",
+      "rapidWindUnavailableToast": "Snelle windanalyse is niet beschikbaar. Ons team is hiervan op de hoogte gesteld. Probeer de analyse later uit te voeren."
+    },
+    "types": {
+      "microclimate": {
+        "description": "Onze microklimaatanalyse berekent de gevoelstemperatuur op uw locatie, rekening houdend met zon, wind en daglichtomstandigheden. We raden u aan te wachten tot de windanalyse is voltooid voor nauwkeurigere resultaten.",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "Microklimaat",
+        "text": "Microklimaatanalyse"
+      },
+      "noise": {
+        "description": "Begrijp hoe uw ontwerp van invloed is op omgevingsgeluid door middel van een realtime-voorspelling in de snelle geluidsanalyse. Voer een gedetailleerde geluidsanalyse uit voor een nauwkeurigere simulatie van de geluidssituatie en een analyse van de omstandigheden op de gevels van het gebouw.",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "Geluid",
+        "text": "Geluidsanalyse"
+      },
+      "sky-component": {
+        "description": "Beoordeel welke delen van de gevels van het gebouw weinig toegang krijgen tot daglicht met behulp van de Vertical Sky Component-score. Als u de analyse wilt uitvoeren, moet u een locatiebeperking toevoegen.",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "Daglichtpotentie",
+        "text": "Daglichtpotentie-analyse"
+      },
+      "solar-panel": {
+        "name": "Zonne-energie"
+      },
+      "sun": {
+        "description": "Beoordeel hoeveel uren zonlicht uw locatie en gebouwen zullen krijgen. Als u de analyse wilt uitvoeren, moet u een locatiebeperking toevoegen en een datum kiezen.",
+        "link": "https://help.autodeskforma.com/en/articles/6951253",
+        "name": "Zonuren",
+        "text": "Zonurenanalyse"
+      },
+      "wind": {
+        "description": "Krijg inzicht in de invloed van uw ontwerpwijzigingen op de windomstandigheden door middel van een realtime-voorspelling in de snelle windanalyse. Voer een gedetailleerde analyse van de windstroom en het windgemak uit om een nauwkeurigere simulatie van verschillende windrichtingen en -snelheden te verkrijgen.",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "Wind",
+        "text": "Windanalyse"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "Knooppunt toevoegen",
+      "buildingWidth": "Breedte gebouw",
+      "cityBlocks": "Stadsblokken",
+      "editGridOrientationButton": "Rasterrichting bewerken",
+      "explanation": "Een voortdurende inspanning in het ontwikkelen van tools die u kunnen helpen de massapotentie van uw locatie te verkennen. Volg de ontwikkelingen op ons forum.",
+      "floors": "Verdiepingen",
+      "headerTitle": "Verkennen",
+      "iterativeExplanation": "Tool voor ontwerpautomatisering waarmee u snel lay-outs van locaties en gebouwen kunt genereren en verkennen.",
+      "layoutTitle": "Lay-out",
+      "layouts": "Lay-outs",
+      "linearBuildings": "Lineaire gebouwen",
+      "mixed": "Gemengd",
+      "name": "Verkennen",
+      "siteAutomation": "Automatisering van locatie",
+      "storyHeight": "Hoogte etage",
+      "towerBuildings": "Torengebouwen",
+      "towerWidth": "Breedte toren"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "Nieuwe basis toevoegen",
+    "changeIndicatorLabel": "Indicator wijzigen",
+    "editBaseButton": "Basis bewerken",
+    "editBaseDoneButton": "Gereed",
+    "editBaseRightMenuMessage": "Bewerk de basis om wijzigingen aan te brengen",
+    "editBaseRightMenuMixedSelectionMessage": "Uw selectie omvat basisobjecten. U kunt geen wijzigingen aanbrengen met een gemengde selectie.",
+    "editing": {
+      "changesWillAffect": "Wijzigingen zullen van invloed zijn op",
+      "proposals": "voorstellen",
+      "title": "Bewerken"
+    },
+    "errors": {
+      "deleteFailed": "Kan basis niet verwijderen.",
+      "duplicateFailed": "Kan basis niet dupliceren.",
+      "fetchFailed": "Kan geen bases ophalen.",
+      "renameIndicatorFailed": "Kan basisindicator niet hernoemen.",
+      "renameFailed": "Kan basis niet hernoemen.",
+      "switchFailed": "Kan niet van basis wisselen."
+    },
+    "noBaseLayersText": "Elementen die u wilt hergebruiken in verschillende voorstellen, kunnen worden toegevoegd aan een basis.",
+    "strategy": {
+      "description": "Het voorstel maakt gebruik van een basis die verouderd is. U moet kiezen of u wilt bijwerken naar de nieuwste versie van de basis of de oudere versie van de basis wilt dupliceren.",
+      "duplicateOld": "Oude versie van basis dupliceren",
+      "header": "Uw basis is verouderd",
+      "useLatest": "Gebruik de nieuwste versie van de basis"
+    },
+    "swapBaseButton": "Basis wisselen",
+    "swapButton": "Wisselen",
+    "untitledBaseLabel": "Naamloze basis"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "Generieke lijn tekenen",
+        "name": "Lijn",
+        "tooltip": "Maak generieke lijnen om de ontwerpintentie over te brengen. Er wordt geen rekening mee gehouden in analyses."
+      },
+      "surface": {
+        "draw": "Generiek oppervlak tekenen",
+        "name": "Oppervlak",
+        "tooltip": "Maak een generiek oppervlak om de ontwerpintentie over te brengen. Er wordt geen rekening mee gehouden in analyses."
+      },
+      "title": "Generiek",
+      "volume": {
+        "draw": "Generiek volume tekenen",
+        "name": "Volume",
+        "tooltip": "Hoewel generieke volumes zullen worden geanalyseerd, zal er geen rekening worden gehouden met hun gebied in de Oppervlaktemeetwaarden."
+      }
+    }
+  },
+  "building": {
+    "addFloor": "Verdieping toevoegen",
+    "addFloorsAction": "Verdiepingen toevoegen",
+    "buildingColorsLabel": "Kleuren van gebouwen",
+    "buildingDesignButton": "Openen in Building Design",
+    "buildingDesignDescription": "Dit gebouw is ontworpen in Building Design. Open Building Design om het te bewerken.",
+    "buildingDesignGeometry": "Geometrie van Building Design",
+    "buildingsTitle": "Gebouwen",
+    "buildingWidthLabel": "Breedte gebouw",
+    "divisionWidth": "Breedte divisie",
+    "roadWidthLabel": "Breedte weg",
+    "towerBlockWidthLabel": "Breedte torenblok",
+    "typesTitle": "Typen",
+    "upgradingFor3DSketchBuilding": "3D Sketch-gebouw upgraden voor opgenomen koolstof",
+    "variationsTitle": "Variaties",
+    "errors": {
+      "failedToLoadFunctions": "Kan aangepaste bouwfuncties niet laden",
+      "failedToLoadSettings": "Kan instellingen niet laden"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "Toevoegen aan bibliotheek",
+      "addToLibraryTooltip": "Toevoegen aan bibliotheek",
+      "emptyFloors": "Lege verdiepingen",
+      "parking": "Parkeren",
+      "popupTitle": "Plattegronden",
+      "title": "Plattegronden",
+      "cannotDrawCornerDescription": "U kunt nog geen hoekplannen tekenen",
+      "cannotDrawSplitDescription": "U kunt nog geen gesplitste plannen tekenen",
+      "finishDrawingTooltip": "Tekening voltooien om plattegronden toe te voegen",
+      "mixedSelectionDescription": "Gemengde plattegronden geselecteerd",
+      "noLibraryDescription": "Er zijn geen plattegronden in de bibliotheek met deze buitenvorm",
+      "noSelectionDescription": "Geen plattegrond in selectie",
+      "rightClickToAddDescription": "Klik met de rechtermuisknop op een verdieping in een van uw voorstellen om deze aan de bibliotheek toe te voegen",
+      "selectSectionsDescription": "Selecteer gedeelten die leeg zijn of plattegronden hebben"
+    },
+    "floors": {
+      "seeAllButton": "Bekijk alle verdiepingen"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "Nieuwe toevoegen",
+      "addSectionCutButton": "Doorsnede toevoegen",
+      "apartmentBuildingStories": "Etages van appartementsgebouwen",
+      "apartmentBuildingStoryHeight": "Etagehoogte appartementsgebouw",
+      "apartmentBuildingWidth": "Breedte appartementsgebouw",
+      "circulationTitle": "Circulatie",
+      "headerTitle": "Lijngebouw",
+      "outdatedLabel": "verouderd",
+      "targetSectionLength": "Lengte doelsectie",
+      "circulation": {
+        "sectionCountText": "Aantal secties: {count}",
+        "widthLabel": "Breedte van doorgang",
+        "widthText": "Breedte: {width}"
+      },
+      "divisionWidthLabel": "Breedte divisie",
+      "releaseToBasicAnimationAlt": "Vrijgeven naar basisanimatie",
+      "releaseToBasicExplanation": "Door de lijnautomatisering vrij te geven, ontstaat er een basisgebouw waarmee u functies of parkeergelegenheid op individuele verdiepingen kunt toevoegen. Na de vrijgave kan de lijnautomatisering niet meer worden teruggekregen.",
+      "releaseToFloorPlanAction": "Vrijgeven naar plattegrond",
+      "releaseToFloorPlanAnimationAlt": "Vrijgeven naar plattegrondanimatie",
+      "releaseToFloorPlanExplanation": "Als u de circulatieautomatisering vrijgeeft, wordt er een plattegrond gemaakt waarmee u de lay-outs handmatig kunt ontwerpen. Na de vrijgave kan de circulatieautomatisering niet meer worden teruggekregen.",
+      "towerWidthLabel": "Breedte torenblok"
+    },
+    "properties": {
+      "lengthLabel": "Lengte",
+      "numberOfFloorsLabel": "Aantal verdiepingen",
+      "numberOfStoriesLabel": "SiteStudy aantal etages",
+      "stories": "Etages",
+      "storyHeight": "Hoogte etage",
+      "storyHeightLabel": "Hoogte etage",
+      "widthLabel": "Breedte"
+    },
+    "toolbar": {
+      "title": "Gebouwen"
+    },
+    "tooltips": {
+      "addBuildingsButton": "Gebouwen toevoegen",
+      "clampToTerrainButton": "Gebouwen aan terrein vastmaken",
+      "numberOfFloorsLabel": "Aantal verdiepingen",
+      "parkingEditDescription": "Parkeergelegenheid wordt nu bewerkt in de bewerker voor plattegronden",
+      "releaseToBasicButton": "Vrijgeven naar basisgebouw",
+      "releaseToZonesButton": "Vrijgeven naar zones",
+      "removeBuildingsButton": "Gebouwen verwijderen",
+      "storyHeightLabel": "Hoogte etage",
+      "swapFloorPlansButton": "Plattegronden wisselen",
+      "targetSectionLengthLabel": "Lengte doelsectie",
+      "towerWidthLabel": "Breedte toren",
+      "widthLabel": "Breedte gebouw"
+    },
+    "types": {
+      "basic": {
+        "draw": "Basisgebouw tekenen",
+        "name": "Basisgebouw",
+        "tooltip": "Teken gebouwen met verdiepingen van elke vorm met controle en precisie. Bekijk gebouwstatistieken in Oppervlaktemeetwaarden."
+      },
+      "line": {
+        "draw": "Lijngebouw tekenen",
+        "name": "Lijngebouw",
+        "tooltip": "Teken een gebouwstructuur rond een lijn. Pas de parameters aan, zoals secties en verdiepingen. Bekijk gebouwstatistieken in Oppervlaktemeetwaarden."
+      }
+    }
+  },
+  "camera": {
+    "compass": "Noord naar boven weergeven",
+    "lookAt": {
+      "title": "Bekijken",
+      "tooltip": "Beweeg de muis over een vlak om de camera uit te lijnen. Klik om het vlak passend te maken of sleep om het zoomgebied aan te passen."
+    },
+    "lookFrom": {
+      "title": "Kijken vanaf punt",
+      "tooltip": "Klik op een punt op een gevel van waaruit u wilt kijken. Of klik en sleep om het punt en de weergaverichting te kiezen."
+    },
+    "optionsLabel": "Camera-opties",
+    "optionsTitle": "Camera-opties",
+    "switchCameraMode": "Tussen cameramodi schakelen",
+    "vectorExport": {
+      "exportSuccessful": "Exporteren gelukt",
+      "title": "Vector exporteren"
+    },
+    "switchTo2d": "Schakel over naar de 2D-modus (orthografisch)",
+    "switchTo3d": "Schakel over naar de 3D-modus",
+    "zoom": {
+      "toFitProposal": "Passend maken aan voorstel",
+      "toFitSelection": "Passend maken aan selectie"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "Rand"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "Meerdere op regel",
+      "placeSinglesButton": "Enkelen plaatsen"
+    }
+  },
+  "contextualData": {
+    "description": "Bekijk en beheer de contextgegevens die beschikbaar zijn voor uw project. U kunt hier ook meer gegevens bestellen.",
+    "title": "Contextgegevens"
+  },
+  "contextMenu": {
+    "copy": "Kopiëren",
+    "cut": "Knippen",
+    "delete": "Verwijderen",
+    "exportTerrainAsObj": "Terrein exporteren als obj",
+    "moveToBack": "Naar achteren verplaatsen",
+    "moveToBase": "Verplaatsen naar basis",
+    "moveToFront": "Naar voren verplaatsen",
+    "moveToProposal": "Verplaatsen naar voorstel",
+    "paste": "Plakken",
+    "pasteInPlace": "Op de plaats plakken",
+    "terrainPad": {
+      "moveToBack": "Terreinblok naar achteren verplaatsen",
+      "moveToFront": "Terreinblok naar voren verplaatsen"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "Het is niet mogelijk om elementen te kopiëren tussen projecten of hubs.",
+    "failedToCopyElementMessage": "Kan element niet kopiëren."
+  },
+  "dataOrders": {
+    "completed": "De volgende gegevensbestelling is voltooid: {name}. Deze wordt toegevoegd aan uw voorstel en u kunt het binnen enkele seconden in Lagen zien.",
+    "completedAll": "{names} zijn geladen en toegevoegd aan uw voorstelbasis. U kunt meer gegevens doorzoeken en bestellen onder Contextgegevens.",
+    "failed": "{name} mislukt",
+    "failedToAdd": "Het toevoegen van '{name}' aan het voorstel is mislukt, maar gegevens zijn nog steeds beschikbaar in de bibliotheek.",
+    "processing": "De volgende gegevensbestelling wordt verwerkt: {name}. Zodra deze is voltooid, wordt deze aan uw voorstel toegevoegd.",
+    "statusTitle": "Status gegevensbestelling"
+  },
+  "demoSite": {
+    "badge": "demo",
+    "flyout": {
+      "content": "We hebben deze site gemaakt om de mogelijkheden van Forma te demonstreren. Begin hieronder een gids om de stappen van een eenvoudige workflow te volgen en uw eigen sites te maken zodra u er klaar voor bent.",
+      "createSiteButton": "Nieuwe locatie maken",
+      "createSiteTooltip": "U moet een actieve licentie hebben en toestemming hebben om locaties in dit project te maken",
+      "header": "Dit is een demolocatie",
+      "startGuideButton": "Handleiding starten"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "AAN DE SLAG MET",
+    "titleFormaSiteDesign": "Een demo site",
+    "description": "Dit is een vooraf ontworpen voorbeeldsite om Forma Locatie Design te verkennen. Maak je geen zorgen dat je iets kapot maakt - zie het als een veilige ruimte om te experimenteren zonder dat dit invloed heeft op je echte projecten.",
+    "callToAction": "Klik op {bold} om de demo site te verkennen.",
+    "callToActionBold": "Doorgaan",
+    "buttonContinue": "Doorgaan",
+    "buttonGoToHome": "Ga naar Forma Home",
+    "imageAlt": "Forma Locatie ontwerpvisualisatie"
+  },
+  "drawing": {
+    "traceShape": "Bestaande vorm traceren"
+  },
+  "hotkeys": {
+    "addNode": "Knooppunt toevoegen",
+    "cancelDrawingPoint": "Tekeningpunt annuleren",
+    "clickAndMoveGrip": "Klik en verplaats een grip om in die richting te schalen.",
+    "complete": "Voltooid",
+    "copy": "Kopiëren",
+    "cut": "Knippen",
+    "deleteSelected": "Selectie verwijderen",
+    "drawHouse": "Huis tekenen",
+    "drawHousesWithLine": "Huizen tekenen met Lijn",
+    "drawLine": "Lijn tekenen",
+    "drawRoad": "Weg tekenen",
+    "edit": "Bewerken",
+    "exitContext": "Context afsluiten",
+    "exitEditGraph": "Grafiek bewerken afsluiten",
+    "exitGraphTool": "Grafiektool afsluiten",
+    "exitHouseTool": "De tool Huis afsluiten",
+    "exitSiteStudyAndApply": "Tool Site Study afsluiten en onderzoek toepassen op voorstel",
+    "exitTool": "Tool afsluiten",
+    "exitTransportationTool": "Transporttool afsluiten",
+    "finishEditing": "Bewerken voltooien",
+    "freeform": "Vrije vorm",
+    "measureDistance": "Afstand meten",
+    "paste": "Plakken",
+    "placeSingleHouses": "Individuele huizen plaatsen",
+    "redo": "Opnieuw",
+    "remove": "Verwijderen",
+    "resetGraph": "Grafiek opnieuw instellen",
+    "selectAll": "Alles selecteren",
+    "selectSomethingToModify": "Selecteer iets te wijzigen met {toolName}",
+    "switchHouseCorner": "Huishoek wisselen",
+    "switchHousePlacementSide": "Zijde van huisplaatsing wisselen",
+    "toggleSidebar": "Zijbalk schakelen",
+    "undo": "Ongedaan maken"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "Houd Shift ingedrukt terwijl u de kompaspositie verplaatst om de rotatieas uit te lijnen met de geometrie onder de cursor.",
+    "editSiteLayout": "Bewerk de lay-out van de locatie of selecteer individuele zones om de gebouwtypologie voor in te stellen.",
+    "freeMode": "Vrije modus. Druk op ↹ Tabblad voor horizontale modus.",
+    "horizontalMode": "Horizontale modus. Druk op ↹ Tabblad voor vrije modus.",
+    "mode2D": "2D-modus. Alle tools beperkt tot horizontaal vlak.",
+    "rotateMoveText": "{moveModeText} Verplaatsen ({inputModeText}). Druk op ↹ tabblad voor {nextMoveModeText} verplaatsen ({nextInputModeText}).",
+    "selectAreaToExplore": "Selecteer voor welk gebied u de opties voor de locatielay-out wilt verkennen.",
+    "snappingAxesHint": " Druk op Alt om hechtingsassen te verbergen. Alt + C om ze te wissen.",
+    "straightAction": "Recht {action}. Druk op ↹ Tabblad voor taps toelopend {action}.",
+    "switchHouseCornerAndRotate": "Druk op Tab om van huishoek te wisselen. Houd de muis ingedrukt en sleep deze om te draaien",
+    "switchHousePlacementSide": "Druk op Tab om de kant van de huisplaatsing te wisselen",
+    "taperAction": "Taps toelopend {action}. Druk op ↹ Tabblad voor taps toelopend {action}."
+  },
+  "menus": {
+    "generatorsByExtensions": "Generatoren bij extenties"
+  },
+  "messages": {
+    "elementAddedTo": "Element toegevoegd aan {location}"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "Bezig met opslaan..."
+    },
+    "camera": {
+      "lookAt": "Bekijken"
+    },
+    "lineWidth": "Lijnbreedte",
+    "settings": "Instellingen",
+    "templates": {
+      "updatesAvailable": "Updates beschikbaar"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "Kan de rechtermuisklikoptie voor gebouw niet uitvoeren",
+      "failedToConvertVolumes": "Kan volumes niet converteren naar het basisgebouw",
+      "failedToDraw": "Kan het basisgebouw niet tekenen",
+      "failedToEdit": "Kan nieuw basisgebouw niet bewerken",
+      "failedToPushPull": "Kan geen push/pull uitvoeren voor basisgebouw"
+    },
+    "failedToLoadContextualData": "Kan contextgegevens niet laden",
+    "import": {
+      "largeScale": "Import bevat elementen die groot van omvang zijn ({size}). Importeren gedraagt zich mogelijk niet zoals verwacht. Druk op ESC om te annuleren.",
+      "resultingShapeInvalid": "De resulterende vorm is ongeldig."
+    },
+    "modelNotGeolocated": "Het Site Design-model heeft geen geolocatie. Bestel contextgegevens om deze te geolokaliseren",
+    "terrain": {
+      "boundingBoxTooLarge": "Het begrenzingsvak van de elementgeometrie is te groot om als terrein te gebruiken. Maximale grootte: 4 km². Werkelijke grootte: {size} km²"
+    },
+    "library": {
+      "couldNotFindElement": "Kan bibliotheekelement niet vinden",
+      "elementNotAvailable": "Bibliotheekelement niet beschikbaar",
+      "failedToConvertTerrain": "Converteren naar terreinelement mislukt",
+      "failedToDownloadFloorPlans": "Plattegronden downloaden mislukt",
+      "failedToSaveFloorPlans": "Opslaan van plattegronden op projectniveau mislukt. Vernieuw de pagina",
+      "failedToUpdateLibrary": "Bibliotheek bijwerken mislukt"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "Fout in het menu voor lijngebouw",
+      "failedToDraw": "Tekenen van lijngebouwen mislukt",
+      "failedToEdit": "Bewerken van lijngebouw mislukt",
+      "failedToolbarAction": "Werkbalkactie voor lijngebouw mislukt"
+    },
+    "siteStudy": {
+      "errorInExplore": "Fout in Verkennen. Probeer het opnieuw.",
+      "errorOccurred": "Er is een fout opgetreden. Onze technici zijn hiervan op de hoogte gesteld.",
+      "failedToLoadPicker": "Kan de verkenningskiezer niet laden. Probeer actie opnieuw."
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "Bladeren door alle plug-ins",
+    "browseDescription": "Blader door bestaande extenties of generatoren van externe providers of voeg uw eigen extenties toe - ze worden hier weergegeven.",
+    "downloadButton": "Extenties downloaden",
+    "downloadDescription": "om modellen te importeren uit Revit of Rhino.",
+    "importModelTitle": "Model importeren uit extensie",
+    "noDescriptionAvailable": "Geen beschrijving beschikbaar.",
+    "plugins": "Plug-ins"
+  },
+  "errorBoundary": {
+    "componentCrashed": "Component gecrasht",
+    "retryButton": "Opnieuw proberen",
+    "unexpectedError": "Er is een onverwachte fout opgetreden. Voer de actie opnieuw uit of herlaad de pagina om het opnieuw te proberen"
+  },
+  "guides": {
+    "closeMenu": "Menu Hulplijnen en meetwaarden sluiten"
+  },
+  "geometryAlerts": {
+    "dismiss": "Afwijzen",
+    "header": "Waarschuwingen voor geometrie",
+    "review": "Controleren",
+    "title": "Waarschuwingen voor geometrie ({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "Verwijder of wijzig om analyses uit te voeren.",
+      "title": "Dubbele geometrieën"
+    },
+    "invalidBbox": {
+      "subTitle": "Verwijder of wijzig om analyses uit te voeren.",
+      "title": "Elementen met geometrie die te ver weg ligt"
+    },
+    "outOfBounds": {
+      "subTitle": "Verwijder of wijzig om analyses uit te voeren.",
+      "title": "Elementen buiten terrein"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "De eerste verdieping heeft 0 oppervlakte. Klik het onderste vlak horizontaal vast om te repareren.",
+      "title": "Eerste verdieping zonder oppervlakte gedetecteerd"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "Dit gebouw heeft één of meer verdiepingen met 0 oppervlakte en er kan geen geldig gebouw van worden gemaakt.",
+      "title": "Verdieping(en) zonder oppervlakte gedetecteerd"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "Dit gebouw bevat <a>niet-waterdichte geometrie</a> en kan bij het afsluiten van 3D Sketch een generiek model zonder verdiepingen worden",
+      "title": "Gebouw is niet waterdicht"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "Dit model bevat <a>niet-waterdichte geometrie</a> die het gedrag van tools en weergaven kan beïnvloeden.",
+      "title": "De geometrie is niet waterdicht"
+    }
+  },
+  "importToolbar": {
+    "title": "Model importeren"
+  },
+  "labels": {
+    "addLabelButton": "Label toevoegen",
+    "category": "Labels",
+    "description": "Voeg labels toe om specifieke punten in het 3D-canvas te markeren met een korte tekstbeschrijving. U kunt maximaal {count} regels tekst toevoegen. ",
+    "label": "Label",
+    "placeholder": "Tekst invoegen..."
+  },
+  "layerList": {
+    "buildings": "Gebouwen",
+    "category": {
+      "contextualDataDuration": "Contextgegevens (~1-2,5 min)"
+    },
+    "generic": "Generiek",
+    "images": "Afbeeldingen",
+    "propertyBoundaries": "Grenzen van het terrein",
+    "roads": "Wegen",
+    "siteLimits": "Locatiebeperkingen",
+    "terrain": "Terrein",
+    "vegetation": "Begroeiing",
+    "zones": "Zones"
+  },
+  "layersTitle": "Lagen",
+  "library": {
+    "addedToLibrary": "{name} aan bibliotheek toegevoegd.",
+    "addToLibraryButton": "Toevoegen aan bibliotheek"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "Beperkingen tekenen",
+      "name": "Beperking",
+      "plural": "Beperkingen",
+      "tooltip": "Maak een volume om de beperkingen van het project te visualiseren."
+    },
+    "siteLimit": {
+      "defineAsAction": "Definiëren als locatiebeperking",
+      "hotkeyDescription": "Locatiebeperking tekenen",
+      "name": "Locatiebeperking",
+      "tooltip": "Maak een locatiebeperking die wordt gebruikt om de meetwaarden van uw project te analyseren."
+    },
+    "title": "Limieten",
+    "zone": {
+      "hotkeyDescription": "Zone tekenen",
+      "name": "Zone",
+      "tooltip": "Teken zones om gebieden op uw locatie te definiëren die u wilt analyseren."
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "Tekenmodus afsluiten"
+  },
+  "navbar": {
+    "addButton": "Toevoegen",
+    "quickActionsButton": "Snelle acties",
+    "settingsButton": "Instellingen"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "Weet u zeker dat u {name} wilt verwijderen?",
+      "descriptionParagraph1": "Een basis bevat objecten die worden hergebruikt in al uw voorstellen. U kunt verschillende bases maken en ertussen wisselen.",
+      "descriptionParagraph2": "Als u een bestaand object wilt toevoegen, klikt u er met de rechtermuisknop op en kiest u Verplaatsen naar basis. Klik op Bewerken om een nieuw object te tekenen."
+    },
+    "dataOrderProcessing": "Er wordt een gegevensbestelling verwerkt. Zodra deze klaar is, wordt deze aan uw voorstel toegevoegd."
+  },
+  "pendingOperation": {
+    "defaultDescription": "Wachten tot de automatisering is voltooid..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} geometrieën die aan uw {layerType} zijn toegevoegd",
+    "geometriesSelectedLabel": "Geometrieën geselecteerd",
+    "updateTerrainAction": "Terrein bijwerken",
+    "updateTerrainDescription": "Vervangt huidig terrein door nieuw terrein uit bibliotheek"
+  },
+  "properties": {
+    "color": "Kleur",
+    "elevation": "Hoogte",
+    "height": "Hoogte",
+    "length": "Lengte",
+    "mixed": "Gemengd",
+    "name": "Naam",
+    "position": "Positie",
+    "radius": "Straal",
+    "width": "Breedte"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "Kan niet alle objecten downloaden.",
+      "downloadElementsRecovery": "of probeer het later opnieuw. U bevindt zich in de weergavemodus totdat het probleem is opgelost",
+      "flatteningGroups": "Groepen op voorstel afvlakken omdat ze niet langer worden ondersteund",
+      "ignoringOldElements": "Oude elementen negeren",
+      "knownCriticalHeader": "Kan elementen niet verwerken",
+      "knownCriticalMessage": "Vernieuw de pagina om het opnieuw te proberen.",
+      "missingGeoLocation": "Ontbrekende geolocatie van het project om actie uit te voeren.",
+      "notFoundHeader": "Voorstel niet gevonden",
+      "notFoundMessage": "We kunnen het voorstel waartoe u toegang probeert te krijgen niet vinden.",
+      "terrainNotFoundHeader": "Terreinmodel ontbreekt",
+      "terrainNotFoundMessage": "Er is een onverwachte fout opgetreden met het huidige voorstel.",
+      "tooManyRequestsHeader": "Iemand is TE actief geweest!",
+      "tooManyRequestsMessage": "We kregen meer aanvragen van uw netwerk dan we aankonden. Probeer deze pagina later te laden of schakel over naar een ander netwerk, bijvoorbeeld via een persoonlijke hotspot."
+    },
+    "noProposalLayersText": "Elementen die uniek zijn voor een voorstel, worden hier vermeld."
+  },
+  "proposalHistory": {
+    "branchFailed": "Nieuw voorstel maken vanuit oude revisie mislukt.",
+    "branchRevisionButton": "Nieuw voorstel maken",
+    "branchSuccess": "Er is een nieuw voorstel gemaakt op basis van de gekozen versie, met de naam '{name}'",
+    "contributors": "Bijdragers: {count}",
+    "copyLinkButton": "Link kopiëren",
+    "currentVersionLabel": "Huidige versie",
+    "filter": {
+      "byAnalysis": "Op analyse",
+      "byDate": "Op datum",
+      "from": "Van",
+      "onlyYours": "Alleen die van u",
+      "pinned": "Vastgemaakt",
+      "selectDates": "Datums selecteren",
+      "title": "Filteren",
+      "to": "Tot"
+    },
+    "linkToVersionCopied": "Link naar {time} gekopieerd",
+    "nameThisVersionAction": "Geef deze versie een naam",
+    "pinVersionAction": "Versie vastzetten",
+    "unpinVersionAction": "Versie losmaken",
+    "untitledVersionLabel": "Naamloze versie",
+    "viewingVersionLabel": "Versie weergeven"
+  },
+  "quickAccess": {
+    "actionsLabel": "Acties",
+    "noSuggestions": "Geen suggesties",
+    "openHotkeyList": "Sneltoetsenlijst openen",
+    "repeatLastTool": "Laatste tool herhalen",
+    "search": "Zoeken",
+    "title": "Snelle toegang"
+  },
+  "requestInvite": {
+    "button": "Uitnodiging aanvragen",
+    "homeLink": "Ga naar uw startpagina",
+    "projectLink": "Ga naar project",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "Al lid",
+        "message": "U bent al lid van dit project."
+      },
+      "ALREADY_REQUESTED": {
+        "header": "Uitnodiging al aangevraagd",
+        "message": "U hebt al een uitnodigingsaanvraag voor dit project in behandeling. Als uw beheerder uw aanvraag goedkeurt, ontvangt u een uitnodiging voor dit project in uw e-mail."
+      },
+      "CAN_JOIN": {
+        "header": "U kunt deelnemen aan",
+        "message": "U kunt deelnemen aan dit project. Ga naar project en klik op de knop 'deelnemen aan project'."
+      },
+      "ERROR": {
+        "header": "Er is iets misgegaan. Probeer het opnieuw"
+      },
+      "NOT_FOUND": {
+        "header": "Fout, kan het project niet vinden",
+        "message": "De URL die u hebt ingevoerd, verwijst niet naar een bestaand project."
+      },
+      "REQUEST_LIMIT": {
+        "header": "Te veel aanvragen",
+        "message": "U hebt te veel uitnodigingsaanvragen in behandeling. Probeer het later opnieuw."
+      },
+      "SUCCESS": {
+        "header": "Uw aanvraag is succesvol verzonden!",
+        "message": "Als uw beheerder uw aanvraag goedkeurt, ontvangt u een uitnodiging voor dit project in uw e-mail."
+      }
+    },
+    "statusFallback": {
+      "header": "U hebt geen toegang tot dit Forma-project",
+      "message": "Om toegang te krijgen tot het project moet u worden uitgenodigd door een van de beheerders. Vraag een uitnodiging aan bij beheerders via de onderstaande knop."
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "Standaard naar map: map Mijn projectbestanden"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "Middelpunt uitlijnen",
+      "left": "Links uitlijnen",
+      "right": "Rechts uitlijnen"
+    },
+    "buildingLabel": "Gebouw",
+    "createNew": "Nieuwe maken",
+    "layoutLabel": "Lay-out",
+    "loading": "Laden",
+    "name": "Huis",
+    "parcelLabel": "Perceel",
+    "plural": "Huizen",
+    "publish": "Publiceren",
+    "tooltip": "Teken één huis of huizen die rond een lijn zijn gestructureerd. Maak en hergebruik huistypen vanuit het eigenschappenvenster.",
+    "tooltips": {
+      "buffer": "Buffer",
+      "flatRoof": "Plat dak",
+      "gableRoof": "Zadeldak",
+      "length": "Lengte",
+      "numberOfFloors": "Aantal verdiepingen",
+      "ridgeDirection": "Richting nok",
+      "roofAngle": "Dakhoek",
+      "shedRoof": "Schuurdak",
+      "storyHeight": "Hoogte etage",
+      "width": "Breedte"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "Sectievak verwijderen",
+    "enableButton": "Sectievak inschakelen",
+    "saveButton": "Sectievak opslaan",
+    "title": "Sectievak",
+    "toggleButton": "Overzicht vak weergeven/verbergen"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "Dit voorstel is gewijzigd terwijl u bewerkingen aan het uitvoeren was (er kan bijvoorbeeld een ander teamlid aan werken). Wilt u uw versie opslaan als een nieuw voorstel?",
+      "discardEdits": "Bewerkingen ongedaan maken",
+      "saveAsNew": "Opslaan als nieuw voorstel",
+      "title": "Conflict bij het bewerken van voorstel"
+    },
+    "error": {
+      "body": "Uw laatste bewerking kon niet worden opgeslagen. Vernieuw de pagina om door te gaan met bewerken.",
+      "ok": "OK",
+      "title": "Opslaan mislukt"
+    }
+  },
+  "shapes": {
+    "arc": "Boog door drie punten",
+    "circle": "Cirkel",
+    "cube": "Kubus",
+    "cuboid": "Balk",
+    "cylinder": "Cilinder",
+    "dome": "Koepel",
+    "freeform": "Vrije vorm",
+    "pyramid": "Piramide",
+    "rectangle": "Rechthoek",
+    "roof": "Dak",
+    "shapes3d": "3D-vormen",
+    "spline": "Spline",
+    "title": "Primitieven"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "Activeer richtlijnen door met de muisaanwijzer over de randen te bewegen, Houd ⇧ Shift ingedrukt om de richtlijn te volgen. Houd {key} vast om hechten te voorkomen.",
+      "affineInstructions": "Houd {key} vast om snappen te voorkomen. Druk op Tab om te schakelen tussen horizontale, verticale en terreinmodus.",
+      "clickToAddSubtract": "Voeg punten toe aan een lijn of trek punten af met klikken.",
+      "editModeStartFinishMac": "Ingedrukt houden ⌥ Optie om punten op te tellen/af te trekken. Druk op ↵ Enter om de bewerking te voltooien.",
+      "editModeStartFinishWindows": "Houd Alt ingedrukt om punten op te tellen/af te trekken. Druk op ↵ Enter om de bewerking te voltooien.",
+      "finishEditing": "Druk op ↵ Enter om de bewerking te voltooien.",
+      "finishPolygon": "Druk op ↵ Enter om het maken van de veelhoek te voltooien.",
+      "preciseMoveVertical": "Druk op {key} om de verticale modus te wisselen.",
+      "specifyDistance": "Typ om een specifieke afstand in te stellen. Klik om te plaatsen."
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "Het verwijderen, kopiëren, knippen en plakken van verdiepingen wordt niet ondersteund voor 3D Sketch-gebouwen. Probeer in plaats daarvan te bewerken in 3D Sketch."
+  },
+  "snapping": {
+    "cursorElevation": "Hoogte bij cursor",
+    "guidesAndMeasurements": "Hulplijnen en meetwaarden",
+    "snapToGuides": "Uitlijnen op hulplijnen",
+    "snapToObjects": "Uitlijnen op objecten"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "Voer de naam van de ruimte in of laat leeg voor standaard"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "Verbinden met scenario",
+      "connectToScenarioDesc": "Een scenario is een gedeelde ontwerpcontainer in uw project die modellen, tools en geometrische en andere gegevens uit verschillende softwaretoepassingen met elkaar verbindt."
+    }
+  },
+  "relativeTime": {
+    "today": "Vandaag"
+  },
+  "terrain": {
+    "elevation": "Hoogte",
+    "errors": {
+      "loadMapImageFailed": "Kan kaartafbeelding niet laden",
+      "loadSatelliteTextureFailed": "Het laden van de satelliettextuur is mislukt.",
+      "loadTextureFailed": "Het laden van de terreintextuur is mislukt."
+    },
+    "labels": {
+      "numberOfSelectedPads": "Volume pads",
+      "padVolume": "Volume blok",
+      "padsVolume": "Volume pads",
+      "showAsPercentage": "Weergeven als percentage",
+      "showAsRatio": "Weergeven als verhouding",
+      "totalMassBalance": "Totale massabalans"
+    },
+    "massBalanceHover": "Netto volume van massawijziging in het hele terrein.",
+    "metricsHeader": "Meetwaarden",
+    "pad": {
+      "header": "Terreinblok",
+      "name": "Terreinblok",
+      "tooltip": "Maai/vul terrein, pas hoogte en helling aan en beoordeel de massabalans."
+    },
+    "padVolumeHover": "Volume toegevoegd aan/afgetrokken van het terrein door de geselecteerde pads.",
+    "padsHeader": "Terreinblokken",
+    "slope": "Helling"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "U kunt niet schakelen tussen basislaag en voorstel terwijl de automatisering wordt geladen",
+    "pendingSelectionBlockedMessage": "U kunt de selectie niet wijzigen terwijl de automatisering wordt geladen",
+    "pendingToolSwitchBlockedMessage": "Hulpmiddelen niet beschikbaar tijdens het laden van de automatisering",
+    "transform": {
+      "redefineReferencePointsButton": "Referentiepunten opnieuw definiëren"
+    }
+  },
+  "transform": {
+    "cover": "Bedekken",
+    "fillet": "Omlijsten",
+    "intersect": {
+      "name": "Doorsnede",
+      "tooltip": "Maak een doorsnede van twee of meer objecten. Het grondvlak van het eerste geselecteerde object wordt overeenkomstig gewijzigd."
+    },
+    "loft": "Lanceren",
+    "move": {
+      "name": "Verplaatsen",
+      "tooltip": "Verplaats een object door een referentie- en eindpunt te definiëren. "
+    },
+    "offset": {
+      "apply": "Offset toepassen",
+      "name": "Offset",
+      "tooltip": "Breid het grondvlak van een object naar buiten uit of verklein deze naar binnen met een bepaalde afstand."
+    },
+    "rotate": {
+      "name": "Roteren",
+      "tooltip": "Roteer objecten in de scène rond een gedefinieerd referentiepunt."
+    },
+    "shell": "Omhulsel",
+    "split": {
+      "name": "Splitsen",
+      "tooltip": "Splits een of meer objecten met behulp van een lijn."
+    },
+    "subtract": {
+      "name": "Aftrekken",
+      "tooltip": "Trek een vorm van een object af met behulp van een ander object. Het grondvlak van het eerste geselecteerde object wordt overeenkomstig gewijzigd."
+    },
+    "sweep": "Vegen",
+    "title": "Transformeren",
+    "union": {
+      "name": "Samenvoegen",
+      "tooltip": "Voeg twee of meer objecten samen. Het eerste geselecteerde object definieert de categorie en hoogte van het resulterende object."
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "Hoekstraal is een dynamische waarde die wegbochten optimaliseert op basis van de lay-out.",
+      "tight": "De hoekstraal is een kleine vaste waarde die gelijk is aan 1/2 van de wegbreedte."
+    },
+    "railroads": {
+      "hotkeyDescription": "Rails tekenen",
+      "name": "Spoorwegen",
+      "toolButton": "Spoorwegen",
+      "tooltip": "Maak spoorwegen en pas de breedtes aan via het rechtervenster.",
+      "typeLabel": "Spoortype",
+      "typePlaceholder": "Selecteer een spoortype"
+    },
+    "roads": {
+      "hotkeyDescription": "Weg tekenen",
+      "name": "Wegen",
+      "toolButton": "Wegen",
+      "tooltip": "Maak wegen en pas de breedte aan via het rechtervenster.",
+      "widthLabel": "Breedte weg",
+      "withGraphToolButton": "Wegen (met grafiek)"
+    },
+    "title": "Transport",
+    "trafficData": {
+      "addButton": "Verkeersgegevens toevoegen",
+      "adtTooltip": "Gemiddeld dagelijks verkeer",
+      "advancedSettingsLabel": "Geavanceerde instellingen",
+      "dailyDistributionLabel": "Dagelijkse verkeersverdeling",
+      "dayTimeTooltip": "Dag: 06.00-18.00",
+      "eveningTimeTooltip": "Avond: 18.00-22.00",
+      "heavyVehicleLabel": "Zwaar verkeer",
+      "nightTimeTooltip": "Nacht: 22.00-06.00",
+      "railRequiredInputsMessage": "Alle inputs zijn vereist om de spoorweg mee te nemen bij de geluidsanalyse",
+      "removeButton": "Verkeersgegevens verwijderen",
+      "roadRequiredInputsMessage": "Alle inputs zijn vereist om de weg mee te nemen bij de geluidsanalyse",
+      "speedLimitTooltip": "Snelheidslimiet",
+      "title": "Gegevens verkeerslawaai"
+    }
+  },
+  "ui": {
+    "add": "Toevoegen",
+    "area": "Gebied",
+    "areaSum": "Gebied (som)",
+    "automationLabel": "AUTOMATISERING",
+    "beta": "Bèta",
+    "browsePluginsDescription": "Blader door bestaande plug-ins van derden of voeg uw eigen plug-ins toe - ze worden hier weergegeven.",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "color": "Kleur",
+    "delete": "Verwijderen",
+    "detach": "Loskoppelen",
+    "duplicate": "Dupliceren",
+    "edit": "Bewerken",
+    "gridSettings": "Rasterinstellingen",
+    "hide": "Verbergen",
+    "length": "Lengte",
+    "lengthSum": "Lengte (som)",
+    "newVersionAvailable": "Nieuwe versie beschikbaar.",
+    "redo": "Opnieuw",
+    "refresh": "Vernieuwen",
+    "remove": "Verwijderen",
+    "rename": "Naam wijzigen",
+    "repair": "Repareren",
+    "retry": "Opnieuw proberen",
+    "show": "Weergeven",
+    "siteLabel": "Locatie",
+    "surroundings": "Omgeving",
+    "textAlignment": "Tekstuitlijning",
+    "undo": "Ongedaan maken",
+    "update": "Bijwerken",
+    "videoNotSupported": "De videotag wordt niet ondersteund door uw browser.",
+    "xyzAxes": "XYZ-assen"
+  },
+  "performanceStats": {
+    "currentSnapshot": "Huidige momentopname",
+    "remainingFromPastSnapshots": "Resterend van eerdere momentopnames",
+    "title": "Prestatiestatistieken {status}"
+  },
+  "units": {
+    "asl": "asl",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "Middelpunt uitlijnen",
+      "left": "Links uitlijnen",
+      "right": "Rechts uitlijnen",
+      "spacing": "Afstand"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "Gebied met bomen tekenen",
+      "name": "Gebied met bomen",
+      "tooltip": "Maak een gebied met bomen en bewerk de grootte en dichtheid ervan. Alle bomen hebben invloed op de analyses."
+    },
+    "header": "Bomen",
+    "landscapingTitle": "Landschapsarchitectuur",
+    "properties": {
+      "bufferTooltip": "Buffer",
+      "gridLengthLabel": "Lengte raster",
+      "gridWidthLabel": "Breedte raster",
+      "heightTooltip": "Hoogte boom",
+      "offsetTooltip": "Offset"
+    },
+    "title": "Begroeiing",
+    "tooltips": {
+      "averageDistanceLabel": "Gemiddelde afstand tussen boomtoppen",
+      "heightLabel": "Hoogte van elke boom"
+    },
+    "treeLine": {
+      "hotkeyDescription": "Lijn van bomen tekenen",
+      "name": "Boomlijn",
+      "tooltip": "Maak een lijn met bomen en bewerk de grootte en dichtheid van deze lijnen. Alle bomen hebben invloed op de analyses."
+    },
+    "trees": "Bomen"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "Geen analysisId opgegeven",
+      "unsupportedAnalysisType": "Geen ondersteund analysetype: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "U hebt alleen-lezentoegang tot deze locatie"
+  },
+  "windAnalysis": {
+    "analyzing": "Analyseren...",
+    "atCapacity": "We voeren momenteel een groot aantal gedetailleerde windanalyses uit. Het kan langer duren voordat uw analyse is voltooid. Hartelijk dank voor uw geduld.",
+    "circleOutsideBoundingBox": "Het analysegebied ligt buiten het kaartgebied",
+    "concurrentQuotaReached": "Limiet voor gelijktijdige windanalyses bereikt",
+    "concurrentQuotaReachedDescription": "Er worden te veel gelijktijdige windanalyses uitgevoerd. Wacht tot een aantal ervan zijn voltooid.",
+    "concurrentQuotaWarning": "Limiet voor gelijktijdige analyse",
+    "concurrentQuotaWarningDescription": "U hebt nog {remaining} gedetailleerde windanalyses over voordat u de limiet van {limit} gelijktijdige analyses bereikt.",
+    "dailyQuotaReached": "Analyselimiet bereikt",
+    "dailyQuotaReachedDescription": "U hebt de dagelijkse limiet van windanalyses bereikt.",
+    "dailyQuotaReachedDescriptionRetry": "U hebt de dagelijkse limiet van windanalyses bereikt. Probeer het opnieuw op {nextAvailableAt}.",
+    "loadingData": "Gegevens worden geladen",
+    "loadingDataTooltip": "Laden...",
+    "runAnalysis": "Analyseren (~{min}-{max} minuten)",
+    "seeAnalysisButton": "Zie Gedetailleerde analyse",
+    "stoppedOrFailed": "Analyse is gestopt of mislukt!",
+    "viewerAccessDisableTooltip": "Kan analyses niet uitvoeren als kijker"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "Geavanceerde modelleringstools",
+      "editIn": "Bewerken in 3D Sketch",
+      "howToStartEditingMessage": "Druk op ⏎ of dubbelklik om de bewerking in 3D Sketch uit te voeren.",
+      "launch": "Nieuwe 3D Sketch",
+      "sketch": "Schets",
+      "updateProperties": "Eigenschappen bijwerken"
+    },
+    "advancedModeling": {
+      "cover": "Bedekken",
+      "fillet": "Omlijsten",
+      "intersect": "Doorsnede",
+      "loft": "Lanceren",
+      "offset": "Offset",
+      "shell": "Omhulsel",
+      "subtract": "Aftrekken",
+      "sweep": "Vegen",
+      "union": "Samenvoegen"
+    },
+    "axes": {
+      "reset": "Assen opnieuw instellen",
+      "set": "XYZ-assen instellen"
+    },
+    "buildingType": {
+      "draw": "3D Sketch-gebouw tekenen",
+      "name": "3D Sketch-gebouw"
+    },
+    "buttons": {
+      "apply": "Toepassen",
+      "cancel": "Annuleren",
+      "ok": "OK"
+    },
+    "convert": {
+      "externalMessage": "Converteer een object naar 3D Sketch om externe vlakken, randen en hoekpunten aan te passen.\n\nZodra het element is geconverteerd, is het niet meer verbonden met het element in de oorspronkelijke bron en worden wijzigingen niet meer gesynchroniseerd.",
+      "message": "Converteer een object naar 3D Sketch om externe vlakken, randen en hoekpunten aan te passen.",
+      "title": "Converteren naar 3D Sketch"
+    },
+    "dialogs": {
+      "arrayButtonArray": "Array",
+      "arrayButtonCancel": "Annuleren",
+      "arrayDistanceBetween2Points": "Lengte tussen 2 punten",
+      "arrayDistanceTotalLength": "Totale lengte",
+      "arraySubtitleDistance": "Afstand",
+      "arraySubtitleQuantity": "Hoeveelheid",
+      "arraySubtitleType": "Type",
+      "arrayTitle": "Array",
+      "arrayTypeLinear": "Lineaire array",
+      "arrayTypeRadial": "Radiale array",
+      "corruptedElementsDeleted": "Sommige elementen konden niet worden opgeslagen en raakten beschadigd. Deze elementen zijn automatisch verwijderd.",
+      "editDimensionTitle": "Dimensie bewerken",
+      "recoveryClosedWithoutSaving": "3D Sketch is gesloten zonder deze correct op te slaan.",
+      "recoveryQuestion": "Wilt u de niet-opgeslagen wijzigingen herstellen?",
+      "recoveryTitle": "Niet-opgeslagen modelwijzigingen gevonden"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "Onderste niet-horizontale vlakken plat maken"
+    },
+    "finishSelection": {
+      "back": "Terug (B)",
+      "cancel": "Annuleren (Esc)",
+      "confirm": "Afronden (F)",
+      "next": "Volgende (N)"
+    },
+    "floors": {
+      "addFloor": "Verdieping toevoegen",
+      "addFloors": "Verdiepingen toevoegen",
+      "floorHeight": "Hoogte verdieping",
+      "floors": "Verdiepingen",
+      "floorWithNumberLabel": "Verdieping {level}",
+      "moreOptions": "Meer",
+      "numberOfFloors": "Aantal verdiepingen",
+      "removeFloors": "Verdiepingen verwijderen",
+      "resetFloors": "Verdiepingen opnieuw instellen",
+      "title": "Details verdieping"
+    },
+    "groupEditing": {
+      "redo": "Opnieuw",
+      "undo": "Ongedaan maken"
+    },
+    "grouping": {
+      "toolbarTitle": "GROEPEN"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "Hoek meten",
+      "measureDistance": "Afstand meten",
+      "menuTitle": "Hulplijnen en meetwaarden",
+      "title": "Hulplijnen en meetwaarden"
+    },
+    "mesh": {
+      "convertHintMessage": "Dubbelklik om extra bewerkingstools in te schakelen door meshes naar objecten te converteren.",
+      "importExceededLimitsMessage": "Uw import overschrijdt {limit} meshdriehoeken en blijft ongewijzigd voor betere prestaties.\n\nAls u meer bewerkingstools wilt gebruiken, selecteert u afzonderlijke meshes en dubbelklikt u om ze te converteren naar bewerkbare objecten.",
+      "importExceededLimitsTitle": "Import overschrijdt de limiet voor de meshdriehoek"
+    },
+    "pasteInPlaceAction": "Op de plaats plakken",
+    "properties": {
+      "mixed": "Gemengd",
+      "objectWithIdLabel": "Object {id}"
+    },
+    "scaleTitle": "SCHALEN",
+    "selection": {
+      "areaSelectionOptions": "Opties voor gebiedselectie",
+      "filterEdges": "Randen",
+      "filterFaces": "Vlakken",
+      "filterGroups": "Groepen",
+      "filterMeshes": "Meshes",
+      "filterSolids": "Vaste stoffen",
+      "filterVertices": "Hoekpunten",
+      "selection": "Selectie",
+      "selectionTools": "Selectietools"
+    },
+    "tools": {
+      "array": "Array",
+      "editArcCircle": "Boog of cirkel bewerken",
+      "editSpline": "Spline bewerken",
+      "extrudeEdges": "Randen extruderen",
+      "extrudeFace": "Vlak extruderen",
+      "facetFace": "Facet vlak",
+      "flattenFace": "Vlakken plat maken",
+      "group": "Groeperen",
+      "groupDetach": "Loskoppelen",
+      "meshToObjects": "Mesh converteren",
+      "mirror": "Spiegelen",
+      "move": "Verplaatsen",
+      "offsetEdges": "Offsetranden",
+      "offsetFace": "Offsetvlak",
+      "reverseFace": "Vlak omkeren",
+      "rotate": "Roteren",
+      "scale": "Schalen",
+      "scaleNonUniform": "Niet-uniforme schaal",
+      "smoothEdges": "Randen rond maken",
+      "tiltFace": "Vlak kantelen",
+      "ungroup": "Groepering opheffen"
+    },
+    "tooltips": {
+      "building": "Complexe 3D-gebouwen met onbeperkte mogelijkheden, zoals schuine daken, schuine wanden en meer.",
+      "editIn": "Converteer objecten om hoekpunten, randen en vlakken in 3D Sketch aan te passen.",
+      "launch": "Gebruik 3D-schetsen om beginnende bouwkundige ontwerpconcepten te modelleren en te herhalen."
+    },
+    "zoom": {
+      "fitProposal": "Passend maken aan voorstel",
+      "fitSelection": "Passend maken aan selectie"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "Snelstartgidsen",
+    "allTutorialsDescription": "Voltooi deze interactieve handleidingen om uw site in te stellen en aan de slag te gaan met Locatie ontwerpen. ",
+    "completionMessage": "Goed gedaan! U hebt de handleiding {header} voltooid!",
+    "completionText": "{percent}% voltooid",
+    "completedTitle": "Voltooid",
+    "continueButton": "Doorgaan",
+    "stepsTotal": "{count} stappen totaal",
+    "timeLabel": "{time} min",
+    "stepProgress": "{current} van {total}",
+    "nextButton": "Volgende",
+    "doneButton": "Gereed",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "Snelstartgidsen",
+    "upNextTitle": "Volgende"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "Uw site instellen",
+      "description": "Voeg contextgegevens toe voordat u begint met het modelleren en analyseren van locaties en gebouwen.",
+      "reviewHeader": "Locatie-instelling voltooid",
+      "reviewText": "U hebt met succes contextgegevens en een locatielimiet toegevoegd.{ 0}{br}Goed gedaan! U kunt nu onze modelleringstools en importmogelijkheden verkennen of doorgaan met een andere handleiding.",
+      "steps": {
+        "openContextualTab": {
+          "header": "Het tabblad contextgegevens openen",
+          "text": "Begin met het openen van het tabblad <bold>Contextuele gegevens</bold>."
+        },
+        "browseAndOrder": {
+          "header": "Blader door gegevens voor de locatie van de site",
+          "text": "Klik op <bold>Bladeren door contextgegevens</bold> om te zien welke gegevenspakketten beschikbaar zijn voor uw sitelocatie.{ 0}{br}Gegevens kunnen omliggende gebouwen, wegen en terrein omvatten. "
+        },
+        "orderStarterPackage": {
+          "header": "Bestel startergegevenspakket",
+          "text": "Klik op <bold>Toevoegen</bold> om te bekijken wat er in dit gegevenspakket is opgenomen. Deze gegevens zijn gratis. "
+        },
+        "orderData": {
+          "header": "Pakket met bestelgegevens",
+          "text": "Selecteer om het downloaden van 3D-contextgegevens naar uw site te starten."
+        },
+        "drawSiteLimit": {
+          "header": "Locatiebeperking tekenen",
+          "text": "Activeer deze tekentool om uw locatielimiet te bepalen. Teken zodra de activiteit actief is punten rond de locatie en omsluit de vorm.{br}{br}Het definiëren van een locatielimiet is een vereiste voor het uitvoeren van analyses in Forma Locatie ontwerp."
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "Gebouwen toevoegen",
+      "description": "Maak gebouwen met onze modelleertools of importeer bestaande modellen. ",
+      "reviewHeader": "Gebouwen toegevoegd aan site",
+      "reviewText": "U hebt met succes gebouwen getekend en assets geïmporteerd naar uw site. Goed werk! U kunt nu de omgevingsomstandigheden beoordelen door analyses uit te voeren of verder te gaan met een andere gids.",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "Een basisgebouw tekenen",
+          "text": "Klik op <bold>Basisbouw</bold> om het bouwhulpmiddel te activeren. Zodra de activiteit actief is, tekent u de vorm van uw gebouw en selecteert u het laatste punt om de tekening van de voetafdruk te voltooien."
+        },
+        "exploreParametricOptions": {
+          "header": "Parametrische opties verkennen",
+          "text": "Verken de beschikbare parametrische opties om uw bouwmodel te wijzigen."
+        },
+        "importModel": {
+          "header": "Een model of bestand importeren",
+          "text": "Klik op <bold>Importeren</bold> om een model of rasterafbeelding van uw lokale apparaat te uploaden."
+        },
+        "placeInScene": {
+          "header": "In scène plaatsen",
+          "text": "Klik op het item dat u zojuist uit de bibliotheek hebt geïmporteerd. Eenmaal geselecteerd, plaatst u het op uw locatie door te klikken en te slepen. De zelfstudie gaat automatisch verder zodra het element is geplaatst."
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "Beoordeel omgevingsomstandigheden",
+      "description": "Voer een analyse van de zonuren uit om uw eerste ontwerpbesluiten te onderbouwen.",
+      "reviewHeader": "Zonuren analyse gedaan!",
+      "reviewText": "U hebt met succes een analyse van het aantal zonuren uitgevoerd op uw site.{ 0}{br}U kunt nu doorgaan met het maken van nieuwe voorstellen, het vergelijken van analyses of het verkennen van meer van Locatie ontwerp.",
+      "steps": {
+        "selectAnalysis": {
+          "header": "Selecteer de analyse",
+          "text": "Klik op het gemarkeerde pictogram om de zonurenanalyse te selecteren."
+        },
+        "selectDate": {
+          "header": "Selecteer een datum",
+          "text": "Gebruik de vervolgkeuzelijst om een datum in te stellen waarvoor u het aantal zonuren op uw locatie wilt analyseren."
+        },
+        "runAnalysis": {
+          "header": "Analyse uitvoeren",
+          "text": "Klik op de knop om de analyse te starten. Het duurt slechts enkele seconden om te voltooien.{br}{br}De handleiding wordt automatisch hervat zodra de analyse is voltooid."
+        },
+        "openAnalysisResults": {
+          "header": "Resultaten openen",
+          "text": "Na voltooiing worden de analyseresultaten hier in de lijst weergegeven. Klik op de meest recente resultaten om ze in detail te bekijken. Er wordt een nieuw venster geopend.",
+          "altText": "Resultaatvenster analyse"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "Hoe los ik 'WebGL niet ondersteund' op?",
+      "text": "Uw computer lijkt WebGL niet te ondersteunen, wat een vereiste is voor het gebruik van Forma",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

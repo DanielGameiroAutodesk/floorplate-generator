@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "比較",
+    "headerText": "提案を選択",
+    "maxProposalsWarning": "一度に比較できる提案は最大 {max} 個までです",
+    "minProposalsWarning": "{min} 個以上の比較対象を選択"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "この提案を削除しますか?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "削除",
+    "duplicateMenuItem": "複製",
+    "exportAsIfcBetaMenuItem": "IFC 形式で書き出す(ベータ版)",
+    "exportAsIfcToDocs": "IFC 形式で Docs に書き出す(ベータ版)",
+    "exportAsObjMenuItem": "OBJ 形式で書き出す",
+    "exportSubmenu": "書き出し...",
+    "renameMenuItem": "名前変更",
+    "revitDownloadAddinMenuItem": "Revit アドインをダウンロード",
+    "revitSendToBetaMenuItem": "Revit に送信アドイン(ベータ版)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "提案履歴を表示"
+  },
+  "createProposal": {
+    "buttonTooltip": "新規提案を追加"
+  },
+  "error": {
+    "couldNotLoadProposals": "提案をロードできませんでした。もう一度試してください。",
+    "retryButton": "再試行"
+  },
+  "exportModal": {
+    "exportingMessage": "書き出し中...",
+    "exportPrimaryButtonTitle": "書き出し",
+    "title": "Forma の提案を Docs に書き出す"
+  },
+  "filter": {
+    "buttonTooltip": "フィルタ",
+    "closeButtonTooltip": "閉じる",
+    "emptyBasesMessage": "プロジェクトには基本画層がありません。[画層]セクションに移動して作成してください。",
+    "sortByHeader": "並べ替え",
+    "title": "フィルタ"
+  },
+  "proposalItem": {
+    "baseTooltip": "基本画層 {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "比較する別の提案を作成",
+    "headerText": "提案",
+    "selectProposalsToCompare": "比較する提案を選択"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "昇順",
+    "alphabeticalDescending": "降順",
+    "lastEdited": "最終編集日"
+  },
+  "toast": {
+    "exportAccessDeniedText": "このフォルダまたはファイルにアクセスする権限がありません。管理者にお問い合わせください。",
+    "exportAccessDeniedTitle": "アクセスが拒否されました",
+    "exportDownloaded": "ダウンロードしたものを書き出す",
+    "exportErrorText": "提案を書き出すことができませんでした。もう一度試してください。問題が解決しない場合は、サポートにお問い合わせください。",
+    "exportErrorTitle": "Docs への書き出しに失敗しました",
+    "exportGenericError": "提案の書き出しに失敗しました",
+    "exportInProgress": "提案を書き出し中...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "プロジェクトの提案が Autodesk Docs に書き出されました。これで、Forma データを Revit プロジェクトにリンクできるようになりました。",
+    "exportSuccessTitle": "Docs に正常に書き出されました",
+    "exportTimeoutText": "Docs への書き出しの生成中にシステムがタイムアウトしました。これは、プロジェクトが非常に大きい場合や、非常に複雑なジオメトリが含まれている場合に発生することがあります。",
+    "exportTimeoutTitle": "Docs への書き出しに失敗しました",
+    "exportTooLargeError": "書き出しに失敗しました。これは、提案が書き出しで現在サポートされているものに対して大きすぎることが原因である可能性があります。",
+    "ifcExportFailed": "書き出しに失敗しました。エラーが報告されます。",
+    "ifcExportStarted": "IFC ファイルの書き出しが開始されました。完了すると自動的にダウンロードされます。",
+    "proposalRenamedWarning": "提案名は既に存在します、{name} に名前変更されました",
+    "revitSendFailed": "Revit への提案の送信に失敗しました。",
+    "revitSendSuccess": "提案が Revit に送信されました",
+    "sessionExpired": "セッションの有効期限が切れました。ページを再ロードしてください。"
+  }
+}

@@ -1,0 +1,449 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Design</title>
+    <link rel="icon" href="/favicon.svg" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--surface-level100);
+        overflow: hidden;
+      }
+
+      button {
+        color: var(--text-default);
+      }
+
+      .main {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+
+      #loading-overlay {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-color: #535353;
+        opacity: 0.25;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #transparent-overlay {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: transparent;
+        z-index: calc(var(--z-notification) + 30);
+        pointer-events: none;
+      }
+
+      .bottom-main {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: auto;
+        /* Forces this element to be on the bottom of page when it is the only element in the parent flex container */
+      }
+
+      .ToolbarPlaceholder {
+        width: 276.5px;
+        height: 48px;
+        position: fixed;
+        position-area: top;
+        background-color: var(--surface-level100);
+        border-radius: 4px;
+        box-shadow: var(--forma-box-shadow);
+      }
+
+      forma-toolbar[direction="horizontal"] > div:first-child {
+        display: flex;
+        align-items: center;
+        height: 48px;
+      }
+
+      .ToolbarContainerTopCenter {
+        position: fixed;
+        position-area: top;
+        height: 48px;
+        z-index: calc(var(--z-secondary-navigation));
+      }
+
+      .TabContent {
+        width: 260px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: 4px;
+      }
+
+      .forma-grid-left.new-nav {
+        width: unset;
+        transition: none;
+      }
+
+      #global-spinner {
+        display: flex;
+        top: 0;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: var(--z-notification);
+        justify-content: center;
+        align-items: center;
+        color: transparent;
+      }
+
+      H1 {
+        font: var(--16-bold);
+      }
+
+      H2 {
+        font: var(--16-bold);
+      }
+
+      H3 {
+        font: var(--16-bold);
+      }
+
+      *:not(canvas):not(:hover) {
+        user-select: none;
+      }
+
+      forma-expanded-tooltip,
+      forma-toolbar {
+        display: none;
+      }
+
+      forma-expanded-tooltip:defined,
+      forma-toolbar:defined {
+        display: initial;
+      }
+
+      #canvas-screenshot-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+      }
+    </style>
+    <link rel="stylesheet" href="#REL#/design-system/v2/forma/styles/base.css?1" />
+    <script>
+      window.SPACE_ENABLED = (function () {
+        const pathSegments = window.location.pathname.split("/")
+        return pathSegments[2] && pathSegments[2].startsWith("doc_")
+      })()
+
+      if (!window.SPACE_ENABLED) {
+        const navbarScript = document.createElement("script")
+        navbarScript.type = "module"
+        navbarScript.src = "#REL#/web-components/forma-navbar/forma-navbar.js"
+        document.head.appendChild(navbarScript)
+      }
+    </script>
+    <script type="module" src="#REL#/datadog-rum/index.js"></script>
+    <script>
+      if (new URLSearchParams(window.location.search).has("darkmode")) {
+        const link = document.createElement("link")
+        link.rel = "stylesheet"
+        link.href = "/design-system/v2/weave/v2/styles/dark-blue-colors.css"
+        document.head.append(link)
+      }
+    </script>
+  </head>
+
+  <body>
+    <forma-analysis-catalog-toast></forma-analysis-catalog-toast>
+    <forma-analysis-modal></forma-analysis-modal>
+    <canvas
+      id="design-mode-canvas"
+      style="width: 100%; height: 100%; position: fixed; background: #f4f4f4; outline: none"
+      tabindex="0"
+    ></canvas>
+    <canvas
+      id="design-mode-2d-graphics"
+      style="width: 100%; height: 100%; position: fixed; outline: none; pointer-events: none; z-index: 1"
+    ></canvas>
+    <div id="root" class="forma-grid">
+      <script>
+        // Use the global navbar visibility check
+        if (!window.SPACE_ENABLED) {
+          document.write('<forma-navbar active-link="design"></forma-navbar>')
+        }
+      </script>
+      <nav class="forma-grid-left collapsed">
+        <forma-sidebar tab="navigator" showextensions hide-tabs="project-members"></forma-sidebar>
+      </nav>
+      <main class="forma-grid-main main">
+        <div class="ToolbarContainerTopCenter">
+          <div class="ToolbarPlaceholder"></div>
+        </div>
+      </main>
+      <aside class="forma-grid-right collapsed"></aside>
+    </div>
+    <div id="modal"></div>
+    <script>
+      // Use the global navbar visibility check for forma-bootstrap
+      if (!window.SPACE_ENABLED) {
+        document.write('<forma-bootstrap project-id="path:1" halt-non-essentials></forma-bootstrap>')
+      }
+    </script>
+    <script>
+      let spinner
+      let loadingOverlay
+      let transparentOverlay
+      let canvasScreenshotOverlay
+
+      if (new URLSearchParams(window.location.search).has("darkmode")) {
+        document.body.setAttribute("data-mode", "dark")
+      }
+
+      if (new URLSearchParams(window.location.search).has("light-mode")) {
+        document.querySelector("#root").classList.remove("forma-grid")
+        document.querySelector("#root").innerHTML = ""
+      }
+
+      if (
+        new URLSearchParams(window.location.search).has("viewAnalysis") ||
+        new URLSearchParams(window.location.search).has("compare")
+      ) {
+        document.querySelector("#root").innerHTML = ""
+      }
+
+      window.globalSpinner = {
+        start: () => {
+          if (!spinner) {
+            spinner = document.createElement("div")
+            spinner.setAttribute("id", "global-spinner")
+            spinner.innerHTML = `<weave-progress size="m"></weave-progress>`
+            document.body.appendChild(spinner)
+          }
+        },
+        stop: () => {
+          spinner && document.body.removeChild(spinner)
+          spinner = undefined
+          window.globalLoadingOverlay.stop()
+        },
+      }
+
+      const stopContextMenu = (e) => e.preventDefault()
+
+      window.globalLoadingOverlay = {
+        start: () => {
+          if (!loadingOverlay) {
+            loadingOverlay = document.createElement("div")
+            loadingOverlay.setAttribute("id", "loading-overlay")
+            loadingOverlay.addEventListener("contextmenu", stopContextMenu)
+            document.body.insertBefore(loadingOverlay, document.getElementById("root"))
+
+            if (!transparentOverlay) {
+              transparentOverlay = document.createElement("div")
+              transparentOverlay.addEventListener("contextmenu", stopContextMenu)
+              transparentOverlay.setAttribute("id", "transparent-overlay")
+              document.body.insertBefore(transparentOverlay, loadingOverlay)
+            }
+          }
+        },
+        stop: () => {
+          if (loadingOverlay) {
+            loadingOverlay.style.opacity = 0
+
+            setTimeout(() => {
+              if (loadingOverlay) {
+                loadingOverlay.removeEventListener("contextmenu", stopContextMenu)
+                document.body.removeChild(loadingOverlay)
+                loadingOverlay = undefined
+              }
+            }, 500)
+          }
+
+          if (transparentOverlay) {
+            transparentOverlay.removeEventListener("contextmenu", stopContextMenu)
+            document.body.removeChild(transparentOverlay)
+            transparentOverlay = undefined
+          }
+        },
+      }
+
+      window.globalCanvasScreenshotOverlay = {
+        start: () => {
+          if (canvasScreenshotOverlay) return
+          canvasScreenshotOverlay = document.createElement("img")
+          canvasScreenshotOverlay.setAttribute("id", "canvas-screenshot-overlay")
+          const canvas = document.getElementById("design-mode-canvas")
+          canvasScreenshotOverlay.src = canvas.toDataURL("image/jpeg")
+          canvas.parentNode.insertBefore(canvasScreenshotOverlay, canvas.nextSibling)
+        },
+        stop: () => {
+          if (!canvasScreenshotOverlay) return
+          canvasScreenshotOverlay.remove()
+          canvasScreenshotOverlay = undefined
+        },
+      }
+
+      window.forma_toasts = window.forma_toasts || []
+      window.__SUBMODE_WITH_OWN_SCENE_ACTIVE__ = false
+      // Show placeholder image if present until we render canvas
+      const snapshot = sessionStorage.getItem("snapshot")
+      const isCompare = new URLSearchParams(window.location.search).has("compare")
+      const isLightMode = new URLSearchParams(window.location.search).has("light-mode")
+      if (snapshot && !isCompare && !isLightMode) {
+        sessionStorage.removeItem("snapshot")
+        const { dataURL, timestamp, proposalId } = JSON.parse(snapshot)
+        if (proposalId === window.location.pathname.split("/")[3] && Date.now() < timestamp + 5000) {
+          const img = new Image()
+          img.id = "canvas-snapshot"
+          img.src = dataURL
+          img.style.cssText = "position: fixed; width: 100%; height: 100%"
+          document.body.insertBefore(img, document.getElementById("root"))
+          window.globalLoadingOverlay.start()
+        }
+
+        const projectId = window.location.pathname.split("/")[2]
+        const sessionProjectId = JSON.parse(sessionStorage.getItem("forma-projectdata")).id === projectId
+        const sidebarCollapsed = JSON.parse(sessionStorage.getItem(`sidebar-collapsed/v2`))
+
+        const navbar = document.querySelector("forma-navbar")
+        if (navbar && projectId.length) {
+          navbar.setAttribute("project-id", projectId)
+        }
+
+        if (!sessionProjectId) {
+          sessionStorage.removeItem(`sidebar-collapsed/v2`)
+        } else {
+          if (!sidebarCollapsed?.left) {
+            document.querySelector(".forma-grid-left")?.classList.remove("collapsed")
+          }
+          if (!sidebarCollapsed?.right) {
+            document.querySelector(".forma-grid-right")?.classList.remove("collapsed")
+          }
+        }
+      }
+
+      window.addEventListener("beforeunload", () => {
+        if (!window.__SCENE_INITIALIZED__ || window.__SUBMODE_WITH_OWN_SCENE_ACTIVE__) return
+        const data = {
+          timestamp: Date.now(),
+          proposalId: window.location.pathname.split("/")[3],
+          dataURL: document.getElementById("design-mode-canvas").toDataURL("image/jpeg"),
+        }
+        sessionStorage.setItem("snapshot", JSON.stringify(data))
+      })
+      // Boot header
+      const projectId = window.location.pathname.split("/")[2]
+      document.querySelector("forma-analysis-catalog-toast").setAttribute("authcontext", projectId)
+      document.querySelector("forma-analysis-modal").setAttribute("authcontext", projectId)
+      document
+        .querySelector("forma-analysis-catalog-toast")
+        .setAttribute(
+          "elementurnprefix",
+          `urn:adsk-forma-elements:proposal:${projectId}:${window.location.pathname.split("/")[3]}`,
+        )
+    </script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/toolbar/forma-toolbar.js"></script>
+    <script
+      type="module"
+      src="#REL#/design-system/v2/forma/components/expanded-tooltip/forma-expanded-tooltip.js"
+    ></script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/grid/forma-grid-navbar-collapsible.js"></script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/sidebar/forma-sidebar.js?v=3"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/button/weave-button.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/linkbutton/weave-linkbutton.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/slider/weave-slider.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/inputslider/weave-inputslider.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/menu-container/weave-menu-container.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/menu/weave-menu.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/radio-button/weave-radio-button.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/modal/weave-modal.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/checkbox/weave-checkbox.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/tooltip/weave-tooltip.js?v=1"></script>
+    <script
+      type="module"
+      src="#REL#/design-system/v2/forma/components/project-header/forma-project-header.js?v=1"
+    ></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/tile/weave-tile.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/input/weave-input.js?v=1"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/editable/weave-editable.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/text-link/weave-text-link.js"></script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/select-native/forma-select-native.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/tab/weave-tab.js"></script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/tooltip/forma-tooltip.js"></script>
+    <script
+      type="module"
+      src="#REL#/design-system/v2/weave/components/segmented-buttons-group/weave-segmented-buttons-group.js"
+    ></script>
+    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/compass/forma-compass.js"></script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/icons/common/forma-common-icons.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/icons/weave-icons.js"></script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/toast/forma-toast.js"></script>
+    <script type="module" src="#REL#/design-system/v2/forma/components/context-menu/forma-context-menu.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/skeleton-item/weave-skeleton-item.js"></script>
+    <script
+      type="module"
+      src="#REL#/design-system/v2/weave/components/flyout-container/weave-flyout-container.js"
+    ></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/avatarbundle/weave-avatarbundle.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/avatar/weave-avatar.js"></script>
+    <script type="module" src="#REL#/design-system/v2/weave/components/badge/weave-badge.js"></script>
+    <script type="module" src="#REL#/web-components/proposal-list-v2/proposal-list-v2.js?v=2"></script>
+    <script>
+      // Conditionally load forma-bootstrap script
+      if (!window.SPACE_ENABLED) {
+        const bootstrapScript = document.createElement("script")
+        bootstrapScript.type = "module"
+        bootstrapScript.src = "#REL#/web-components/forma-bootstrap/forma-bootstrap.js"
+        document.head.appendChild(bootstrapScript)
+      }
+    </script>
+    <script type="module" src="#REL#/web-components/forma-analysis-catalog/forma-analysis-catalog.js"></script>
+    <script type="module" src="#REL#/web-components/forma-analysis-modal/forma-analysis-modal.js"></script>
+    <script type="module" src="#REL#/web-components/help-panel/help-panel.es.js"></script>
+    <script type="module" src="#REL#/web-components/license-banner/v1/forma-license-banner.js"></script>
+    <script type="module" src="#REL#/web-components/sm-join-project-button/v1/sm-join-project-button.es.js"></script>
+    <script
+      type="module"
+      src="#REL#/design-system/v2/weave/components/progress/weave-progress-indeterminate.js"
+    ></script>
+    <script
+      type="module"
+      src="https://app.autodeskforma.com/design-system/v2/weave/components/progress-bar/weave-progress-bar.js"
+    ></script>
+    <script type="module" src="#REL#/web-components/scenario-model-list/scenario-model-list.js"></script>
+    <script type="module" src="#REL#/web-components/forma-analysis-menu/forma-analysis-menu.js"></script>
+    <forma-toast></forma-toast>
+    <script>
+      // Brigde for older components still using sm-toast
+      window.customElements.define("sm-toast", class NOOP extends HTMLElement {})
+      window.sm_toasts = {
+        push: ({ content, autoDismiss = true }) => {
+          window.forma_toasts.push({ content: `[OLD sm_toasts] ${content}`, status: "warning", autoDismiss })
+        },
+      }
+
+      if (window.forma_toasts && navigator.userAgent.indexOf("Chrome") === -1) {
+        window.forma_toasts.push({
+          status: "warning",
+          content: `Incompatible browser. It looks like you are not using Google Chrome, which is the only browser we support at this time. Please switch browser to use the application.`,
+          autoDismiss: false,
+        })
+      }
+    </script>
+    <script>
+      if (window.location.host.includes("local")) {
+        const script = document.createElement("script")
+        script.type = "module"
+        script.src = "/designmode/frame-timer.js"
+        document.body.appendChild(script)
+      }
+    </script>
+  </body>
+</html>

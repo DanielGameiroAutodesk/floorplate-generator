@@ -1,0 +1,297 @@
+.model-tree {
+  /* padding: 0px 16px 0 16px; */
+  /* font-family: "Consolas", Courier, monospace; */
+  font-size: x-small;
+  cursor: default;
+  margin-top: 24px;
+}
+
+.mt-title-button {
+  font-size: small;
+  border: 1px solid #242424;
+  padding: 2px 4px 2px 4px;
+  border: 0px solid black;
+  color: white;
+  background-color: #242424;
+}
+
+.mt-title-button:hover {
+  background-color: #484848;
+  color: white;
+}
+
+.mt-title-button:active {
+  background-color: #black;
+  color: #aaaaaa;
+}
+
+.mt-clickable-span {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+.mt-button {
+  font-size: small;
+  border: 1px solid #242424;
+  padding: 2px 4px 2px 4px;
+  border: 0px solid black;
+}
+
+.mt-button:hover {
+  background-color: #242424;
+  color: white;
+}
+
+.model-tree pre {
+  cursor: text;
+}
+
+.mt-transform {
+  user-select: text;
+  font-size: x-small;
+  border-collapse: collapse;
+}
+
+.mt-transform tr {
+  user-select: text;
+}
+
+.mt-transform td {
+  user-select: text;
+  border: 1px solid #aaaaaa;
+  padding: 4px;
+}
+
+.mt-transform div {
+  border-right: 1px solid #aaaaaa;
+  border-bottom: 1px solid #aaaaaa;
+}
+
+.mt-transform-raw {
+  text-wrap: wrap;
+}
+
+.mt-transform-alt1 {
+  background-color: #ffffff;
+}
+.mt-transform-alt2 {
+  background-color: #dddddd;
+}
+
+.mt-minimize {
+  float: right;
+}
+
+.mt-window-hidden {
+  position: absolute;
+  bottom: 0;
+  padding: 4px;
+  height: 12px;
+  width: 250px;
+  right: 0;
+  z-index: 9999;
+  border-radius: 4px;
+}
+
+.mt-window {
+  position: absolute;
+  bottom: 0;
+  z-index: 9999;
+  right: 0;
+  top: 50vh;
+  min-width: 400px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 16px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-gutter: unset;
+  scroll-behavior: smooth;
+  scrollbar-color: cornflowerblue #242424;
+}
+
+.mt-stats-table {
+  font-size: x-small;
+  user-select: text;
+}
+
+.mt-stats-table td {
+  font-size: x-small;
+  user-select: text;
+  padding: 4px;
+}
+
+.mt-full {
+  position: absolute;
+  padding: 16px;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  left: 0;
+  background-color: white;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-gutter: unset;
+  scroll-behavior: smooth;
+  scrollbar-color: cornflowerblue #242424;
+}
+
+.mt-background {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+h3 {
+  font-size: x-small;
+}
+
+.mt-content {
+  margin: 0px;
+  padding: 0px;
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.mt-selected {
+  text-decoration: underline;
+  font-weight: bold;
+  background-color: rgb(156, 165, 255);
+}
+
+.mt-context {
+  background-color: rgb(224, 235, 255);
+}
+
+.mt-node {
+  margin-left: 12px;
+}
+
+.mt-node-label {
+  display: flex;
+  flex-direction: row;
+  margin-right: 5px;
+}
+
+button {
+  font-size: x-small;
+}
+
+.mt-node-label button {
+  opacity: 0.25;
+  background: transparent;
+  border: none;
+}
+
+.mt-node-label:hover button {
+  opacity: 1;
+  margin-left: 4px;
+}
+
+.mt-node-label-item-count {
+  color: #aaaaaa;
+  font-size: x-small;
+  margin-left: 4px;
+}
+
+.mt-node-body {
+  color: black;
+}
+
+.mt-node-history {
+  color: black;
+  font-weight: bold;
+}
+
+.mt-node-group {
+  color: rgb(180, 1, 200);
+}
+
+.mt-node-instance {
+  color: rgb(153, 11, 255);
+}
+
+.mt-node-face {
+  color: rgb(100, 1, 0);
+}
+
+.mt-node-edge {
+  color: rgb(0, 100, 0);
+}
+
+.mt-node-vertex {
+  color: orange;
+}
+
+.mt-fixed-header {
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: white;
+}
+
+.mt-fixed-header h2 {
+  margin: 0px;
+  color: white;
+}
+
+.mt-expand {
+  display: inline;
+  overflow: hidden;
+  width: 12px;
+  cursor: pointer;
+}
+
+.mt-no-expand {
+  display: inline;
+  width: 12px;
+  cursor: pointer;
+  color: #cccccc;
+}
+
+.mt-clickable {
+  display: inline-flex;
+}
+
+.mt-clickable:hover {
+  background-color: rgba(128, 128, 255, 0.5);
+  cursor: pointer;
+}
+
+.mt-header {
+  background-color: #323232;
+  padding: 8px 16px 8px 16px;
+  margin: 0px;
+}
+
+.input[type="checkbox"] {
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.mt-option-indent {
+  margin-left: 12px;
+}
+
+.mt-option-separator {
+  margin: 4px 0px 4px 0px;
+  padding: 0px;
+  border: none;
+  border-top: 1px solid #242424;
+}
+
+label {
+  vertical-align: middle;
+}

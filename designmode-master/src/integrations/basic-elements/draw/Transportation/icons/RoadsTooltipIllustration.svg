@@ -1,0 +1,51 @@
+<svg width="188" height="112" viewBox="0 0 188 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_507_60955)">
+    <path
+      d="M93.5907 21.9971C94.2945 21.4835 95.2499 21.4846 95.9525 21.9998L135.095 50.7036C136.186 51.5038 136.184 53.1341 135.091 53.9319L96.5053 82.0924C95.8015 82.6061 94.8462 82.605 94.1436 82.0897L55.0013 53.386C53.9101 52.5858 53.9119 50.9554 55.005 50.1577L93.5907 21.9971Z"
+      fill="#EEEEEE"
+    />
+    <path
+      d="M95.6173 94.9299L163.445 45.8996L158.693 42.4113L90.756 91.3912L95.6173 94.9299Z"
+      fill="#9BD5EF"
+      fill-opacity="0.7"
+    />
+    <path
+      d="M53.1245 89.5286L75.3924 73.6062L70.6398 70.1178L48.2633 85.9899L53.1245 89.5286Z"
+      fill="#9BD5EF"
+      fill-opacity="0.7"
+    />
+    <path
+      d="M42.9733 54.1096L120.906 -2.4348L116.153 -5.92314L38.1121 50.5709L42.9733 54.1096Z"
+      fill="#9BD5EF"
+      fill-opacity="0.7"
+    />
+    <path
+      d="M156.316 60.7457L70.9699 -0.99692L75.7225 -4.48527L161.177 57.207L156.316 60.7457Z"
+      fill="#9BD5EF"
+      fill-opacity="0.7"
+    />
+    <path d="M161.177 44.1331L93.848 92.5642" stroke="#0696D7" stroke-width="0.7" />
+    <path
+      d="M70.5312 77.1977L14.1949 36.4891L18.9474 33.0008L75.3924 73.659L70.5312 77.1977Z"
+      fill="#9BD5EF"
+      fill-opacity="0.7"
+    />
+    <path d="M16.7603 34.7561L70.9758 73.8338" stroke="#0696D7" stroke-width="0.7" />
+    <path d="M70.587 73.6813L50.8239 87.8678" stroke="#0696D7" stroke-width="0.7" />
+    <path d="M158.645 58.7382L72.4699 -3.58176" stroke="#0696D7" stroke-width="0.7" />
+    <path d="M113.861 -0.934662L41.0372 51.8117" stroke="#0696D7" stroke-width="0.7" />
+    <circle cx="70.7321" cy="73.8808" r="1.75" fill="white" stroke="#0696D7" stroke-width="0.7" />
+    <circle cx="50.824" cy="87.9837" r="1.75" fill="white" stroke="#0696D7" stroke-width="0.7" />
+    <circle cx="158.645" cy="58.9957" r="1.75" fill="white" stroke="#0696D7" stroke-width="0.7" />
+    <circle cx="161.177" cy="44.1613" r="1.75" fill="white" stroke="#0696D7" stroke-width="0.7" />
+    <circle cx="93.1297" cy="93.44" r="1.75" fill="white" stroke="#0696D7" stroke-width="0.7" />
+    <circle cx="40.9294" cy="52.0448" r="1.75" fill="white" stroke="#0696D7" stroke-width="0.7" />
+    <circle cx="17.0584" cy="34.7508" r="1.75" fill="white" stroke="#0696D7" stroke-width="0.7" />
+    <circle cx="95.048" cy="12.7628" r="1.75" fill="white" stroke="#0696D7" stroke-width="0.7" />
+  </g>
+  <defs>
+    <clipPath id="clip0_507_60955">
+      <rect width="188" height="112" fill="white" />
+    </clipPath>
+  </defs>
+</svg>

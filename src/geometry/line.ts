@@ -1,20 +1,41 @@
 /**
- * Line utility functions
- * A line is defined by two endpoints (start and end)
+ * @fileoverview Line segment and polyline utilities for 2D geometry.
+ *
+ * This module provides operations on line segments (start/end pairs) and polylines.
+ * Lines are used for corridor centerlines, polygon edges, wall boundaries, and
+ * intersection calculations. All coordinates and distances use feet (imperial).
+ *
+ * **Architecture Role**: Sits above the point module and is consumed by polygon,
+ * clip, and graph modules. Critical for wing centerlines, edge extraction, and
+ * line-line intersection tests used in footprint processing.
+ *
+ * **Direction Convention**: Lines have an implicit direction from start → end.
+ * Perpendicular vectors use CCW rotation (left-facing normal). Offset directions:
+ * positive = left of direction vector (CCW), negative = right.
  */
 
 import { Line, Point } from '../types/geometry';
 import { createPoint, distance, lerp } from './point';
 
 /**
- * Creates a new line from two points
+ * Creates a new line segment from two endpoints.
+ *
+ * @param start - Start point of the segment
+ * @param end - End point of the segment
+ * @returns A Line object
  */
 export function createLine(start: Point, end: Point): Line {
   return { start, end };
 }
 
 /**
- * Creates a line from coordinates
+ * Creates a line segment from raw coordinates.
+ *
+ * @param x1 - Start X
+ * @param y1 - Start Y
+ * @param x2 - End X
+ * @param y2 - End Y
+ * @returns A Line from (x1,y1) to (x2,y2)
  */
 export function createLineFromCoords(x1: number, y1: number, x2: number, y2: number): Line {
   return {
@@ -24,28 +45,43 @@ export function createLineFromCoords(x1: number, y1: number, x2: number, y2: num
 }
 
 /**
- * Calculates the length of a line segment
+ * Calculates the Euclidean length of a line segment.
+ *
+ * @param line - Line segment
+ * @returns Length in feet
  */
 export function lineLength(line: Line): number {
   return distance(line.start, line.end);
 }
 
 /**
- * Returns the midpoint of a line segment
+ * Returns the midpoint of a line segment.
+ *
+ * @param line - Line segment
+ * @returns Point at t=0.5
  */
 export function lineMidpoint(line: Line): Point {
   return lerp(line.start, line.end, 0.5);
 }
 
 /**
- * Returns a point along the line at parameter t (0=start, 1=end)
+ * Returns a point along the line at parameter t.
+ *
+ * @param line - Line segment
+ * @param t - Parameter (0 = start, 1 = end; values outside [0,1] extrapolate)
+ * @returns Point on the line
  */
 export function pointOnLine(line: Line, t: number): Point {
   return lerp(line.start, line.end, t);
 }
 
 /**
- * Returns the direction vector of a line (not normalized)
+ * Returns the direction vector of a line (from start to end).
+ *
+ * Not normalized; magnitude equals segment length.
+ *
+ * @param line - Line segment
+ * @returns Vector (end - start)
  */
 export function lineDirection(line: Line): Point {
   return {
@@ -55,11 +91,14 @@ export function lineDirection(line: Line): Point {
 }
 
 /**
- * Returns the normalized direction vector of a line
+ * Returns the unit-length direction vector of a line.
+ *
+ * @param line - Line segment
+ * @returns Normalized vector; zero vector if segment is degenerate
  */
 export function lineDirectionNormalized(line: Line): Point {
   const len = lineLength(line);
-  if (len === 0) return { x: 0, y: 0 };
+  if (len === 0) return { x: 0, y: 0 }; // Degenerate segment
   const dir = lineDirection(line);
   return {
     x: dir.x / len,
@@ -68,14 +107,24 @@ export function lineDirectionNormalized(line: Line): Point {
 }
 
 /**
- * Returns the angle of the line (in radians)
+ * Returns the angle of the line in radians.
+ *
+ * Measured from positive X axis; same as atan2(dy, dx) for direction vector.
+ *
+ * @param line - Line segment
+ * @returns Angle in [-π, π]
  */
 export function lineAngle(line: Line): number {
   return Math.atan2(line.end.y - line.start.y, line.end.x - line.start.x);
 }
 
 /**
- * Returns a perpendicular vector to the line (rotated 90 degrees counter-clockwise)
+ * Returns the left-facing perpendicular (normal) to the line direction.
+ *
+ * Rotated 90° CCW from direction: (-dy, dx) for normalized dir (dx, dy).
+ *
+ * @param line - Line segment
+ * @returns Unit vector perpendicular to the line (pointing left)
  */
 export function perpendicularVector(line: Line): Point {
   const dir = lineDirectionNormalized(line);
@@ -86,8 +135,14 @@ export function perpendicularVector(line: Line): Point {
 }
 
 /**
- * Creates a line parallel to the given line, offset by the given distance
- * Positive offset = to the left (counter-clockwise), negative = to the right
+ * Creates a line parallel to the given line, offset perpendicularly.
+ *
+ * **Offset convention**: Positive = left of direction (CCW perpendicular);
+ * negative = right. Both endpoints are shifted by the same amount.
+ *
+ * @param line - Source line
+ * @param offset - Perpendicular distance (feet); sign determines side
+ * @returns New parallel line
  */
 export function parallelLine(line: Line, offset: number): Line {
   const perp = perpendicularVector(line);
@@ -104,8 +159,12 @@ export function parallelLine(line: Line, offset: number): Line {
 }
 
 /**
- * Extends or shortens a line by the given amounts at each end
- * Positive values extend, negative values shorten
+ * Extends or shortens a line at each end.
+ *
+ * @param line - Source line
+ * @param startExtension - Amount to extend/retract at start (positive = extend backward)
+ * @param endExtension - Amount to extend/retract at end (positive = extend forward)
+ * @returns New line; negative values shorten the segment
  */
 export function extendLine(line: Line, startExtension: number, endExtension: number): Line {
   const dir = lineDirectionNormalized(line);
@@ -182,7 +241,6 @@ export function segmentIntersection(line1: Line, line2: Line): LineIntersectionR
     return result;
   }
 
-  // Check if intersection is within both segments
   const t1 = result.t1!;
   const t2 = result.t2!;
 
@@ -194,7 +252,17 @@ export function segmentIntersection(line1: Line, line2: Line): LineIntersectionR
 }
 
 /**
- * Calculates the closest point on a line segment to a given point
+ * Calculates the closest point on a line segment to a given point.
+ *
+ * Uses orthogonal projection onto the line, then clamps to [0,1] so the result
+ * lies on the segment (not the infinite line).
+ *
+ * @param line - Line segment
+ * @param point - Query point
+ * @returns Closest point on the segment
+ *
+ * @remarks
+ * Formula: t = dot(P - A, B - A) / |B - A|²; clamp t ∈ [0,1].
  */
 export function closestPointOnSegment(line: Line, point: Point): Point {
   const dx = line.end.x - line.start.x;
@@ -202,15 +270,11 @@ export function closestPointOnSegment(line: Line, point: Point): Point {
   const len2 = dx * dx + dy * dy;
 
   if (len2 === 0) {
-    // Line segment is actually a point
-    return { ...line.start };
+    return { ...line.start }; // Degenerate segment
   }
 
-  // Calculate parameter t for projection
   let t = ((point.x - line.start.x) * dx + (point.y - line.start.y) * dy) / len2;
-
-  // Clamp t to [0, 1] to stay within segment
-  t = Math.max(0, Math.min(1, t));
+  t = Math.max(0, Math.min(1, t)); // Clamp to segment
 
   return {
     x: line.start.x + t * dx,
@@ -219,7 +283,11 @@ export function closestPointOnSegment(line: Line, point: Point): Point {
 }
 
 /**
- * Calculates the distance from a point to a line segment
+ * Calculates the minimum distance from a point to a line segment.
+ *
+ * @param line - Line segment
+ * @param point - Query point
+ * @returns Perpendicular distance to segment, or distance to nearest endpoint
  */
 export function distanceToSegment(line: Line, point: Point): number {
   const closest = closestPointOnSegment(line, point);
@@ -234,7 +302,10 @@ export function pointOnSegment(line: Line, point: Point, tolerance: number = 0.0
 }
 
 /**
- * Reverses the direction of a line
+ * Reverses the direction of a line (swaps start and end).
+ *
+ * @param line - Line segment
+ * @returns New line with start↔end swapped
  */
 export function reverseLine(line: Line): Line {
   return {
@@ -245,7 +316,20 @@ export function reverseLine(line: Line): Line {
 
 /**
  * Computes the angle bisector line at a vertex where two directions meet.
- * The bisector divides the angular space evenly between the two wing directions.
+ *
+ * The bisector divides the angle evenly. Used for wing centerline generation
+ * where corridors turn at intersections. Returns a short segment from vertex
+ * in the bisector direction.
+ *
+ * @param vertex - Shared vertex (start of bisector)
+ * @param dir1 - First direction vector (need not be normalized)
+ * @param dir2 - Second direction vector (need not be normalized)
+ * @returns Line from vertex along the bisector; fallback if directions degenerate
+ *
+ * @remarks
+ * Edge case: when dir1 and dir2 are opposite (bLen ≈ 0), the bisector is
+ * ambiguous; we return perpendicular to dir1. Zero-length directions yield
+ * a horizontal fallback ray.
  */
 export function angleBisectorLine(
   vertex: Point,
@@ -255,7 +339,7 @@ export function angleBisectorLine(
   const len1 = Math.sqrt(dir1.x * dir1.x + dir1.y * dir1.y);
   const len2 = Math.sqrt(dir2.x * dir2.x + dir2.y * dir2.y);
   if (len1 < 1e-9 || len2 < 1e-9) {
-    return { start: vertex, end: { x: vertex.x + 1, y: vertex.y } };
+    return { start: vertex, end: { x: vertex.x + 1, y: vertex.y } }; // Fallback
   }
   const n1 = { x: dir1.x / len1, y: dir1.y / len1 };
   const n2 = { x: dir2.x / len2, y: dir2.y / len2 };
@@ -263,7 +347,7 @@ export function angleBisectorLine(
   const by = n1.y + n2.y;
   const bLen = Math.sqrt(bx * bx + by * by);
   if (bLen < 1e-9) {
-    // Directions are opposite; bisector is perpendicular to either
+    // Opposite directions: bisector perpendicular to either
     return { start: vertex, end: { x: vertex.x - n1.y, y: vertex.y + n1.x } };
   }
   return {
@@ -273,7 +357,10 @@ export function angleBisectorLine(
 }
 
 /**
- * Computes the total length of a polyline defined by ordered points.
+ * Computes the total length of a polyline (chain of segments).
+ *
+ * @param points - Ordered vertices (polyline not closed)
+ * @returns Sum of segment lengths; 0 if fewer than 2 points
  */
 export function polylineLength(points: Point[]): number {
   let total = 0;

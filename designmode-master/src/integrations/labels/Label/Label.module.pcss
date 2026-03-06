@@ -1,0 +1,112 @@
+:root {
+  --base-purple-hovered: #b37bfc;
+  --base-purple-selected: #8c41ed;
+  --proposal-blue-hovered: rgba(167, 210, 243, 0.5);
+  --proposal-blue-selected: #9dc5dc;
+}
+
+.PositioningWrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: opacity 0.2s;
+}
+
+.ContentWrapper {
+  position: fixed;
+  z-index: 1;
+  cursor: auto;
+  border-radius: 2px;
+  box-shadow: var(--forma-box-shadow);
+}
+
+:root {
+  --line-height: 1.8rem;
+}
+
+.Text {
+  font: var(--11-medium);
+  line-height: var(--line-height);
+  letter-spacing: 0.005em;
+  white-space: pre-wrap;
+  max-width: 150px;
+  box-sizing: border-box;
+  user-select: none;
+  word-break: break-word;
+  border-radius: 2px;
+  min-height: 18px;
+}
+
+.Content {
+  flex: 1;
+  width: max-content;
+  max-height: calc(5 * var(--line-height) + 8px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 2px;
+  padding: 4px 8px;
+  transform-origin: middle center;
+}
+
+/* Displays a "blue focus bar" imitating the focused state of weave inputs */
+.Content:focus-within::after {
+  position: absolute;
+  display: block;
+  content: "";
+  bottom: 0;
+  left: 8px;
+  right: 9px;
+  border-bottom: solid 4px var(--halo-color-neutral-focus);
+  border-top: 1px solid var(--border-color-accent-default);
+}
+
+.LabelTextArea {
+  outline: none;
+  background: white;
+  color: var(--text-color-medium-default);
+  resize: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  user-select: all;
+  padding: 0 7px;
+  border-radius: 0;
+  border: 1px solid var(--border-color-input-box);
+
+  &:not(:focus) {
+    pointer-events: none;
+  }
+}
+
+.LabelTextArea.AutoResizeClone {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  visibility: hidden;
+}
+
+.LabelTextArea::placeholder {
+  color: #ffffff;
+  opacity: 0.5;
+}
+
+.ColorInput {
+  border: none;
+  outline: 0;
+  height: 15px;
+  width: 15px;
+  -webkit-appearance: none;
+}
+
+.Occluded {
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.Disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.Hidden {
+  visibility: hidden;
+}

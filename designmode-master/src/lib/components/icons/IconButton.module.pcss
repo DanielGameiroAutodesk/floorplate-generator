@@ -1,0 +1,16 @@
+.IconButton {
+  cursor: pointer;
+  height: 16px;
+  color: var(--icon-color-medium);
+  &:hover {
+    color: var(--icon-color-selected-hover);
+  }
+}
+
+.IconButtonGroup {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: var(--columnWidth);
+}

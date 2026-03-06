@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Define the folder(s) to watch delimited by a pipe "|"
+WATCHED_DIRS="src/integrations/wsm-tools|src/integrations/3dsketch|checkly/src/3d-sketch|checkly/local|git_hooks/pre-push|checkly/playwright\.3ds\.config\.ts"
+
+echo "Checking for changes in monitored folders..."
+
+# Get the list of changed files in the watched directories
+# Check if the upstream branch exists
+if git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
+    echo "Comparing against upstream branch..."
+    git diff --name-only @{u} | grep -E "^((${WATCHED_DIRS}))"
+    CHANGED_FILES=$(git diff --name-only @{u} | grep -E "^((${WATCHED_DIRS}))")
+else
+    echo "No upstream branch found. Assuming this is a new branch."
+    echo "Comparing against master..."
+    git diff --name-only master | grep -E "^((${WATCHED_DIRS}))"
+    CHANGED_FILES=$(git diff --name-only master | grep -E "^((${WATCHED_DIRS}))")
+fi
+
+if [[ -n "$CHANGED_FILES" ]]; then
+    echo "Detected changes in monitored folders: Running tests..."
+
+    # Run 3d sketch test command using random port to force EU region
+    pnpm test3dsci || { echo "Tests failed! Push aborted."; exit 1; }
+
+    echo "All tests passed! Proceeding with push."
+else
+    echo "No changes detected in monitored folders. Proceeding with push."
+fi
+
+exit 0

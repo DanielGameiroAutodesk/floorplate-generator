@@ -1,0 +1,38 @@
+.ToolStackBreadcrumb {
+  position: absolute;
+  left: 350px;
+  top: 16px;
+  background: white;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: var(--forma-box-shadow);
+}
+
+.ToolStackBreadcrumbItem {
+  display: inline;
+  margin-left: 5px;
+  margin-right: 5px;
+  color: grey;
+}
+
+.ToolStackBreadcrumbItem:hover {
+  color: cornflowerblue;
+  cursor: pointer;
+}
+
+.ToolStackBreadcrumbActiveTool {
+  color: cornflowerblue;
+}
+
+.ToolStackBreadcrumbFocusTool {
+  border-bottom: 1px dashed rgba(200, 200, 200, 0.95);
+}
+
+.ToolStackBreadcrumbSeparator {
+  display: inline;
+  color: grey;
+}
+
+.ToolStackHeader {
+  font-weight: bold;
+}

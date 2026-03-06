@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 12.7 12.7"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="Node_Centroid.svg"
+   inkscape:export-filename="Node_Centroid.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showguides="true"
+     inkscape:zoom="13.049214"
+     inkscape:cx="10.881881"
+     inkscape:cy="10.613666"
+     inkscape:window-width="3840"
+     inkscape:window-height="2066"
+     inkscape:window-x="5749"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2"><sodipodi:guide
+       position="6.6301884,9.5572501"
+       orientation="0,-1"
+       id="guide1"
+       inkscape:locked="false" /><sodipodi:guide
+       position="3.1833015,6.4145003"
+       orientation="1,0"
+       id="guide2"
+       inkscape:locked="false" /></sodipodi:namedview><defs
+     id="defs1" /><g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"><g
+       inkscape:groupmode="layer"
+       id="layer2"
+       inkscape:label="Layer 2"><image
+         width="12.663583"
+         height="12.663583"
+         preserveAspectRatio="none"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAACxLAAAsSwGlPZapAAAA&#10;AXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAK0SURBVHgB7ZixbhNBEIbHSBTQYKE0ERI6FJDS&#10;BAwFrU0HFU5NQXgC/AZJniD2E8QU1DEVdNgtBRjSpCDyCQnRIGKapEhxmd/Zk9ar9d3c3Z7jKPtJ&#10;I2vP2r35d2b3ZpfI4/F4PFeZCjkiiqIq/zTZ6mw1toCtqv4es4VsQ7YBW69SqYxpEWDHA7YdtqMo&#10;G7voSxcFZlw5XpQdFb25Oo9ZH0XuGEU5o5F5DfCLkN97dJ7jU4xPTqnTP6T+z78U/jueGKjeuE61&#10;O7eoubZMLx8uU3D7pm3okG2d18aQMpBJgJqlz6bzcPTN+68TxyVsPL1Lmy9WbUJCtmcsIiQhYgEq&#10;T7+R4TxmfOvTwWT2s4CobD1fpbeNFfOvkO2xdJe6RnI2yXB+++MBtfb2MzsP0Ad9MYZBoN4lQhQB&#10;lToj/RlmHg64oL2+ZovEPUkqSSMwNSPIeaSNKzBWvOA1WpK+qQJU7m/ozxD2PGkzC4yFTcDgteT7&#10;IIlAU29gprpffpFrsIMZkxKXJolIBNT1xocff6gssK6S3m1DIqCmN3r75QmwfEdqaX0kAgK9Mfz9&#10;n8rCspCDtD4SAVMLyeXiNbEIcLKIFxqJgKlP+oxCzAkoL5LebUMiINQbZQpAxZr0bhsSAd/1RuP+&#10;EpUFym2D1NJaIqCvNyw1izNwVjAYpPWRCOiRlovI0zKigDOCJT17af1SBai6/J3+bPfVE9uCyw3G&#10;wgHHoCs5E0i30bbewExZXpibGaezbUlfkQBVl3f0Z636ihMRGANjGXSkx8rCR8r24DBXeR2njcX5&#10;kDIcKZ0d6iFCWmZjE8A6muuhPibpWgVCUK2i5EbRF0cFjsLqD5YmMz5jAwgpx7VKLhbpYquICFwt&#10;tqPiYIz5Xi0aQhCNbpSNI+V4QAUp43q9wfaILsv1usfj8XguNWepias8L/ewdAAAAABJRU5ErkJg&#10;gg==&#10;"
+         id="image1"
+         x="-0.0091040898"
+         y="0.033907473"
+         style="display:none" /><circle
+         style="fill:#ff23f6;fill-opacity:1;stroke-width:0.289505"
+         id="path2"
+         cx="6.3499999"
+         cy="6.3499999"
+         r="3.5718751" /></g></g></svg>

@@ -1,0 +1,24 @@
+name: PR deploy
+on:
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened]
+jobs:
+  handler:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      pull-requests: write
+    steps:
+      - uses: spacemakerai/pr-deploy-action@v1
+        with:
+          config: |
+            stg:
+              workflow: build-and-deploy.yaml
+              inputs:
+                stg-deploy: true
+            ops:
+              workflow: ops.yml
+              inputs:
+                force-deploy: true

@@ -1,20 +1,35 @@
 /**
  * Floorplate Generator - Forma Extension Entry Point
  *
- * Bar Generator - Multifamily Floorplate Tool
- * Generates apartment layouts from building footprints in Autodesk Forma
+ * Bar Generator - Multifamily Floorplate Tool. Generates apartment layouts from
+ * building footprints in Autodesk Forma.
  *
- * This file is the main orchestrator that:
- * 1. Initializes all modules
- * 2. Wires up cross-module communication
- * 3. Manages the button state machine
- * 4. Connects to Forma SDK
+ * ## Primary Responsibilities
+ * - **Initialization**: Wires up tabs, managers, callbacks, and Forma connection
+ * - **Button state machine**: Maps select → generate → stop; updates button label/behavior
+ * - **Cross-module events**: Connects generation-manager, floating-panel-manager, storage, bake
  *
- * The actual logic is split into focused modules:
- * - state/ui-state.ts - UI state management
- * - state/unit-config.ts - Configuration converters
- * - tabs/*.ts - Tab-specific handlers
- * - managers/*.ts - Core functionality managers
+ * ## State Lifecycle
+ * - `init()` runs on load: sets callbacks, tab handlers, generate button, Forma init, load saved floorplates
+ * - Button state (`buttonState`) is local; `setUpdateButtonState` lets generation-manager drive it
+ *
+ * ## Forma SDK Integration
+ * - `Forma.project.get()` for connection status and project name
+ * - `Forma.render.addMesh()` for option rendering (via handleOptionSelected, onSavedFloorplateLoaded)
+ * - No selection or geometry APIs; those are in generation-manager
+ *
+ * ## Storage Synchronization
+ * - `loadSavedFloorplates()` on init; save/bake flow uses storage-service and notifies panel
+ *
+ * ## Side Effects
+ * - DOM: button labels, status bar, tab switching, Show Results visibility
+ * - Forma: mesh rendering, project info for status
+ *
+ * ## Module Layout
+ * - state/ui-state.ts - UI state
+ * - state/unit-config.ts - UI → algorithm converters
+ * - tabs/*.ts - Tab handlers
+ * - managers/*.ts - Generation, floating panel, saved floorplates
  */
 
 import { Forma } from 'forma-embedded-view-sdk/auto';
@@ -86,10 +101,11 @@ let buttonState: ButtonState = 'select';
 /**
  * Update the generate button's visual state and label.
  *
- * WHY state machine?
- * - Clear visual feedback about what clicking will do
- * - Prevents confusion about "what happens if I click?"
- * - Maps directly to user's mental model: select → generate → stop
+ * @param newState - One of 'select' | 'generate' | 'stop'.
+ *
+ * @remarks
+ * State machine provides clear feedback: select → generate → stop. User always
+ * knows what the next click will do.
  */
 function updateButtonState(newState: ButtonState): void {
   buttonState = newState;
@@ -108,7 +124,9 @@ function updateButtonState(newState: ButtonState): void {
 }
 
 /**
- * Handle button click based on current state.
+ * Handle generate/stop button click based on current state.
+ *
+ * Dispatches to handleGenerate (select/generate) or handleStopAutoGeneration (stop).
  */
 function handleButtonClick(): void {
   switch (buttonState) {
@@ -127,7 +145,9 @@ function handleButtonClick(): void {
 // ============================================================================
 
 /**
- * Handle save request from floating panel.
+ * Handle save request from the floating panel.
+ *
+ * @param layoutOption - The layout option to save.
  */
 async function handleSaveFloorplate(layoutOption: LayoutOption): Promise<void> {
   try {
@@ -141,8 +161,12 @@ async function handleSaveFloorplate(layoutOption: LayoutOption): Promise<void> {
 }
 
 /**
- * Handle bake request from floating panel.
- * Creates a native Forma building from the generated floorplate.
+ * Handle bake request from the floating panel.
+ *
+ * Creates a native Forma building from the generated floorplate. On success,
+ * resets generation state and updates button to "Select Building".
+ *
+ * @param layoutOption - The layout option to bake.
  */
 async function handleBakeFloorplate(layoutOption: LayoutOption): Promise<void> {
   try {
@@ -169,7 +193,11 @@ async function handleBakeFloorplate(layoutOption: LayoutOption): Promise<void> {
 }
 
 /**
- * Handle option selection from floating panel.
+ * Handle option selection from the floating panel.
+ *
+ * Renders the selected layout option to Forma via Forma.render.addMesh.
+ *
+ * @param index - Index of the selected option.
  */
 async function handleOptionSelected(index: number): Promise<void> {
   const options = getGeneratedOptions();
@@ -197,7 +225,9 @@ async function handleOptionSelected(index: number): Promise<void> {
 }
 
 /**
- * Update visibility of the "Show Results" button (visible when we have generated options).
+ * Update visibility of the "Show Results" button.
+ *
+ * Visible when there are generated options; hidden after bake or when empty.
  */
 function updateShowResultsButtonVisibility(): void {
   const options = getGeneratedOptions();
@@ -205,7 +235,11 @@ function updateShowResultsButtonVisibility(): void {
 }
 
 /**
- * Handle generation complete - open panel and send options.
+ * Handle generation complete: open floating panel and send options for display.
+ *
+ * @param options - Generated layout options.
+ * @param selectedIndex - Index of the selected option.
+ * @param _floorplan - Unused; kept for callback signature compatibility.
  */
 async function onGenerationComplete(options: LayoutOption[], selectedIndex: number, _floorplan: FloorPlanData): Promise<void> {
   // Update building ID for saved floorplates filtering
@@ -222,7 +256,12 @@ async function onGenerationComplete(options: LayoutOption[], selectedIndex: numb
 }
 
 /**
- * Handle loading a saved floorplate.
+ * Handle loading a saved floorplate from storage.
+ *
+ * Sets options in generation-manager, opens panel, sends options, and renders to Forma.
+ *
+ * @param options - Loaded layout options.
+ * @param floorplan - Floorplan of the first option.
  */
 async function onSavedFloorplateLoaded(options: LayoutOption[], floorplan: FloorPlanData): Promise<void> {
   // Set the loaded options
@@ -249,11 +288,23 @@ async function onSavedFloorplateLoaded(options: LayoutOption[], floorplan: Floor
 // Forma Connection
 // ============================================================================
 
+/**
+ * Update the status bar with connection state.
+ *
+ * @param type - CSS class: 'connected' | 'disconnected' | 'connecting'.
+ * @param message - Text to display in the status bar.
+ */
 function setStatus(type: 'connected' | 'disconnected' | 'connecting', message: string): void {
   dom.statusBar.className = `status-bar ${type}`;
   dom.statusText.textContent = message;
 }
 
+/**
+ * Initialize Forma connection and update status bar.
+ *
+ * Fetches project info; on success sets "Connected to {name}", on failure sets "Not connected".
+ * Button remains enabled even on failure for testing.
+ */
 async function initForma(): Promise<void> {
   try {
     const projectInfo = await Forma.project.get();
@@ -272,6 +323,9 @@ async function initForma(): Promise<void> {
 // Initialize
 // ============================================================================
 
+/**
+ * Initialize the extension: wire callbacks, tabs, button, Forma, and saved floorplates.
+ */
 function init(): void {
   // Wire up cross-module callbacks
   setMixMarkInputChanged(markInputChanged);

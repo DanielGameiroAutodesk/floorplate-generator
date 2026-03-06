@@ -1,0 +1,8 @@
+packages:
+  - "checkly"
+  - "packages/*"
+
+minimumReleaseAge: 2880
+
+minimumReleaseAgeExclude:
+  - '@spacemakerai/*'

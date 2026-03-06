@@ -1,0 +1,80 @@
+.MenuItemContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.MenuItem {
+  height: 30px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  font: $theme-typography-Regular12px;
+  color: $theme-colors-gray60;
+  justify-content: space-between;
+  cursor: pointer;
+
+  &.selected {
+    color: $theme-colors-gray20;
+  }
+}
+
+.MenuText {
+  display: flex;
+
+  forma-eye-16,
+  forma-eye-hidden-16 {
+    margin-right: 10px;
+    fill: $theme-colors-gray60;
+  }
+
+  &.selected {
+    svg {
+      fill: $theme-colors-gray20;
+    }
+  }
+}
+
+.IconsWrapper {
+  display: flex;
+}
+
+.MenuIcon {
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  position: relative;
+  box-sizing: border-box;
+  margin-left: 3px;
+  margin-right: 3px;
+  border-radius: 3px;
+  border: 0.1rem solid white;
+  cursor: pointer;
+
+  &.selected.active {
+    background: $theme-colors-blue50$theme-opacityPercentage[20];
+    border-color: $theme-colors-blue50$theme-opacityPercentage[20];
+  }
+
+  &:hover {
+    &.selected.active {
+      background: $theme-colors-blue50$theme-opacityPercentage[20];
+      border-color: $theme-colors-blue50$theme-opacityPercentage[20];
+    }
+
+    &.active {
+      background: $theme-colors-gray60$theme-opacityPercentage[20];
+      border-color: $theme-colors-gray60$theme-opacityPercentage[20];
+    }
+  }
+}
+
+.TerrainSatelliteIcon {
+  background-image: url("./assets/satellite.png");
+  background-repeat: no-repeat;
+  height: 15px;
+  width: 15px;
+}

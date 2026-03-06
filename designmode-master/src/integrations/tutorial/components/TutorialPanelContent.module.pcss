@@ -1,0 +1,175 @@
+.PanelContent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.PanelHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.PanelTitleContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.BackButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-medium-default);
+  flex-shrink: 0;
+}
+
+.BackButton:hover {
+  color: var(--text-color-link-default);
+}
+
+.PanelTitle {
+  font: var(--16-bold);
+  color: var(--text-color-medium-default);
+  margin: 0;
+}
+
+.CloseButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-light);
+  flex-shrink: 0;
+}
+
+.CloseButton:hover {
+  color: var(--text-color-medium-default);
+}
+
+.PanelDescription {
+  font: var(--14-regular);
+  color: var(--text-color-light);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Section Header */
+.SectionHeader {
+  font: var(--12-bold);
+  color: var(--text-color-medium-default);
+  margin: 0px 0 12px 0;
+}
+
+.CompletedSectionHeader {
+  margin-top: 24px;
+}
+
+/* Tutorial List */
+.TutorialList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.TutorialItem {
+  margin: 0;
+}
+
+.TutorialButton {
+  width: 100%;
+  background: var(--background-color-surface-200);
+  border: 1px solid var(--border-color-divider-light);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.TutorialButton:hover {
+  background: var(--background-color-surface-300);
+  border-color: var(--border-color-medium-default);
+}
+
+.TutorialButtonCompleted {
+  background: var(--green-100);
+}
+
+.TutorialButtonCompleted:hover {
+  background: var(--green-200);
+  border-color: var(--border-color-medium-default);
+}
+
+.TutorialContent {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.TutorialIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.TutorialIconCompleted svg path {
+  fill: var(--status-color-success);
+}
+
+.TutorialInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.TutorialTitle {
+  font: var(--12-bold);
+  color: var(--text-color-medium-default);
+  margin: 0;
+}
+
+.TutorialDescription {
+  font: var(--11-regular);
+  color: var(--text-color-light);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.TutorialTime {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font: var(--11-regular);
+  color: var(--text-color-light);
+}
+
+.TutorialItemRight {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Dev Reset Button */
+.DevResetContainer {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color-divider-light);
+}

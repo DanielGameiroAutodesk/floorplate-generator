@@ -1,0 +1,29 @@
+{
+  "name": "checkly",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "pnpm checkly test",
+    "test-record": "npx checkly test --record",
+    "test-update": "pnpm checkly test --update-snapshots",
+    "test-local": "DEBUG=pw:webserver,pw:api ./with-checkly-env.sh pnpm playwright test",
+    "test-local-debug": "DEBUG=pw:webserver,pw:api ./with-checkly-env.sh pnpm playwright test --debug",
+    "test-local-3d-sketch": "FORMA_TOKEN=$(spacemaker-cli api login token) DEBUG=pw:webserver,pw:api pnpm playwright test --config=playwright.3ds.config.ts",
+    "test-local-3d-sketch-ci": "RANDPORT=1 CI=1 FORMA_TOKEN=$(spacemaker-cli api login token) DEBUG= pnpm playwright test --config=playwright.3ds.config.ts",
+    "deploy": "pnpm checkly deploy --force",
+    "gha-check-checkly": "pnpm typecheck && checkly test --tags ci-check --reporter=github --record",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@spacemakerai/deploy-targets": "^2.15.0",
+    "checkly": "^6.0.0",
+    "dotenv": "^16.4.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@spacemakerai/checkly-lib": "^1.6.1"
+  },
+  "packageManager": "pnpm@10.26.2"
+}

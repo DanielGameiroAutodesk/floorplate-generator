@@ -306,6 +306,56 @@ describe('L-shape integration', () => {
     }
   });
 
+  // === Inner core invariants (regression guards) ===
+
+  test('has exactly N inner cores matching inner intersection count', () => {
+    const analysis = analyzeFootprint(L_POLYGON);
+    const innerCount = analysis.intersections.filter(i => i.type === 'inner').length;
+    const innerFillUnits = fpd.units.filter(u => u.id.startsWith('inner-fill-'));
+    const innerCoreBlocks = fpd.cores.filter(c => c.id.startsWith('inner-core'));
+    expect(innerFillUnits.length + innerCoreBlocks.length).toBe(innerCount);
+  });
+
+  test('inner core polygons are non-self-intersecting', () => {
+    const innerFills = fpd.units.filter(u => u.id.startsWith('inner-fill-'));
+    for (const fill of innerFills) {
+      if (!fill.polyPoints || fill.polyPoints.length < 3) continue;
+      const pts = fill.polyPoints;
+      const n = pts.length;
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 2; j < n; j++) {
+          if (i === 0 && j === n - 1) continue;
+          const a1 = pts[i], a2 = pts[(i + 1) % n];
+          const b1 = pts[j], b2 = pts[(j + 1) % n];
+          const d1x = a2.x - a1.x, d1y = a2.y - a1.y;
+          const d2x = b2.x - b1.x, d2y = b2.y - b1.y;
+          const denom = d1x * d2y - d1y * d2x;
+          if (Math.abs(denom) < 1e-10) continue;
+          const t1 = ((b1.x - a1.x) * d2y - (b1.y - a1.y) * d2x) / denom;
+          const t2 = ((b1.x - a1.x) * d1y - (b1.y - a1.y) * d1x) / denom;
+          const hasCross = t1 > 0.01 && t1 < 0.99 && t2 > 0.01 && t2 < 0.99;
+          expect(hasCross).toBe(false);
+        }
+      }
+    }
+  });
+
+  test('inner core area is between 5 and 200 sqm', () => {
+    const innerFills = fpd.units.filter(u => u.id.startsWith('inner-fill-'));
+    for (const fill of innerFills) {
+      if (!fill.polyPoints || fill.polyPoints.length < 3) continue;
+      let area = 0;
+      const pts = fill.polyPoints;
+      for (let i = 0; i < pts.length; i++) {
+        const j = (i + 1) % pts.length;
+        area += pts[i].x * pts[j].y - pts[j].x * pts[i].y;
+      }
+      area = Math.abs(area / 2);
+      expect(area).toBeGreaterThan(5);
+      expect(area).toBeLessThan(200);
+    }
+  });
+
   // === L-specific topology invariants (regression guards) ===
 
   test('corridor segments are non-self-intersecting quads', () => {
@@ -541,9 +591,11 @@ describe('C-shape integration', () => {
 
 describe('snake full generation', () => {
   let fpd: FloorPlanData;
+  let innerIntersectionCount: number;
 
   beforeAll(() => {
     const analysis = analyzeFootprint(SNAKE_POLYGON);
+    innerIntersectionCount = analysis.intersections.filter(i => i.type === 'inner').length;
     fpd = generateMultiWingFloorplate(
       SNAKE_POLYGON, analysis, STANDARD_CONFIG, EGRESS_SPRINKLERED
     );
@@ -593,6 +645,54 @@ describe('snake full generation', () => {
     expect(isFinite(fpd.stats.gsf)).toBe(true);
     expect(fpd.stats.gsf).toBeGreaterThan(0);
     expect(isFinite(fpd.stats.nrsf)).toBe(true);
+  });
+
+  // === Inner core invariants for snake ===
+
+  test('has exactly N inner cores matching inner intersection count', () => {
+    const innerFillUnits = fpd.units.filter(u => u.id.startsWith('inner-fill-'));
+    const innerCoreBlocks = fpd.cores.filter(c => c.id.startsWith('inner-core'));
+    expect(innerFillUnits.length + innerCoreBlocks.length).toBe(innerIntersectionCount);
+  });
+
+  test('no inner core crosses the corridor centerline', () => {
+    const innerFills = fpd.units.filter(u => u.id.startsWith('inner-fill-'));
+    for (const fill of innerFills) {
+      if (!fill.polyPoints || fill.polyPoints.length < 3) continue;
+      const pts = fill.polyPoints;
+      const n = pts.length;
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 2; j < n; j++) {
+          if (i === 0 && j === n - 1) continue;
+          const a1 = pts[i], a2 = pts[(i + 1) % n];
+          const b1 = pts[j], b2 = pts[(j + 1) % n];
+          const d1x = a2.x - a1.x, d1y = a2.y - a1.y;
+          const d2x = b2.x - b1.x, d2y = b2.y - b1.y;
+          const denom = d1x * d2y - d1y * d2x;
+          if (Math.abs(denom) < 1e-10) continue;
+          const t1 = ((b1.x - a1.x) * d2y - (b1.y - a1.y) * d2x) / denom;
+          const t2 = ((b1.x - a1.x) * d1y - (b1.y - a1.y) * d1x) / denom;
+          const hasCross = t1 > 0.01 && t1 < 0.99 && t2 > 0.01 && t2 < 0.99;
+          expect(hasCross).toBe(false);
+        }
+      }
+    }
+  });
+
+  test('inner core area is between 5 and 200 sqm', () => {
+    const innerFills = fpd.units.filter(u => u.id.startsWith('inner-fill-'));
+    for (const fill of innerFills) {
+      if (!fill.polyPoints || fill.polyPoints.length < 3) continue;
+      let area = 0;
+      const pts = fill.polyPoints;
+      for (let i = 0; i < pts.length; i++) {
+        const j = (i + 1) % pts.length;
+        area += pts[i].x * pts[j].y - pts[j].x * pts[i].y;
+      }
+      area = Math.abs(area / 2);
+      expect(area).toBeGreaterThan(5);
+      expect(area).toBeLessThan(200);
+    }
   });
 });
 

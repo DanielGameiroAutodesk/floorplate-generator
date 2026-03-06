@@ -1,0 +1,39 @@
+name: Ops
+on:
+  pull_request:
+    paths:
+      - "checkly/**"
+      - "ops/**"
+      - ".github/workflows/ops.yml"
+      - "pnpm-lock.yaml"
+  push:
+    paths:
+      - "checkly/**"
+      - "ops/**"
+      - ".github/workflows/ops.yml"
+      - "pnpm-lock.yaml"
+  workflow_dispatch:
+    inputs:
+      force-deploy:
+        type: boolean
+        description: Deploy from any branch
+jobs:
+  ops:
+    uses: spacemakerai/github-workflows/.github/workflows/ops.yml@v2
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      pull-requests: write
+    secrets: inherit
+    with:
+      node-version: "22"
+      deploy: ${{ github.ref == 'refs/heads/master' || inputs.force-deploy || false }}
+      terraform-working-directory: ops
+      checkly-working-directory: checkly
+  notify-failure-slack:
+    needs: ops
+    if: failure() && github.ref == 'refs/heads/master'
+    uses: spacemakerai/github-workflows/.github/workflows/notify-failure-slack.yml@v2
+    permissions: {}
+    secrets: inherit

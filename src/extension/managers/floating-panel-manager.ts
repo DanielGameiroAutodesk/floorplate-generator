@@ -1,14 +1,33 @@
 /**
  * Floating Panel Manager
  *
- * Manages the floating preview panel that displays generated options.
- * Uses Forma's native floating panel API and MessagePort for communication.
+ * Manages the floating preview panel that displays generated floorplate options.
+ * Coordinates between the main extension panel and the Forma-hosted floating view
+ * via Forma's native floating panel API and MessagePort for bidirectional messaging.
  *
- * WHY floating panel instead of modal?
- * 1. Users can position it anywhere on screen while working
- * 2. It persists across selection changes (modals would close)
- * 3. Matches Forma's UX patterns for visualization panels
- * 4. MessagePort keeps it synchronized with main panel
+ * ## Primary Responsibilities
+ * - **Panel lifecycle**: Opens/closes the floating panel via `Forma.openFloatingPanel`
+ * - **Message port**: Establishes and maintains `MessagePort` for communication
+ * - **Event routing**: Handles OPTION_SELECTED, SAVE_FLOORPLATE, BAKE_FLOORPLATE from the panel
+ * - **State sync**: Sends UPDATE_OPTIONS when generation completes or panel reconnects
+ *
+ * ## Architecture & Event Flow
+ * - Main panel (this extension) holds `floatingPanelPort`; the panel iframe posts messages.
+ * - Protocol: `{ type: string, data?: object }`. Main panel handles: PANEL_READY, ACK, OPTION_SELECTED, SAVE_FLOORPLATE, BAKE_FLOORPLATE.
+ * - Forma does not notify on panel close; we infer loss via missing ACK and reset port.
+ *
+ * ## State Lifecycle
+ * 1. **Closed**: `floatingPanelPort === null`, `isPanelOpen === false`
+ * 2. **Open**: Port established, panel iframe loaded, PANEL_READY received
+ * 3. **Reconnect**: User reopens "Show Results"; we reset port and re-open to get fresh connection
+ *
+ * ## Storage Synchronization
+ * - No persistent storage; panel state is in-memory. Options are passed via postMessage.
+ * - Saved floorplates are handled by storage-service; this module only notifies success/error.
+ *
+ * ## Side Effects
+ * - Opens Forma floating panel (native UI)
+ * - Invokes callbacks for option selection, save, bake (set by main.ts)
  */
 
 import { Forma } from 'forma-embedded-view-sdk/auto';
@@ -38,7 +57,9 @@ let storiesRef: number = 1;
 // ============================================================================
 
 /**
- * Set callbacks for panel events.
+ * Register callbacks invoked when the panel triggers option selection, save, or bake.
+ *
+ * @param callbacks - Object with onOptionSelected, onSaveRequest, onBakeRequest.
  */
 export function setPanelCallbacks(callbacks: {
   onOptionSelected: (index: number) => Promise<void>;
@@ -51,7 +72,11 @@ export function setPanelCallbacks(callbacks: {
 }
 
 /**
- * Update the reference to generated options (called after generation).
+ * Update the cached reference to generated options. Used after generation or when loading saved floorplates.
+ *
+ * @param options - Layout options (balanced, mix, efficiency).
+ * @param selectedIndex - Index of the currently selected option.
+ * @param stories - Number of stories for total-building metrics (defaults to 1).
  */
 export function setGeneratedOptions(options: LayoutOption[], selectedIndex: number, stories?: number): void {
   generatedOptionsRef = options;
@@ -78,12 +103,10 @@ function getExtensionBaseUrl(): string {
 }
 
 /**
- * Open the floorplate floating panel.
+ * Open the floorplate floating panel and establish a message port for communication.
  *
- * WHY we use Forma.openFloatingPanel:
- * - Native Forma UI that users expect
- * - Handles positioning, resizing, minimizing
- * - Integrates with Forma's panel management
+ * If the panel is already open (e.g. user closed and reopened elsewhere), we fall through
+ * to create a new port. Forma does not notify on external close, so we reset port on ACK timeout.
  */
 export async function openFloorplatePanel(): Promise<void> {
   if (floatingPanelPort) return;
@@ -168,11 +191,14 @@ async function handlePanelMessage(event: MessageEvent): Promise<void> {
 // ============================================================================
 
 /**
- * Send all generated options to the floating panel for display.
+ * Send generated options to the floating panel for display.
  *
- * @param options - Array of layout options (typically 3: balanced, mix, efficiency)
- * @param selectedIndex - Index of currently selected option
- * @param stories - Number of stories from UI state
+ * Triggers an ACK timeout; if the panel does not acknowledge within 1 second,
+ * we reset the port and reopen to re-establish connection.
+ *
+ * @param options - Array of layout options (typically 3: balanced, mix, efficiency).
+ * @param selectedIndex - Index of currently selected option.
+ * @param stories - Number of stories for metrics (defaults to 1).
  */
 export function sendOptionsToPanel(options: LayoutOption[], selectedIndex: number, stories?: number): void {
   if (floatingPanelPort) {
@@ -185,6 +211,7 @@ export function sendOptionsToPanel(options: LayoutOption[], selectedIndex: numbe
       const sentOptions = options;
       const sentIndex = selectedIndex;
       if (pendingAckTimer) clearTimeout(pendingAckTimer);
+      // 1000ms: if panel doesn't ACK, assume port dead (e.g. user closed panel) and reconnect
       pendingAckTimer = setTimeout(async () => {
         resetPanelState();
         pendingAckTimer = null;
@@ -202,7 +229,10 @@ export function sendOptionsToPanel(options: LayoutOption[], selectedIndex: numbe
 }
 
 /**
- * Notify panel of successful save.
+ * Notify the floating panel that a save completed successfully.
+ *
+ * @param id - Storage ID of the saved floorplate.
+ * @param name - Display name of the saved floorplate.
  */
 export function notifySaveSuccess(id: string, name: string): void {
   if (floatingPanelPort) {
@@ -214,7 +244,9 @@ export function notifySaveSuccess(id: string, name: string): void {
 }
 
 /**
- * Notify panel of save error.
+ * Notify the floating panel that a save failed.
+ *
+ * @param error - Error message to display.
  */
 export function notifySaveError(error: string): void {
   if (floatingPanelPort) {
@@ -226,7 +258,9 @@ export function notifySaveError(error: string): void {
 }
 
 /**
- * Notify panel of successful bake.
+ * Notify the floating panel that a bake completed successfully.
+ *
+ * @param urn - Forma URN of the baked building.
  */
 export function notifyBakeSuccess(urn: string): void {
   if (floatingPanelPort) {
@@ -238,7 +272,9 @@ export function notifyBakeSuccess(urn: string): void {
 }
 
 /**
- * Notify panel of bake error.
+ * Notify the floating panel that a bake failed.
+ *
+ * @param error - Error message to display.
  */
 export function notifyBakeError(error: string): void {
   if (floatingPanelPort) {
@@ -254,7 +290,9 @@ export function notifyBakeError(error: string): void {
 // ============================================================================
 
 /**
- * Check if the floating panel is currently open.
+ * Check whether the floating panel is currently open and connected.
+ *
+ * @returns True if we have an active message port.
  */
 export function isPanelCurrentlyOpen(): boolean {
   return isPanelOpen;
@@ -262,7 +300,9 @@ export function isPanelCurrentlyOpen(): boolean {
 
 /**
  * Reset panel state when the panel is closed externally (e.g. user clicked X).
- * Forma does not notify us on close, so we must reset before reopening.
+ *
+ * Forma does not notify on panel close; we call this before reopen to ensure
+ * a fresh port is created. Also clears the pending ACK timer.
  */
 export function resetPanelState(): void {
   isPanelOpen = false;
@@ -271,12 +311,12 @@ export function resetPanelState(): void {
 }
 
 /**
- * Handle option selection from the floating panel.
- * Renders the selected option to Forma.
+ * Handle option selection from the floating panel. Renders the selected option to Forma.
  *
- * @param index - Index of selected option
- * @param options - Array of available options
- * @returns The newly selected option index
+ * @param index - Index of selected option.
+ * @param options - Array of available options.
+ * @param currentIndex - Currently selected index (for no-op check).
+ * @returns Object with selectedIndex and floorplan; floorplan null if index invalid.
  */
 export async function handleOptionSelected(
   index: number,

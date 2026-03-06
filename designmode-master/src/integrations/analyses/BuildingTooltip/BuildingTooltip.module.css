@@ -1,0 +1,19 @@
+.TooltipContainer {
+  z-index: var(--z-primary-navigation) + 30;
+  position: fixed;
+}
+
+.Tooltip {
+  position: relative;
+  height: 24px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #535353;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 4px 12px;
+  font: var(--12-bold);
+}

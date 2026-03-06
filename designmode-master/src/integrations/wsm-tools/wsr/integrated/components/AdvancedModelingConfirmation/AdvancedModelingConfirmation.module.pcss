@@ -1,0 +1,43 @@
+.Container {
+  box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.1);
+  background: rgb(83, 83, 83);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  gap: 8px;
+  padding: 5px 10px;
+  position: absolute;
+
+  > :nth-child(even)::after {
+    content: "";
+    width: 1px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.ToolName {
+  color: rgb(245, 245, 245);
+  font-weight: 700;
+  font-size: 12px;
+  margin-left: 10px;
+  padding: 0 17px;
+  user-select: none;
+  border-left: 1px solid rgb(231, 236, 242);
+}
+
+.ButtonWrapperWithHover {
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

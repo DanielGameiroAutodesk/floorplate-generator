@@ -1,0 +1,81 @@
+.Modal {
+  border-radius: 8px;
+  border: none;
+  box-shadow: var(--effect-shadow-high);
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  min-height: 510px;
+  overflow: hidden;
+  padding: 48px;
+  box-sizing: border-box;
+  position: relative;
+  width: 400px;
+
+  &::backdrop {
+    background: rgba(34, 34, 34, 0.25);
+  }
+}
+
+.Header {
+  font: var(--24-bold);
+  margin: 0 0 8px 0;
+}
+
+.Body {
+  font: var(--12-regular);
+  color: var(--text-primary, #3c3c3c);
+  line-height: 20px;
+  margin: 0 0 24px 0;
+}
+
+.Content {
+  margin-bottom: 24px;
+}
+
+.SuggestedAction {
+  padding: 8px;
+  display: flex;
+  gap: 16px;
+  font: var(--12-regular);
+  color: var(--text-primary, #3c3c3c);
+  line-height: 20px;
+
+  & svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+}
+
+.SuggestedActionHeader {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.IconContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Footer {
+  display: flex;
+  justify-content: right;
+  gap: 8px;
+}
+
+.CloseButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  outline: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}

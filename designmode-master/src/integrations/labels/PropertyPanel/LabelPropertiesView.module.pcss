@@ -1,0 +1,45 @@
+.Picker {
+  border: 1px solid var(--border-color-divider-heavy);
+  border-radius: 2px;
+  display: flex;
+  height: 16px;
+  width: 16px;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  & > input {
+    visibility: hidden;
+    flex: 0;
+  }
+}
+
+.Row {
+  justify-self: stretch;
+  display: flex;
+  flex: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ColorCode {
+  font: var(--12-regular);
+}
+
+.ColorValue {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.HeaderWithAddDeleteButton {
+  font-family: Artifakt Element;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

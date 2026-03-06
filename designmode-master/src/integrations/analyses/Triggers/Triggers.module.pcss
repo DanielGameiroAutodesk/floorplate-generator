@@ -1,0 +1,37 @@
+.Panel {
+  padding: 0;
+  min-height: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.Panel.SeparatorPanel {
+  border-bottom: 1px solid var(--border-color-divider-light);
+}
+
+.TriggerError {
+  border-left: 2px solid #dd2222;
+  padding-left: 16px;
+  margin-bottom: 10px;
+  margin-left: -16px;
+}
+
+.TriggerError .Header {
+  font: var(--11-medium);
+  padding-bottom: 12px;
+}
+
+.TriggerError .Content {
+  font: var(--11-regular);
+  color: var(--text-color-light);
+}
+
+.ColoredBullet {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}

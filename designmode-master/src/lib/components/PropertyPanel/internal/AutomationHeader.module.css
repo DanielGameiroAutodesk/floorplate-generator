@@ -1,0 +1,20 @@
+.Container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  gap: 4px;
+}
+
+.Title {
+  font: var(--12-bold);
+}
+
+.AutomationLabel {
+  font: var(--12-bold);
+  color: var(--text-color-light);
+}
+
+.Padding {
+  flex-grow: 1;
+}

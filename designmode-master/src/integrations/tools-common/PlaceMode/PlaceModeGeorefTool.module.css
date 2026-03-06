@@ -1,0 +1,52 @@
+.BorderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+
+  font: var(--12-medium);
+}
+
+.Count {
+  --size: 20px;
+  height: var(--size);
+  min-width: var(--size);
+  border-radius: calc(var(--size) / 2);
+
+  padding: 0 3px;
+
+  background-color: #ffffff;
+  color: black;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Padding {
+  width: 100px;
+}
+
+.Tooltip {
+  background-color: #0696d7;
+  color: white;
+  border-radius: 4px;
+
+  z-index: var(--z-secondary-navigation);
+  position: fixed;
+  box-shadow: 4px 2px 13px 0 rgba(166, 166, 166, 0.4);
+  pointer-events: none;
+
+  padding: 4px 10px;
+}
+
+.WhiteButton::part(button) {
+  --background-color-accent: white;
+  --button-solid-label-fontcolor: var(--text-color-medium-default);
+  --halo-pressed: rgba(0, 0, 0, 0.25);
+  padding-inline: 20px;
+}
+
+.CancelButton::part(button) {
+  --button-flat-label-fontcolor: white;
+}

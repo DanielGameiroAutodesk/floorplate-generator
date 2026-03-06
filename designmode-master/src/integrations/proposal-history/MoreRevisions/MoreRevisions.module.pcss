@@ -1,0 +1,40 @@
+.MoreRevisions {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.MoreRevisionsOpen {
+  cursor: pointer;
+}
+
+.MoreHeader {
+  display: flex;
+  padding: 9px;
+  justify-content: flex-start;
+  align-items: center;
+
+  border-left: 1px solid var(--border-color-medium-default);
+  font: var(--text-color-light);
+
+  position: relative;
+  z-index: 0;
+
+  /* hover bg */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -18px;
+    right: -8px;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  &:hover::before {
+    background: var(--background-color-ghost-high-hover);
+  }
+}
+
+.MoreText {
+  padding-left: 3px;
+}

@@ -1,0 +1,16 @@
+name: Sync to localization repo
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    uses: spacemakerai/localization/.github/workflows/sync-app-to-localization-repo.yml@workflows-v1
+    permissions:
+      contents: read
+    secrets: inherit
+    with:
+      repo-name: ${{ github.event.repository.name }}
+      translations-path: src/i18n/translations

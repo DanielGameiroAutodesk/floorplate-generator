@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "Compare",
+    "headerText": "Select proposals",
+    "maxProposalsWarning": "You can only compare up to {max} proposals at a time",
+    "minProposalsWarning": "Select {min} or more to compare"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "Are you sure you want to delete this proposal?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "Delete",
+    "duplicateMenuItem": "Duplicate",
+    "exportAsIfcBetaMenuItem": "Export as IFC (Beta)",
+    "exportAsIfcToDocs": "Export as IFC to Docs (Beta)",
+    "exportAsObjMenuItem": "Export as OBJ",
+    "exportSubmenu": "Export...",
+    "renameMenuItem": "Rename",
+    "revitDownloadAddinMenuItem": "Download Revit add-in",
+    "revitSendToBetaMenuItem": "Send to Revit add-in (Beta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "Show proposal history"
+  },
+  "createProposal": {
+    "buttonTooltip": "Add new proposal"
+  },
+  "error": {
+    "couldNotLoadProposals": "Couldn't load proposals. Please try again.",
+    "retryButton": "Retry"
+  },
+  "exportModal": {
+    "exportingMessage": "Exporting ...",
+    "exportPrimaryButtonTitle": "Export",
+    "title": "Export Forma Proposal to Docs"
+  },
+  "filter": {
+    "buttonTooltip": "Filter",
+    "closeButtonTooltip": "Close",
+    "emptyBasesMessage": "The project does not have any bases. Go to the Layers section to create one.",
+    "sortByHeader": "Sort by",
+    "title": "Filter"
+  },
+  "proposalItem": {
+    "baseTooltip": "Base {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "Create another proposal to compare",
+    "headerText": "Proposals",
+    "selectProposalsToCompare": "Select proposals to compare"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A-Z",
+    "alphabeticalDescending": "Z-A",
+    "lastEdited": "Last edited"
+  },
+  "toast": {
+    "exportAccessDeniedText": "You do not have permission to access this folder or file. Please contact your administrator for assistance.",
+    "exportAccessDeniedTitle": "Access denied",
+    "exportDownloaded": "Export downloaded",
+    "exportErrorText": "We were unable to export the proposal. Please try again. If the issue persists, contact support for assistance.",
+    "exportErrorTitle": "Failed to export to Docs",
+    "exportGenericError": "Failed to export proposal",
+    "exportInProgress": "Exporting proposal ...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "Your project proposal has been exported to Autodesk Docs. You can now use it to link your Forma data into your Revit project.",
+    "exportSuccessTitle": "Successfully exported to Docs",
+    "exportTimeoutText": "The system timed out while generating an export to Docs. This can occur if the project is very large and/or contains very complex geometry.",
+    "exportTimeoutTitle": "Failed to export to Docs",
+    "exportTooLargeError": "Export was unsuccessful. This may be because the proposal is too large for what is currently supported to export.",
+    "ifcExportFailed": "Export failed. The error is reported.",
+    "ifcExportStarted": "Your IFC file export has started - it will be downloaded automatically when complete.",
+    "proposalRenamedWarning": "Proposal name already exists, renamed to {name}",
+    "revitSendFailed": "Failed to send the proposal to Revit.",
+    "revitSendSuccess": "Proposal has been sent to Revit",
+    "sessionExpired": "Your session has expired. Please reload the page."
+  }
+}

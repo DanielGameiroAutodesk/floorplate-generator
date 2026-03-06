@@ -1,0 +1,186 @@
+.Revision {
+  font: inherit;
+  text-decoration: none;
+  color: inherit;
+
+  border-left: 1px solid var(--border-color-medium-default);
+  padding: 5px 10px;
+  position: relative;
+  min-width: 45px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  /* hover bg */
+  &::before {
+    display: block;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -18px;
+    right: -8px;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    background: var(--background-color-ghost-high-hover);
+  }
+
+  /* dot/circle in timeline */
+  &::after {
+    content: "";
+    border-radius: 100%;
+    width: 5px;
+    height: 5px;
+    display: block;
+    position: absolute;
+    top: 18px;
+    background: var(--icon-color-medium);
+    margin-left: -13px;
+  }
+
+  &:hover .MenuButton,
+  &:hover .PinButton {
+    opacity: 1;
+  }
+
+  &.Last,
+  &.First {
+    border-left-color: transparent;
+  }
+}
+
+.SelectedRevision {
+  /* blue selection box/outline */
+  &::before {
+    background: var(--background-on-focus);
+    border: 1px solid var(--border-color-selected);
+  }
+
+  &:hover::before {
+    background: var(--background-on-focus);
+  }
+
+  /* dot */
+  &::after {
+    background: var(--text-color-accent);
+  }
+
+  /* solid line */
+  & .TileContent::before {
+    display: block;
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    border: 1px solid transparent;
+    border-left-color: var(--border-color-medium-default);
+  }
+}
+
+.CurrentRevision {
+  border: 1px solid transparent;
+}
+
+.Avatar {
+  display: inline-block;
+  margin-right: 8px;
+  line-height: 0;
+}
+
+.VersionName {
+  padding: 6px 0;
+}
+
+.ContentRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  line-height: 0;
+  margin: 3px 0;
+
+  & > *:not(:last-child) {
+    margin-right: 3px;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.Analyses {
+  margin-top: 3px;
+  justify-content: flex-start;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 3px 0 6px 0;
+}
+
+.TileContent {
+  padding-left: 6px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &.First::before {
+    display: block;
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 21px;
+    bottom: 0;
+    border: 1px solid transparent;
+    border-left-color: var(--border-color-medium-default);
+  }
+
+  &.Last::before {
+    display: block;
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0px;
+    border: 1px solid transparent;
+    border-left-color: var(--border-color-medium-default);
+    height: 16px;
+  }
+}
+
+.TileTitle {
+  font: var(--11-medium);
+  z-index: 1;
+}
+
+.MenuButton {
+  opacity: 0;
+}
+
+.ButtonsWrapper {
+  /* To align with arrow*/
+  margin-right: -8px;
+}
+
+.PinButton {
+  opacity: 0;
+}
+
+.PinnedButton {
+  opacity: 1;
+}
+
+/* Pin Button  */
+.PinButton {
+  svg {
+    color: var(--icon-color-medium);
+  }
+}

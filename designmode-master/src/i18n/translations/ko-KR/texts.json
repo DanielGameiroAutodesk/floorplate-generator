@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "설계를 시작할 준비",
+    "body": "<bold>계속</bold>을 선택하면 두 가지 설정 단계가 자동으로 실행됩니다. 사용자가 별도로 할 작업은 없습니다. 단계가 완료되면 Forma Site Design에서 설계를 시작할 준비가 완료됩니다.",
+    "contextual": {
+      "header": "사이트별 상황 데이터 로드",
+      "body": "지형 및 주변 건물 등 사이트에 필요한 상황 데이터를 무료로 로드합니다."
+    },
+    "sunAnalysis": {
+      "header": "사이트 상황에 대한 인사이트 얻기",
+      "body": "설계 결정에 도움이 되도록 사이트 및 주변 환경에 대한 일조시간 분석을 실시하겠습니다."
+    },
+    "continueButton": "계속",
+    "sunAnalysisCoachmark": {
+      "header": "일조시간 분석",
+      "body": "사이트에 대한 일조시간 분석이 자동으로 시작되었습니다.{br}{br}표시기가 녹색이 되거나 캔버스 상단에 배너가 표시되면 결과를 검토할 수 있습니다."
+    },
+    "finalModal": {
+      "title": "이제 사이트가 설정되었습니다.",
+      "subTitle": "계속해서 아래 권장 단계 중 하나를 수행합니다.",
+      "suggestedAction1": {
+        "header": "건물 그리기",
+        "body": "도구막대에서 건물 도구 중 하나를 활성화합니다."
+      },
+      "suggestedAction2": {
+        "header": "모델 가져오기",
+        "body": "도구막대에서 가져오기 아이콘을 클릭하고 제안된 단계를 따릅니다."
+      },
+      "suggestedAction3": {
+        "header": "분석 비교",
+        "body": "두 번째 분석을 실행하고 화면 왼쪽 상단에서 비교 모드를 엽니다."
+      },
+      "showMeHow": "추가 옵션 표시",
+      "finalButton": "확인했습니다."
+    },
+    "sunAnalysisTriggerError": "태양 분석을 트리거하지 못했습니다."
+  },
+  "alignment": {
+    "center": "가운데 정렬",
+    "left": "왼쪽 정렬",
+    "right": "오른쪽 정렬"
+  },
+  "analysis": {
+    "alertsLabel": "알림",
+    "analyzeTitle": "분석",
+    "analysisParameters": "분석 매개변수",
+    "areaRadius": "영역 반지름",
+    "areaTitle": "분석 영역",
+    "customCircle": "맞춤형 원",
+    "daylightAnalysisIllustrationAlt": "일조 분석 그림",
+    "failedToOrder": "분석을 주문하지 못함: {error}",
+    "learnMore": "자세히 알아보기",
+    "microclimateAreaRadius": "미기후 영역 반지름",
+    "noisePredictionUnavailable": "소음 예측을 사용할 수 없음",
+    "radiusLabel": "반지름",
+    "selectAreaToRunAnalysis": "분석을 실행할 사이트 제한 또는 영역 선택",
+    "disabledTooltips": {
+      "addRoadsOrRails": "분석을 실행할 교통 데이터가 있는 도로 및/또는 철도 추가",
+      "analysisAreaOutsideMap": "분석 영역이 맵 영역을 벗어남",
+      "concurrentQuotaReached": "동시 풍력 분석 제한에 도달함",
+      "dailyQuotaReached": "일일 풍력 분석 할당량에 도달함",
+      "geometryAlertsDetected": "형상 문제가 탐지됨",
+      "geometryTooComplex": "형상이 너무 복잡함",
+      "invalidParameters": "잘못된 매개변수",
+      "loadingData": "데이터 로드 중",
+      "notAvailable": "사용할 수 없음",
+      "notAbleAsViewer": "분석을 뷰어로 실행할 수 없음",
+      "pleaseWait": "잠시 기다려 주십시오…",
+      "savingInProgress": "저장 진행 중...",
+      "selectSiteLimitOrZone": "분석을 실행할 사이트 제한 또는 영역 선택"
+    },
+    "emptyStateZoneExplanation": "기본적으로 분석은 추가한 건물 및 기타 객체에 대해 실행됩니다. 특정 영역에 대한 전체 분석 결과를 얻으려면 사이트 제한 또는 구역을 추가하십시오.",
+    "entireModel": "전체 모델",
+    "missingTrafficData": {
+      "description": "실제 소음 조건을 예측하려면 교통 데이터가 있는 도로 또는 철도를 추가하십시오.",
+      "startGuideButton": "시작 가이드",
+      "title": "교통 데이터 누락"
+    },
+    "noiseAreaRadius": "소음 영역 반지름",
+    "properties": {
+      "radiusLabel": "반지름"
+    },
+    "seeResultButton": "분석 결과 보기",
+    "seeResultsButton": "분석 결과 보기",
+    "selectionTitle": "분석 영역 선택",
+    "selectAllAreasButton": "모든 영역 선택",
+    "deselectAllAreasButton": "모든 영역 선택 취소",
+    "skyComponent": {
+      "potentialDescription": "<strong>일조 잠재량 분석</strong>에서는 수직 하늘 구성요소 점수를 사용하여 일조가 부족한 정면 부분을 식별합니다. 분석할 영역을 선택하십시오."
+    },
+    "sun": {
+      "removeDateButton": "날짜 제거"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "완전 지원 건물",
+      "buildingsPartialSupport": "부분 지원 건물/기타",
+      "iconAlt": "분석 지원 수준",
+      "title": "분석 지원"
+    },
+    "windAreaRadius": "바람 영역 반지름",
+    "windRoseUnavailable": {
+      "description": "풍배도 데이터 공급자에 문제가 발생했습니다. 계속 미기후 패턴을 분석할 수 있지만 바람 조건이 발생할 가능성을 검토하기 위한 과거 데이터가 없습니다. 데이터를 복원하기 위해 작업 중입니다.",
+      "title": "풍배도를 현재 사용할 수 없음",
+      "windDescription": "풍배도 데이터 공급자에 문제가 발생했습니다. 계속 일반적인 바람 패턴을 분석하고 바람 속도를 수동으로 조정할 수는 있습니다. 신속 풍력 분석은 사용할 수 없습니다. 데이터를 복원하기 위해 작업 중입니다."
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "이 구성의 분석이 이미 존재합니다. ",
+    "concurrentAnalysesReached": "동시 분석 제한에 도달했습니다.",
+    "concurrentNoiseAnalysesReached": "동시 소음 분석 제한에 도달했습니다.",
+    "dailyNoiseQuotaReached": "24시간 이내 최대 소음 분석 횟수 도달",
+    "dailyQuotaReached": "일일 분석 할당량에 도달했습니다.",
+    "nothingToAnalyze": "분석할 항목이 없음",
+    "somethingWentWrong": "문제가 발생했습니다."
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "상세 풍력 분석을 사용할 수 없습니다. 나중에 분석을 실행해 보십시오.",
+      "rapidWindUnavailable": "신속 풍력 분석을 사용할 수 없습니다. 나중에 분석을 실행해 보십시오.",
+      "rapidWindUnavailableToast": "신속 풍력 분석을 사용할 수 없습니다. 당사 팀에 알림이 전송되었습니다. 나중에 분석을 실행해 보십시오."
+    },
+    "types": {
+      "microclimate": {
+        "description": "Autodesk의 미기후 분석은 태양, 바람 및 일조 조건을 고려하여 사이트에서 감지된 온도를 계산합니다. 보다 정확한 결과를 얻으려면 풍력 분석이 완료될 때까지 기다리는 것이 좋습니다.",
+        "link": "https://help.autodeskforma.com/ko/articles/6932531",
+        "name": "미기후",
+        "text": "미기후 분석"
+      },
+      "noise": {
+        "description": "신속 소음 분석으로 실시간 예측을 통해 설계가 환경 소음 조건에 미치는 영향을 파악할 수 있습니다. 소음 조건을 더욱 정확하게 시뮬레이션하고 건물 정면의 조건을 분석하려면 상세 소음 분석을 실행하십시오.",
+        "link": "https://help.autodeskforma.com/ko/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "소음",
+        "text": "소음 분석"
+      },
+      "sky-component": {
+        "description": "수직 하늘 구성요소 점수를 사용하여 일조가 부족한 건물 정면의 부분을 평가합니다. 분석을 실행하려면 사이트 한계를 추가해야 합니다.",
+        "link": "https://help.autodeskforma.com/ko/articles/6951302",
+        "name": "일조 잠재량",
+        "text": "일조 잠재량 분석"
+      },
+      "solar-panel": {
+        "name": "태양 에너지"
+      },
+      "sun": {
+        "description": "사이트와 건물이 태양광을 받을 시간을 평가합니다. 분석을 실행하려면 사이트 한계를 추가하고 날짜를 선택해야 합니다.",
+        "link": "https://help.autodeskforma.com/ko/articles/6951253",
+        "name": "일조시간",
+        "text": "일조시간 분석"
+      },
+      "wind": {
+        "description": "신속 풍력 분석으로 실시간 예측을 통해 설계 변경이 바람 조건에 미치는 영향을 파악할 수 있습니다. 다양한 바람 방향 및 속도를 보다 정확하게 시뮬레이션하려면 상세 바람 흐름 및 바람 쾌적성 분석을 실행하십시오.",
+        "link": "https://help.autodeskforma.com/ko/articles/6981020",
+        "name": "바람",
+        "text": "풍력 분석"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "노드 추가",
+      "buildingWidth": "건물 폭",
+      "cityBlocks": "도시 블록",
+      "editGridOrientationButton": "그리드 방향 편집",
+      "explanation": "사이트의 매스작업 잠재력을 탐색하는 데 도움이 될 수 있는 도구를 개발하기 위해 지속적으로 노력 중입니다. 포럼에서 개발 상황을 확인하십시오.",
+      "floors": "층",
+      "headerTitle": "탐색",
+      "iterativeExplanation": "사이트 및 건물 배치를 신속하게 생성하고 탐색할 수 있는 설계 자동화 도구입니다.",
+      "layoutTitle": "배치",
+      "layouts": "배치",
+      "linearBuildings": "선형 건물",
+      "mixed": "혼합",
+      "name": "탐색",
+      "siteAutomation": "사이트 자동화",
+      "storyHeight": "층 높이",
+      "towerBuildings": "타워 건물",
+      "towerWidth": "타워 폭"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "새 베이스 추가",
+    "changeIndicatorLabel": "변경 표시기",
+    "editBaseButton": "베이스 편집",
+    "editBaseDoneButton": "완료",
+    "editBaseRightMenuMessage": "베이스를 편집하여 변경",
+    "editBaseRightMenuMixedSelectionMessage": "선택 항목에 베이스 객체가 포함되어 있습니다. 혼합 선택에서는 변경할 수 없습니다.",
+    "editing": {
+      "changesWillAffect": "변경사항이 영향을 미침",
+      "proposals": "설계안",
+      "title": "편집 중"
+    },
+    "errors": {
+      "deleteFailed": "베이스를 삭제하지 못했습니다.",
+      "duplicateFailed": "베이스를 복제하지 못했습니다.",
+      "fetchFailed": "베이스를 가져오지 못했습니다.",
+      "renameIndicatorFailed": "베이스 표시기의 이름을 바꾸지 못했습니다.",
+      "renameFailed": "베이스의 이름을 바꾸지 못했습니다.",
+      "switchFailed": "베이스를 전환하지 못했습니다."
+    },
+    "noBaseLayersText": "설계안에서 재사용하려는 요소를 베이스에 추가할 수 있습니다.",
+    "strategy": {
+      "description": "해당 설계안에서 오래된 베이스를 사용합니다. 최신 버전의 베이스로 업데이트할지 또는 이전 버전의 베이스를 복제할지 선택해야 합니다.",
+      "duplicateOld": "베이스의 이전 버전 복제",
+      "header": "베이스가 오래되었습니다.",
+      "useLatest": "최신 버전의 베이스 사용"
+    },
+    "swapBaseButton": "베이스 교체",
+    "swapButton": "교환",
+    "untitledBaseLabel": "제목 없는 베이스"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "일반 선 그리기",
+        "name": "선",
+        "tooltip": "일반 선을 작성하여 설계 의도를 전달합니다. 분석에서는 고려되지 않습니다."
+      },
+      "surface": {
+        "draw": "일반 표면 그리기",
+        "name": "표면",
+        "tooltip": "일반 표면을 작성하여 설계 의도를 전달합니다. 분석에서는 고려되지 않습니다."
+      },
+      "title": "일반",
+      "volume": {
+        "draw": "일반 체적 그리기",
+        "name": "체적",
+        "tooltip": "일반 체적은 분석되지만, 해당 면적은 면적 지표에서 고려되지 않습니다."
+      }
+    }
+  },
+  "building": {
+    "addFloor": "층 추가",
+    "addFloorsAction": "층 추가",
+    "buildingColorsLabel": "건물 색상",
+    "buildingDesignButton": "Building Design에서 열기",
+    "buildingDesignDescription": "이 건물은 Building Design에서 설계되었습니다. 편집하려면 Building Design을 여십시오.",
+    "buildingDesignGeometry": "Building Design 형상",
+    "buildingsTitle": "건물",
+    "buildingWidthLabel": "건물 폭",
+    "divisionWidth": "구획 폭",
+    "roadWidthLabel": "도로 폭",
+    "towerBlockWidthLabel": "타워 블록 폭",
+    "typesTitle": "유형",
+    "upgradingFor3DSketchBuilding": "내재 탄소를 위해 3D 스케치 건물 업그레이드 중",
+    "variationsTitle": "변형",
+    "errors": {
+      "failedToLoadFunctions": "사용자 지정 건물 기능을 로드하지 못했습니다.",
+      "failedToLoadSettings": "설정을 로드하지 못했습니다."
+    },
+    "floorPlans": {
+      "addToLibraryButton": "라이브러리에 추가",
+      "addToLibraryTooltip": "라이브러리에 추가",
+      "emptyFloors": "빈 층",
+      "parking": "주차",
+      "popupTitle": "평면도",
+      "title": "평면도",
+      "cannotDrawCornerDescription": "아직 코너 평면도를 그릴 수 없습니다.",
+      "cannotDrawSplitDescription": "아직 분할 평면도를 그릴 수 없습니다.",
+      "finishDrawingTooltip": "그리기를 완료하여 평면도 추가",
+      "mixedSelectionDescription": "혼합 평면도가 선택됨",
+      "noLibraryDescription": "라이브러리에 이 외부 쉐이프를 가진 평면도가 없습니다.",
+      "noSelectionDescription": "선택 항목에 평면도가 없습니다.",
+      "rightClickToAddDescription": "설계안 중 하나에서 층을 마우스 오른쪽 버튼으로 클릭하여 라이브러리에 추가합니다.",
+      "selectSectionsDescription": "비어 있거나 평면도가 있는 구획을 선택하십시오."
+    },
+    "floors": {
+      "seeAllButton": "모든 층 보기"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "새 항목 추가",
+      "addSectionCutButton": "단면 절단 추가",
+      "apartmentBuildingStories": "아파트 건물 층",
+      "apartmentBuildingStoryHeight": "아파트 건물 층 높이",
+      "apartmentBuildingWidth": "아파트 건물 폭",
+      "circulationTitle": "동선",
+      "headerTitle": "선 건물",
+      "outdatedLabel": "오래됨",
+      "targetSectionLength": "목표 구획 길이",
+      "circulation": {
+        "sectionCountText": "구획 수: {count}",
+        "widthLabel": "복도 폭",
+        "widthText": "폭: {width}"
+      },
+      "divisionWidthLabel": "구획 폭",
+      "releaseToBasicAnimationAlt": "기본 애니메이션으로 전환",
+      "releaseToBasicExplanation": "선 자동화를 해제하면 개별 층에 기능이나 주차장을 추가할 수 있는 기본 건물이 작성됩니다. 해제 후에는 라인 자동화로 복귀할 수 없습니다.",
+      "releaseToFloorPlanAction": "평면도로 전환",
+      "releaseToFloorPlanAnimationAlt": "평면도 애니메이션으로 전환",
+      "releaseToFloorPlanExplanation": "동선 자동화를 해제하면 배치를 수동으로 설계할 수 있는 평면도가 작성됩니다. 해제 후에는 동선 자동화로 복귀할 수 없습니다.",
+      "towerWidthLabel": "타워 블록 폭"
+    },
+    "properties": {
+      "lengthLabel": "길이",
+      "numberOfFloorsLabel": "층수",
+      "numberOfStoriesLabel": "SiteStudy 층수",
+      "stories": "층",
+      "storyHeight": "층 높이",
+      "storyHeightLabel": "층 높이",
+      "widthLabel": "폭"
+    },
+    "toolbar": {
+      "title": "건물"
+    },
+    "tooltips": {
+      "addBuildingsButton": "건물 추가",
+      "clampToTerrainButton": "건물을 지형에 고정",
+      "numberOfFloorsLabel": "층수",
+      "parkingEditDescription": "이제 평면도 편집기에서 주차장 편집이 수행됩니다.",
+      "releaseToBasicButton": "기본 건물로 전환",
+      "releaseToZonesButton": "구역으로 전환",
+      "removeBuildingsButton": "건물 제거",
+      "storyHeightLabel": "층 높이",
+      "swapFloorPlansButton": "평면도 교체",
+      "targetSectionLengthLabel": "목표 구획 길이",
+      "towerWidthLabel": "타워 폭",
+      "widthLabel": "건물 폭"
+    },
+    "types": {
+      "basic": {
+        "draw": "기본 건물 그리기",
+        "name": "기본 건물",
+        "tooltip": "어떤 쉐이프의 층이 있는 건물이든 정밀하게 제어하여 그립니다. 면적 지표에서 건물 정보를 확인할 수 있습니다."
+      },
+      "line": {
+        "draw": "선 건물 그리기",
+        "name": "선 건물",
+        "tooltip": "선을 기준으로 건물 구조를 그립니다. 구획 및 층과 같은 매개변수를 조정합니다. 면적 지표에서 건물 통계를 확인할 수 있습니다."
+      }
+    }
+  },
+  "camera": {
+    "compass": "북쪽을 위로 표시",
+    "lookAt": {
+      "title": "보기",
+      "tooltip": "면 위로 마우스를 이동하여 카메라를 정렬합니다. 클릭하여 면에 맞게 줌하거나 끌어서 줌 영역을 조정합니다."
+    },
+    "lookFrom": {
+      "title": "점에서 보기",
+      "tooltip": "정면에서 보려는 점을 클릭합니다. 또는 클릭한 다음 끌어 점과 뷰 방향을 선택합니다."
+    },
+    "optionsLabel": "카메라 옵션",
+    "optionsTitle": "카메라 옵션",
+    "switchCameraMode": "카메라 모드 전환",
+    "vectorExport": {
+      "exportSuccessful": "내보내기 성공",
+      "title": "벡터 내보내기"
+    },
+    "switchTo2d": "2D(직교) 모드로 전환",
+    "switchTo3d": "3D 모드로 전환",
+    "zoom": {
+      "toFitProposal": "설계안에 맞게 줌",
+      "toFitSelection": "선택 항목에 맞게 줌"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "모서리"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "선에 여러 개",
+      "placeSinglesButton": "단일 배치"
+    }
+  },
+  "contextualData": {
+    "description": "프로젝트에 사용할 수 있는 상황 데이터를 보고 관리합니다. 여기에서 더 많은 데이터를 주문할 수도 있습니다.",
+    "title": "상황 데이터"
+  },
+  "contextMenu": {
+    "copy": "복사",
+    "cut": "잘라내기",
+    "delete": "삭제",
+    "exportTerrainAsObj": "지형을 객체로 내보내기",
+    "moveToBack": "뒤로 이동",
+    "moveToBase": "베이스로 이동",
+    "moveToFront": "앞으로 이동",
+    "moveToProposal": "설계안으로 이동",
+    "paste": "붙여넣기",
+    "pasteInPlace": "제자리에 붙여넣기",
+    "terrainPad": {
+      "moveToBack": "지형 패드를 뒤로 이동",
+      "moveToFront": "지형 패드를 앞으로 이동"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "프로젝트 또는 허브 간에는 요소를 복사할 수 없습니다.",
+    "failedToCopyElementMessage": "요소를 복사하지 못했습니다."
+  },
+  "dataOrders": {
+    "completed": "다음 데이터 주문이 완료되었습니다. {name}. 설계안에 추가 중이며, 몇 초 후에 레이어에서 확인할 수 있습니다.",
+    "completedAll": "{names}이(가) 로드되어 설계안 베이스에 추가되었습니다. 상황 데이터에서 더 많은 데이터를 찾아보고 주문할 수 있습니다.",
+    "failed": "{name} 실패",
+    "failedToAdd": "설계안에 \"{name}\"을(를) 추가하지 못했지만, 라이브러리에서 데이터를 계속 사용할 수 있습니다.",
+    "processing": "다음 데이터 주문을 처리 중입니다. {name}. 완료되면 설계안에 추가됩니다.",
+    "statusTitle": "데이터 주문 상태"
+  },
+  "demoSite": {
+    "badge": "데모",
+    "flyout": {
+      "content": "Forma 기능을 시연하기 위해 이 사이트를 만들었습니다. 아래 안내서를 시작하여 간단한 워크플로우의 단계를 따르고, 준비가 되면 직접 사이트를 만드십시오.",
+      "createSiteButton": "새 사이트 작성",
+      "createSiteTooltip": "활성 라이선스가 있어야 하며, 이 프로젝트에 사이트를 작성할 수 있는 권한이 있어야 합니다.",
+      "header": "이 사이트는 데모 사이트입니다.",
+      "startGuideButton": "시작 가이드"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "시작하기",
+    "titleFormaSiteDesign": "데모 사이트",
+    "description": "이 사이트는 Forma 사이트 Design을 탐색할 수 있도록 미리 디자인된 샘플 사이트입니다. 고장 날까 봐 걱정하지 마세요. 실제 프로젝트에 영향을 주지 않으면서 실험할 수 있는 안전한 공간으로 생각하세요.",
+    "callToAction": "{bold} 클릭하여 데모 사이트를 탐색합니다.",
+    "callToActionBold": "계속",
+    "buttonContinue": "계속",
+    "buttonGoToHome": "Forma 홈으로 이동",
+    "imageAlt": "Forma 사이트 디자인 시각화"
+  },
+  "drawing": {
+    "traceShape": "기존 쉐이프 추적"
+  },
+  "hotkeys": {
+    "addNode": "노드 추가",
+    "cancelDrawingPoint": "점 그리기 취소",
+    "clickAndMoveGrip": "그립을 클릭하고 이동하여 해당 방향으로 축척을 조정합니다.",
+    "complete": "완료",
+    "copy": "복사",
+    "cut": "잘라내기",
+    "deleteSelected": "선택 항목 삭제",
+    "drawHouse": "주택 그리기",
+    "drawHousesWithLine": "선으로 주택 그리기",
+    "drawLine": "선 그리기",
+    "drawRoad": "도로 그리기",
+    "edit": "편집",
+    "exitContext": "컨텍스트 종료",
+    "exitEditGraph": "그래프 편집 종료",
+    "exitGraphTool": "그래프 도구 종료",
+    "exitHouseTool": "주택 도구 종료",
+    "exitSiteStudyAndApply": "Site Study 도구를 종료하고 설계안에 연구 내용 적용",
+    "exitTool": "도구 종료",
+    "exitTransportationTool": "교통 도구 종료",
+    "finishEditing": "편집 완료",
+    "freeform": "자유형",
+    "measureDistance": "거리 측정",
+    "paste": "붙여넣기",
+    "placeSingleHouses": "단일 주택 배치",
+    "redo": "다시 실행",
+    "remove": "제거",
+    "resetGraph": "그래프 재설정",
+    "selectAll": "모두 선택",
+    "selectSomethingToModify": "{toolName}(으)로 수정할 항목 선택",
+    "switchHouseCorner": "주택 코너 전환",
+    "switchHousePlacementSide": "주택 배치 측면 전환",
+    "toggleSidebar": "사이드바 전환",
+    "undo": "실행 취소"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "나침반 위치를 이동하는 동안 Shift 키를 누르고 있으면 회전 축이 커서 아래의 형상과 정렬됩니다.",
+    "editSiteLayout": "사이트 배치를 편집하거나, 건물 유형을 설정할 개별 구역을 선택합니다.",
+    "freeMode": "자유 모드. 수평 모드를 사용하려면 ↹ Tab 키를 누릅니다.",
+    "horizontalMode": "수평 모드. 자유 모드를 사용하려면 ↹ Tab 키를 누릅니다.",
+    "mode2D": "2D 모드. 모든 도구가 수평 평면에 구속됩니다.",
+    "rotateMoveText": "{moveModeText} 이동({inputModeText}). {nextMoveModeText} 이동({nextInputModeText})으로 전환하려면 ↹ Tab 키를 누릅니다.",
+    "selectAreaToExplore": "사이트 배치 옵션을 탐색할 영역을 선택합니다.",
+    "snappingAxesHint": " Alt 키를 눌러 스냅 축을 숨깁니다. Alt+C를 눌러 지웁니다.",
+    "straightAction": "직선 {action}. 테이퍼 {action}로 전환하려면 ↹ Tab 키를 누릅니다.",
+    "switchHouseCornerAndRotate": "주택 코너를 전환하려면 Tab 키를 누릅니다. 마우스를 누른 채 끌어 회전할 수 있습니다.",
+    "switchHousePlacementSide": "주택 배치 측면을 전환하려면 Tab 키를 누릅니다.",
+    "taperAction": "테이퍼 {action}. 테이퍼 {action}로 전환하려면 ↹ Tab 키를 누릅니다."
+  },
+  "menus": {
+    "generatorsByExtensions": "확장 기능별 생성기"
+  },
+  "messages": {
+    "elementAddedTo": "요소가 {location}에 추가됨"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "저장 진행 중..."
+    },
+    "camera": {
+      "lookAt": "보기"
+    },
+    "lineWidth": "선 폭",
+    "settings": "설정",
+    "templates": {
+      "updatesAvailable": "업데이트 사용 가능"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "건물 오른쪽 클릭 옵션을 수행하지 못함",
+      "failedToConvertVolumes": "체적을 기본 건물로 변환하지 못함",
+      "failedToDraw": "기본 건물을 그리지 못함",
+      "failedToEdit": "새 기본 건물을 편집하지 못함",
+      "failedToPushPull": "기본 건물을 푸시/풀하지 못함"
+    },
+    "failedToLoadContextualData": "상황 데이터를 로드하지 못함",
+    "import": {
+      "largeScale": "가져오기에 규모가 큰 요소({size})가 포함되어 있습니다. 가져오기가 예상대로 동작하지 않을 수 있습니다. 취소하려면 Esc 키를 누르십시오.",
+      "resultingShapeInvalid": "결과 쉐이프가 유효하지 않습니다."
+    },
+    "modelNotGeolocated": "사이트 설계 모델이 지리 위치에 있지 않습니다. 지리 위치를 지정하려면 상황 데이터를 주문하십시오.",
+    "terrain": {
+      "boundingBoxTooLarge": "요소 형상 경계 상자가 너무 커서 지형으로 사용할 수 없습니다. 최대 크기: 4km². 실제 크기: {size}km²"
+    },
+    "library": {
+      "couldNotFindElement": "라이브러리 요소를 찾을 수 없음",
+      "elementNotAvailable": "라이브러리 요소를 사용할 수 없음",
+      "failedToConvertTerrain": "지형 요소로 변환하지 못함",
+      "failedToDownloadFloorPlans": "평면도를 다운로드하지 못함",
+      "failedToSaveFloorPlans": "프로젝트 수준 평면도를 저장하지 못했습니다. 페이지를 새로 고치십시오.",
+      "failedToUpdateLibrary": "라이브러리를 업데이트하지 못함"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "선 건물 메뉴 오류",
+      "failedToDraw": "선 건물을 그리지 못함",
+      "failedToEdit": "선 건물을 편집하지 못함",
+      "failedToolbarAction": "선 건물 도구막대 작업 실패"
+    },
+    "siteStudy": {
+      "errorInExplore": "탐색에서 오류가 발생했습니다. 다시 시도하십시오!",
+      "errorOccurred": "오류가 발생했습니다. 엔지니어에게 알림이 전송됩니다.",
+      "failedToLoadPicker": "탐색 선택기를 로드하지 못했습니다. 작업을 다시 시도하십시오."
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "모든 플러그인 찾아보기",
+    "browseDescription": "기존 확장 기능이나 타사 공급자의 생성기를 찾아보거나 자체 확장 기능 또는 생성기를 추가하십시오. 확장 기능 또는 생성기는 여기에 표시됩니다.",
+    "downloadButton": "확장 기능 다운로드",
+    "downloadDescription": "Revit 또는 Rhino에서 모델을 가져올 수 있습니다.",
+    "importModelTitle": "확장 기능에서 모델 가져오기",
+    "noDescriptionAvailable": "설명이 제공되지 않습니다.",
+    "plugins": "플러그인"
+  },
+  "errorBoundary": {
+    "componentCrashed": "구성요소가 충돌함",
+    "retryButton": "재시도",
+    "unexpectedError": "예기치 않은 오류가 발생했습니다. 작업을 다시 시도하거나 페이지를 다시 로드하여 다시 시도하십시오."
+  },
+  "guides": {
+    "closeMenu": "안내선 및 측정 메뉴 닫기"
+  },
+  "geometryAlerts": {
+    "dismiss": "무시",
+    "header": "형상 알림",
+    "review": "검토",
+    "title": "형상 알림({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "분석을 실행하기 위해 제거하거나 수정합니다.",
+      "title": "중복된 형상"
+    },
+    "invalidBbox": {
+      "subTitle": "분석을 실행하기 위해 제거하거나 수정합니다.",
+      "title": "형상이 너무 멀리 있는 요소"
+    },
+    "outOfBounds": {
+      "subTitle": "분석을 실행하기 위해 제거하거나 수정합니다.",
+      "title": "지형 외부의 요소"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "1층의 면적이 0입니다. 하단 면을 수평으로 스냅하여 수정하십시오.",
+      "title": "면적이 0인 1층이 탐지됨"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "이 건물에는 면적이 0인 층이 하나 이상 있으므로 유효한 건물로 만들 수 없습니다.",
+      "title": "면적이 0인 층이 탐지됨"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "이 건물에는 <a>비수밀 형상</a>이 포함되어 있어 3D 스케치 종료 시 층이 없는 일반 모델이 될 수 있습니다.",
+      "title": "건물이 수밀 상태가 아님"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "이 모델에는 도구 및 표시 동작에 영향을 줄 수 있는 <a>비수밀 형상</a>이 포함되어 있습니다.",
+      "title": "형상이 수밀 상태가 아님"
+    }
+  },
+  "importToolbar": {
+    "title": "모델 가져오기"
+  },
+  "labels": {
+    "addLabelButton": "레이블 추가",
+    "category": "레이블",
+    "description": "레이블을 추가하여 간단한 텍스트 설명으로 3D 캔버스의 특정 지점을 표시합니다. 최대 {count}줄의 텍스트를 추가할 수 있습니다. ",
+    "label": "레이블",
+    "placeholder": "텍스트 삽입..."
+  },
+  "layerList": {
+    "buildings": "건물",
+    "category": {
+      "contextualDataDuration": "상황 데이터(~1~2.5분)"
+    },
+    "generic": "일반",
+    "images": "이미지",
+    "propertyBoundaries": "대지 경계",
+    "roads": "도로",
+    "siteLimits": "사이트 제한",
+    "terrain": "지형",
+    "vegetation": "식생",
+    "zones": "영역"
+  },
+  "layersTitle": "레이어",
+  "library": {
+    "addedToLibrary": "라이브러리에 {name}이(가) 추가되었습니다.",
+    "addToLibraryButton": "라이브러리에 추가"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "제약 조건 그리기",
+      "name": "제약 조건",
+      "plural": "제약 조건",
+      "tooltip": "체적을 작성하여 프로젝트의 제약 조건을 시각화합니다."
+    },
+    "siteLimit": {
+      "defineAsAction": "사이트 한계로 정의",
+      "hotkeyDescription": "사이트 제한 그리기",
+      "name": "사이트 제한",
+      "tooltip": "프로젝트의 지표를 분석하는 데 사용되는 사이트 한계를 작성합니다."
+    },
+    "title": "제한",
+    "zone": {
+      "hotkeyDescription": "영역 그리기",
+      "name": "영역",
+      "tooltip": "영역을 그려 사이트에서 분석할 영역을 정의합니다."
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "그리기 모드 종료"
+  },
+  "navbar": {
+    "addButton": "추가",
+    "quickActionsButton": "빠른 작업",
+    "settingsButton": "설정"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "{name}을(를) 삭제하시겠습니까?",
+      "descriptionParagraph1": "베이스에는 설계안 전체에서 재사용되는 객체가 포함됩니다. 여러 개의 베이스를 작성하고 베이스를 교체할 수 있습니다.",
+      "descriptionParagraph2": "기존 객체를 추가하려면 객체를 마우스 오른쪽 버튼으로 클릭하고 베이스로 이동을 선택합니다. 새 객체를 그리려면 편집을 클릭합니다."
+    },
+    "dataOrderProcessing": "데이터 주문을 처리 중입니다. 완료되면 설계안에 추가됩니다."
+  },
+  "pendingOperation": {
+    "defaultDescription": "자동화가 완료될 때까지 기다리는 중..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count}개의 형상이 {layerType}에 추가됨",
+    "geometriesSelectedLabel": "형상이 선택됨",
+    "updateTerrainAction": "지형 업데이트",
+    "updateTerrainDescription": "현재 지형을 라이브러리의 새 지형으로 대치합니다."
+  },
+  "properties": {
+    "color": "색상",
+    "elevation": "표고",
+    "height": "높이",
+    "length": "길이",
+    "mixed": "혼합",
+    "name": "이름",
+    "position": "위치",
+    "radius": "반지름",
+    "width": "폭"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "일부 객체를 다운로드하지 못함",
+      "downloadElementsRecovery": "나중에 다시 시도하십시오. 문제가 해결될 때까지 뷰 모드에 있습니다",
+      "flatteningGroups": "더 이상 지원되지 않으므로 설계안에서 그룹 단순화",
+      "ignoringOldElements": "이전 요소 무시",
+      "knownCriticalHeader": "요소를 처리하지 못함",
+      "knownCriticalMessage": "페이지를 새로 고쳐 다시 시도하십시오.",
+      "missingGeoLocation": "작업을 수행하기 위한 프로젝트 지리 위치가 누락되었습니다.",
+      "notFoundHeader": "설계안을 찾을 수 없음",
+      "notFoundMessage": "액세스하려는 설계안을 찾을 수 없습니다.",
+      "terrainNotFoundHeader": "지형 모델 누락",
+      "terrainNotFoundMessage": "현재 설계안에 예기치 않은 오류가 발생했습니다.",
+      "tooManyRequestsHeader": "요청이 너무 많습니다!",
+      "tooManyRequestsMessage": "네트워크에서 처리할 수 있는 것보다 더 많은 요청을 받았습니다. 이 페이지를 나중에 로드하거나 다른 네트워크(예: 개인용 핫스폿)로 전환해 보십시오."
+    },
+    "noProposalLayersText": "설계안의 고유한 요소가 여기에 나열됩니다."
+  },
+  "proposalHistory": {
+    "branchFailed": "이전 리비전에서 새 설계안을 작성하지 못했습니다.",
+    "branchRevisionButton": "새 설계안 작성",
+    "branchSuccess": "선택한 버전에서 이름이 \"{name}\"인 새 설계안이 작성되었습니다.",
+    "contributors": "참여자 수: {count}",
+    "copyLinkButton": "링크 복사",
+    "currentVersionLabel": "현재 버전",
+    "filter": {
+      "byAnalysis": "분석별",
+      "byDate": "날짜별",
+      "from": "시작",
+      "onlyYours": "내 항목만",
+      "pinned": "고정됨",
+      "selectDates": "날짜 선택",
+      "title": "필터",
+      "to": "끝"
+    },
+    "linkToVersionCopied": "{time} 링크가 복사됨",
+    "nameThisVersionAction": "이 버전 명명",
+    "pinVersionAction": "버전 고정",
+    "unpinVersionAction": "버전 고정 해제",
+    "untitledVersionLabel": "제목 없는 버전",
+    "viewingVersionLabel": "버전 확인 중"
+  },
+  "quickAccess": {
+    "actionsLabel": "작업",
+    "noSuggestions": "제안 사항 없음",
+    "openHotkeyList": "핫키 리스트 열기",
+    "repeatLastTool": "마지막 도구 반복",
+    "search": "검색",
+    "title": "빠른 실행"
+  },
+  "requestInvite": {
+    "button": "초대 요청",
+    "homeLink": "홈페이지로 이동",
+    "projectLink": "프로젝트로 이동",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "이미 멤버임",
+        "message": "이미 이 프로젝트의 멤버입니다."
+      },
+      "ALREADY_REQUESTED": {
+        "header": "초대가 이미 요청됨",
+        "message": "이 프로젝트에 대해 보류 중인 초대 요청이 이미 있습니다. 관리자가 요청을 승인하면 이메일로 이 프로젝트에 대한 초대장을 받게 됩니다."
+      },
+      "CAN_JOIN": {
+        "header": "참여 가능",
+        "message": "이 프로젝트에 참여할 수 있습니다. 프로젝트로 이동하여 '프로젝트 참여' 버튼을 클릭하십시오."
+      },
+      "ERROR": {
+        "header": "문제가 발생했습니다. 다시 시도하십시오."
+      },
+      "NOT_FOUND": {
+        "header": "오류 발생, 프로젝트를 찾을 수 없음",
+        "message": "입력한 URL이 기존 프로젝트를 가리키고 있지 않습니다."
+      },
+      "REQUEST_LIMIT": {
+        "header": "요청이 너무 많음",
+        "message": "보류 중인 초대 요청이 너무 많습니다. 나중에 다시 시도하십시오."
+      },
+      "SUCCESS": {
+        "header": "요청이 성공적으로 전송되었습니다!",
+        "message": "관리자가 요청을 승인하면 이메일로 이 프로젝트에 대한 초대장을 받게 됩니다."
+      }
+    },
+    "statusFallback": {
+      "header": "이 Forma 프로젝트에 대한 액세스 권한이 없습니다.",
+      "message": "프로젝트에 액세스하려면 관리자 중 한 명의 초대를 받아야 합니다. 아래 버튼을 눌러 관리자에게 초대를 요청하십시오."
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "기본 폴더: 내 프로젝트 파일 폴더"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "가운데 정렬",
+      "left": "왼쪽 정렬",
+      "right": "오른쪽 정렬"
+    },
+    "buildingLabel": "건물",
+    "createNew": "새로 작성",
+    "layoutLabel": "배치",
+    "loading": "로드 중",
+    "name": "주택",
+    "parcelLabel": "구획",
+    "plural": "주택",
+    "publish": "게시",
+    "tooltip": "선을 기준으로 구성된 단일 주택 또는 여러 주택을 그립니다. 특성 패널에서 주택 유형을 만들고 재사용할 수 있습니다.",
+    "tooltips": {
+      "buffer": "버퍼",
+      "flatRoof": "평지붕",
+      "gableRoof": "박공 지붕",
+      "length": "길이",
+      "numberOfFloors": "층수",
+      "ridgeDirection": "용마루 방향",
+      "roofAngle": "지붕 각도",
+      "shedRoof": "경사진 지붕",
+      "storyHeight": "층 높이",
+      "width": "폭"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "구획 상자 삭제",
+    "enableButton": "구획 상자 활성화",
+    "saveButton": "구획 상자 저장",
+    "title": "구획 상자",
+    "toggleButton": "상자 윤곽 표시/숨기기"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "이 설계안은 편집하는 동안 변경되었습니다(예: 다른 팀 멤버가 작업 중일 수 있음). 해당 버전을 새 설계안으로 저장하시겠습니까?",
+      "discardEdits": "편집 내용 취소",
+      "saveAsNew": "새 설계안으로 저장",
+      "title": "설계안 편집 충돌"
+    },
+    "error": {
+      "body": "마지막 편집 내용을 저장하지 못했습니다. 편집을 계속하려면 페이지를 새로 고치십시오.",
+      "ok": "확인",
+      "title": "저장 실패"
+    }
+  },
+  "shapes": {
+    "arc": "3점 호",
+    "circle": "원",
+    "cube": "정육면체",
+    "cuboid": "직육면체",
+    "cylinder": "원통",
+    "dome": "돔",
+    "freeform": "자유형",
+    "pyramid": "피라미드",
+    "rectangle": "직사각형",
+    "roof": "지붕",
+    "shapes3d": "3D 쉐이프",
+    "spline": "스플라인",
+    "title": "기본체"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "모서리에 마우스를 올려 가이드라인을 활성화하고 ⇧ Shift 키를 누른 상태에서 가이드라인을 따라갑니다. 스냅을 방지하려면 {key} 키를 누르고 있습니다.",
+      "affineInstructions": "스냅을 방지하려면 {key} 키를 누르고 있습니다. Tab 키를 눌러 수평, 수직 및 지형 모드 간에 전환합니다.",
+      "clickToAddSubtract": "클릭으로 선에 점을 추가하거나 점을 뺍니다.",
+      "editModeStartFinishMac": "⌥ 옵션을 누른 상태에서 점을 추가하거나 뺍니다. ↵ Enter 키를 눌러 편집을 마칩니다.",
+      "editModeStartFinishWindows": "Alt 키를 누른 상태에서 점을 추가하거나 뺍니다. ↵ Enter 키를 눌러 편집을 마칩니다.",
+      "finishEditing": "↵ Enter 키를 눌러 편집을 마칩니다.",
+      "finishPolygon": "↵ Enter 키를 눌러 다각형 작성을 완료합니다.",
+      "preciseMoveVertical": "{key} 키를 눌러 수직 모드를 전환합니다.",
+      "specifyDistance": "특정 거리를 입력하여 설정합니다. 클릭하여 배치합니다."
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "3D 스케치 건물의 경우 층 삭제, 복사, 잘라내기 및 붙여넣기가 지원되지 않습니다. 대신 3D 스케치에서 편집해 보십시오."
+  },
+  "snapping": {
+    "cursorElevation": "커서에서의 표고",
+    "guidesAndMeasurements": "안내선 및 측정",
+    "snapToGuides": "안내선으로 스냅",
+    "snapToObjects": "객체로 스냅"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "공간 이름을 입력하거나, 기본값을 사용하려면 비워 두십시오."
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "시나리오에 연결",
+      "connectToScenarioDesc": "시나리오는 여러 소프트웨어 응용프로그램의 모델, 도구, 형상 및 기타 데이터를 연결하는 프로젝트 내의 공유 설계 컨테이너입니다."
+    }
+  },
+  "relativeTime": {
+    "today": "오늘"
+  },
+  "terrain": {
+    "elevation": "표고",
+    "errors": {
+      "loadMapImageFailed": "맵 이미지를 로드하지 못했습니다.",
+      "loadSatelliteTextureFailed": "위성 텍스처를 로드하지 못했습니다.",
+      "loadTextureFailed": "지형 텍스처를 로드하지 못했습니다."
+    },
+    "labels": {
+      "numberOfSelectedPads": "패드 체적",
+      "padVolume": "패드 체적",
+      "padsVolume": "패드 체적",
+      "showAsPercentage": "백분율로 표시",
+      "showAsRatio": "비율로 표시",
+      "totalMassBalance": "총 질량 균형"
+    },
+    "massBalanceHover": "전체 지형에서 질량 변화의 순 체적입니다.",
+    "metricsHeader": "지표",
+    "pad": {
+      "header": "지형 패드",
+      "name": "지형 패드",
+      "tooltip": "지형을 절토/성토하고, 표고 및 경사를 조정하고, 질량 균형을 평가합니다."
+    },
+    "padVolumeHover": "선택한 패드에 의해 지형에서 추가된/뺀 체적입니다.",
+    "padsHeader": "지형 패드",
+    "slope": "경사"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "자동화가 로드되는 동안에는 베이스 레이어/설계안 간에 전환할 수 없습니다.",
+    "pendingSelectionBlockedMessage": "자동화가 로드되는 동안에는 선택 항목을 변경할 수 없습니다.",
+    "pendingToolSwitchBlockedMessage": "자동화가 로드되는 동안에는 도구를 사용할 수 없음",
+    "transform": {
+      "redefineReferencePointsButton": "참조점 재정의"
+    }
+  },
+  "transform": {
+    "cover": "커버",
+    "fillet": "모깎기",
+    "intersect": {
+      "name": "교차",
+      "tooltip": "두 개 이상의 객체의 교차를 작성합니다. 첫 번째로 선택한 객체의 외곽설정이 그에 따라 변경됩니다."
+    },
+    "loft": "로프트",
+    "move": {
+      "name": "이동",
+      "tooltip": "참조점 및 끝점을 정의하여 객체를 이동합니다. "
+    },
+    "offset": {
+      "apply": "간격띄우기 적용",
+      "name": "간격띄우기",
+      "tooltip": "객체의 외곽설정을 특정 거리만큼 바깥쪽으로 확장하거나 안쪽으로 축소합니다."
+    },
+    "rotate": {
+      "name": "회전",
+      "tooltip": "정의된 참조점을 중심으로 장면의 객체를 회전합니다."
+    },
+    "shell": "쉘",
+    "split": {
+      "name": "분할",
+      "tooltip": "선을 사용하여 하나 이상의 객체를 분할합니다."
+    },
+    "subtract": {
+      "name": "빼기",
+      "tooltip": "다른 객체를 사용하여 객체에서 쉐이프를 뺍니다. 첫 번째로 선택한 객체의 외곽설정이 그에 따라 변경됩니다."
+    },
+    "sweep": "스윕",
+    "title": "변환",
+    "union": {
+      "name": "결합",
+      "tooltip": "두 개 이상의 객체를 병합합니다. 첫 번째로 선택한 객체에 따라 결과 객체의 카테고리 및 높이가 정의됩니다."
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "코너 반지름은 배치를 기준으로 도로 곡선을 최적화하는 동적 값입니다.",
+      "tight": "코너 반지름은 도로 폭의 1/2에 해당하는 작은 고정 값입니다."
+    },
+    "railroads": {
+      "hotkeyDescription": "철도 그리기",
+      "name": "철도",
+      "toolButton": "철도",
+      "tooltip": "오른쪽 패널을 통해 철도를 작성하고 폭을 조정합니다.",
+      "typeLabel": "철도 유형",
+      "typePlaceholder": "철도 유형 선택"
+    },
+    "roads": {
+      "hotkeyDescription": "도로 그리기",
+      "name": "도로",
+      "toolButton": "도로",
+      "tooltip": "오른쪽 패널을 통해 도로를 작성하고 폭을 조정합니다.",
+      "widthLabel": "도로 폭",
+      "withGraphToolButton": "도로(그래프 있음)"
+    },
+    "title": "교통",
+    "trafficData": {
+      "addButton": "교통 데이터 추가",
+      "adtTooltip": "평균 일교통량",
+      "advancedSettingsLabel": "고급 설정",
+      "dailyDistributionLabel": "일교통량 분포",
+      "dayTimeTooltip": "낮 : 06:00~18:00",
+      "eveningTimeTooltip": "저녁 : 18:00~22:00",
+      "heavyVehicleLabel": "교통 체증",
+      "nightTimeTooltip": "밤 : 22:00~06:00",
+      "railRequiredInputsMessage": "소음 분석에서 철도를 고려하려면 모든 항목을 입력해야 합니다.",
+      "removeButton": "교통 데이터 제거",
+      "roadRequiredInputsMessage": "소음 분석에서 도로를 고려하려면 모든 항목을 입력해야 합니다.",
+      "speedLimitTooltip": "속도 제한",
+      "title": "교통 소음 데이터"
+    }
+  },
+  "ui": {
+    "add": "추가",
+    "area": "면적",
+    "areaSum": "면적(합계)",
+    "automationLabel": "자동화",
+    "beta": "베타",
+    "browsePluginsDescription": "타사 공급자의 기존 플러그인을 찾아보거나 자체 플러그인을 추가하십시오. 플러그인은 여기에 표시됩니다.",
+    "cancel": "취소",
+    "close": "닫기",
+    "color": "색상",
+    "delete": "삭제",
+    "detach": "분리",
+    "duplicate": "복제",
+    "edit": "편집",
+    "gridSettings": "그리드 설정",
+    "hide": "숨기기",
+    "length": "길이",
+    "lengthSum": "길이(합계)",
+    "newVersionAvailable": "새 버전을 사용할 수 있습니다.",
+    "redo": "다시 실행",
+    "refresh": "새로고침",
+    "remove": "제거",
+    "rename": "이름 바꾸기",
+    "repair": "복구",
+    "retry": "재시도",
+    "show": "표시",
+    "siteLabel": "사이트",
+    "surroundings": "주변",
+    "textAlignment": "텍스트 정렬",
+    "undo": "실행 취소",
+    "update": "업데이트",
+    "videoNotSupported": "브라우저에서 동영상 태그를 지원하지 않습니다.",
+    "xyzAxes": "XYZ축"
+  },
+  "performanceStats": {
+    "currentSnapshot": "현재 스냅샷",
+    "remainingFromPastSnapshots": "이전 스냅샷에서 남은 항목",
+    "title": "성능 통계 {status}"
+  },
+  "units": {
+    "asl": "ASL",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "가운데 정렬",
+      "left": "왼쪽 정렬",
+      "right": "오른쪽 정렬",
+      "spacing": "간격"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "조경 구역 그리기",
+      "name": "조경 구역",
+      "tooltip": "조경 구역을 작성하고 크기와 밀도를 편집합니다. 모든 나무가 분석에 영향을 미칩니다."
+    },
+    "header": "나무",
+    "landscapingTitle": "조경",
+    "properties": {
+      "bufferTooltip": "버퍼",
+      "gridLengthLabel": "그리드 길이",
+      "gridWidthLabel": "그리드 폭",
+      "heightTooltip": "나무 높이",
+      "offsetTooltip": "간격띄우기"
+    },
+    "title": "식생",
+    "tooltips": {
+      "averageDistanceLabel": "나무 수관 사이의 평균 거리",
+      "heightLabel": "각 나무의 높이"
+    },
+    "treeLine": {
+      "hotkeyDescription": "나무 선 그리기",
+      "name": "나무 선",
+      "tooltip": "나무로 채워진 선을 작성하고 크기 및 밀도를 편집합니다. 모든 나무가 분석에 영향을 미칩니다."
+    },
+    "trees": "나무"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "analysisId가 제공되지 않음",
+      "unsupportedAnalysisType": "지원되는 분석 유형이 아님: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "이 사이트에 대한 보기 전용 접근 권한이 있습니다."
+  },
+  "windAnalysis": {
+    "analyzing": "분석 중...",
+    "atCapacity": "현재 많은 수의 상세 풍력 분석을 실행 중입니다. 분석을 완료하는 데 시간이 더 오래 걸릴 수 있습니다. 양해해 주셔서 감사합니다!",
+    "circleOutsideBoundingBox": "분석 영역이 맵 영역을 벗어남",
+    "concurrentQuotaReached": "동시 풍력 분석 제한에 도달함",
+    "concurrentQuotaReachedDescription": "동시에 실행 중인 풍력 분석이 너무 많습니다. 일부 작업이 완료될 때까지 기다려 주십시오.",
+    "concurrentQuotaWarning": "동시 분석 제한",
+    "concurrentQuotaWarningDescription": "동시 분석 제한({limit})에 도달하기까지 {remaining}회의 상세 풍력 분석이 남았습니다.",
+    "dailyQuotaReached": "분석 제한에 도달함",
+    "dailyQuotaReachedDescription": "일일 풍력 분석 제한에 도달했습니다.",
+    "dailyQuotaReachedDescriptionRetry": "일일 풍력 분석 제한에 도달했습니다. {nextAvailableAt}에 다시 시도하십시오.",
+    "loadingData": "데이터 로드 중",
+    "loadingDataTooltip": "로드 중...",
+    "runAnalysis": "분석(~{min}~{max}분)",
+    "seeAnalysisButton": "상세 분석 보기",
+    "stoppedOrFailed": "분석이 중지되었거나 실패했습니다!",
+    "viewerAccessDisableTooltip": "분석을 뷰어로 실행할 수 없음"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "고급 모델링 도구",
+      "editIn": "3D 스케치에서 편집",
+      "howToStartEditingMessage": "⏎를 누르거나 두 번 클릭하여 3D 스케치에서 편집합니다.",
+      "launch": "새 3D 스케치",
+      "sketch": "스케치",
+      "updateProperties": "특성 업데이트"
+    },
+    "advancedModeling": {
+      "cover": "커버",
+      "fillet": "모깎기",
+      "intersect": "교차",
+      "loft": "로프트",
+      "offset": "간격띄우기",
+      "shell": "쉘",
+      "subtract": "빼기",
+      "sweep": "스윕",
+      "union": "결합"
+    },
+    "axes": {
+      "reset": "축 재설정",
+      "set": "XYZ축 설정"
+    },
+    "buildingType": {
+      "draw": "3D 스케치 건물 그리기",
+      "name": "3D 스케치 건물"
+    },
+    "buttons": {
+      "apply": "적용",
+      "cancel": "취소",
+      "ok": "확인"
+    },
+    "convert": {
+      "externalMessage": "객체를 3D 스케치로 변환하여 외부 면, 모서리 및 정점을 수정합니다.\n\n요소가 변환되면 더 이상 원래 소스의 요소에 연결되지 않으며 변경사항이 동기화되지 않습니다.",
+      "message": "객체를 3D 스케치로 변환하여 외부 면, 모서리 및 정점을 수정합니다.",
+      "title": "3D 스케치로 변환"
+    },
+    "dialogs": {
+      "arrayButtonArray": "배열",
+      "arrayButtonCancel": "취소",
+      "arrayDistanceBetween2Points": "두 점 사이의 길이",
+      "arrayDistanceTotalLength": "총 길이",
+      "arraySubtitleDistance": "거리",
+      "arraySubtitleQuantity": "수량",
+      "arraySubtitleType": "유형",
+      "arrayTitle": "배열",
+      "arrayTypeLinear": "선형 배열",
+      "arrayTypeRadial": "방사형 배열",
+      "corruptedElementsDeleted": "일부 요소가 저장되지 못하고 손상되었습니다. 이러한 요소는 자동으로 삭제되었습니다.",
+      "editDimensionTitle": "치수 편집",
+      "recoveryClosedWithoutSaving": "3D 스케치가 제대로 저장되지 않고 닫혔습니다.",
+      "recoveryQuestion": "저장되지 않은 변경사항을 복구하시겠습니까?",
+      "recoveryTitle": "저장되지 않은 모델 변경사항이 발견됨"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "수평이 아닌 가장 낮은 면 평면화"
+    },
+    "finishSelection": {
+      "back": "뒤로(B)",
+      "cancel": "취소(Esc)",
+      "confirm": "완료(F)",
+      "next": "다음(N)"
+    },
+    "floors": {
+      "addFloor": "층 추가",
+      "addFloors": "층 추가",
+      "floorHeight": "층 높이",
+      "floors": "층",
+      "floorWithNumberLabel": "층 {level}",
+      "moreOptions": "추가",
+      "numberOfFloors": "층수",
+      "removeFloors": "층 제거",
+      "resetFloors": "층 재설정",
+      "title": "층 상세 정보"
+    },
+    "groupEditing": {
+      "redo": "다시 실행",
+      "undo": "실행 취소"
+    },
+    "grouping": {
+      "toolbarTitle": "그룹"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "각도 측정",
+      "measureDistance": "거리 측정",
+      "menuTitle": "안내선 및 측정",
+      "title": "안내선 및 측정"
+    },
+    "mesh": {
+      "convertHintMessage": "두 번 클릭하면 메쉬를 객체로 변환하여 추가 편집 도구를 사용할 수 있습니다.",
+      "importExceededLimitsMessage": "가져오기가 메쉬 삼각형 제한({limit})을 초과하지만 성능 향상을 위해 변경되지 않은 상태로 유지됩니다.\n\n추가 편집 도구에 액세스하려면 개별 메시를 선택하고 두 번 클릭하여 편집 가능한 객체로 변환하십시오.",
+      "importExceededLimitsTitle": "가져오기가 메쉬 삼각형 제한을 초과함"
+    },
+    "pasteInPlaceAction": "제자리에 붙여넣기",
+    "properties": {
+      "mixed": "혼합",
+      "objectWithIdLabel": "객체 {id}"
+    },
+    "scaleTitle": "축척",
+    "selection": {
+      "areaSelectionOptions": "영역 선택 옵션",
+      "filterEdges": "모서리",
+      "filterFaces": "면",
+      "filterGroups": "그룹",
+      "filterMeshes": "메쉬",
+      "filterSolids": "솔리드",
+      "filterVertices": "정점",
+      "selection": "선택",
+      "selectionTools": "선택 도구"
+    },
+    "tools": {
+      "array": "배열",
+      "editArcCircle": "호 또는 원 편집",
+      "editSpline": "스플라인 편집",
+      "extrudeEdges": "모서리 돌출",
+      "extrudeFace": "면 돌출",
+      "facetFace": "깎인면 면",
+      "flattenFace": "면 평면화",
+      "group": "그룹화",
+      "groupDetach": "분리",
+      "meshToObjects": "메쉬 변환",
+      "mirror": "대칭",
+      "move": "이동",
+      "offsetEdges": "모서리 간격띄우기",
+      "offsetFace": "면 간격띄우기",
+      "reverseFace": "면 반전",
+      "rotate": "회전",
+      "scale": "축척",
+      "scaleNonUniform": "비균일 축척",
+      "smoothEdges": "모서리 부드럽게 처리",
+      "tiltFace": "경사 면",
+      "ungroup": "그룹 해제"
+    },
+    "tooltips": {
+      "building": "경사 지붕, 기울어진 벽 등 무한한 가능성을 지닌 복잡한 3D 건물입니다.",
+      "editIn": "객체를 변환하여 3D 스케치에서 정점, 모서리 및 면을 수정합니다.",
+      "launch": "3D 스케치를 사용하여 초기 단계의 건축 설계 개념을 모델링하고 반복합니다."
+    },
+    "zoom": {
+      "fitProposal": "설계안에 맞게 줌",
+      "fitSelection": "선택 항목에 맞게 줌"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "빠른 시작 안내서",
+    "allTutorialsDescription": "사이트를 설정하고 사이트 디자인에서 작업을 시작하려면 다음 대화형 안내서를 작성하십시오. ",
+    "completionMessage": "잘하셨습니다! {header} 가이드를 완료했습니다!",
+    "completionText": "{percent}% 완료",
+    "completedTitle": "완료됨",
+    "continueButton": "계속",
+    "stepsTotal": "총 {count}단계",
+    "timeLabel": "{time}분",
+    "stepProgress": "{current}/{total}",
+    "nextButton": "다음",
+    "doneButton": "완료",
+    "tutorialPanelButtonText": "사이트 설계",
+    "tutorialPanelButtonDescription": "빠른 시작 안내서",
+    "upNextTitle": "다음 튜토리얼"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "사이트 설정",
+      "description": "대지 및 건물 모델링 및 분석을 시작하기 전에 상황 데이터 추가",
+      "reviewHeader": "사이트 설정 완료",
+      "reviewText": "상황 데이터 및 사이트 한계를 성공적으로 추가했습니다.{ 0}{br}잘하셨습니다! 이제 모델링 도구와 가져오기 기능을 살펴보거나 다른 안내서를 통해 계속 진행할 수 있습니다.",
+      "steps": {
+        "openContextualTab": {
+          "header": "상황 데이터 탭 열기",
+          "text": "<bold>먼저 상황별 데이터</bold> 탭을 엽니다."
+        },
+        "browseAndOrder": {
+          "header": "사이트 위치에 대한 데이터 찾아보기",
+          "text": "<bold>상황 데이터 찾아보기</bold>를 클릭하여 사이트 위치에 사용할 수 있는 데이터 패키지를 확인합니다.{ 0}{br}데이터에는 주변 건물, 도로 및 지형이 포함될 수 있습니다. "
+        },
+        "orderStarterPackage": {
+          "header": "스타터 데이터 패키지 주문",
+          "text": "<bold>추가를</bold> 클릭하여 이 데이터 패키지에 포함된 내용을 검토합니다. 이 데이터는 무료입니다. "
+        },
+        "orderData": {
+          "header": "주문 데이터 패키지",
+          "text": "3D 상황 데이터 다운로드를 사이트로 시작하려면 순서를 선택하십시오."
+        },
+        "drawSiteLimit": {
+          "header": "사이트 제한 그리기",
+          "text": "이 도면 도구를 활성화하여 사이트 한계를 정의합니다. 활성화되면 사이트 주위에 점을 그리고 모양을 둘러쌉니다.{br}{br}Forma 사이트 Design에서 해석을 실행하려면 사이트 한계 정의해야 합니다."
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "건물 추가",
+      "description": "Autodesk의 모델링 도구를 사용하여 건물을 작성하거나 기존 모델을 가져올 수 있습니다. ",
+      "reviewHeader": "대지에 추가된 건물",
+      "reviewText": "성공적으로 건물을 그리고 자산을 사이트로 가져왔습니다. 잘하셨습니다! 이제 해석을 실행하여 환경 조건을 평가하거나 다른 가이드로 계속할 수 있습니다.",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "기본 건물 그리기",
+          "text": "<bold>기본 빌딩</bold>을 클릭하여 빌딩 도구를 활성화합니다. 활성화되면 건물의 모양을 그리고 마지막 점을 선택하여 외곽설정 그리기를 완료합니다."
+        },
+        "exploreParametricOptions": {
+          "header": "파라메트릭 옵션 탐색",
+          "text": "건물 모델을 수정하는 데 사용할 수 있는 파라메트릭 옵션을 탐색합니다."
+        },
+        "importModel": {
+          "header": "모델 또는 파일 가져오기",
+          "text": "<bold>가져오기</bold>를 클릭하여 로컬 장치에서 모델 또는 래스터 이미지 업로드"
+        },
+        "placeInScene": {
+          "header": "장면에 배치",
+          "text": "라이브러리에서 방금 가져온 항목을 클릭합니다. 선택한 후에는 클릭하고 끌어서 사이트에 배치합니다. 요소가 배치되면 튜토리얼이 자동으로 진행됩니다."
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "환경 조건 평가",
+      "description": "일조시간 해석을 실행하여 초기 설계 결정을 통보할 수 있습니다.",
+      "reviewHeader": "일조 시간 분석이 완료되었습니다!",
+      "reviewText": "사이트에서 일조시간 해석을 성공적으로 실행했습니다.{ 0}{br}이제 계속해서 새로운 제안서를 작성하고, 분석을 비교하고, 더 많은 사이트 설계를 탐색할 수 있습니다.",
+      "steps": {
+        "selectAnalysis": {
+          "header": "분석 선택",
+          "text": "강조 표시된 아이콘을 클릭하여 일조시간 분석을 선택합니다."
+        },
+        "selectDate": {
+          "header": "날짜 선택",
+          "text": "드롭다운을 사용하여 사이트에서 일조시간을 분석할 날짜를 설정합니다."
+        },
+        "runAnalysis": {
+          "header": "분석 실행",
+          "text": "버튼을 클릭하여 분석을 시작합니다. 완료하는 데 몇 초밖에 걸리지 않습니다.{br}{br}분석이 완료되면 가이드가 자동으로 재개됩니다."
+        },
+        "openAnalysisResults": {
+          "header": "결과 열기",
+          "text": "완료되면 분석 결과가 여기에 있는 리스트에 표시됩니다. 최신 결과를 클릭하여 자세히 검토하십시오. 새 창이 열립니다.",
+          "altText": "분석 결과 창"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "\"WebGL이 지원되지 않음\" 문제를 수정하는 방법은 무엇입니까?",
+      "text": "컴퓨터에서 Forma를 사용하기 위한 요구사항인 WebGL을 지원하지 않는 것 같습니다",
+      "url": "https://help.autodeskforma.com/autodeskforma/ko/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

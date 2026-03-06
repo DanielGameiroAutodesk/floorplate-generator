@@ -1,0 +1,82 @@
+.TemplateListContainer {
+  padding-inline: 16px 10px;
+  max-height: 250px;
+  overflow-y: auto;
+
+  & > :first-child {
+    margin-top: 12px;
+  }
+  & > :nth-child(n + 2) {
+    margin-top: 4px;
+  }
+  & > :last-child {
+    margin-bottom: 12px;
+  }
+}
+
+.TemplateListRow {
+  --row-inner-height: 36px;
+  display: flex;
+  height: var(--row-inner-height);
+  width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+
+  justify-content: space-between;
+  align-items: center;
+
+  & weave-icon-button {
+    display: none;
+  }
+  &:hover weave-icon-button {
+    display: block;
+  }
+}
+
+.TemplateListPreviewContainer {
+  flex: 0 0 var(--row-inner-height);
+  height: var(--row-inner-height);
+
+  background-color: var(--background-color-surface-200);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.TemplateListRowTitle {
+  font: var(--11-medium);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: var(--row-inner-height);
+  flex: 0 0 105px;
+  padding-inline: 8px;
+
+  display: flex;
+  align-items: center;
+}
+
+.TemplateListRowTitleEdit {
+  font: var(--11-medium);
+  height: var(--row-inner-height);
+  width: 100%;
+  padding-inline: 8px;
+
+  display: flex;
+  align-items: center;
+}
+
+.TemplateListRowTitleContainer {
+  display: flex;
+  align-items: center;
+  flex: 1 0 100px;
+
+  &:hover .TemplateListRowTitle {
+    background-color: var(--background-color-ghost-high-hover);
+  }
+}
+
+.TemplateListRowButtonContainer {
+  display: flex;
+  align-items: center;
+}

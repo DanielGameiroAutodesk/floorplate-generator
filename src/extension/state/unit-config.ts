@@ -22,7 +22,11 @@ import { state, calculateSmartDefaultsFromArea } from './ui-state';
  * characteristics (corner eligibility, flexibility) align with typical
  * multifamily conventions where larger units go at premium positions.
  *
- * @returns Algorithm-compatible unit configuration
+ * @returns Algorithm-compatible unit configuration (percentages, areas in sq m, cornerEligible).
+ *
+ * @remarks
+ * **Edge case**: If user has fewer than 4 unit types, we map to the first N enum values.
+ * If more than 4, extras map to ThreeBed. Area sort ensures consistency with getUnitColors.
  */
 export function getUnitConfiguration(): UnitConfiguration {
   // Sort by area so smallest = Studio, largest = ThreeBed

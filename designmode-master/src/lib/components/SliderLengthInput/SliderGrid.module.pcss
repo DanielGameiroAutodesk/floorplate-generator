@@ -1,0 +1,16 @@
+.SliderGrid {
+  display: grid;
+  grid-template-columns: minmax(50px, auto) 1fr fit-content(80px);
+  gap: 12px 8px;
+  align-items: center;
+
+  & *:nth-child(1) {
+    grid-column-start: 1;
+  }
+  & *:nth-child(2) {
+    grid-column-start: 2;
+  }
+  & *:nth-child(3) {
+    grid-column-start: 3;
+  }
+}

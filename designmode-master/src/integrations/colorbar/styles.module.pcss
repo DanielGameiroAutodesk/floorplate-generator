@@ -1,0 +1,118 @@
+.borderOverlay {
+  position: absolute;
+  display: flex;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  max-width: 400px;
+  height: 22px;
+}
+
+.rangeBorder {
+  position: relative;
+  border: 1px solid var(--color-scheme-border-base, rgba(128, 128, 128, 0.5));
+  border-radius: 4px 4px 0 0;
+  z-index: 2;
+}
+
+.rangeBorder::before {
+  display: initial;
+  content: "";
+  position: absolute;
+  background: var(--background-color-control-thumb, #808080);
+  left: 0;
+  top: 50%;
+  transform: translate(-3px, -50%);
+  width: 5px;
+  height: 12px;
+  border-radius: 1px;
+}
+
+.rangeBorder::after {
+  display: initial;
+  content: "";
+  position: absolute;
+  background: var(--background-color-control-thumb, #808080);
+  right: 0;
+  top: 50%;
+  transform: translate(3px, -50%);
+  width: 5px;
+  height: 12px;
+  border-radius: 1px;
+}
+
+.trigger {
+  cursor: col-resize;
+  position: absolute;
+  top: 0px;
+  max-width: 400px;
+  width: 100%;
+  pointer-events: auto;
+  z-index: 10;
+  height: 22px;
+}
+
+.leftBar {
+  background: rgba(255, 255, 255, 0.4);
+  border-top-left-radius: 4;
+  position: absolute;
+  border-radius: 4px 0px 0 0;
+}
+
+.rightBar {
+  background: rgba(255, 255, 255, 0.4);
+  border-top-right-radius: 4;
+  position: absolute;
+  border-radius: 4px 0px 0 0;
+  transform: translateX(-100%);
+  left: 100%;
+}
+
+.itemsContainer {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  height: 36px;
+  width: 400px;
+  background: white;
+  border-radius: 4px;
+  @media (max-width: 1280px) {
+    width: auto;
+    max-width: 400px;
+    min-width: 200px;
+  }
+  box-shadow:
+    0px 3px 8px rgba(0, 0, 0, 0.08),
+    0px 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.labelPosition {
+  display: flex;
+  align-items: center;
+  height: 14px;
+  margin-left: 3px;
+  margin-top: 22px;
+  position: absolute;
+}
+
+.label {
+  font-size: 10px;
+  letter-spacing: 0.01em;
+  color: #9daab8;
+  width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: 1250px) {
+    width: 50px;
+  }
+  @media (max-width: 1200px) {
+    width: 40px;
+  }
+  @media (max-width: 1145px) {
+    width: 30px;
+  }
+  @media (max-width: 1070px) {
+    width: 20px;
+  }
+}

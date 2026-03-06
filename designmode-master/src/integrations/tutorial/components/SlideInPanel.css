@@ -1,0 +1,24 @@
+/* Tutorial panel spacing adjustments */
+:root {
+  --tutorial-panel-width: 0px;
+}
+
+:root.tutorial-panel-open {
+  --tutorial-panel-width: 260px;
+}
+
+/* Adjust right sidebar when tutorial panel is open */
+.forma-grid-right {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Push right sidebar left when panel is open */
+html.tutorial-panel-open .forma-grid-right {
+  transform: translateX(calc(-1 * var(--tutorial-panel-width))) !important;
+}
+
+/* Also adjust main content area to prevent overlap */
+html.tutorial-panel-open .forma-grid-main {
+  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-right: var(--tutorial-panel-width);
+}

@@ -1,0 +1,78 @@
+.TemplateButton {
+  height: 36px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 36px auto 28px;
+  grid-column-gap: 10px;
+
+  align-items: center;
+
+  font: var(--11-medium);
+
+  &:hover {
+    background-color: var(--background-color-surface-200);
+    cursor: pointer;
+
+    .UpdatesAvailableButton &:hover {
+      background-color: var(--background-color-surface-200);
+    }
+  }
+}
+
+.UpdatesAvailableButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  background: none;
+  border: none;
+}
+
+.PreviewContainer36 {
+  width: 36px;
+  height: 36px;
+}
+
+.ClassName {
+  width: 20px;
+}
+
+.SubHeader {
+  font: var(--12-bold);
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.TemplateList {
+  & > :nth-child(n + 2) {
+    margin-top: 4px;
+  }
+}
+
+.AutomationRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 36px;
+}
+
+.AutomationInputWithIcon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 84px;
+}
+
+.AutomationIconLabel {
+  height: 16px;
+  margin-right: 8px;
+}
+
+.Divider {
+  border: none;
+  height: 1px;
+  background-color: var(--border-color-divider-light);
+}

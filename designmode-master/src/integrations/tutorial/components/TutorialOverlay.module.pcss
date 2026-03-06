@@ -1,0 +1,25 @@
+.TutorialContainer {
+  position: relative;
+}
+
+.OverlayRoot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: calc(var(--z-notification) + 1);
+  pointer-events: none;
+}
+
+.OverlayActive {
+  background: var(--background-color-overlay-dark);
+  pointer-events: auto;
+}
+
+.WidgetDock {
+  position: fixed;
+  bottom: 16px;
+  right: 288px;
+  z-index: var(--z-elements);
+}

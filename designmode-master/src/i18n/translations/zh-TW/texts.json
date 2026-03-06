@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "準備好開始設計",
+    "body": "如果選取<bold>「繼續」</bold>，我們會為您自動執行兩個設定步驟。您不需要採取任何行動。步驟完成後，您就可以在 Forma Site Design 中開始設計。",
+    "contextual": {
+      "header": "載入敷地特有的環境",
+      "body": "我們會為您的敷地載入免費的環境資料，包括地形和周圍的建築。"
+    },
+    "sunAnalysis": {
+      "header": "深入探索敷地狀況",
+      "body": "我們會對您的敷地和周圍環境執行日照時數分析，方便您制定設計決策。"
+    },
+    "continueButton": "繼續",
+    "sunAnalysisCoachmark": {
+      "header": "日照時數分析",
+      "body": "我們已對您的敷地自動啟動日照時數分析。{br}{br}當指示器變為綠色或圖元區頂部顯示橫幅後，即可檢閱結果。"
+    },
+    "finalModal": {
+      "title": "您的敷地現在設定好了",
+      "subTitle": "請繼續執行下面其中一個建議的步驟:",
+      "suggestedAction1": {
+        "header": "繪製建築",
+        "body": "啟用工具列中的其中一個建築工具。"
+      },
+      "suggestedAction2": {
+        "header": "匯入模型",
+        "body": "按一下工具列中的匯入圖示，然後按照建議的步驟進行。"
+      },
+      "suggestedAction3": {
+        "header": "比較分析",
+        "body": "執行第二個分析，並在螢幕左上角開啟「比較」模式。"
+      },
+      "showMeHow": "顯示更多選項",
+      "finalButton": "瞭解了"
+    },
+    "sunAnalysisTriggerError": "無法觸發日照分析"
+  },
+  "alignment": {
+    "center": "置中對齊",
+    "left": "靠左對齊",
+    "right": "靠右對齊"
+  },
+  "analysis": {
+    "alertsLabel": "警示",
+    "analyzeTitle": "分析",
+    "analysisParameters": "分析參數",
+    "areaRadius": "區域半徑",
+    "areaTitle": "分析區域",
+    "customCircle": "自訂圓圈",
+    "daylightAnalysisIllustrationAlt": "採光分析圖解",
+    "failedToOrder": "無法排序分析: {error}",
+    "learnMore": "進一步瞭解",
+    "microclimateAreaRadius": "微氣候區域半徑",
+    "noisePredictionUnavailable": "無法取得噪音預測",
+    "radiusLabel": "半徑",
+    "selectAreaToRunAnalysis": "選取要執行分析的敷地界線或區域",
+    "disabledTooltips": {
+      "addRoadsOrRails": "新增有交通資料的道路和/或鐵路以執行分析",
+      "analysisAreaOutsideMap": "分析區域在地圖區域之外",
+      "concurrentQuotaReached": "已達到同時執行風環境分析數的限制",
+      "dailyQuotaReached": "已達到每日的風環境分析限額",
+      "geometryAlertsDetected": "偵測到幾何圖形問題",
+      "geometryTooComplex": "幾何圖形太複雜",
+      "invalidParameters": "參數無效",
+      "loadingData": "正在載入資料",
+      "notAvailable": "無法使用",
+      "notAbleAsViewer": "無法以檢視者身分執行分析",
+      "pleaseWait": "請稍候...",
+      "savingInProgress": "正在儲存...",
+      "selectSiteLimitOrZone": "選取要執行分析的敷地界線或區域"
+    },
+    "emptyStateZoneExplanation": "預設情況下，系統會對您新增的建築和其他物件執行分析。新增敷地界線或區域，可取得特定區域的完整分析結果。",
+    "entireModel": "整個模型",
+    "missingTrafficData": {
+      "description": "新增有交通資料的道路或鐵路，以預測真實世界的噪音狀況。",
+      "startGuideButton": "入門指南",
+      "title": "缺少交通資料"
+    },
+    "noiseAreaRadius": "噪音區域半徑",
+    "properties": {
+      "radiusLabel": "半徑"
+    },
+    "seeResultButton": "查看分析結果",
+    "seeResultsButton": "查看分析結果",
+    "selectionTitle": "選取分析區域",
+    "selectAllAreasButton": "選擇所有區域",
+    "deselectAllAreasButton": "取消選取所有區域",
+    "skyComponent": {
+      "potentialDescription": "我們的<strong>採光潛力分析</strong>透過「垂直天空分量」分數的協助，可以找出立面採光不足的部分。請選擇要分析的區域。"
+    },
+    "sun": {
+      "removeDateButton": "移除日期"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "具有完整支援的建築",
+      "buildingsPartialSupport": "具有部分支援的建築/其他",
+      "iconAlt": "分析支援等級",
+      "title": "分析支援"
+    },
+    "windAreaRadius": "風場區域半徑",
+    "windRoseUnavailable": {
+      "description": "我們的風玫瑰圖資料提供者發生問題。您仍然可以分析微氣候模式，但沒有歷史資料可檢驗風場狀況的可能性。我們正在努力還原資料。",
+      "title": "目前無法取得風玫瑰圖",
+      "windDescription": "我們的風玫瑰圖資料提供者發生問題。您仍然可以分析一般風場模式並手動調整風速。無法使用快速風環境分析。我們正在努力還原資料。"
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "使用此規劃的分析已存在。",
+    "concurrentAnalysesReached": "已達到同時執行分析數的限制",
+    "concurrentNoiseAnalysesReached": "已達到同時執行噪音分析數的限制",
+    "dailyNoiseQuotaReached": "已達到 24 小時內噪音分析數的上限",
+    "dailyQuotaReached": "已達到每日的分析限額",
+    "nothingToAnalyze": "沒有可分析的內容",
+    "somethingWentWrong": "發生錯誤"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "無法獲得詳細風環境分析。請稍後再嘗試執行分析。",
+      "rapidWindUnavailable": "無法獲得快速風環境分析。請稍後再嘗試執行分析。",
+      "rapidWindUnavailableToast": "無法獲得快速風環境分析。我們的團隊已收到通知。請稍後再嘗試執行分析。"
+    },
+    "types": {
+      "microclimate": {
+        "description": "我們的微氣候分析會考慮日照、風場和採光等狀況，計算在您的敷地所感受到的溫度。我們建議等到風環境分析完成，可獲得更準確的結果。",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "微氣候",
+        "text": "微氣候分析"
+      },
+      "noise": {
+        "description": "透過快速噪音分析中的即時預測，瞭解您的設計如何影響環境的噪音狀況。執行詳細噪音分析，可以更準確模擬噪音狀況，同時分析建築立面的狀況。",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "噪音",
+        "text": "噪音分析"
+      },
+      "sky-component": {
+        "description": "藉助「垂直天空分量」分數，評估建築立面採光不足的部分。若要執行分析，您必須新增敷地界線。",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "採光潛力",
+        "text": "採光潛力分析"
+      },
+      "solar-panel": {
+        "name": "太陽能"
+      },
+      "sun": {
+        "description": "評估您的敷地和建築可獲得日照的時數。若要執行分析，您必須新增敷地界線並選擇日期。",
+        "link": "https://help.autodeskforma.com/en/articles/6951253",
+        "name": "日照時數",
+        "text": "日照時數分析"
+      },
+      "wind": {
+        "description": "透過快速風環境分析中的即時預測，瞭解您的設計變更如何影響風場狀況。執行詳細的風場和風環境舒適度分析，可以更準確模擬不同的風向和風速。",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "風環境",
+        "text": "風環境分析"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "新增節點",
+      "buildingWidth": "建築寬度",
+      "cityBlocks": "城市街區",
+      "editGridOrientationButton": "編輯格線方位",
+      "explanation": "我們持續努力開發各種工具，協助您探索敷地的量體潛力。請透過我們的論壇關注開發進度。",
+      "floors": "樓層",
+      "headerTitle": "探索",
+      "iterativeExplanation": "設計自動化工具，可讓您快速產生和探索敷地與建築配置。",
+      "layoutTitle": "配置",
+      "layouts": "配置",
+      "linearBuildings": "線性建築",
+      "mixed": "混合",
+      "name": "探索",
+      "siteAutomation": "敷地自動化",
+      "storyHeight": "總樓高",
+      "towerBuildings": "高層建築",
+      "towerWidth": "高層建築寬度"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "新增基底",
+    "changeIndicatorLabel": "變更指示器",
+    "editBaseButton": "編輯基底",
+    "editBaseDoneButton": "完成",
+    "editBaseRightMenuMessage": "編輯基底進行變更",
+    "editBaseRightMenuMixedSelectionMessage": "您選取的項目包括基底物件。不能混合選取來進行變更。",
+    "editing": {
+      "changesWillAffect": "變更將會影響",
+      "proposals": "個提案",
+      "title": "編輯"
+    },
+    "errors": {
+      "deleteFailed": "無法刪除基底。",
+      "duplicateFailed": "無法複製基底。",
+      "fetchFailed": "無法擷取基底。",
+      "renameIndicatorFailed": "無法更名基底指示器。",
+      "renameFailed": "無法更名基底。",
+      "switchFailed": "無法切換基底。"
+    },
+    "noBaseLayersText": "您可以在基底新增要在各個提案中重複使用的元素。",
+    "strategy": {
+      "description": "提案使用已過時的基底。請選擇要更新到最新版本的基底，還是複製較舊版本的基底。",
+      "duplicateOld": "複製舊版基底",
+      "header": "您的基底已過時",
+      "useLatest": "使用最新版本的基底"
+    },
+    "swapBaseButton": "交換基底",
+    "swapButton": "交換",
+    "untitledBaseLabel": "未命名基底"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "繪製一般直線",
+        "name": "直線",
+        "tooltip": "建立一般直線以傳達設計意圖。不會納入分析。"
+      },
+      "surface": {
+        "draw": "繪製一般表面",
+        "name": "表面",
+        "tooltip": "建立一般表面以傳達設計意圖。不會納入分析。"
+      },
+      "title": "一般",
+      "volume": {
+        "draw": "繪製一般體積",
+        "name": "體積",
+        "tooltip": "雖然系統會分析一般體積，但不會將其面積納入面積度量中。"
+      }
+    }
+  },
+  "building": {
+    "addFloor": "新增一層樓",
+    "addFloorsAction": "新增多層樓",
+    "buildingColorsLabel": "建築顏色",
+    "buildingDesignButton": "以 Building Design 開啟",
+    "buildingDesignDescription": "此建築在 Building Design 中設計，請開啟 Building Design 進行編輯。",
+    "buildingDesignGeometry": "Building Design 幾何圖形",
+    "buildingsTitle": "建築",
+    "buildingWidthLabel": "建築寬度",
+    "divisionWidth": "區塊寬度",
+    "roadWidthLabel": "道路寬度",
+    "towerBlockWidthLabel": "大樓寬度",
+    "typesTitle": "類型",
+    "upgradingFor3DSketchBuilding": "升級 3D 草圖建築以計算隱含碳",
+    "variationsTitle": "變化",
+    "errors": {
+      "failedToLoadFunctions": "無法載入自訂建築功能",
+      "failedToLoadSettings": "無法載入設定"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "新增到資源庫",
+      "addToLibraryTooltip": "新增到資源庫",
+      "emptyFloors": "樓層空白",
+      "parking": "停車場",
+      "popupTitle": "樓層平面圖",
+      "title": "樓層平面圖",
+      "cannotDrawCornerDescription": "您還無法繪製轉角平面圖",
+      "cannotDrawSplitDescription": "您還無法繪製分割平面圖",
+      "finishDrawingTooltip": "完成繪製以新增樓層平面圖",
+      "mixedSelectionDescription": "已選取混合樓層平面圖",
+      "noLibraryDescription": "資源庫中沒有此外部造型的樓層平面圖",
+      "noSelectionDescription": "沒有選取樓層平面圖",
+      "rightClickToAddDescription": "在其中一個提案中的樓層按一下右鍵，將其新增到資源庫中",
+      "selectSectionsDescription": "請選取空白或有樓層平面圖的區段"
+    },
+    "floors": {
+      "seeAllButton": "查看所有樓層"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "新增",
+      "addSectionCutButton": "新增切割區段",
+      "apartmentBuildingStories": "公寓大樓總樓層數",
+      "apartmentBuildingStoryHeight": "公寓大樓總樓高",
+      "apartmentBuildingWidth": "公寓大樓寬度",
+      "circulationTitle": "通道",
+      "headerTitle": "線型建築",
+      "outdatedLabel": "過時",
+      "targetSectionLength": "目標區段長度",
+      "circulation": {
+        "sectionCountText": "區段數: {count}",
+        "widthLabel": "走廊寬度",
+        "widthText": "寬度: {width}"
+      },
+      "divisionWidthLabel": "區塊寬度",
+      "releaseToBasicAnimationAlt": "釋出為基本動畫",
+      "releaseToBasicExplanation": "釋出線型自動化會建立一個基本建築，您可以為各個樓層增加功能或停車場。釋出後，就無法再次執行線型自動化。",
+      "releaseToFloorPlanAction": "釋出為樓層平面圖",
+      "releaseToFloorPlanAnimationAlt": "釋出為樓層平面圖動畫",
+      "releaseToFloorPlanExplanation": "釋出通道自動化會建立一個樓層平面圖，您可以手動設計配置。釋出後，就無法再次執行通道自動化。",
+      "towerWidthLabel": "大樓寬度"
+    },
+    "properties": {
+      "lengthLabel": "長度",
+      "numberOfFloorsLabel": "樓層數",
+      "numberOfStoriesLabel": "SiteStudy 總樓層數",
+      "stories": "總樓層數",
+      "storyHeight": "總樓高",
+      "storyHeightLabel": "總樓高",
+      "widthLabel": "寬度"
+    },
+    "toolbar": {
+      "title": "建築"
+    },
+    "tooltips": {
+      "addBuildingsButton": "新增建築",
+      "clampToTerrainButton": "將建築固定在地形上",
+      "numberOfFloorsLabel": "樓層數",
+      "parkingEditDescription": "樓層平面圖編輯器中的停車場現在編輯完成",
+      "releaseToBasicButton": "釋出為基本建築",
+      "releaseToZonesButton": "釋出為區域",
+      "removeBuildingsButton": "移除建築",
+      "storyHeightLabel": "總樓高",
+      "swapFloorPlansButton": "交換樓層平面圖",
+      "targetSectionLengthLabel": "目標區段長度",
+      "towerWidthLabel": "高層建築寬度",
+      "widthLabel": "建築寬度"
+    },
+    "types": {
+      "basic": {
+        "draw": "繪製基本建築",
+        "name": "基本建築",
+        "tooltip": "以可控制和精確的方式繪製任何樓層形狀的建築。在「面積度量」中檢視建築統計資訊。"
+      },
+      "line": {
+        "draw": "繪製線型建築",
+        "name": "線型建築",
+        "tooltip": "沿著一條線繪製建築結構。調整其參數 (例如區段數和樓層數)。在「面積度量」中檢視建築統計資訊。"
+      }
+    }
+  },
+  "camera": {
+    "compass": "北方朝上",
+    "lookAt": {
+      "title": "看向",
+      "tooltip": "將滑鼠移到某一面上方調整相機方向。按一下可縮放佈滿整面，拖曳可調整縮放區域。"
+    },
+    "lookFrom": {
+      "title": "從某一點觀看",
+      "tooltip": "按一下立面的某個點可從該點觀看，或者按一下並拖曳可挑選某個點和檢視方向。"
+    },
+    "optionsLabel": "相機選項",
+    "optionsTitle": "相機選項",
+    "switchCameraMode": "切換相機模式",
+    "vectorExport": {
+      "exportSuccessful": "成功匯出",
+      "title": "向量匯出"
+    },
+    "switchTo2d": "切換為 2D (正投影) 模式",
+    "switchTo3d": "切換為 3D 模式",
+    "zoom": {
+      "toFitProposal": "縮放至佈滿提案",
+      "toFitSelection": "縮放至佈滿選取項目"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "邊"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "整排連棟",
+      "placeSinglesButton": "放置獨棟"
+    }
+  },
+  "contextualData": {
+    "description": "查看和管理可用於專案的環境資料。您也可以在這裡訂購更多資料。",
+    "title": "環境資料"
+  },
+  "contextMenu": {
+    "copy": "複製",
+    "cut": "剪下",
+    "delete": "刪除",
+    "exportTerrainAsObj": "將地形匯出為 obj",
+    "moveToBack": "向後移動",
+    "moveToBase": "移到基底",
+    "moveToFront": "向前移動",
+    "moveToProposal": "移到提案中",
+    "paste": "貼上",
+    "pasteInPlace": "就地貼上",
+    "terrainPad": {
+      "moveToBack": "將地形板向後移動",
+      "moveToFront": "將地形板向前移動"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "無法在專案或中樞之間複製元素。",
+    "failedToCopyElementMessage": "無法複製元素。"
+  },
+  "dataOrders": {
+    "completed": "已完成下列資料訂購: {name}。資料正新增到您的提案中，您在幾秒鐘之後就可以在圖層中看到。",
+    "completedAll": "{names} 已載入並新增到您的提案基底中。您可以在「環境資料」下瀏覽和訂購更多資料。",
+    "failed": "{name} 失敗",
+    "failedToAdd": "無法將「{name}」新增到提案中，但資料在資源庫中仍然可用。",
+    "processing": "正在處理下列資料訂購: {name}。完成後，資料會新增到您的提案中。",
+    "statusTitle": "資料訂購狀態"
+  },
+  "demoSite": {
+    "badge": "示範",
+    "flyout": {
+      "content": "我們創建此網站是為了演示Forma功能。開始下面的指南，按照簡單工作流程的步驟操作，並在準備就緒后創建自己的網站。",
+      "createSiteButton": "建立新敷地",
+      "createSiteTooltip": "您必須擁有有效的授權並具備權限，才能在此專案中建立敷地",
+      "header": "這是一個示範敷地",
+      "startGuideButton": "入門指南"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "開始使用",
+    "titleFormaSiteDesign": "展示網站",
+    "description": "這是一個預先設計的範例網站，供您探索 Forma 敷地 Design。不要擔心破壞任何東西 - 將其視為一個安全的實驗空間，而不會對您的實際專案產生任何影響。",
+    "callToAction": "按一下 {bold} 以瀏覽 展示 網站。",
+    "callToActionBold": "繼續",
+    "buttonContinue": "繼續",
+    "buttonGoToHome": "前往 Forma 首頁",
+    "imageAlt": "Forma 敷地 設計視覺化"
+  },
+  "drawing": {
+    "traceShape": "描繪現有形狀"
+  },
+  "hotkeys": {
+    "addNode": "新增節點",
+    "cancelDrawingPoint": "取消繪製點",
+    "clickAndMoveGrip": "按一下並移動掣點可調整該方向的比例。",
+    "complete": "完成",
+    "copy": "複製",
+    "cut": "剪下",
+    "deleteSelected": "刪除選取項目",
+    "drawHouse": "繪製房屋",
+    "drawHousesWithLine": "繪製連棟房屋",
+    "drawLine": "繪製直線",
+    "drawRoad": "繪製道路",
+    "edit": "編輯",
+    "exitContext": "結束環境",
+    "exitEditGraph": "結束編輯圖表",
+    "exitGraphTool": "結束圖表工具",
+    "exitHouseTool": "結束房屋工具",
+    "exitSiteStudyAndApply": "結束「敷地研究」工具，並將研究套用到提案",
+    "exitTool": "結束工具",
+    "exitTransportationTool": "結束交通運輸工具",
+    "finishEditing": "完成編輯",
+    "freeform": "任意形狀",
+    "measureDistance": "測量距離",
+    "paste": "貼上",
+    "placeSingleHouses": "放置獨棟房屋",
+    "redo": "重做",
+    "remove": "移除",
+    "resetGraph": "重設圖表",
+    "selectAll": "全選",
+    "selectSomethingToModify": "使用{toolName}選取要修改的內容",
+    "switchHouseCorner": "切換房屋轉角",
+    "switchHousePlacementSide": "切換房屋放置邊",
+    "toggleSidebar": "切換側邊欄",
+    "undo": "退回"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "移動羅盤位置時，請按住 Shift 鍵讓旋轉軸與游標下方的幾何圖形對齊。",
+    "editSiteLayout": "編輯敷地配置，或選取個別區域以設定建築類型。",
+    "freeMode": "自由模式。按 ↹ Tab 鍵進入水平模式。",
+    "horizontalMode": "水平模式。按 ↹ Tab 鍵進入自由模式。",
+    "mode2D": "2D 模式。所有工具都會限制在水平平面。",
+    "rotateMoveText": "{moveModeText} 移動 ({inputModeText})。按 ↹ Tab 鍵可 {nextMoveModeText} 移動 ({nextInputModeText})。",
+    "selectAreaToExplore": "選取要探索敷地配置選項的區域。",
+    "snappingAxesHint": " 按 Alt 鍵可隱藏貼齊的軸。按 Alt + C 可清除。",
+    "straightAction": "將{action}拉直。按 ↹ Tab 鍵可將{action}調整成錐形。",
+    "switchHouseCornerAndRotate": "按 Tab 鍵可切換房屋轉角。按住並拖曳滑鼠可旋轉",
+    "switchHousePlacementSide": "按 Tab 鍵可切換房屋放置邊",
+    "taperAction": "將{action}調整成錐形。按 ↹ Tab 鍵可將{action}調整成錐形。"
+  },
+  "menus": {
+    "generatorsByExtensions": "延伸功能提供的產生器"
+  },
+  "messages": {
+    "elementAddedTo": "元素已新增到 {location}"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "正在儲存..."
+    },
+    "camera": {
+      "lookAt": "看向"
+    },
+    "lineWidth": "線寬",
+    "settings": "設定",
+    "templates": {
+      "updatesAvailable": "更新可供使用"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "無法執行建築，請用右鍵按一下選項",
+      "failedToConvertVolumes": "無法將體積轉換為基本建築",
+      "failedToDraw": "無法繪製基本建築",
+      "failedToEdit": "無法編輯新的基本建築",
+      "failedToPushPull": "無法推/拉基本建築"
+    },
+    "failedToLoadContextualData": "無法載入環境資料",
+    "import": {
+      "largeScale": "匯入包含比例 ({size}) 較大的元素。匯入的行為可能不如預期。按 Esc 取消。",
+      "resultingShapeInvalid": "產生的形狀無效。"
+    },
+    "modelNotGeolocated": "Site Design 模型沒有地理位置。請訂購環境資料以便找出地理位置",
+    "terrain": {
+      "boundingBoxTooLarge": "元素幾何圖形邊界框太大，無法用作地形。最大面積: 4 平方公里。實際面積: {size} 平方公里"
+    },
+    "library": {
+      "couldNotFindElement": "找不到資源庫元素",
+      "elementNotAvailable": "資源庫元素無法使用",
+      "failedToConvertTerrain": "無法轉換為地形元素",
+      "failedToDownloadFloorPlans": "無法下載樓層平面圖",
+      "failedToSaveFloorPlans": "無法儲存專案層級的樓層平面圖。請重新整理頁面",
+      "failedToUpdateLibrary": "無法更新資源庫"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "線型建築功能表發生錯誤",
+      "failedToDraw": "無法繪製線型建築",
+      "failedToEdit": "編輯線型建築失敗",
+      "failedToolbarAction": "線型建築工具列動作失敗"
+    },
+    "siteStudy": {
+      "errorInExplore": "探索時發生錯誤。請再試一次！",
+      "errorOccurred": "發生錯誤，我們的工程師已收到通知。",
+      "failedToLoadPicker": "無法載入探索選擇器。請再次嘗試動作。"
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "瀏覽所有外掛程式",
+    "browseDescription": "瀏覽第三方提供者既有的延伸功能或產生器，或新增您自己的 - 將在這裡顯示。",
+    "downloadButton": "下載延伸功能",
+    "downloadDescription": "以從 Revit 或 Rhino 匯入模型。",
+    "importModelTitle": "從延伸功能匯入模型",
+    "noDescriptionAvailable": "沒有說明。",
+    "plugins": "外掛程式"
+  },
+  "errorBoundary": {
+    "componentCrashed": "元件發生當機",
+    "retryButton": "重試",
+    "unexpectedError": "發生意外的錯誤。請重試動作，或重新載入頁面再試一次"
+  },
+  "guides": {
+    "closeMenu": "關閉導引和測量功能表"
+  },
+  "geometryAlerts": {
+    "dismiss": "關閉",
+    "header": "幾何圖形警示",
+    "review": "檢閱",
+    "title": "幾何圖形警示 ({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "請移除或修改以執行分析。",
+      "title": "幾何圖形重複"
+    },
+    "invalidBbox": {
+      "subTitle": "請移除或修改以執行分析。",
+      "title": "元素的幾何圖形距離太遠"
+    },
+    "outOfBounds": {
+      "subTitle": "請移除或修改以執行分析。",
+      "title": "元素在地形之外"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "一樓的面積為 0。請將底面水平貼齊以修復問題。",
+      "title": "偵測到一樓面積為零"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "此建築有一個或多個樓層的面積為 0，無法形成有效的建築。",
+      "title": "偵測到有樓層面積為零"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "此建築有<a>幾何圖形不是無縫</a>，在結束 3D 草圖時可能會變成沒有樓層的一般模型",
+      "title": "建築不是無縫"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "此模型有<a>幾何圖形不是無縫</a>，可能會影響工具和顯示行為。",
+      "title": "幾何圖形不是無縫"
+    }
+  },
+  "importToolbar": {
+    "title": "匯入模型"
+  },
+  "labels": {
+    "addLabelButton": "新增標示",
+    "category": "標示",
+    "description": "新增標示，使用簡短文字描述標記 3D 圖元區中的特定點。您最多可以新增 {count} 行文字。",
+    "label": "標示",
+    "placeholder": "插入文字..."
+  },
+  "layerList": {
+    "buildings": "建築",
+    "category": {
+      "contextualDataDuration": "環境資料 (~1-2.5 分鐘)"
+    },
+    "generic": "一般",
+    "images": "影像",
+    "propertyBoundaries": "地界邊界",
+    "roads": "道路",
+    "siteLimits": "敷地界線",
+    "terrain": "地形",
+    "vegetation": "植物",
+    "zones": "區域"
+  },
+  "layersTitle": "圖層",
+  "library": {
+    "addedToLibrary": "已將 {name} 新增到資源庫。",
+    "addToLibraryButton": "新增到資源庫"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "繪製限制條件",
+      "name": "限制條件",
+      "plural": "限制條件",
+      "tooltip": "建立體積以顯示專案的限制條件。"
+    },
+    "siteLimit": {
+      "defineAsAction": "定義為敷地界線",
+      "hotkeyDescription": "繪製敷地界線",
+      "name": "敷地界線",
+      "tooltip": "建立用於分析專案度量的敷地界線。"
+    },
+    "title": "限制",
+    "zone": {
+      "hotkeyDescription": "繪製區域",
+      "name": "區域",
+      "tooltip": "繪製區域以定義要在敷地上分析的區域。"
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "結束繪製模式"
+  },
+  "navbar": {
+    "addButton": "新增",
+    "quickActionsButton": "快速動作",
+    "settingsButton": "設定"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "您是否確定要刪除 {name}？",
+      "descriptionParagraph1": "基底包含的物件可在不同提案間重複使用。您可以建立多個基底，在不同提案之間交換。",
+      "descriptionParagraph2": "若要新增現有物件，請用右鍵按一下該物件，然後選擇「移到基底」。若要繪製新物件，請按一下「編輯」。"
+    },
+    "dataOrderProcessing": "正在處理資料訂購。完成後，資料會新增到您的提案中。"
+  },
+  "pendingOperation": {
+    "defaultDescription": "正在等候自動化完成..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} 個幾何圖形已新增到您的{layerType}",
+    "geometriesSelectedLabel": "已選取幾何圖形",
+    "updateTerrainAction": "更新地形",
+    "updateTerrainDescription": "使用資源庫中的新地形取代目前的地形"
+  },
+  "properties": {
+    "color": "顏色",
+    "elevation": "高程",
+    "height": "高度",
+    "length": "長度",
+    "mixed": "混合",
+    "name": "名稱",
+    "position": "位置",
+    "radius": "半徑",
+    "width": "寬度"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "無法下載所有物件。",
+      "downloadElementsRecovery": "或稍後再試一次。在問題解決之前，您將處於檢視模式",
+      "flatteningGroups": "將提案的群組解除，因為系統已經不再支援這些群組",
+      "ignoringOldElements": "忽略舊元素",
+      "knownCriticalHeader": "無法處理元素",
+      "knownCriticalMessage": "請重新整理頁面再試一次。",
+      "missingGeoLocation": "缺少要執行動作的專案地理位置。",
+      "notFoundHeader": "找不到提案",
+      "notFoundMessage": "我們找不到您嘗試存取的提案。",
+      "terrainNotFoundHeader": "缺少地形模型",
+      "terrainNotFoundMessage": "目前提案發生意外錯誤。",
+      "tooManyRequestsHeader": "有人太活躍了！",
+      "tooManyRequestsMessage": "從您的網路收到的請求超出我們的處理能力。請稍後再嘗試載入此頁面，或切換到其他網路 - 例如，透過個人熱點。"
+    },
+    "noProposalLayersText": "這裡會列出某個提案獨有的元素。"
+  },
+  "proposalHistory": {
+    "branchFailed": "無法從舊版修訂建立新提案。",
+    "branchRevisionButton": "建立新提案",
+    "branchSuccess": "已從選擇的版本建立名為「{name}」的新提案",
+    "contributors": "投稿人數: {count}",
+    "copyLinkButton": "複製連結",
+    "currentVersionLabel": "目前版本",
+    "filter": {
+      "byAnalysis": "依分析",
+      "byDate": "依日期",
+      "from": "從",
+      "onlyYours": "只有您的",
+      "pinned": "已釘住",
+      "selectDates": "選取日期",
+      "title": "篩選",
+      "to": "到"
+    },
+    "linkToVersionCopied": "{time} 的連結已複製",
+    "nameThisVersionAction": "命名此版本",
+    "pinVersionAction": "釘住版本",
+    "unpinVersionAction": "取消釘住版本",
+    "untitledVersionLabel": "未命名版本",
+    "viewingVersionLabel": "檢視版本"
+  },
+  "quickAccess": {
+    "actionsLabel": "動作",
+    "noSuggestions": "沒有建議",
+    "openHotkeyList": "開啟快速鍵清單",
+    "repeatLastTool": "重複上一個工具",
+    "search": "搜尋",
+    "title": "快速存取"
+  },
+  "requestInvite": {
+    "button": "請求發出邀請",
+    "homeLink": "前往您的首頁",
+    "projectLink": "前往專案",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "已經是成員",
+        "message": "您已經是此專案的成員。"
+      },
+      "ALREADY_REQUESTED": {
+        "header": "已請求發出邀請",
+        "message": "您請求發出此專案的邀請正待處理。如果您的管理員核准請求，您就會在電子郵件中收到此專案的邀請。"
+      },
+      "CAN_JOIN": {
+        "header": "您可以加入",
+        "message": "您可以加入此專案。請前往專案，按一下「加入專案」按鈕。"
+      },
+      "ERROR": {
+        "header": "發生錯誤，請再試一次"
+      },
+      "NOT_FOUND": {
+        "header": "錯誤: 找不到專案",
+        "message": "您輸入的 URL 不是指向現有專案。"
+      },
+      "REQUEST_LIMIT": {
+        "header": "請求太多",
+        "message": "您有太多待處理的邀請請求。請稍後再試一次。"
+      },
+      "SUCCESS": {
+        "header": "您的請求已成功寄送！",
+        "message": "如果您的管理員核准請求，您就會在電子郵件中收到此專案的邀請。"
+      }
+    },
+    "statusFallback": {
+      "header": "您沒有此 Forma 專案的存取權",
+      "message": "若要存取專案，您必須獲得其中一位管理員的邀請。請使用下面的按鈕向管理員請求發出邀請。"
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "預設資料夾: 我的專案檔案資料夾"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "置中對齊",
+      "left": "靠左對齊",
+      "right": "靠右對齊"
+    },
+    "buildingLabel": "建築",
+    "createNew": "新建",
+    "layoutLabel": "配置",
+    "loading": "正在載入",
+    "name": "房屋",
+    "parcelLabel": "宗地",
+    "plural": "房屋",
+    "publish": "發佈",
+    "tooltip": "繪製獨棟房屋或沿著一條線的連棟房屋。在性質面板中製作和重複使用房屋類型。",
+    "tooltips": {
+      "buffer": "緩衝",
+      "flatRoof": "平屋頂",
+      "gableRoof": "山牆屋頂",
+      "length": "長度",
+      "numberOfFloors": "樓層數",
+      "ridgeDirection": "屋脊方向",
+      "roofAngle": "屋頂角度",
+      "shedRoof": "單坡屋頂",
+      "storyHeight": "總樓高",
+      "width": "寬度"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "刪除剖面框",
+    "enableButton": "啟用剖面框",
+    "saveButton": "儲存剖面框",
+    "title": "剖面框",
+    "toggleButton": "顯示/隱藏框線"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "此提案在您進行編輯時發生變更 (例如，可能有其他團隊成員處理此提案)。您是否要將您的版本另存為新提案？",
+      "discardEdits": "捨棄編輯",
+      "saveAsNew": "另存成新提案",
+      "title": "提案編輯發生衝突"
+    },
+    "error": {
+      "body": "無法儲存上一次的編輯內容。請重新整理頁面以繼續編輯。",
+      "ok": "確定",
+      "title": "儲存失敗"
+    }
+  },
+  "shapes": {
+    "arc": "依三點建立弧",
+    "circle": "圓形",
+    "cube": "正方體",
+    "cuboid": "長方體",
+    "cylinder": "圓柱",
+    "dome": "圓頂",
+    "freeform": "任意形狀",
+    "pyramid": "角錐",
+    "rectangle": "矩形",
+    "roof": "屋頂",
+    "shapes3d": "3D 造型",
+    "spline": "雲形線",
+    "title": "基本型"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "將游標懸停在邊可啟用輔助線，按住 ⇧ Shift 鍵可跟著輔助線。按住 {key} 可防止貼齊。",
+      "affineInstructions": "按住 {key} 可防止貼齊。按 Tab 鍵可在水平、垂直和地形模式之間切換。",
+      "clickToAddSubtract": "按一下可在直線中增加或減少點。",
+      "editModeStartFinishMac": "按住 ⌥ 選項可增加/減少點。按 ↵ Enter 鍵可完成編輯。",
+      "editModeStartFinishWindows": "按住 Alt 鍵可增加/減少點。按 ↵ Enter 鍵可完成編輯。",
+      "finishEditing": "按 ↵ Enter 鍵可完成編輯。",
+      "finishPolygon": "按 ↵ Enter 鍵可完成建立多邊形。",
+      "preciseMoveVertical": "按 {key} 可切換垂直模式。",
+      "specifyDistance": "輸入可設定特定距離。按一下可放置。"
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "3D 草圖建築不支援刪除、複製、剪下和貼上樓層。請改為在 3D 草圖中編輯。"
+  },
+  "snapping": {
+    "cursorElevation": "游標處的高程",
+    "guidesAndMeasurements": "導引和測量",
+    "snapToGuides": "鎖點到導引",
+    "snapToObjects": "鎖點到物件"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "輸入空間名稱，或留空使用預設值"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "連線到方案",
+      "connectToScenarioDesc": "方案是專案中的共用設計容器，連接來自多個軟體應用程式的模型、工具以及幾何資料和其他資料。"
+    }
+  },
+  "relativeTime": {
+    "today": "今天"
+  },
+  "terrain": {
+    "elevation": "高程",
+    "errors": {
+      "loadMapImageFailed": "無法載入地圖影像",
+      "loadSatelliteTextureFailed": "載入衛星材質失敗。",
+      "loadTextureFailed": "載入地形材質失敗。"
+    },
+    "labels": {
+      "numberOfSelectedPads": "建板體積",
+      "padVolume": "建板體積",
+      "padsVolume": "建板體積",
+      "showAsPercentage": "以百分比顯示",
+      "showAsRatio": "以比率顯示",
+      "totalMassBalance": "總量體平衡"
+    },
+    "massBalanceHover": "整個地形的量體體積淨變化。",
+    "metricsHeader": "度量",
+    "pad": {
+      "header": "地形板",
+      "name": "地形板",
+      "tooltip": "地形挖方/填方、調整高程和坡度，以及估算量體平衡。"
+    },
+    "padVolumeHover": "透過選取的建板為地形增加/減少體積。",
+    "padsHeader": "地形板",
+    "slope": "斜度"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "自動化載入時，無法在基底圖層/提案之間切換",
+    "pendingSelectionBlockedMessage": "自動化載入時，無法變更選取",
+    "pendingToolSwitchBlockedMessage": "自動化載入時，無法使用工具",
+    "transform": {
+      "redefineReferencePointsButton": "重新定義參考點"
+    }
+  },
+  "transform": {
+    "cover": "覆蓋",
+    "fillet": "圓角",
+    "intersect": {
+      "name": "交集",
+      "tooltip": "讓兩個或多個物件相交。第一個所選物件的輪廓會跟著變更。"
+    },
+    "loft": "斷面混成",
+    "move": {
+      "name": "移動",
+      "tooltip": "透過定義參考點和終點來移動物件。"
+    },
+    "offset": {
+      "apply": "套用偏移",
+      "name": "偏移",
+      "tooltip": "將物件的輪廓向外延伸，或向內減少一定距離。"
+    },
+    "rotate": {
+      "name": "旋轉",
+      "tooltip": "圍繞定義的參考點旋轉場景中的物件。"
+    },
+    "shell": "薄殼",
+    "split": {
+      "name": "分割",
+      "tooltip": "使用線條分割一個或多個物件。"
+    },
+    "subtract": {
+      "name": "差集",
+      "tooltip": "將一個物件使用另一個物件減去某個形狀。第一個所選物件的輪廓會跟著變更。"
+    },
+    "sweep": "掃掠",
+    "title": "轉換",
+    "union": {
+      "name": "聯集",
+      "tooltip": "合併兩個或多個物件。第一個選取的物件會定義結果物件的品類和高度。"
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "轉角半徑是一個動態值，可根據配置最佳化道路曲線。",
+      "tight": "轉角半徑等於道路寬度 1/2 的小固定值。"
+    },
+    "railroads": {
+      "hotkeyDescription": "繪製鐵路",
+      "name": "鐵路",
+      "toolButton": "鐵路",
+      "tooltip": "透過右側面板建立鐵路並調整寬度。",
+      "typeLabel": "鐵路類型",
+      "typePlaceholder": "選取鐵路類型"
+    },
+    "roads": {
+      "hotkeyDescription": "繪製道路",
+      "name": "道路",
+      "toolButton": "道路",
+      "tooltip": "透過右側面板建立道路並調整寬度。",
+      "widthLabel": "道路寬度",
+      "withGraphToolButton": "道路 (含圖表)"
+    },
+    "title": "交通運輸",
+    "trafficData": {
+      "addButton": "新增交通資料",
+      "adtTooltip": "平均每日交通量",
+      "advancedSettingsLabel": "進階設定",
+      "dailyDistributionLabel": "每日交通量分佈",
+      "dayTimeTooltip": "白天: 06.00-18.00",
+      "eveningTimeTooltip": "晚上: 18.00-22.00",
+      "heavyVehicleLabel": "交通繁忙",
+      "nightTimeTooltip": "半夜: 22.00-06.00",
+      "railRequiredInputsMessage": "鐵路的噪音分析必須輸入所有資料",
+      "removeButton": "移除交通資料",
+      "roadRequiredInputsMessage": "道路的噪音分析必須輸入所有資料",
+      "speedLimitTooltip": "速限",
+      "title": "交通噪音資料"
+    }
+  },
+  "ui": {
+    "add": "新增",
+    "area": "面積",
+    "areaSum": "面積 (加總)",
+    "automationLabel": "自動化",
+    "beta": "Beta",
+    "browsePluginsDescription": "瀏覽第三方提供者既有的外掛程式，或新增您自己的 - 將在這裡顯示。",
+    "cancel": "取消",
+    "close": "關閉",
+    "color": "顏色",
+    "delete": "刪除",
+    "detach": "分離",
+    "duplicate": "複製",
+    "edit": "編輯",
+    "gridSettings": "格線設定",
+    "hide": "隱藏",
+    "length": "長度",
+    "lengthSum": "長度 (加總)",
+    "newVersionAvailable": "有新版本。",
+    "redo": "重做",
+    "refresh": "重新整理",
+    "remove": "移除",
+    "rename": "更名",
+    "repair": "修復",
+    "retry": "重試",
+    "show": "顯示",
+    "siteLabel": "敷地",
+    "surroundings": "周圍環境",
+    "textAlignment": "文字對齊",
+    "undo": "退回",
+    "update": "更新",
+    "videoNotSupported": "您的瀏覽器不支援影片標籤。",
+    "xyzAxes": "XYZ 軸"
+  },
+  "performanceStats": {
+    "currentSnapshot": "目前的快照",
+    "remainingFromPastSnapshots": "來自過去的快照",
+    "title": "效能統計資料 {status}"
+  },
+  "units": {
+    "asl": "asl",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "置中對齊",
+      "left": "靠左對齊",
+      "right": "靠右對齊",
+      "spacing": "間距"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "繪製成片樹林",
+      "name": "成片樹林",
+      "tooltip": "建立一片種植樹木的區域，並編輯大小和密度。所有樹木都會影響分析。"
+    },
+    "header": "樹木",
+    "landscapingTitle": "景觀",
+    "properties": {
+      "bufferTooltip": "緩衝",
+      "gridLengthLabel": "格線長度",
+      "gridWidthLabel": "格線寬度",
+      "heightTooltip": "樹高",
+      "offsetTooltip": "偏移"
+    },
+    "title": "植物",
+    "tooltips": {
+      "averageDistanceLabel": "樹冠之間的平均距離",
+      "heightLabel": "每棵樹的高度"
+    },
+    "treeLine": {
+      "hotkeyDescription": "繪製成排樹木",
+      "name": "成排樹木",
+      "tooltip": "建立一條種植樹木的直線，並編輯大小和密度。所有樹木都會影響分析。"
+    },
+    "trees": "樹木"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "未提供 analysisId",
+      "unsupportedAnalysisType": "不支援分析類型: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "您只能檢視此敷地"
+  },
+  "windAnalysis": {
+    "analyzing": "正在分析...",
+    "atCapacity": "我們目前正在執行大量的詳細風環境分析。您的分析可能需要較長的時間才能完成。感謝您耐心等待！",
+    "circleOutsideBoundingBox": "分析區域在地圖區域之外",
+    "concurrentQuotaReached": "已達到同時執行風環境分析數限制",
+    "concurrentQuotaReachedDescription": "您同時執行太多風環境分析。請等候其中一些完成。",
+    "concurrentQuotaWarning": "同時執行分析限制",
+    "concurrentQuotaWarningDescription": "您還有 {remaining} 個詳細風環境分析，就會達到 {limit} 個同時執行分析的限制。",
+    "dailyQuotaReached": "已達到分析限制",
+    "dailyQuotaReachedDescription": "您已達到風環境分析的每日限制。",
+    "dailyQuotaReachedDescriptionRetry": "您已達到風環境分析的每日限制。請在 {nextAvailableAt} 再試一次。",
+    "loadingData": "正在載入資料",
+    "loadingDataTooltip": "正在載入...",
+    "runAnalysis": "分析 (~{min}-{max} 分鐘)",
+    "seeAnalysisButton": "查看詳細分析",
+    "stoppedOrFailed": "分析已停止或失敗！",
+    "viewerAccessDisableTooltip": "無法以檢視者身分執行分析"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "進階建模工具",
+      "editIn": "在 3D 草圖中編輯",
+      "howToStartEditingMessage": "按 ⏎ 或按兩下在 3D 草圖中編輯。",
+      "launch": "新 3D 草圖",
+      "sketch": "草圖",
+      "updateProperties": "更新性質"
+    },
+    "advancedModeling": {
+      "cover": "覆蓋",
+      "fillet": "圓角",
+      "intersect": "交集",
+      "loft": "斷面混成",
+      "offset": "偏移",
+      "shell": "薄殼",
+      "subtract": "差集",
+      "sweep": "掃掠",
+      "union": "聯集"
+    },
+    "axes": {
+      "reset": "重設軸",
+      "set": "設定 XYZ 軸"
+    },
+    "buildingType": {
+      "draw": "繪製 3D 草圖建築",
+      "name": "3D 草圖建築"
+    },
+    "buttons": {
+      "apply": "套用",
+      "cancel": "取消",
+      "ok": "確定"
+    },
+    "convert": {
+      "externalMessage": "將物件轉換為 3D 草圖以修改外部的面、邊和頂點。\n\n元素一旦轉換，就不會再與原始來源中的元素連接，也不會同步變更。",
+      "message": "將物件轉換為 3D 草圖，以修改外部的面、邊和頂點。",
+      "title": "轉換為 3D 草圖"
+    },
+    "dialogs": {
+      "arrayButtonArray": "陣列",
+      "arrayButtonCancel": "取消",
+      "arrayDistanceBetween2Points": "2 點之間的長度",
+      "arrayDistanceTotalLength": "總長度",
+      "arraySubtitleDistance": "距離",
+      "arraySubtitleQuantity": "數量",
+      "arraySubtitleType": "類型",
+      "arrayTitle": "陣列",
+      "arrayTypeLinear": "線性陣列",
+      "arrayTypeRadial": "徑向陣列",
+      "corruptedElementsDeleted": "某些元素無法儲存而且損毀。這些元素已自動刪除。",
+      "editDimensionTitle": "編輯尺寸",
+      "recoveryClosedWithoutSaving": "3D 草圖已關閉，但未正確儲存。",
+      "recoveryQuestion": "是否要復原未儲存的變更？",
+      "recoveryTitle": "發現未儲存的模型變更"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "將最低的非水平面弄平"
+    },
+    "finishSelection": {
+      "back": "上一步 (B)",
+      "cancel": "取消 (Esc)",
+      "confirm": "完成 (F)",
+      "next": "下一步 (N)"
+    },
+    "floors": {
+      "addFloor": "新增一層樓",
+      "addFloors": "新增多層樓",
+      "floorHeight": "一層樓高度",
+      "floors": "多層樓",
+      "floorWithNumberLabel": "{level} 樓",
+      "moreOptions": "更多",
+      "numberOfFloors": "樓層數",
+      "removeFloors": "移除樓層",
+      "resetFloors": "重設樓層",
+      "title": "樓層詳細資料"
+    },
+    "groupEditing": {
+      "redo": "重做",
+      "undo": "退回"
+    },
+    "grouping": {
+      "toolbarTitle": "群組"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "測量角度",
+      "measureDistance": "測量距離",
+      "menuTitle": "導引和測量",
+      "title": "導引和測量"
+    },
+    "mesh": {
+      "convertHintMessage": "按兩下將網格轉換為物件，以啟用其他編輯工具。",
+      "importExceededLimitsMessage": "您的匯入內容超過 {limit} 個網格三角形，為了獲得更好的效能而未變更。\n\n若要存取更多編輯工具，請選取個別網格，然後按兩下將其轉換為可編輯的物件。",
+      "importExceededLimitsTitle": "匯入內容超過網格三角形限制"
+    },
+    "pasteInPlaceAction": "就地貼上",
+    "properties": {
+      "mixed": "混合",
+      "objectWithIdLabel": "物件 {id}"
+    },
+    "scaleTitle": "比例",
+    "selection": {
+      "areaSelectionOptions": "區域選取選項",
+      "filterEdges": "邊",
+      "filterFaces": "面",
+      "filterGroups": "群組",
+      "filterMeshes": "網格",
+      "filterSolids": "實體",
+      "filterVertices": "頂點",
+      "selection": "選取",
+      "selectionTools": "選取工具"
+    },
+    "tools": {
+      "array": "陣列",
+      "editArcCircle": "編輯弧或圓",
+      "editSpline": "編輯雲形線",
+      "extrudeEdges": "擠出邊",
+      "extrudeFace": "擠出面",
+      "facetFace": "將面變成刻面",
+      "flattenFace": "將面弄平",
+      "group": "分組",
+      "groupDetach": "分離",
+      "meshToObjects": "轉換網格",
+      "mirror": "鏡射",
+      "move": "移動",
+      "offsetEdges": "偏移邊",
+      "offsetFace": "偏移面",
+      "reverseFace": "反轉面",
+      "rotate": "旋轉",
+      "scale": "比例",
+      "scaleNonUniform": "非等比例",
+      "smoothEdges": "平滑邊",
+      "tiltFace": "傾斜面",
+      "ungroup": "解除分組"
+    },
+    "tooltips": {
+      "building": "有無限多種可能性的複雜 3D 建築，例如斜屋頂、傾斜牆壁等等。",
+      "editIn": "轉換物件，在 3D 草圖中修改頂點、邊和面。",
+      "launch": "使用 3D 草圖建立模型並反覆執行早期的建築設計概念。"
+    },
+    "zoom": {
+      "fitProposal": "縮放至佈滿提案",
+      "fitSelection": "縮放至佈滿選取項目"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "快速入門指南",
+    "allTutorialsDescription": "完成以下互動式指南，以設定您的網站並開始使用 敷地 Design。",
+    "completionMessage": "太棒了！您已完成{header}指南！",
+    "completionText": "已完成{percent}%",
+    "completedTitle": "完成",
+    "continueButton": "繼續",
+    "stepsTotal": "總共 {count} 個步驟",
+    "timeLabel": "{time} 分鐘",
+    "stepProgress": "第 {current} 步 (共 {total} 步)",
+    "nextButton": "下一步",
+    "doneButton": "完成",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "快速入門指南",
+    "upNextTitle": "接下來"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "設定您的網站",
+      "description": "請在開始塑型和分析敷地和建築之前先加入環境資料。",
+      "reviewHeader": "敷地設定完成",
+      "reviewText": "您已成功加入環境資料和敷地界線。{br}{br}幹得好！您現在可以探索我們的塑型工具和匯入功能，或繼續學習其他指南。",
+      "steps": {
+        "openContextualTab": {
+          "header": "開啟 環境資料 頁籤",
+          "text": "首先打開<bold>上下文數據</bold>選項卡。"
+        },
+        "browseAndOrder": {
+          "header": "瀏覽網站位置的資料",
+          "text": "按一下<bold>「瀏覽」環境資料</bold> 以查看您的網站位置有哪些資料套件。{br}{br}資料可能包括周圍的建築物、道路和地形。"
+        },
+        "orderStarterPackage": {
+          "header": "訂單起始器資料套件",
+          "text": "按下<bold>添加</bold>以查看此數據包中包含的內容。這些數據是免費的。"
+        },
+        "orderData": {
+          "header": "訂單資料套件",
+          "text": "選取訂單以開始下載 3D 環境資料到您的網站。"
+        },
+        "drawSiteLimit": {
+          "header": "繪製敷地界線",
+          "text": "啟用此繪製工具來定義您的 敷地界線。啟動后，在網站周圍繪製點並包圍形狀。{br}{br}定義敷地界線是在 Forma 敷地 Design 中執行分析的先決條件。"
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "新增建築",
+      "description": "使用我們的建模工具建立建築或匯入現有模型。",
+      "reviewHeader": "建築 已加入到網站",
+      "reviewText": "您已成功將建築物和導入的資產繪製到您的網站。幹得好！您現在可以透過執行分析來評估環境條件，或繼續使用其他指南。",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "繪製 基本建築",
+          "text": "按兩下<bold>基本構建</bold>以啟動構建工具。處於活動狀態后，繪製建築物的形狀並選擇最後一個點以完成繪製跡線。"
+        },
+        "exploreParametricOptions": {
+          "header": "探索參數式選項",
+          "text": "探究可用於修改建築模型的 參數式 選項。"
+        },
+        "importModel": {
+          "header": "匯入模型或檔案",
+          "text": "按<bold>一下「匯入</bold>」 從本端裝置上傳模型或點陣式影像。"
+        },
+        "placeInScene": {
+          "header": "放在場景中",
+          "text": "按一下剛從資源庫匯入的項目。選取後，按一下並拖曳將其放在敷地上。放置元素後，自學課程會自動繼續。"
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "評估環境條件",
+      "description": "執行 日照時數 分析，為您的早期設計決策提供資訊。",
+      "reviewHeader": "日照時數分析完成！",
+      "reviewText": "您已成功在您的網站上執行日照時數分析。{br}{br}您現在可以繼續建立新建議、比較分析或探索 敷地 Design 的其他內容。",
+      "steps": {
+        "selectAnalysis": {
+          "header": "選取分析",
+          "text": "按一下亮顯的圖示，選取日照時數分析。"
+        },
+        "selectDate": {
+          "header": "選取日期",
+          "text": "使用下拉式功能表設定要分析敷地日照時數的日期。"
+        },
+        "runAnalysis": {
+          "header": "執行分析",
+          "text": "按一下按鈕可啟動分析，只需幾秒鐘即可完成。{br}{br}分析完成後，指南會自動繼續。"
+        },
+        "openAnalysisResults": {
+          "header": "開啟結果",
+          "text": "完成後，這裡會以清單顯示分析結果。按一下最新的結果，系統會開啟一個新視窗供您檢閱詳細內容。",
+          "altText": "分析結果視窗"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "如何修正「不支援 WebGL」問題？",
+      "text": "您的電腦似乎不支援 WebGL，這是使用 Forma 的必要條件",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

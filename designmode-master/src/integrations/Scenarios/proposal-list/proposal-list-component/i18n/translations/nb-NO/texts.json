@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "Sammenlign",
+    "headerText": "Utvalgte forslag",
+    "maxProposalsWarning": "Du kan bare sammenligne opptil {max} forslag om gangen",
+    "minProposalsWarning": "Velg {min} eller flere for å sammenligne"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "Er du sikker på at du vil slette dette forslaget?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "Slett",
+    "duplicateMenuItem": "Dupliser",
+    "exportAsIfcBetaMenuItem": "Eksporter som IFC (Beta)",
+    "exportAsIfcToDocs": "Eksporter som IFC til Docs (Beta)",
+    "exportAsObjMenuItem": "Eksporter som OBJ",
+    "exportSubmenu": "Eksporter ...",
+    "renameMenuItem": "Gi nytt navn",
+    "revitDownloadAddinMenuItem": "Last ned Revit-tillegget",
+    "revitSendToBetaMenuItem": "Send til Revit-tillegget (Beta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "Vis forslagshistorikk"
+  },
+  "createProposal": {
+    "buttonTooltip": "Legg til nytt forslag"
+  },
+  "error": {
+    "couldNotLoadProposals": "Kunne ikke laste inn forslag. Prøv igjen.",
+    "retryButton": "Prøv igjen"
+  },
+  "exportModal": {
+    "exportingMessage": "Eksporterer ...",
+    "exportPrimaryButtonTitle": "Eksporter",
+    "title": "Eksporter Forma-forslag til Docs"
+  },
+  "filter": {
+    "buttonTooltip": "Filter",
+    "closeButtonTooltip": "Lukk",
+    "emptyBasesMessage": "Prosjektet har ingen grunnlag. Gå til Lag-seksjonen for å opprette en.",
+    "sortByHeader": "Sorter etter",
+    "title": "Filter"
+  },
+  "proposalItem": {
+    "baseTooltip": "Base {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "Opprett et nytt forslag for å sammenligne",
+    "headerText": "Forslag",
+    "selectProposalsToCompare": "Velg forslag å sammenligne"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A–Å",
+    "alphabeticalDescending": "Å–A",
+    "lastEdited": "Sist redigert"
+  },
+  "toast": {
+    "exportAccessDeniedText": "Du har ikke tillatelse til å få tilgang til denne mappen eller filen. Kontakt administratoren for å få hjelp.",
+    "exportAccessDeniedTitle": "Tilgang avvist",
+    "exportDownloaded": "Eksport lastet ned",
+    "exportErrorText": "Vi kunne ikke eksportere forslaget. Prøv på nytt. Hvis problemet vedvarer, må du kontakte support for hjelp.",
+    "exportErrorTitle": "Eksport til Docs mislyktes",
+    "exportGenericError": "Kunne ikke eksportere forslag",
+    "exportInProgress": "Eksporterer forslag ...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "Prosjektforslaget ditt er eksportert til Autodesk Docs. Du kan nå bruke det til å koble Forma-dataene dine til Revit-prosjektet ditt.",
+    "exportSuccessTitle": "Eksportert til Docs",
+    "exportTimeoutText": "Systemet ble tidsavbrutt mens det genererte en eksport til Docs. Dette kan skje hvis prosjektet er veldig stort og/eller inneholder svært kompleks geometri.",
+    "exportTimeoutTitle": "Kunne ikke eksportere til Docs",
+    "exportTooLargeError": "Eksporten var mislykket. Dette kan skyldes at forslaget er for stort til det som per nå støttes for eksport.",
+    "ifcExportFailed": "Eksporten mislyktes. Feilen er rapportert.",
+    "ifcExportStarted": "Eksporten av IFC-filen din har startet – den vil bli lastet ned automatisk når den er fullført.",
+    "proposalRenamedWarning": "Forslagsnavnet eksisterer allerede ­– det nye navnet er {name}",
+    "revitSendFailed": "Kunne ikke sende forslaget til Revit.",
+    "revitSendSuccess": "Forslaget er sendt til Revit",
+    "sessionExpired": "Økten din er utløpt. Last inn siden på nytt."
+  }
+}

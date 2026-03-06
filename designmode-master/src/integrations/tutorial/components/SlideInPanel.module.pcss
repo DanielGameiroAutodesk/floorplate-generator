@@ -1,0 +1,69 @@
+.TutorialPanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
+  height: 100%;
+  background-color: var(--background-color-surface-100);
+  box-shadow: var(--effect-shadow-high);
+  z-index: calc(var(--z-primary-navigation) + 25);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.TutorialPanel.Open {
+  transform: translateX(0);
+}
+
+.SlideInPanelContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+}
+
+.PanelButtonContainer {
+  position: fixed;
+  bottom: 16px;
+  right: 288px;
+  z-index: var(--z-notification);
+  pointer-events: auto;
+}
+
+.PanelButton {
+  display: inherit;
+  width: 229px;
+  height: 52px;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 16px;
+  color: var(--text-color-medium-default);
+  cursor: pointer;
+  margin: 0;
+  background: var(--background-color-surface-100);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.PanelButton:hover {
+  box-shadow: var(--halo-color-neutral-pressed) 0 0 0 2px;
+}
+
+.PanelButtonText {
+  display: flex;
+  flex-direction: column;
+}
+
+.PanelButtonTextTitle {
+  font: var(--14-bold);
+}
+
+.PanelButtonTextDescription {
+  font: var(--12-medium);
+  color: var(--text-color-link-default);
+}

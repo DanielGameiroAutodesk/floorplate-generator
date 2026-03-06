@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "Vergleichen",
+    "headerText": "Vorschläge auswählen",
+    "maxProposalsWarning": "Sie können nur bis zu {max} Vorschläge gleichzeitig vergleichen",
+    "minProposalsWarning": "Wählen Sie {min} oder mehr zum Vergleichen aus."
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "Möchten Sie diesen Vorschlag wirklich löschen?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "Löschen",
+    "duplicateMenuItem": "Kopieren",
+    "exportAsIfcBetaMenuItem": "Als IFC exportieren (Beta)",
+    "exportAsIfcToDocs": "Als IFC in Docs exportieren (Beta)",
+    "exportAsObjMenuItem": "Als OBJ exportieren",
+    "exportSubmenu": "Exportieren...",
+    "renameMenuItem": "Umbenennen",
+    "revitDownloadAddinMenuItem": "Revit-Add-In herunterladen",
+    "revitSendToBetaMenuItem": "An Revit-Add-In senden (Beta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "Verlauf der Vorschläge anzeigen"
+  },
+  "createProposal": {
+    "buttonTooltip": "Neuen Vorschlag hinzufügen"
+  },
+  "error": {
+    "couldNotLoadProposals": "Vorschläge konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+    "retryButton": "Wiederholen"
+  },
+  "exportModal": {
+    "exportingMessage": "Exportvorgang läuft...",
+    "exportPrimaryButtonTitle": "Export",
+    "title": "Forma-Vorschlag in Docs exportieren"
+  },
+  "filter": {
+    "buttonTooltip": "Filter",
+    "closeButtonTooltip": "Schließen",
+    "emptyBasesMessage": "Das Projekt hat keine Basen. Wechseln Sie zum Abschnitt Layer, um einen zu erstellen.",
+    "sortByHeader": "Sortieren nach",
+    "title": "Filter"
+  },
+  "proposalItem": {
+    "baseTooltip": "Basis {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "Weiteren Vorschlag für den Vergleich erstellen",
+    "headerText": "Vorschläge",
+    "selectProposalsToCompare": "Vorschläge zum Vergleich auswählen"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A-Z",
+    "alphabeticalDescending": "Z-A",
+    "lastEdited": "Zuletzt bearbeitet"
+  },
+  "toast": {
+    "exportAccessDeniedText": "Sie haben keine Berechtigung zum Zugriff auf diesen Ordner oder diese Datei. Wenden Sie sich an Ihren Administrator, um Unterstützung zu erhalten.",
+    "exportAccessDeniedTitle": "Zugriff verweigert",
+    "exportDownloaded": "Exportiert heruntergeladene Dateien",
+    "exportErrorText": "Der Vorschlag konnte nicht exportiert werden. Bitte versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an den Support, um Unterstützung zu erhalten.",
+    "exportErrorTitle": "Export nach Docs fehlgeschlagen",
+    "exportGenericError": "Fehler beim Exportieren des Vorschlags",
+    "exportInProgress": "Vorschlag wird exportiert...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "Ihr Projekt-Vorschlag wurde nach Autodesk Docs exportiert. Sie können es jetzt verwenden, um Ihre Forma-Daten mit Ihrem Revit-Projekt zu verknüpfen.",
+    "exportSuccessTitle": "Erfolgreich nach Docs exportiert",
+    "exportTimeoutText": "Das System hat beim Generieren eines Exports in Docs eine Zeitüberschreitung verzeichnet. Dies kann auftreten, wenn das Projekt sehr groß ist und/oder sehr komplexe Geometrie enthält.",
+    "exportTimeoutTitle": "Export nach Docs fehlgeschlagen",
+    "exportTooLargeError": "Export war nicht erfolgreich. Dies kann daran liegen, dass der Vorschlag zu groß für den derzeit unterstützten Export ist.",
+    "ifcExportFailed": "Export fehlgeschlagen. Der Fehler wird gemeldet.",
+    "ifcExportStarted": "Der Export Ihrer IFC-Datei wurde gestartet. Er wird automatisch heruntergeladen, wenn der Vorgang abgeschlossen ist.",
+    "proposalRenamedWarning": "Vorschlagsname ist bereits vorhanden, umbenannt in {name}",
+    "revitSendFailed": "Fehler beim Senden des Vorschlags an Revit.",
+    "revitSendSuccess": "Vorschlag wurde an Revit gesendet",
+    "sessionExpired": "Ihre Sitzung ist abgelaufen. Laden Sie die Seite neu."
+  }
+}

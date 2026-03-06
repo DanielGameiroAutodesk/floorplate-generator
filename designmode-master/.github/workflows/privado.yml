@@ -1,0 +1,17 @@
+# See https://wiki.autodesk.com/x/frmHs
+name: Privado Scan
+on:
+  schedule:
+    - cron: "10 5 * * 0" # Every Sunday 05:10 UTC
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/privado.yml
+  workflow_dispatch:
+jobs:
+  privado:
+    uses: spacemakerai/github-workflows/.github/workflows/privado.yml@v2
+    permissions:
+      contents: read
+    secrets: inherit

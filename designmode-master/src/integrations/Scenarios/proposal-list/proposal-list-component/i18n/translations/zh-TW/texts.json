@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "比較",
+    "headerText": "選取提案",
+    "maxProposalsWarning": "一次最多只能比較 {max} 個提案",
+    "minProposalsWarning": "請至少選取 {min} 個以進行比較"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "是否確定要刪除此提案？"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "刪除",
+    "duplicateMenuItem": "複製",
+    "exportAsIfcBetaMenuItem": "匯出為 IFC (Beta)",
+    "exportAsIfcToDocs": "以 IFC 匯出到 Docs (Beta)",
+    "exportAsObjMenuItem": "匯出為 OBJ",
+    "exportSubmenu": "匯出...",
+    "renameMenuItem": "更名",
+    "revitDownloadAddinMenuItem": "下載 Revit 增益集",
+    "revitSendToBetaMenuItem": "傳送到 Revit 增益集 (Beta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "顯示提案歷程"
+  },
+  "createProposal": {
+    "buttonTooltip": "新增提案"
+  },
+  "error": {
+    "couldNotLoadProposals": "無法載入提案。請再試一次。",
+    "retryButton": "重試"
+  },
+  "exportModal": {
+    "exportingMessage": "正在匯出...",
+    "exportPrimaryButtonTitle": "匯出",
+    "title": "將 Forma 提案匯出到 Docs"
+  },
+  "filter": {
+    "buttonTooltip": "篩選",
+    "closeButtonTooltip": "關閉",
+    "emptyBasesMessage": "該專案沒有任何基底。請前往「圖層」區段建立一個。",
+    "sortByHeader": "排序依據",
+    "title": "篩選"
+  },
+  "proposalItem": {
+    "baseTooltip": "基底 {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "建立另一個要比較的提案",
+    "headerText": "提案",
+    "selectProposalsToCompare": "選取要比較的提案"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A-Z",
+    "alphabeticalDescending": "Z-A",
+    "lastEdited": "上次編輯時間"
+  },
+  "toast": {
+    "exportAccessDeniedText": "您沒有權限存取此資料夾或檔案。請聯絡您的管理員尋求協助。",
+    "exportAccessDeniedTitle": "存取遭拒",
+    "exportDownloaded": "匯出下載的項目",
+    "exportErrorText": "我們無法匯出提案。請再試一次。如果問題持續發生，請聯絡支援尋求協助。",
+    "exportErrorTitle": "無法匯出到 Docs",
+    "exportGenericError": "無法匯出提案",
+    "exportInProgress": "正在匯出提案...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "您的專案提案已匯出到 Autodesk Docs。您現在可以使用該提案將 Forma 資料連結到 Revit 專案。",
+    "exportSuccessTitle": "成功匯出到 Docs",
+    "exportTimeoutText": "系統在產生匯出到 Docs 的檔案時逾時。如果專案非常大且/或包含非常複雜的幾何圖形，可能會發生這種情況。",
+    "exportTimeoutTitle": "無法匯出到 Docs",
+    "exportTooLargeError": "匯出不成功。可能是因為提案太大，目前不支援匯出太大的內容。",
+    "ifcExportFailed": "匯出失敗。已回報錯誤。",
+    "ifcExportStarted": "已開始匯出您的 IFC 檔案 - 完成時會自動下載。",
+    "proposalRenamedWarning": "已經有此提案名稱，更名為 {name}",
+    "revitSendFailed": "無法將提案傳送到 Revit。",
+    "revitSendSuccess": "提案已傳送到 Revit",
+    "sessionExpired": "您的工作階段已過期。請重新載入頁面。"
+  }
+}

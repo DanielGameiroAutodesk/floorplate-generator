@@ -1,0 +1,116 @@
+.Header {
+  font: var(--12-medium);
+  margin-bottom: 16px;
+}
+
+.IconButton {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-color-divider-light);
+  &:hover {
+    border: 1px solid var(--border-color-selected);
+  }
+  &.selected,
+  &.selected:hover {
+    border: 1px solid var(--border-color-accent-default);
+  }
+  box-sizing: border-box;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &[disabled] {
+    cursor: default;
+    border: 1px solid var(--border-color-disabled);
+    opacity: var(--disabled);
+
+    &:hover {
+      border: 1px solid var(--border-color-disabled);
+    }
+  }
+}
+
+.IconButtonGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+
+  > *:first-child {
+    margin-left: 0;
+  }
+
+  > * {
+    margin-left: 8px;
+  }
+}
+
+.PreviewTile {
+  width: 65px;
+  height: 65px;
+  background: var(--background-color-surface-200);
+  &:hover {
+    border: 1px solid var(--border-color-selected);
+  }
+  &.selected,
+  &.selected:hover {
+    border: 1px solid var(--border-color-accent-default);
+  }
+  box-sizing: border-box;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &[disabled] {
+    cursor: default;
+    opacity: var(--disabled);
+  }
+}
+
+.PreviewTileWrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.LayoutTypes {
+  display: flex;
+  flex-direction: column;
+
+  > .LayoutType:first-child {
+    margin-top: 0;
+  }
+
+  > .LayoutType {
+    margin-top: 4px;
+  }
+}
+
+.LayoutType {
+  flex-direction: row;
+  height: 36px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.LayoutType > .icon {
+  background-color: var(--background-color-surface-200);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.LayoutType > h3 {
+  font: var(--11-medium);
+  margin-left: 8px;
+}

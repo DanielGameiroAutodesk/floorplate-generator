@@ -1,0 +1,101 @@
+.PopupContent {
+  --buffer: 16px;
+
+  width: 260px;
+}
+
+.PopupThumbnailContainer {
+  height: 200px;
+}
+
+.EditTemplate {
+  padding: var(--buffer);
+}
+
+.EditTemplateSection {
+  display: grid;
+  grid-template-columns:
+    [full-width-start icon-a-start] 16px
+    [icon-a-end input-a-start] 70px
+    [input-a-end] 1fr
+    [icon-b-start] 16px
+    [icon-b-end input-b-start] 70px
+    [input-b-end full-width-end];
+
+  grid-row-gap: 12px;
+  grid-column-gap: 8px;
+  align-items: center;
+
+  & > label {
+    height: 16px;
+    width: 16px;
+  }
+
+  & > p {
+    font: var(--11-medium);
+  }
+
+  & > weave-button {
+    width: 100%;
+  }
+
+  & > .FullWidth {
+    grid-column: full-width;
+  }
+
+  & > .IconA {
+    grid-column: icon-a;
+  }
+
+  & > .IconB {
+    grid-column: icon-b;
+    color: #808080;
+  }
+
+  & > .InputA {
+    grid-column: input-a;
+  }
+
+  & > .InputB {
+    grid-column: input-b;
+  }
+
+  forma-select-native {
+    width: 100%;
+
+    &::part(select) {
+      padding-right: 20px;
+    }
+  }
+}
+
+.RoofList {
+  grid-column: icon-b-start / input-b-end;
+
+  & > :nth-child(n + 2) {
+    margin-left: 8px;
+  }
+
+  & > :hover {
+    cursor: pointer;
+  }
+}
+
+.LayoutSVG {
+  grid-column: input-a-start / input-a-end;
+  grid-row: span 2;
+  width: 60px;
+  height: 60px;
+
+  g {
+    cursor: pointer;
+  }
+}
+
+.HoverSVGIcon:hover {
+  rect,
+  path {
+    stroke: var(--icon-color-control-hover);
+    fill: var(--icon-color-control-hover);
+  }
+}

@@ -1,0 +1,82 @@
+.FloorHeightContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.Header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.HeaderTitle {
+  font: var(--12-bold);
+}
+
+.Body {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.InputContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  weave-input {
+    width: 90px;
+  }
+}
+
+.RowContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  input {
+    width: 65px;
+  }
+}
+
+.Divider {
+  color: #e7ecf2;
+  margin: 0;
+  border-style: solid;
+  border-top: none;
+}
+
+.ActionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #9daab833;
+  }
+}
+
+.TitleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ActionContainer {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* create a wrapper for icons that are wrapped with a tooltip to fix styling issue */
+.IconWrapper {
+  display: flex;
+}

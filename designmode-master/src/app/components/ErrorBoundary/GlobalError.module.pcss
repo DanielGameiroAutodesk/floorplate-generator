@@ -1,0 +1,29 @@
+.background {
+  background-image: url("/sm-static/images/autodesk-brand-bg-1.png");
+  background-size: cover;
+  z-index: calc(var(--z-notification) + 40);
+}
+
+.contentGrid {
+  z-index: calc(var(--z-notification) + 40);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.content {
+  font: var(--12-regular);
+  max-width: 25rem;
+  text-align: center;
+  h1 {
+    font: var(--12-bold);
+    margin-bottom: 1.6rem;
+  }
+  p {
+    margin: 1.6rem 0;
+  }
+  weave-text-link {
+    display: block;
+    margin: 0.8rem 0;
+  }
+}

@@ -114,6 +114,49 @@ function createRectangleMesh(
  * Instead, we decompose the L into two convex quads (rectangles) which can each
  * be safely triangulated. This produces clean, non-overlapping geometry.
  */
+
+function triangulate7PointLShape(
+  points: { x: number; y: number }[],
+  z: number,
+  color: { r: number; g: number; b: number; a: number },
+  transform: { centerX: number; centerY: number; rotation: number }
+): { positions: number[]; colors: number[] } {
+  const positions: number[] = [];
+  const colors: number[] = [];
+
+  const wp = points.map(p =>
+    transformPoint(p.x, p.y, transform.centerX, transform.centerY, transform.rotation)
+  );
+
+  // 7 points: 0=outer, 1=legA-out, 2=legA-in, 3a=chamferA, 3b=chamferB, 4=legB-in, 5=legB-out
+  // Decompose into:
+  // Quad A: 0, 1, 2, 3
+  // Triangle Foyer: 0, 3, 4
+  // Quad B: 0, 4, 5, 6
+
+  // Helper to push triangle
+  const pushTri = (a: number, b: number, c: number) => {
+    positions.push(
+      wp[a].x, wp[a].y, z,
+      wp[b].x, wp[b].y, z,
+      wp[c].x, wp[c].y, z
+    );
+    colors.push(
+      color.r, color.g, color.b, color.a,
+      color.r, color.g, color.b, color.a,
+      color.r, color.g, color.b, color.a
+    );
+  };
+
+  pushTri(0, 1, 2);
+  pushTri(0, 2, 3);
+  pushTri(0, 3, 4);
+  pushTri(0, 4, 5);
+  pushTri(0, 5, 6);
+
+  return { positions, colors };
+}
+
 function triangulateLShape(
   points: { x: number; y: number }[],
   z: number,
@@ -335,11 +378,6 @@ function triangulatePolygon(
     );
   }
 
-  // #region agent log
-  if (n >= 4 && positions.length === 0) {
-    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-missing-pink-pre',hypothesisId:'H2',location:'renderer.ts:triangulatePolygon',message:'Triangulation produced no faces for polygon',data:{pointCount:n,signedAreaHalf:signedArea/2,safetyRemaining:safety,points},timestamp:Date.now()})}).catch(()=>{});
-  }
-  // #endregion
 
   return { positions, colors };
 }
@@ -357,6 +395,8 @@ function createUnitMesh(
     // L-shaped or polygon unit — use ear-clipping for all polygon shapes
     if (unit.isLShaped && unit.polyPoints.length === 6) {
       return triangulateLShape(unit.polyPoints, z, color, transform);
+    } else if (unit.isLShaped && unit.polyPoints.length === 7) {
+      return triangulate7PointLShape(unit.polyPoints, z, color, transform);
     } else {
       return triangulatePolygon(unit.polyPoints, z, color, transform);
     }
@@ -586,9 +626,6 @@ function renderCorridor(corridor: CorridorBlock, elevation: number, transform: T
   const { positions, colors } = corridorPolyForRender && corridorPolyForRender.length >= 3
     ? triangulatePolygon(corridorPolyForRender, elevation, color, transform)
     : createRectangleMesh(corridor.x, corridor.y, corridor.width, corridor.depth, elevation, color, transform);
-  // #region agent log
-  fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-winding-postfix',hypothesisId:'H6',location:'renderer.ts:renderCorridor',message:'Corridor mesh winding + triangulation',data:{hasPoly:!!(corridor.polyPoints&&corridor.polyPoints.length>=3),polyPointCount:corridor.polyPoints?.length??0,signedAreaHalf:signedArea/2,reversedForWinding:!!(corridor.polyPoints&&corridor.polyPoints.length>=3&&signedArea<0),positionsCount:positions.length},timestamp:Date.now()})}).catch(()=>{});
-  // #endregion
 
   return {
     positions: new Float32Array(positions),
@@ -660,9 +697,6 @@ function combineMeshes(meshes: FormaMeshData[]): FormaMeshData {
 export function renderFloorplate(floorplan: FloorPlanData, elevationOffset: number = 0.5): FormaMeshData {
   const elevation = floorplan.floorElevation + elevationOffset;
   const transform = floorplan.transform;
-  // #region agent log
-  fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-winding-postfix',hypothesisId:'H6',location:'renderer.ts:renderFloorplate',message:'Render floorplate entry',data:{transform,corridorSegments:floorplan.corridorSegments?.length??0,units:floorplan.units.length,cores:floorplan.cores.length,fillers:floorplan.fillers?.length??0,wingCount:floorplan.wingInfo?.wingCount??1},timestamp:Date.now()})}).catch(()=>{});
-  // #endregion
   const fillerCores = fillersToCoreBlocks(floorplan.fillers ?? []);
   const allCores = [...floorplan.cores, ...fillerCores];
 

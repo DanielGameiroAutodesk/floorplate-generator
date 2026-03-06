@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "セット アップして設計を開始する",
+    "body": "<bold>[続行]</bold>を選択すると、2 つのセットアップ手順が自動的に実行されます。操作は必要ありません。これらの手順が完了すると、Forma Site Design で設計を開始できるようになります。",
+    "contextual": {
+      "header": "用地固有のコンテキストをロードする",
+      "body": "地形や周囲の建物などを含む、用地のフリー コンテキスト データがロードされます。"
+    },
+    "sunAnalysis": {
+      "header": "用地条件のインサイトを取得する",
+      "body": "用地と周辺環境で日照時間解析を自動実行し、設計上の意思決定に影響する情報を提供します。"
+    },
+    "continueButton": "続行",
+    "sunAnalysisCoachmark": {
+      "header": "日照時間解析",
+      "body": "用地で日照時間解析が自動的に開始されます。{br}{br}インジケータが緑色になるか、キャンバスの上部にバナーが表示されたら、結果を確認できます。"
+    },
+    "finalModal": {
+      "title": "用地のセットアップが完了しました",
+      "subTitle": "以下のいずれかの推奨手順に進んでください:",
+      "suggestedAction1": {
+        "header": "建物を描画する",
+        "body": "ツールバーで建物ツールの 1 つをアクティブにします。"
+      },
+      "suggestedAction2": {
+        "header": "モデルを読み込む",
+        "body": "ツールバーの読み込みアイコンをクリックして、推奨される手順に従います。"
+      },
+      "suggestedAction3": {
+        "header": "解析を比較する",
+        "body": "2 番目の解析を実行し、画面の左上隅から比較モードを開きます。"
+      },
+      "showMeHow": "オプションをさらに表示",
+      "finalButton": "OK"
+    },
+    "sunAnalysisTriggerError": "日照解析のトリガに失敗しました"
+  },
+  "alignment": {
+    "center": "中心に位置合わせ",
+    "left": "左に位置合わせ",
+    "right": "右に位置合わせ"
+  },
+  "analysis": {
+    "alertsLabel": "警告",
+    "analyzeTitle": "解析",
+    "analysisParameters": "解析パラメータ",
+    "areaRadius": "エリア半径",
+    "areaTitle": "解析エリア",
+    "customCircle": "カスタム円",
+    "daylightAnalysisIllustrationAlt": "昼光解析のイラスト",
+    "failedToOrder": "解析の注文に失敗しました: {error}",
+    "learnMore": "詳細はこちら",
+    "microclimateAreaRadius": "微気候エリア半径",
+    "noisePredictionUnavailable": "騒音予測は利用できません",
+    "radiusLabel": "半径",
+    "selectAreaToRunAnalysis": "解析を実行する用地の制限またはゾーンを選択",
+    "disabledTooltips": {
+      "addRoadsOrRails": "交通量データを持つ道路や線路を追加して解析を実行",
+      "analysisAreaOutsideMap": "解析エリアがマップ エリアの外側にあります",
+      "concurrentQuotaReached": "同時風解析の制限に達しました",
+      "dailyQuotaReached": "1 日の風解析クォータに達しました",
+      "geometryAlertsDetected": "ジオメトリの問題が検出されました",
+      "geometryTooComplex": "ジオメトリが複雑すぎます",
+      "invalidParameters": "無効なパラメータ",
+      "loadingData": "データをロード中",
+      "notAvailable": "使用不可",
+      "notAbleAsViewer": "閲覧者は解析を実行できません",
+      "pleaseWait": "お待ちください…",
+      "savingInProgress": "保存中です...",
+      "selectSiteLimitOrZone": "解析を実行する用地の制限またはゾーンを選択"
+    },
+    "emptyStateZoneExplanation": "既定では、追加した建物やその他のオブジェクトに対して解析が実行されます。用地の制限やゾーンを追加すると、特定のエリアの完全な解析結果が得られます。",
+    "entireModel": "モデル全体",
+    "missingTrafficData": {
+      "description": "実際の騒音状況を予測するために、交通量データを持つ道路や線路を追加します。",
+      "startGuideButton": "スタート ガイド",
+      "title": "交通量データがありません"
+    },
+    "noiseAreaRadius": "騒音エリア半径",
+    "properties": {
+      "radiusLabel": "半径"
+    },
+    "seeResultButton": "解析結果を見る",
+    "seeResultsButton": "解析結果を確認",
+    "selectionTitle": "解析エリアを選択",
+    "selectAllAreasButton": "すべての領域を選択",
+    "deselectAllAreasButton": "すべての領域を選択解除",
+    "skyComponent": {
+      "potentialDescription": "<strong>昼光の利用可能性解析</strong>では、垂直天空成分スコアを使用して、昼光がほとんど入らないファサードの部分を特定します。解析するエリアを選択します。"
+    },
+    "sun": {
+      "removeDateButton": "日付を削除"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "完全支持の建物",
+      "buildingsPartialSupport": "部分支持の建物/その他",
+      "iconAlt": "解析支持レベル",
+      "title": "解析支持"
+    },
+    "windAreaRadius": "風エリア半径",
+    "windRoseUnavailable": {
+      "description": "風配図データ プロバイダに問題が発生しています。微気候パターンの解析は引き続き可能ですが、風の状態の可能性を調べるための履歴データがありません。データの復元に取り組んでいます。",
+      "title": "風配図は現在利用できません",
+      "windDescription": "風配図データ プロバイダに問題が発生しています。一般的な風のパターンを解析して風速を手動で調整することは引き続き可能ですが、高速な風は利用できません。データの復元に取り組んでいます。"
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "この環境設定の解析は既に存在します。 ",
+    "concurrentAnalysesReached": "同時解析の制限に達しました",
+    "concurrentNoiseAnalysesReached": "同時騒音解析の制限に達しました",
+    "dailyNoiseQuotaReached": "24 時間以内の騒音解析の最大数を満たしています",
+    "dailyQuotaReached": "1 日の解析クォータに達しました",
+    "nothingToAnalyze": "解析するものがありません",
+    "somethingWentWrong": "何らかの問題が発生しました"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "詳細な風解析は使用できません。後で解析を実行してください。",
+      "rapidWindUnavailable": "高速風解析は使用できません。後で解析を実行してください。",
+      "rapidWindUnavailableToast": "高速風解析は使用できません。担当チームに通知されました。後ほど解析を実行してください。"
+    },
+    "types": {
+      "microclimate": {
+        "description": "オートデスクの微気候解析は、日照、風、昼光条件を考慮して、用地で体感する温度を計算します。より正確な結果を得るには、風解析が完了するまで待つことをお勧めします。",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "微気候",
+        "text": "微気候解析"
+      },
+      "noise": {
+        "description": "高速騒音解析のリアルタイムの予測により、設計が環境騒音にどのように影響するかを把握します。詳細な騒音解析を実行して騒音状況のより正確なシミュレーションを行い、併せて建物のファサードの状態解析も行います。",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "騒音",
+        "text": "騒音解析"
+      },
+      "sky-component": {
+        "description": "垂直天空成分スコアを使用して、建物のファサードのどの部分に昼光があまり入らないかを評価します。解析を実行するには、用地の制限を追加する必要があります。",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "昼光の利用可能性",
+        "text": "昼光の利用可能性解析"
+      },
+      "solar-panel": {
+        "name": "太陽エネルギー"
+      },
+      "sun": {
+        "description": "用地と建物に何時間太陽光が当たるかを評価します。解析を実行するには、用地の制限を追加し、日付を選択する必要があります。",
+        "link": "https://help.autodeskforma.com/en/articles/6951253",
+        "name": "日照時間",
+        "text": "日照時間解析"
+      },
+      "wind": {
+        "description": "高速風解析のリアルタイム予測により、設計の変更が風の状態にどのように影響するかを把握できます。詳細な風の流れと風快適性の解析を実行して、さまざまな風向と風速のより正確なシミュレーションを行います。",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "風",
+        "text": "風解析"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "ノードを追加",
+      "buildingWidth": "建物の幅",
+      "cityBlocks": "都市ブロック",
+      "editGridOrientationButton": "グリッド方向を編集",
+      "explanation": "用地のマス可能性の検討に役立つツールの開発に継続的に取り組んでいます。フォーラムで開発の進捗をフォローしてください。",
+      "floors": "フロア",
+      "headerTitle": "探索",
+      "iterativeExplanation": "用地や建物のレイアウトをすばやく生成して検討できる設計自動化ツール。",
+      "layoutTitle": "レイアウト",
+      "layouts": "レイアウト",
+      "linearBuildings": "直線上建物",
+      "mixed": "混合",
+      "name": "探索",
+      "siteAutomation": "用地自動化",
+      "storyHeight": "階の高さ",
+      "towerBuildings": "高層建物",
+      "towerWidth": "高層棟の幅"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "新しい基本画層を追加",
+    "changeIndicatorLabel": "変更インジケータ",
+    "editBaseButton": "基本画層を編集",
+    "editBaseDoneButton": "完了",
+    "editBaseRightMenuMessage": "基本画層を編集して変更を加えます",
+    "editBaseRightMenuMixedSelectionMessage": "選択内容には基本画層のオブジェクトも含まれています。混在させて選択した場合は変更できません。",
+    "editing": {
+      "changesWillAffect": "変更内容は",
+      "proposals": "提案に影響します",
+      "title": "編集"
+    },
+    "errors": {
+      "deleteFailed": "基本画層の削除に失敗しました。",
+      "duplicateFailed": "基本画層の複製に失敗しました。",
+      "fetchFailed": "基本画層の取得に失敗しました。",
+      "renameIndicatorFailed": "基本画層インジケータの名前変更に失敗しました。",
+      "renameFailed": "基本画層の名前を変更できませんでした。",
+      "switchFailed": "基本画層の交換に失敗しました。"
+    },
+    "noBaseLayersText": "提案全体で再利用する要素を基本画層に追加できます。",
+    "strategy": {
+      "description": "提案で使用している基本画層は古いものです。基本画層を最新バージョンに更新するか、古いバージョンの基本画層を複製する必要があります。",
+      "duplicateOld": "古いバージョンの基本画層を複製",
+      "header": "この基本画層は古いものです",
+      "useLatest": "最新バージョンの基本画層を使用"
+    },
+    "swapBaseButton": "基本画層を交換",
+    "swapButton": "交換",
+    "untitledBaseLabel": "無題の基本画層"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "汎用線分を描画",
+        "name": "線分",
+        "tooltip": "設計意図を伝えるための汎用線分を作成します。汎用線分は解析では考慮されません。"
+      },
+      "surface": {
+        "draw": "汎用サーフェスを描画",
+        "name": "サーフェス",
+        "tooltip": "設計意図を伝えるための汎用サーフェスを作成します。汎用サーフェスは解析では考慮されません。"
+      },
+      "title": "汎用",
+      "volume": {
+        "draw": "汎用容積を描画",
+        "name": "容積",
+        "tooltip": "汎用容積は解析されますが、その面積は面積指標には考慮されません。"
+      }
+    }
+  },
+  "building": {
+    "addFloor": "フロアを追加",
+    "addFloorsAction": "フロアを追加",
+    "buildingColorsLabel": "建物の色",
+    "buildingDesignButton": "Building Design で開く",
+    "buildingDesignDescription": "この建物は Building Design で設計されているため、Building Design を開いて編集してください。",
+    "buildingDesignGeometry": "Building Design ジオメトリ",
+    "buildingsTitle": "建物",
+    "buildingWidthLabel": "建物の幅",
+    "divisionWidth": "区画の幅",
+    "roadWidthLabel": "道路の幅",
+    "towerBlockWidthLabel": "高層棟群の幅",
+    "typesTitle": "タイプ",
+    "upgradingFor3DSketchBuilding": "エンボディド カーボンの 3D スケッチ建物をアップグレードする",
+    "variationsTitle": "バリエーション",
+    "errors": {
+      "failedToLoadFunctions": "カスタム建物機能のロードに失敗しました",
+      "failedToLoadSettings": "設定のロードに失敗しました"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "ライブラリに追加",
+      "addToLibraryTooltip": "ライブラリに追加",
+      "emptyFloors": "空のフロア",
+      "parking": "駐車場",
+      "popupTitle": "平面図",
+      "title": "平面図",
+      "cannotDrawCornerDescription": "隅角部図はまだ描画できません",
+      "cannotDrawSplitDescription": "分割図はまだ描画できません",
+      "finishDrawingTooltip": "描画を終了して平面図を追加します",
+      "mixedSelectionDescription": "混合の平面図が選択されました",
+      "noLibraryDescription": "この外部形状の平面図はライブラリにありません",
+      "noSelectionDescription": "平面図が選択されていません",
+      "rightClickToAddDescription": "提案の 1 つのフロアを右クリックして、ライブラリに追加します",
+      "selectSectionsDescription": "空のセクションまたは平面図のあるセクションを選択してください"
+    },
+    "floors": {
+      "seeAllButton": "すべてのフロアを見る"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "新規追加",
+      "addSectionCutButton": "断面を追加",
+      "apartmentBuildingStories": "集合住宅棟の階",
+      "apartmentBuildingStoryHeight": "集合住宅棟の階の高さ",
+      "apartmentBuildingWidth": "集合住宅棟の幅",
+      "circulationTitle": "動線",
+      "headerTitle": "線分建物",
+      "outdatedLabel": "旧式",
+      "targetSectionLength": "対象区画の長さ",
+      "circulation": {
+        "sectionCountText": "セクション数: {count}",
+        "widthLabel": "廊下の幅",
+        "widthText": "幅: {width}"
+      },
+      "divisionWidthLabel": "区画の幅",
+      "releaseToBasicAnimationAlt": "基本的なアニメーションを実行",
+      "releaseToBasicExplanation": "線分の自動生成を実行すると基本建物が作成され、個々のフロアに各種機能や駐車場を追加できるようになります。ただし、一度実行したら元に取り戻すことはできません。",
+      "releaseToFloorPlanAction": "平面図に実行",
+      "releaseToFloorPlanAnimationAlt": "平面図アニメーションを実行",
+      "releaseToFloorPlanExplanation": "動線の自動生成を実行すると平面図が作成され、レイアウトを手動で設計できるようになります。ただし、一度実行したら元に取り戻すことはできません。",
+      "towerWidthLabel": "高層棟群の幅"
+    },
+    "properties": {
+      "lengthLabel": "長さ",
+      "numberOfFloorsLabel": "フロアの数",
+      "numberOfStoriesLabel": "Site Study の階数",
+      "stories": "階数",
+      "storyHeight": "階の高さ",
+      "storyHeightLabel": "階の高さ",
+      "widthLabel": "幅"
+    },
+    "toolbar": {
+      "title": "建物"
+    },
+    "tooltips": {
+      "addBuildingsButton": "建物を追加",
+      "clampToTerrainButton": "建物を地形にクランプ",
+      "numberOfFloorsLabel": "フロアの数",
+      "parkingEditDescription": "駐車場の編集が平面図エディタで行われるようになりました",
+      "releaseToBasicButton": "基本建物に実行",
+      "releaseToZonesButton": "ゾーンに実行",
+      "removeBuildingsButton": "建物を除去",
+      "storyHeightLabel": "階の高さ",
+      "swapFloorPlansButton": "平面図を交換",
+      "targetSectionLengthLabel": "対象区画の長さ",
+      "towerWidthLabel": "高層棟の幅",
+      "widthLabel": "建物の幅"
+    },
+    "types": {
+      "basic": {
+        "draw": "基本建物を描画",
+        "name": "基本建物",
+        "tooltip": "あらゆる形状のフロアを含む建物を、調整しながら精密に描画できます。建物の統計情報は面積指標で確認します。"
+      },
+      "line": {
+        "draw": "線分建物を描画",
+        "name": "線分建物",
+        "tooltip": "線分の周囲に建物構造を描画します。セクションやフロアなどのパラメータを調整します。建物の統計情報は面積指標で確認します。"
+      }
+    }
+  },
+  "camera": {
+    "compass": "北を上に表示",
+    "lookAt": {
+      "title": "正面",
+      "tooltip": "カメラを位置合わせするには、マウス カーソルを面の上に置き、クリックして面にズーム フィットさせるか、ドラッグしてズーム エリアを調整します。"
+    },
+    "lookFrom": {
+      "title": "視点位置",
+      "tooltip": "カメラを置くファサード上の点をクリックします。または、クリックしてドラッグすることで、点とビュー方向を選択します。"
+    },
+    "optionsLabel": "カメラ オプション",
+    "optionsTitle": "カメラ オプション",
+    "switchCameraMode": "カメラ モードを切り替え",
+    "vectorExport": {
+      "exportSuccessful": "書き出しに成功しました",
+      "title": "ベクトル書き出し"
+    },
+    "switchTo2d": "2D (直交投影)モードに切り替える",
+    "switchTo3d": "3D モードに切り替える",
+    "zoom": {
+      "toFitProposal": "提案に合わせてズーム",
+      "toFitSelection": "選択範囲に合わせてズーム"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "エッジ"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "連棟住宅",
+      "placeSinglesButton": "戸建て住宅を配置"
+    }
+  },
+  "contextualData": {
+    "description": "プロジェクトで使用できるコンテキスト データを表示および管理します。ここからデータを追加で取得することもできます。",
+    "title": "コンテキスト データ"
+  },
+  "contextMenu": {
+    "copy": "コピー",
+    "cut": "切り取り",
+    "delete": "削除",
+    "exportTerrainAsObj": "地形をオブジェクトとして書き出す",
+    "moveToBack": "背面に移動",
+    "moveToBase": "基本画層に移動",
+    "moveToFront": "前面に移動",
+    "moveToProposal": "提案に移動",
+    "paste": "貼り付け",
+    "pasteInPlace": "その場に貼り付け",
+    "terrainPad": {
+      "moveToBack": "地形舗装を背面に移動",
+      "moveToFront": "地形舗装を前面に移動"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "プロジェクト間やハブ間で要素をコピーすることはできません。",
+    "failedToCopyElementMessage": "要素のコピーに失敗しました。"
+  },
+  "dataOrders": {
+    "completed": "次のデータの取得が完了しました: {name}。提案に追加され、数秒後に[画層]に表示されます。",
+    "completedAll": "{names} がロードされ、提案された基本画層に追加されました。[コンテキスト データ]で参照したり、データを追加で取得することができます。",
+    "failed": "{name} に失敗しました",
+    "failedToAdd": "\"{name}\" を提案に追加できませんでしたが、データはライブラリで使用可能です。",
+    "processing": "次のデータの取得を処理しています: {name}。完了すると提案に追加されます。",
+    "statusTitle": "データの取得ステータス"
+  },
+  "demoSite": {
+    "badge": "デモ",
+    "flyout": {
+      "content": "このサイトは、Forma の機能をデモンストレーションするために作成されました。以下のガイドを開始して、簡単なワークフローの手順に従い、準備ができたら独自のサイトを作成してください。",
+      "createSiteButton": "新しい用地を作成",
+      "createSiteTooltip": "このプロジェクトに用地を作成するには、有効なライセンスと権限が必要です",
+      "header": "これはデモ用の用地です",
+      "startGuideButton": "スタート ガイド"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "始めましょう",
+    "titleFormaSiteDesign": "製品デモ サイト",
+    "description": "これは、Forma 用地 Design を検討するための事前に設計されたサンプル サイトです。何かを壊すことを心配する必要はありません - 実際のプロジェクトに影響を与えることなく、実験するための安全な空間と見なしてください。",
+    "callToAction": "[{bold}] をクリックして、製品デモ サイトを探索します。",
+    "callToActionBold": "続行",
+    "buttonContinue": "続行",
+    "buttonGoToHome": "Forma ホームに移動",
+    "imageAlt": "Forma 用地 デザイン ビジュアライゼーション"
+  },
+  "drawing": {
+    "traceShape": "既存の形状をトレース"
+  },
+  "hotkeys": {
+    "addNode": "ノードを追加",
+    "cancelDrawingPoint": "描画ポイントをキャンセル",
+    "clickAndMoveGrip": "グリップをクリックして移動し、その方向に尺度変更します。",
+    "complete": "完了",
+    "copy": "コピー",
+    "cut": "切り取り",
+    "deleteSelected": "選択を削除",
+    "drawHouse": "住宅を描画",
+    "drawHousesWithLine": "線分で住宅を描画",
+    "drawLine": "線分を描画",
+    "drawRoad": "道路を描画",
+    "edit": "編集",
+    "exitContext": "コンテキストを終了",
+    "exitEditGraph": "グラフ編集を終了",
+    "exitGraphTool": "グラフ ツールを終了",
+    "exitHouseTool": "住宅ツールを終了",
+    "exitSiteStudyAndApply": "Site Study ツールを終了して提案にスタディを適用",
+    "exitTool": "ツールを終了",
+    "exitTransportationTool": "交通ツールを終了",
+    "finishEditing": "編集を終了",
+    "freeform": "フリーフォーム",
+    "measureDistance": "距離を計測",
+    "paste": "貼り付け",
+    "placeSingleHouses": "戸建て住宅を配置",
+    "redo": "やり直し",
+    "remove": "削除",
+    "resetGraph": "グラフをリセット",
+    "selectAll": "すべて選択",
+    "selectSomethingToModify": "{toolName} で修正する対象を選択",
+    "switchHouseCorner": "住宅の角を切り替える",
+    "switchHousePlacementSide": "住宅の配置側を切り替える",
+    "toggleSidebar": "サイドバーを切り替える",
+    "undo": "元に戻す"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "[Shift]キーを押しながらコンパスの位置を移動すると、回転軸がカーソルの下にあるジオメトリに位置合わせされます。",
+    "editSiteLayout": "用地のレイアウトを編集するか、個々のゾーンを選択して建物の類型を設定します。",
+    "freeMode": "フリー モード。↹ [Tab]を押して水平モードにします。",
+    "horizontalMode": "水平モード。↹ [Tab]を押してフリー モードにします。",
+    "mode2D": "2D モード。すべてのツールが水平面に拘束されています。",
+    "rotateMoveText": "{moveModeText} 移動({inputModeText})。↹ [Tab]を押して {nextMoveModeText} 移動({nextInputModeText})します。",
+    "selectAreaToExplore": "用地レイアウトの候補を探索するエリアを選択します。",
+    "snappingAxesHint": " [Alt]キーを押してスナップ軸を非表示にします。[Alt]+[C]を押してクリアします。",
+    "straightAction": "直線 {action}。テーパ {action}するには、↹ [Tab]を押します。",
+    "switchHouseCornerAndRotate": "[Tab]を押して、住宅の角を切り替えます。回転するには、マウスを押したままドラッグします",
+    "switchHousePlacementSide": "[Tab]を押して住宅の配置側を切り替えます",
+    "taperAction": "テーパ {action}。テーパ {action}するには、↹ [Tab]を押します。"
+  },
+  "menus": {
+    "generatorsByExtensions": "拡張機能によるジェネレータ"
+  },
+  "messages": {
+    "elementAddedTo": "{location} に追加された要素"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "保存中です..."
+    },
+    "camera": {
+      "lookAt": "正面"
+    },
+    "lineWidth": "線分の幅",
+    "settings": "設定",
+    "templates": {
+      "updatesAvailable": "更新が利用可能です"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "建物の右クリック オプションの実行に失敗しました",
+      "failedToConvertVolumes": "容積を基本建物に変換できませんでした",
+      "failedToDraw": "基本建物の描画に失敗しました",
+      "failedToEdit": "新しい基本建物の編集に失敗しました",
+      "failedToPushPull": "基本建物のプッシュ/プルに失敗しました"
+    },
+    "failedToLoadContextualData": "コンテキスト データのロードに失敗しました",
+    "import": {
+      "largeScale": "スケールの大きい({size})要素が読み込みに含まれています。そのため読み込みが期待どおりに動作しない可能性があります。キャンセルするには、[Esc]を押します。",
+      "resultingShapeInvalid": "結果の形状は無効です。"
+    },
+    "modelNotGeolocated": "Site Design モデルに地理的位置情報が設定されていません。地理的位置を設定するためのコンテキスト データを取得してください",
+    "terrain": {
+      "boundingBoxTooLarge": "要素ジオメトリのバウンディング ボックスが大きすぎるため、地形として使用できません。最大サイズ: 4km²。実際のサイズ: {size}km²"
+    },
+    "library": {
+      "couldNotFindElement": "ライブラリ要素が見つかりませんでした",
+      "elementNotAvailable": "ライブラリ要素は使用できません",
+      "failedToConvertTerrain": "地形要素への変換に失敗しました",
+      "failedToDownloadFloorPlans": "平面図のダウンロードに失敗しました",
+      "failedToSaveFloorPlans": "プロジェクト レベルの平面図の保存に失敗しました。ページを更新してください",
+      "failedToUpdateLibrary": "ライブラリの更新に失敗しました"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "線分建物メニューでエラーが発生しました",
+      "failedToDraw": "線分建物の描画に失敗しました",
+      "failedToEdit": "線分建物の編集に失敗しました",
+      "failedToolbarAction": "線分建物のツールバー アクションに失敗しました"
+    },
+    "siteStudy": {
+      "errorInExplore": "探索中にエラーが発生しました。もう一度試してください。",
+      "errorOccurred": "エラーが発生しました。担当エンジニアに通知されます。",
+      "failedToLoadPicker": "Explore Picker のロードに失敗しました。もう一度実行してみてください。"
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "すべてのプラグインを参照",
+    "browseDescription": "サードパーティ プロバイダの既存の拡張機能またはジェネレータを参照するか、独自のものを追加します。ここにすべて表示されます。",
+    "downloadButton": "拡張機能をダウンロード",
+    "downloadDescription": "Revit または Rhino からモデルを読み込みます。",
+    "importModelTitle": "拡張機能からモデルを読み込む",
+    "noDescriptionAvailable": "説明はありません。",
+    "plugins": "プラグイン"
+  },
+  "errorBoundary": {
+    "componentCrashed": "コンポーネントがクラッシュしました",
+    "retryButton": "再試行",
+    "unexpectedError": "予期しないエラーが発生しました。操作を再試行するか、ページを再ロードしてもう一度試してください"
+  },
+  "guides": {
+    "closeMenu": "ガイドと測定のメニューを閉じる"
+  },
+  "geometryAlerts": {
+    "dismiss": "閉じる",
+    "header": "ジオメトリ警告",
+    "review": "レビュー",
+    "title": "ジオメトリ警告({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "解析を実行するには、削除または修正してください。",
+      "title": "重複したジオメトリ"
+    },
+    "invalidBbox": {
+      "subTitle": "解析を実行するには、削除または修正してください。",
+      "title": "ジオメトリが遠すぎる要素"
+    },
+    "outOfBounds": {
+      "subTitle": "解析を実行するには、削除または修正してください。",
+      "title": "地形外の要素"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "1 階の面積は 0 です。底面を水平にスナップして修復します。",
+      "title": "面積ゼロの 1 階が検出されました"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "この建物には面積が 0 のフロアが 1 つ以上あるため、有効な建物にすることはできません。",
+      "title": "面積がゼロのフロアが検出されました"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "この建物には<a>非水密ジオメトリ</a>が含まれているため、3D スケッチを終了すると、フロアを持たない汎用モデルになる可能性があります",
+      "title": "建物は水密ではありません"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "このモデルには、ツールや表示の動作に影響を与える可能性のある<a>非水密ジオメトリ</a>が含まれています。",
+      "title": "ジオメトリは水密ではありません"
+    }
+  },
+  "importToolbar": {
+    "title": "モデルを読み込む"
+  },
+  "labels": {
+    "addLabelButton": "ラベルを追加",
+    "category": "ラベル",
+    "description": "3D キャンバス内の特定の点をマークするラベルを追加し、簡単な説明を記入します。最大 {count} 行のテキストを追加できます。 ",
+    "label": "ラベル",
+    "placeholder": "テキストを挿入..."
+  },
+  "layerList": {
+    "buildings": "建物",
+    "category": {
+      "contextualDataDuration": "コンテキスト データ(約 1 ～ 2.5 分)"
+    },
+    "generic": "汎用",
+    "images": "イメージ",
+    "propertyBoundaries": "プロパティの境界",
+    "roads": "道路",
+    "siteLimits": "用地の制限",
+    "terrain": "地形",
+    "vegetation": "植栽",
+    "zones": "ゾーン"
+  },
+  "layersTitle": "画層",
+  "library": {
+    "addedToLibrary": "ライブラリに {name} が追加されました。",
+    "addToLibraryButton": "ライブラリに追加"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "拘束を描画",
+      "name": "拘束",
+      "plural": "拘束",
+      "tooltip": "容積を作成して、プロジェクトの拘束を可視化します。"
+    },
+    "siteLimit": {
+      "defineAsAction": "用地の制限として定義",
+      "hotkeyDescription": "用地の制限を描画",
+      "name": "用地の制限",
+      "tooltip": "プロジェクトの指標の解析に使用する用地の制限を作成します。"
+    },
+    "title": "制限",
+    "zone": {
+      "hotkeyDescription": "ゾーンを描画",
+      "name": "ゾーン",
+      "tooltip": "ゾーンを描画して、用地上で解析するエリアを定義します。"
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "描画モードを終了"
+  },
+  "navbar": {
+    "addButton": "追加",
+    "quickActionsButton": "クイック アクション",
+    "settingsButton": "設定"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "{name} を削除してよろしいですか?",
+      "descriptionParagraph1": "基本画層には、提案全体で再利用されるオブジェクトが含まれています。複数の基本画層を作成して、それらを入れ替えることができます。",
+      "descriptionParagraph2": "既存のオブジェクトを追加するには、当該オブジェクトを右クリックして[基本画層に移動]を選択します。新しいオブジェクトを描画するには、[編集]をクリックします。"
+    },
+    "dataOrderProcessing": "データの取得を処理しています。完了すると、提案に追加されます。"
+  },
+  "pendingOperation": {
+    "defaultDescription": "自動生成が完了するのを待っています..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} 個のジオメトリが {layerType} に追加されました",
+    "geometriesSelectedLabel": "選択されたジオメトリ",
+    "updateTerrainAction": "地形を更新",
+    "updateTerrainDescription": "現在の地形をライブラリの新しい地形で置き換えます"
+  },
+  "properties": {
+    "color": "色",
+    "elevation": "標高",
+    "height": "高さ",
+    "length": "長さ",
+    "mixed": "混合",
+    "name": "名前",
+    "position": "位置",
+    "radius": "半径",
+    "width": "幅"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "すべてのオブジェクトのダウンロードに失敗しました。",
+      "downloadElementsRecovery": "または後でもう一度試してください。問題が解決されるまでビュー モードになります",
+      "flatteningGroups": "提案されているグループはサポートされなくなったため、フラット化されます",
+      "ignoringOldElements": "古い要素を無視する",
+      "knownCriticalHeader": "要素の処理に失敗しました",
+      "knownCriticalMessage": "ページを更新してもう一度試してください。",
+      "missingGeoLocation": "操作を実行するためのプロジェクトの地理的位置がありません。",
+      "notFoundHeader": "提案が見つかりません",
+      "notFoundMessage": "アクセスしようとしている提案が見つかりません。",
+      "terrainNotFoundHeader": "地形モデルが見つかりません",
+      "terrainNotFoundMessage": "現在の提案で予期しないエラーが発生しました。",
+      "tooManyRequestsHeader": "誰かが活動的過ぎたようです。",
+      "tooManyRequestsMessage": "お客様のネットワークから、処理しきれないほど多くの要求を受け取りました。このページを後でロードするか、別のネットワーク(たとえば、パーソナル ホットスポット経由)に切り替えてください。"
+    },
+    "noProposalLayersText": "提案に固有の要素は、ここに一覧表示されます。"
+  },
+  "proposalHistory": {
+    "branchFailed": "古い改訂から新しい提案を作成できませんでした。",
+    "branchRevisionButton": "新しい提案を作成",
+    "branchSuccess": "選択したバージョンから新しい提案が \"{name}\" という名前で作成されました",
+    "contributors": "投稿者: {count}",
+    "copyLinkButton": "リンクをコピー",
+    "currentVersionLabel": "現在のバージョン",
+    "filter": {
+      "byAnalysis": "解析別",
+      "byDate": "日付別",
+      "from": "自",
+      "onlyYours": "あなた専用",
+      "pinned": "ピン固定",
+      "selectDates": "複数の日付を選択",
+      "title": "フィルタ",
+      "to": "至"
+    },
+    "linkToVersionCopied": "{time} へのリンクがコピーされました",
+    "nameThisVersionAction": "このバージョンに名前を付ける",
+    "pinVersionAction": "バージョンをピン固定",
+    "unpinVersionAction": "バージョンのピンを解除",
+    "untitledVersionLabel": "無題バージョン",
+    "viewingVersionLabel": "バージョンを表示中"
+  },
+  "quickAccess": {
+    "actionsLabel": "アクション",
+    "noSuggestions": "候補はありません",
+    "openHotkeyList": "ホットキー リストを開く",
+    "repeatLastTool": "最後のツールを繰り返す",
+    "search": "検索",
+    "title": "クイック アクセス"
+  },
+  "requestInvite": {
+    "button": "招待をリクエスト",
+    "homeLink": "ホーム ページに移動",
+    "projectLink": "プロジェクトに移動",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "既にメンバーです",
+        "message": "あなたは既にこのプロジェクトのメンバーです。"
+      },
+      "ALREADY_REQUESTED": {
+        "header": "招待をリクエスト済みです",
+        "message": "このプロジェクトに対する保留中の招待リクエストが既にあります。管理者がリクエストを承認すると、このプロジェクトへの招待状がメールで届きます。"
+      },
+      "CAN_JOIN": {
+        "header": "参加できます",
+        "message": "このプロジェクトに参加できます。プロジェクトに移動し、[プロジェクトに参加]ボタンをクリックします。"
+      },
+      "ERROR": {
+        "header": "問題が発生しました。もう一度試してください"
+      },
+      "NOT_FOUND": {
+        "header": "エラーです。プロジェクトが見つかりません",
+        "message": "入力した URL は既存のプロジェクトを指していません。"
+      },
+      "REQUEST_LIMIT": {
+        "header": "リクエストが多すぎます",
+        "message": "保留中の招待リクエストが多すぎます。しばらくしてからもう一度試してください。"
+      },
+      "SUCCESS": {
+        "header": "リクエストが正常に送信されました。",
+        "message": "管理者がリクエストを承認すると、このプロジェクトへの招待状がメールで届きます。"
+      }
+    },
+    "statusFallback": {
+      "header": "この Forma プロジェクトへのアクセス権がありません",
+      "message": "プロジェクトにアクセスするには、管理者の 1 人から招待を受ける必要があります。下のボタンを使用して管理者に招待をリクエストしてください。"
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "既定のフォルダ: マイ プロジェクト ファイル フォルダ"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "中心に位置合わせ",
+      "left": "左に位置合わせ",
+      "right": "右に位置合わせ"
+    },
+    "buildingLabel": "建物",
+    "createNew": "新規作成",
+    "layoutLabel": "レイアウト",
+    "loading": "ロード中",
+    "name": "住宅",
+    "parcelLabel": "区画",
+    "plural": "住宅",
+    "publish": "パブリッシュ",
+    "tooltip": "線分で囲まれた戸建て住宅を描画します。プロパティ パネルから住宅の種類を作成して再利用します。",
+    "tooltips": {
+      "buffer": "緩衝",
+      "flatRoof": "陸屋根",
+      "gableRoof": "切妻屋根",
+      "length": "長さ",
+      "numberOfFloors": "フロアの数",
+      "ridgeDirection": "棟方向",
+      "roofAngle": "屋根の角度",
+      "shedRoof": "片流れ屋根",
+      "storyHeight": "階の高さ",
+      "width": "幅"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "断面ボックスを削除",
+    "enableButton": "断面ボックスを有効化",
+    "saveButton": "断面ボックスを保存",
+    "title": "断面ボックス",
+    "toggleButton": "ボックスの枠を表示/非表示"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "この提案は編集中に変更されました(たとえば、他のチーム メンバーも作業している可能性があります)。あなたが編集したバージョンを新しい提案として保存しますか?",
+      "discardEdits": "編集を破棄",
+      "saveAsNew": "新しい提案として保存",
+      "title": "提案編集の競合"
+    },
+    "error": {
+      "body": "直近の編集の保存に失敗しました。編集を続行するには、ページを更新します。",
+      "ok": "OK",
+      "title": "保存に失敗しました"
+    }
+  },
+  "shapes": {
+    "arc": "3 点を指定した円弧",
+    "circle": "円",
+    "cube": "立方体",
+    "cuboid": "直方体",
+    "cylinder": "円柱",
+    "dome": "ドーム",
+    "freeform": "フリーフォーム",
+    "pyramid": "ピラミッド",
+    "rectangle": "長方形",
+    "roof": "屋根",
+    "shapes3d": "3D 形状",
+    "spline": "スプライン",
+    "title": "プリミティブ"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "エッジにカーソルを合わせてガイドラインをアクティブにし、⇧ [Shift]キーを押したままにしてガイドラインに従います。スナップしないようにするには、[{key}]を押したままにします。",
+      "affineInstructions": "スナップしないようにするには、[{key}]を押したままにします。水平、垂直、地形モードを切り替えるには、[Tab]を押します。",
+      "clickToAddSubtract": "クリックによって、線分上の点を追加または削除します。",
+      "editModeStartFinishMac": "⌥ [Option]キーを押したままにすると点を追加/削除できます。↵ [Enter]キーを押して編集を終了します。",
+      "editModeStartFinishWindows": "[Alt]キーを押したまま点を追加/削除します。↵ [Enter]を押して編集を終了します。",
+      "finishEditing": "↵ [Enter]キーを押して編集を終了します。",
+      "finishPolygon": "↵ [Enter]キーを押して、ポリゴンの作成を完了します。",
+      "preciseMoveVertical": "[{key}]を押して、垂直モードを切り替えます。",
+      "specifyDistance": "特定の距離を設定するタイプです。クリックして配置します。"
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "フロアの削除、コピー、切り取り、貼り付けは、3D スケッチ建物ではサポートされていません。代わりに 3D スケッチで編集してみてください。"
+  },
+  "snapping": {
+    "cursorElevation": "カーソル位置の標高",
+    "guidesAndMeasurements": "ガイドと測定",
+    "snapToGuides": "ガイドにスナップ",
+    "snapToObjects": "オブジェクトにスナップ"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "スペース名を入力します。既定の場合は空のままにします"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "シナリオに紐付け",
+      "connectToScenarioDesc": "シナリオはプロジェクト内の共有設計コンテナで、複数のソフトウェア アプリケーションのモデル、ツール、ジオメトリやその他のデータを接続します。"
+    }
+  },
+  "relativeTime": {
+    "today": "今日"
+  },
+  "terrain": {
+    "elevation": "標高",
+    "errors": {
+      "loadMapImageFailed": "マップ イメージのロードに失敗しました",
+      "loadSatelliteTextureFailed": "衛星テクスチャのロードに失敗しました。",
+      "loadTextureFailed": "地形テクスチャのロードに失敗しました。"
+    },
+    "labels": {
+      "numberOfSelectedPads": "舗装容積",
+      "padVolume": "舗装容積",
+      "padsVolume": "舗装容積",
+      "showAsPercentage": "パーセンテージで表示",
+      "showAsRatio": "比率として表示",
+      "totalMassBalance": "総質量バランス"
+    },
+    "massBalanceHover": "地形全体の質量変化の正味容積。",
+    "metricsHeader": "指標",
+    "pad": {
+      "header": "地形舗装",
+      "name": "地形舗装",
+      "tooltip": "地形の切土/盛土、標高と勾配の調整、マス バランスの評価を行います。"
+    },
+    "padVolumeHover": "選択した舗装によって地形に加算/減算された容積。",
+    "padsHeader": "地形舗装",
+    "slope": "勾配"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "自動生成のロード中は、基本画層と提案を切り替えることはできません",
+    "pendingSelectionBlockedMessage": "自動生成のロード中は選択を変更できません",
+    "pendingToolSwitchBlockedMessage": "自動生成のロード中はツールを使用できません",
+    "transform": {
+      "redefineReferencePointsButton": "参照点を再定義"
+    }
+  },
+  "transform": {
+    "cover": "かぶり",
+    "fillet": "フィレット",
+    "intersect": {
+      "name": "交差",
+      "tooltip": "2 つ以上のオブジェクトの交差を作成します。それに応じて、最初に選択したオブジェクトのフットプリントが変更されます。"
+    },
+    "loft": "ロフト",
+    "move": {
+      "name": "移動",
+      "tooltip": "参照点と終点を定義して、オブジェクトを移動します。 "
+    },
+    "offset": {
+      "apply": "オフセットを適用",
+      "name": "オフセット",
+      "tooltip": "オブジェクトのフットプリントを外側に延長するか、特定の距離だけ内側に縮小します。"
+    },
+    "rotate": {
+      "name": "回転",
+      "tooltip": "定義した参照点を中心としてシーン内のオブジェクトを回転します。"
+    },
+    "shell": "シェル",
+    "split": {
+      "name": "分割",
+      "tooltip": "線分を使用して 1 つ以上のオブジェクトを分割します。"
+    },
+    "subtract": {
+      "name": "減算",
+      "tooltip": "別のオブジェクトを使用して、オブジェクトから形状を差し引きます。それに応じて、最初に選択したオブジェクトのフットプリントが変更されます。"
+    },
+    "sweep": "スイープ",
+    "title": "変換",
+    "union": {
+      "name": "集合",
+      "tooltip": "2 つ以上のオブジェクトを結合します。最初に選択したオブジェクトによって、結果のオブジェクトのカテゴリと高さが定義されます。"
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "コーナー半径は、レイアウトに基づいて道路の曲線を最適化する動的な値です。",
+      "tight": "コーナー半径は、道路の幅の 1/2 に等しい小さな固定値です。"
+    },
+    "railroads": {
+      "hotkeyDescription": "レールを描画",
+      "name": "鉄道",
+      "toolButton": "鉄道",
+      "tooltip": "右側のパネルで線路を作成し、幅を調整します。",
+      "typeLabel": "レール タイプ",
+      "typePlaceholder": "レール タイプを選択"
+    },
+    "roads": {
+      "hotkeyDescription": "道路を描画",
+      "name": "道路",
+      "toolButton": "道路",
+      "tooltip": "右側のパネルで道路を作成し、幅を調整します。",
+      "widthLabel": "道路の幅",
+      "withGraphToolButton": "道路(グラフ構造)"
+    },
+    "title": "交通",
+    "trafficData": {
+      "addButton": "交通量データを追加",
+      "adtTooltip": "平均日交通量",
+      "advancedSettingsLabel": "高度な設定",
+      "dailyDistributionLabel": "日交通量分布",
+      "dayTimeTooltip": "日中: 06:00 ～ 18:00",
+      "eveningTimeTooltip": "夕刻: 18:00 ～ 22:00",
+      "heavyVehicleLabel": "激しい交通量",
+      "nightTimeTooltip": "夜間: 22:00 ～ 06:00",
+      "railRequiredInputsMessage": "騒音解析で鉄道を考慮するには、すべての入力が必要です",
+      "removeButton": "交通量データを削除",
+      "roadRequiredInputsMessage": "騒音解析で道路を考慮するには、すべての入力が必要です",
+      "speedLimitTooltip": "速度制限",
+      "title": "交通量騒音データ"
+    }
+  },
+  "ui": {
+    "add": "追加",
+    "area": "面積",
+    "areaSum": "面積 (合計)",
+    "automationLabel": "自動生成",
+    "beta": "ベータ",
+    "browsePluginsDescription": "サードパーティ プロバイダの既存のプラグインを参照するか、独自のプラグインを追加します。プラグインはここに表示されます。",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "color": "色",
+    "delete": "削除",
+    "detach": "アタッチ解除",
+    "duplicate": "複製",
+    "edit": "編集",
+    "gridSettings": "グリッド設定",
+    "hide": "非表示",
+    "length": "長さ",
+    "lengthSum": "長さ (合計)",
+    "newVersionAvailable": "新しいバージョンが利用可能です。",
+    "redo": "やり直し",
+    "refresh": "更新",
+    "remove": "削除",
+    "rename": "名前変更",
+    "repair": "修復",
+    "retry": "再試行",
+    "show": "表示",
+    "siteLabel": "用地",
+    "surroundings": "周辺環境",
+    "textAlignment": "文字位置合わせ",
+    "undo": "元に戻す",
+    "update": "更新",
+    "videoNotSupported": "お使いのブラウザはビデオ タグをサポートしていません。",
+    "xyzAxes": "XYZ 軸"
+  },
+  "performanceStats": {
+    "currentSnapshot": "現在のスナップショット",
+    "remainingFromPastSnapshots": "過去のスナップショットからの残り",
+    "title": "パフォーマンスの統計情報 {status}"
+  },
+  "units": {
+    "asl": "ASL",
+    "magl": "MAGL",
+    "masl": "MASL"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "中心に位置合わせ",
+      "left": "左に位置合わせ",
+      "right": "右に位置合わせ",
+      "spacing": "間隔"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "樹木エリアを描画",
+      "name": "樹木エリア",
+      "tooltip": "樹木が植えられたエリアを作成し、樹木のサイズと密度を編集します。すべての樹木が解析に影響します。"
+    },
+    "header": "樹木",
+    "landscapingTitle": "景観",
+    "properties": {
+      "bufferTooltip": "緩衝",
+      "gridLengthLabel": "グリッドの長さ",
+      "gridWidthLabel": "グリッドの幅",
+      "heightTooltip": "樹木の高さ",
+      "offsetTooltip": "オフセット"
+    },
+    "title": "植栽",
+    "tooltips": {
+      "averageDistanceLabel": "樹冠の間の平均距離",
+      "heightLabel": "それぞれの樹木の高さ"
+    },
+    "treeLine": {
+      "hotkeyDescription": "樹木線を描画",
+      "name": "樹木線",
+      "tooltip": "樹木が植えられた線を作成し、樹木のサイズと密度を編集します。すべての樹木が解析に影響します。"
+    },
+    "trees": "樹木"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "解析の ID が指定されていません",
+      "unsupportedAnalysisType": "サポートされていない解析タイプです: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "この用地に対して持っている権限は表示のみです"
+  },
+  "windAnalysis": {
+    "analyzing": "解析中...",
+    "atCapacity": "現在、多数の詳細な風解析を実行しています。解析が完了するまでに時間がかかる場合があります。しばらくお待ちください。",
+    "circleOutsideBoundingBox": "解析エリアがマップ エリアの外側にあります",
+    "concurrentQuotaReached": "同時風解析の上限に達しました",
+    "concurrentQuotaReachedDescription": "同時に実行されている風解析が多すぎます。一部が完了するのをお待ちください。",
+    "concurrentQuotaWarning": "同時解析の上限",
+    "concurrentQuotaWarningDescription": "同時解析の上限の {limit} 回に達するまでに、詳細な風解析が {remaining} 回残っています。",
+    "dailyQuotaReached": "解析上限に達しました",
+    "dailyQuotaReachedDescription": "風解析の 1 日の上限に達しました。",
+    "dailyQuotaReachedDescriptionRetry": "風解析の 1 日の上限に達しました。{nextAvailableAt} にもう一度試してください。",
+    "loadingData": "データをロード中",
+    "loadingDataTooltip": "ロード中...",
+    "runAnalysis": "解析(約 {min} ～ {max} 分)",
+    "seeAnalysisButton": "詳細解析を見る",
+    "stoppedOrFailed": "解析が停止または失敗しました。",
+    "viewerAccessDisableTooltip": "閲覧者は解析を実行できません"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "高度なモデリング ツール",
+      "editIn": "3D スケッチで編集",
+      "howToStartEditingMessage": "⏎ を押すかダブルクリックして、3D スケッチで編集します。",
+      "launch": "新規 3D スケッチ",
+      "sketch": "スケッチ",
+      "updateProperties": "プロパティを更新"
+    },
+    "advancedModeling": {
+      "cover": "かぶり",
+      "fillet": "フィレット",
+      "intersect": "交差",
+      "loft": "ロフト",
+      "offset": "オフセット",
+      "shell": "シェル",
+      "subtract": "減算",
+      "sweep": "スイープ",
+      "union": "集合"
+    },
+    "axes": {
+      "reset": "軸をリセット",
+      "set": "XYZ 軸を設定"
+    },
+    "buildingType": {
+      "draw": "3D スケッチの建物を描画",
+      "name": "3D スケッチ建物"
+    },
+    "buttons": {
+      "apply": "適用",
+      "cancel": "キャンセル",
+      "ok": "OK"
+    },
+    "convert": {
+      "externalMessage": "オブジェクトを 3D スケッチに変換して、外側面、エッジ、頂点を修正します。\n\n要素が一度変換されると元のソース内の要素との紐付けがなくなり、変更は同期されなくなります。",
+      "message": "オブジェクトを 3D スケッチに変換して、外側面、エッジ、頂点を修正します。",
+      "title": "3D スケッチに変換"
+    },
+    "dialogs": {
+      "arrayButtonArray": "配列",
+      "arrayButtonCancel": "キャンセル",
+      "arrayDistanceBetween2Points": "2 点間の長さ",
+      "arrayDistanceTotalLength": "全体長さ",
+      "arraySubtitleDistance": "距離",
+      "arraySubtitleQuantity": "数量",
+      "arraySubtitleType": "タイプ",
+      "arrayTitle": "配列",
+      "arrayTypeLinear": "直線状配列",
+      "arrayTypeRadial": "円形状配列",
+      "corruptedElementsDeleted": "一部の要素の保存に失敗し、破損しました。当該要素は自動的に削除されました。",
+      "editDimensionTitle": "寸法を編集",
+      "recoveryClosedWithoutSaving": "3D スケッチが適切に保存されずに閉じられました。",
+      "recoveryQuestion": "未保存の変更を復元しますか?",
+      "recoveryTitle": "保存されていないモデルの変更が見つかりました"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "最も低い非水平面をフラット化"
+    },
+    "finishSelection": {
+      "back": "戻る(B)",
+      "cancel": "キャンセル(ESC)",
+      "confirm": "終了(F)",
+      "next": "次へ(N)"
+    },
+    "floors": {
+      "addFloor": "フロアを追加",
+      "addFloors": "フロアを追加",
+      "floorHeight": "フロアの高さ",
+      "floors": "フロア",
+      "floorWithNumberLabel": "フロア {level}",
+      "moreOptions": "詳細",
+      "numberOfFloors": "フロアの数",
+      "removeFloors": "フロアを削除",
+      "resetFloors": "フロアをリセット",
+      "title": "フロアの詳細"
+    },
+    "groupEditing": {
+      "redo": "やり直し",
+      "undo": "元に戻す"
+    },
+    "grouping": {
+      "toolbarTitle": "グループ"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "角度を計測",
+      "measureDistance": "距離を計測",
+      "menuTitle": "ガイドと測定",
+      "title": "ガイドと測定"
+    },
+    "mesh": {
+      "convertHintMessage": "ダブルクリックしてメッシュをオブジェクトに変換することで、追加の編集ツールを有効にします。",
+      "importExceededLimitsMessage": "読み込みがメッシュ三角形制限 {limit} を超えており、パフォーマンス向上のために変更されません。\n\nその他の編集ツールにアクセスするには、個々のメッシュを選択し、ダブルクリックして編集可能オブジェクトに変換します。",
+      "importExceededLimitsTitle": "読み込みがメッシュ三角形の上限を超えています"
+    },
+    "pasteInPlaceAction": "その場に貼り付け",
+    "properties": {
+      "mixed": "混合",
+      "objectWithIdLabel": "オブジェクト {id}"
+    },
+    "scaleTitle": "スケール",
+    "selection": {
+      "areaSelectionOptions": "エリア選択オプション",
+      "filterEdges": "エッジ",
+      "filterFaces": "面",
+      "filterGroups": "グループ",
+      "filterMeshes": "メッシュ",
+      "filterSolids": "ソリッド",
+      "filterVertices": "頂点",
+      "selection": "選択",
+      "selectionTools": "選択ツール"
+    },
+    "tools": {
+      "array": "配列",
+      "editArcCircle": "円弧または円を編集",
+      "editSpline": "スプラインを編集",
+      "extrudeEdges": "エッジを押し出し",
+      "extrudeFace": "面を押し出し",
+      "facetFace": "面を分割",
+      "flattenFace": "面をフラット化",
+      "group": "グループ化",
+      "groupDetach": "アタッチ解除",
+      "meshToObjects": "メッシュを変換",
+      "mirror": "鏡像化",
+      "move": "移動",
+      "offsetEdges": "エッジをオフセット",
+      "offsetFace": "面をオフセット",
+      "reverseFace": "面を反転",
+      "rotate": "回転",
+      "scale": "スケール",
+      "scaleNonUniform": "不均等スケール",
+      "smoothEdges": "エッジをスムーズ化",
+      "tiltFace": "面を傾斜",
+      "ungroup": "グループ解除"
+    },
+    "tooltips": {
+      "building": "傾斜した屋根や傾斜した壁など、無制限の可能性を秘めた複雑な 3D 建物。",
+      "editIn": "オブジェクトを変換して、3D スケッチの頂点、エッジ、面を修正します。",
+      "launch": "3D スケッチを使用して、初期段階の建築設計コンセプトをモデル化し、反復します。"
+    },
+    "zoom": {
+      "fitProposal": "提案に合わせてズーム",
+      "fitSelection": "選択範囲に合わせてズーム"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "クイック スタート ガイド",
+    "allTutorialsDescription": "これらのインタラクティブ ガイドを完了して、サイトを設定し、外用地設計での作業を開始してください。",
+    "completionMessage": "これで {header} ガイドは完了です。",
+    "completionText": "{percent}% 完了",
+    "completedTitle": "完了",
+    "continueButton": "続行",
+    "stepsTotal": "合計 {count} ステップ",
+    "timeLabel": "{time} 分",
+    "stepProgress": "{current}/{total}",
+    "nextButton": "次へ",
+    "doneButton": "完了",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "クイック スタート ガイド",
+    "upNextTitle": "次のトピック"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "サイトをセットアップする",
+      "description": "用地や建物のモデリングや解析を開始する前に、コンテキスト データを追加します。",
+      "reviewHeader": "用地のセットアップが完了しました",
+      "reviewText": "コンテキスト データおよび用地の制限が正常に追加されました。{br}{br}よくできました!これで、モデリング ツールとインポート機能を確認したり、別のガイドに進むことができます。",
+      "steps": {
+        "openContextualTab": {
+          "header": "コンテキスト データ タブを開く",
+          "text": "まず、[<bold>コンテキスト データ</bold>]タブを開きます。"
+        },
+        "browseAndOrder": {
+          "header": "サイトの場所のデータを参照",
+          "text": "[<bold>コンテキスト データを参照</bold>]をクリックして、サイトの場所で使用可能なデータ パッケージを確認します。{br}{br}データには周囲の建物、道路、地形などが含まれます。"
+        },
+        "orderStarterPackage": {
+          "header": "スターター データ パッケージを注文する",
+          "text": "[<bold>追加</bold>] をクリックして、このデータ パッケージに含まれる内容を確認します。このデータは無料です。"
+        },
+        "orderData": {
+          "header": "注文データ パッケージ",
+          "text": "サイトへの 3D コンテキスト データのダウンロードを開始する順序を選択します。"
+        },
+        "drawSiteLimit": {
+          "header": "用地の制限を描画",
+          "text": "サイト用地の制限を定義するには、この描画ツールをアクティブにします。アクティブにしたら、サイトの周囲にポイントを描画し、形状を囲みます。{br}{br}用地の制限が定義されていることは、Forma 用地 Design で解析を実行するための前提条件です。"
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "建物を追加",
+      "description": "モデリング ツールを使用して建物を作成したり、既存のモデルをインポートしたりできます。",
+      "reviewHeader": "サイトに追加された建物",
+      "reviewText": "建物が正常に描画され、アセットがサイトに読み込まれました。お疲れ様でした!これで、解析を実行して環境条件を評価することも、別のガイドに進むこともできます。",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "基本建物を描画する",
+          "text": "[<bold>Basic building</bold>]をクリックして、建築ツールをアクティブにします。アクティブにしたら、建物の形状を描画し、最後の点を選択してフットプリントの描画を完了します。"
+        },
+        "exploreParametricOptions": {
+          "header": "パラメトリック オプションを探索する",
+          "text": "建物モデルの修正に使用できるパラメトリック オプションについて説明します。"
+        },
+        "importModel": {
+          "header": "モデルまたはファイルのインポート",
+          "text": "[<bold>読み込み</bold>]をクリックして、ローカル デバイスからモデルまたはラスター イメージをアップロードします。"
+        },
+        "placeInScene": {
+          "header": "シーン内に配置する",
+          "text": "ライブラリから読み込んだアイテムをクリックします。選択したら、クリックおよびドラッグして用地に配置します。要素を配置すると、チュートリアルは自動的に進みます。"
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "環境条件の評価",
+      "description": "日照時間解析を実行して、設計に関する早期の意思決定を通知します。",
+      "reviewHeader": "日照時間解析が完了しました!",
+      "reviewText": "サイトで日照時間解析が正常に実行されました。{.0}{br}引き続き新しい提案の作成、解析の比較、用地 Design の検討を行うことができます。",
+      "steps": {
+        "selectAnalysis": {
+          "header": "解析を選択",
+          "text": "ハイライト表示されたアイコンをクリックして、日照時間解析を選択します。"
+        },
+        "selectDate": {
+          "header": "日付を選択",
+          "text": "ドロップダウンを使用して、用地の日照時間を解析するための日付を設定します。"
+        },
+        "runAnalysis": {
+          "header": "解析を実行",
+          "text": "ボタンをクリックして、解析を開始します。解析はほんの数秒で完了します。{br}{br}解析が完了すると、ガイドが自動的に再開されます。"
+        },
+        "openAnalysisResults": {
+          "header": "結果を開く",
+          "text": "完了すると、解析結果がこのリストに表示されます。最新の結果をクリックして詳細を確認します。新しいウィンドウが開きます。",
+          "altText": "解析結果ウィンドウ"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "「WebGL はサポートされていません」の対処方法",
+      "text": "お使いのコンピュータは、Forma の使用に必要な WebGL をサポートしていないようです",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

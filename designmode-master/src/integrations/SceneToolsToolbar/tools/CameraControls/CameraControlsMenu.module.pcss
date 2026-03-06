@@ -1,0 +1,42 @@
+.Menu {
+  box-shadow: var(--forma-box-shadow);
+  border-radius: 4px;
+  width: 260px;
+  padding: 0.8rem 0;
+
+  &[data-open="false"] {
+    display: none;
+  }
+}
+
+.ControlsHeader {
+  padding: 0.2rem 1.6rem;
+  display: flex;
+  align-items: center;
+}
+
+.MenuTitle {
+  margin: 0;
+  display: flex;
+  flex-grow: 1;
+  font: var(--12-bold);
+  color: var(--text-color-medium-default);
+}
+
+.Divider {
+  color: var(--border-color-divider-light);
+  margin: 0.8rem 0;
+  border-style: solid;
+  border-top: none;
+}
+
+.Button {
+  border: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.25rem;
+  background: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

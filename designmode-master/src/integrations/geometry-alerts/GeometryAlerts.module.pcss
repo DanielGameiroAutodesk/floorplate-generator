@@ -1,0 +1,196 @@
+.MessageCenterIcon {
+  background-color: var(--background-color-surface-100);
+  box-shadow: var(--effect-shadow-high);
+  border-radius: 4px;
+  padding: 4px;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.MessageCenterPlacement {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+/* These styles are adapted from forma-toast.css in the design-system repo */
+
+.toast {
+  background-color: var(--background-color-surface-100);
+  border-radius: 3px 4px 4px 3px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  color: var(--text-color-medium-default);
+  display: flex;
+  justify-content: space-between;
+  padding-left: 12px;
+  box-sizing: border-box;
+  width: 23rem;
+  pointer-events: all;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.toast.none {
+  border-left: 4px solid var(--status-color-read);
+}
+.toast.primary {
+  border-left: 4px solid var(--status-color-info);
+}
+.toast.success {
+  border-left: 4px solid var(--status-color-success);
+}
+.toast.error {
+  border-left: 4px solid var(--status-color-error);
+}
+.toast.warning {
+  border-left: 4px solid var(--status-color-warning);
+}
+
+.group {
+  display: flex;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+  font: var(--11-regular);
+  line-height: 14px;
+  gap: 2px;
+
+  h1 {
+    font: var(--12-bold);
+    margin: 0;
+  }
+
+  a {
+    color: var(--icon-color-selected-hover);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.closeIcon {
+  margin: 4px;
+}
+
+.Expanded {
+  --padding-inline: 16px;
+  width: 383px;
+  border-radius: 4px;
+  background-color: white;
+  pointer-events: all;
+
+  box-sizing: border-box;
+
+  & .ExpandedHeader {
+    display: flex;
+    grid-template-columns: auto 48px;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-left: 16px;
+    padding-right: 10px;
+
+    font: var(--12-bold);
+
+    height: 48px;
+    border-bottom: 1px solid var(--border-color-divider-light);
+  }
+
+  & .ExpandedRow {
+    display: grid;
+
+    grid-template-columns:
+      2px 14px
+      [icon-start] 56px [icon-end]
+      12px
+      [text-start] 1fr [text-end]
+      12px
+      [actions-start] auto [actions-end]
+      16px;
+
+    grid-template-rows: [full-height-start] 12px [content-start] 56px [content-end] 12px [full-height-end];
+
+    align-items: center;
+
+    //cursor: pointer;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    .StatusBar {
+      --status-color: var(--status-color-read);
+
+      background-color: var(--status-color);
+      grid-column: 1 / 2;
+      grid-row: full-height;
+      width: 100%;
+      height: 100%;
+
+      &.None {
+      }
+
+      &.Success {
+        --status-color: var(--status-color-success);
+      }
+
+      &.Warning {
+        --status-color: var(--status-color-warning);
+      }
+      &.Error {
+        --status-color: var(--status-color-error);
+      }
+
+      &.Primary {
+        --status-color: var(--status-color-info);
+      }
+    }
+
+    box-sizing: border-box;
+
+    & .Icon {
+      grid-column: icon;
+      grid-row: content;
+      width: 100%;
+      height: 100%;
+
+      display: grid;
+      align-items: center;
+      justify-items: center;
+
+      background-color: #f5f5f5;
+      border: 1px solid rgba(128, 128, 128, 0.2);
+    }
+
+    & .Content {
+      grid-column: text;
+      grid-row: content;
+
+      & .Title {
+        font: var(--11-medium);
+
+        & span {
+          font: var(--11-regular);
+        }
+      }
+      & .SubTitle {
+        font: var(--11-regular);
+      }
+    }
+
+    & .Actions {
+      grid-column: actions;
+      grid-row: content;
+
+      display: flex;
+      gap: 8px;
+    }
+  }
+}

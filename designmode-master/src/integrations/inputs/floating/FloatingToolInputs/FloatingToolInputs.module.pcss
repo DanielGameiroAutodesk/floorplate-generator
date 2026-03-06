@@ -1,0 +1,39 @@
+.FloatingInputsWrapper {
+  z-index: var(--z-secondary-navigation);
+  position: fixed;
+
+  display: grid;
+  grid-gap: 6px;
+  background-color: var(--background-color-surface-100);
+  padding: 4px;
+  border-radius: 3px;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    0px 3px 8px rgba(0, 0, 0, 0.04);
+}
+
+.FloatingInputWrapper {
+  grid-column: 2;
+  justify-self: end;
+}
+
+.FloatingInput {
+  min-width: 30px;
+  text-align: right;
+  overflow: visible;
+}
+
+.IconWrapper {
+  grid-column: 1;
+  display: flex;
+  place-items: center;
+}
+
+.Icon {
+  max-height: 12px;
+  max-width: 12px;
+}
+
+.Unit {
+  grid-column: 3;
+}

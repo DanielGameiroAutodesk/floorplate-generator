@@ -1,0 +1,39 @@
+.FloatingAnnotationWrapper {
+  position: fixed;
+  width: 0;
+  height: 0;
+}
+
+.FloatingAnnotationContent {
+  margin: -4px 0 0 1px; /*Makes the triangle tip be aligned with cursor tip*/
+  border-radius: 3px;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    0 3px 8px rgba(0, 0, 0, 0.04);
+  padding: 0.6rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  textarea {
+    font: var(--12-regular);
+    color: inherit;
+    width: 25rem;
+    border: none;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    min-height: 50px;
+  }
+
+  textarea:focus {
+    outline: 1px solid var(--border-color-selected);
+  }
+}
+
+.FloatingAnnotationPreview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 10rem;
+}

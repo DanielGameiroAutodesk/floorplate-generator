@@ -1,0 +1,62 @@
+.Modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.Modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 40rem;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.Modal__title {
+  padding: 1.8rem;
+  font: var(--medium-small-bold);
+  color: rgba(60, 60, 60, 1);
+  border-bottom: rgba(60, 60, 60, 0.1) solid 0.1rem;
+}
+
+.Modal__body {
+  padding: 0 1.8rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+  flex-direction: column;
+  height: 5.4rem;
+  font:
+    normal 400 normal 10px/14px "Artifakt Element",
+    sans-serif;
+  color: rgba(60, 60, 60, 0.7);
+}
+
+.Modal__body__context {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Modal__footer {
+  padding: 1.8rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+  flex-direction: row;
+}
+
+.Modal__footer__button::part(button) {
+  font: var(--medium-medium-medium);
+  padding: 1.7rem 1.5rem;
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,20 @@
+.viewModeBanner {
+  grid-area: banner;
+  max-height: 3rem;
+  background-color: var(--background-color-accent);
+  z-index: var(--z-primary-navigation);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+
+  color: white;
+  font: var(--12-bold);
+
+  padding: 3px;
+}
+
+.timestamp {
+  font: var(--12-medium);
+}

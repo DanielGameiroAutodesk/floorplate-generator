@@ -1,0 +1,74 @@
+.TemplateUpdateList {
+  padding: 4px 6px;
+  max-height: 283px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.TemplateUpdateRow {
+  width: 374px;
+  box-sizing: border-box;
+  padding: 12px 16px 12px 12px;
+  display: flex;
+  align-items: center;
+  font: var(--11-regular);
+}
+
+.TemplateUpdateRow:hover {
+  background: rgba(128, 128, 128, 10%);
+}
+
+.TemplateUpdatePreview {
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
+  min-height: 54px;
+  margin-right: 12px;
+  border: 1px solid rgba(128, 128, 128, 20%);
+}
+
+.TemplateUpdateMain {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.TemplateUpdateTitleLine {
+  display: flex;
+}
+
+.TemplateUpdateTitleName {
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  max-width: 125px;
+}
+
+.TemplateUpdateTitleCount {
+  margin-left: 0.35em;
+  cursor: default;
+}
+
+.TemplateUpdateRow a {
+  cursor: pointer;
+}
+
+.TemplateUpdateRow a:hover {
+  text-decoration: underline;
+}
+
+.TemplateUpdateRow weave-button {
+  margin-left: 14px;
+  width: fit-content;
+  height: fit-content;
+  font: var(--11-medium);
+}
+
+.UpdateAllTemplatesFooter {
+  border-top: 1px solid var(--border-color-divider-light);
+  padding: 14px 20px;
+  text-align: right;
+}

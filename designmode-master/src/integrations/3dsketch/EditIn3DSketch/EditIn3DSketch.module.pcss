@@ -1,0 +1,103 @@
+.EditIn3DSketchButtonContainer {
+  display: flex;
+  padding: 0px 0px 20px 0px;
+}
+
+.EditIn3DSketchButtonText {
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.ModalBackDrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+}
+
+.Dialog {
+  position: fixed;
+  top: 33%;
+  max-width: 700px;
+  padding: 0;
+  background-color: white;
+  box-shadow:
+    0px 8px 24px rgba(0, 0, 0, 0.12),
+    0px 5px 10px rgba(0, 0, 0, 0.04);
+  border: none;
+  border-radius: 4px;
+  margin: auto;
+  user-select: none;
+}
+
+.DialogContent {
+  width: 420px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.DialogHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.DialogTitle {
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0px;
+  text-align: left;
+}
+
+.DialogCloseButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: none;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #2a333d;
+  fill: #2a333d;
+  stroke: #2a333d;
+
+  &:hover {
+    background: #0001;
+  }
+}
+
+.DialogBody {
+  margin-top: 12px;
+}
+
+.DialogMessage {
+  font-family:
+    Artifakt Element,
+    sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0px;
+  text-align: left;
+}
+
+.DialogFooter {
+  margin-top: 28px;
+  display: flex;
+  justify-content: end;
+  gap: 16px;
+}

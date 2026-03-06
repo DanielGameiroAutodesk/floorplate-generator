@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "Vergelijken",
+    "headerText": "Voorstellen selecteren",
+    "maxProposalsWarning": "U kunt maximaal {max} voorstellen tegelijk vergelijken",
+    "minProposalsWarning": "Selecteer {min} of meer om te vergelijken"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "Weet u zeker dat u dit voorstel wilt verwijderen?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "Verwijderen",
+    "duplicateMenuItem": "Dupliceren",
+    "exportAsIfcBetaMenuItem": "Exporteren als IFC (bèta)",
+    "exportAsIfcToDocs": "Exporteren als IFC naar Docs (bèta)",
+    "exportAsObjMenuItem": "Exporteren als OBJ",
+    "exportSubmenu": "Exporteren...",
+    "renameMenuItem": "Naam wijzigen",
+    "revitDownloadAddinMenuItem": "Revit-invoegtoepassing downloaden",
+    "revitSendToBetaMenuItem": "Verzenden naar Revit-invoegtoepassing (bèta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "Geschiedenis van voorstel weergeven"
+  },
+  "createProposal": {
+    "buttonTooltip": "Nieuw voorstel toevoegen"
+  },
+  "error": {
+    "couldNotLoadProposals": "Kan voorstellen niet laden. Probeer het opnieuw.",
+    "retryButton": "Opnieuw"
+  },
+  "exportModal": {
+    "exportingMessage": "Exporteren...",
+    "exportPrimaryButtonTitle": "Exporteren",
+    "title": "Forma-voorstel naar Docs exporteren"
+  },
+  "filter": {
+    "buttonTooltip": "Filteren",
+    "closeButtonTooltip": "Sluiten",
+    "emptyBasesMessage": "Het project heeft geen bases. Ga naar de sectie Lagen om er een te maken.",
+    "sortByHeader": "Sorteren op",
+    "title": "Filteren"
+  },
+  "proposalItem": {
+    "baseTooltip": "Basis {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "Nog een voorstel maken om te vergelijken",
+    "headerText": "Voorstellen",
+    "selectProposalsToCompare": "Voorstellen selecteren om te vergelijken"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A-Z",
+    "alphabeticalDescending": "Z-A",
+    "lastEdited": "Laatst bewerkt"
+  },
+  "toast": {
+    "exportAccessDeniedText": "U hebt geen rechten voor toegang tot deze map of dit bestand. Neem contact op met uw beheerder voor ondersteuning.",
+    "exportAccessDeniedTitle": "Toegang geweigerd",
+    "exportDownloaded": "Export gedownload",
+    "exportErrorText": "We kunnen het voorstel niet exporteren. Probeer het opnieuw. Als het probleem aanhoudt, neem dan contact op met de ondersteuning voor hulp.",
+    "exportErrorTitle": "Exporteren naar Docs mislukt",
+    "exportGenericError": "Voorstel exporteren mislukt",
+    "exportInProgress": "Voorstel exporteren...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "Uw voorstel is geëxporteerd naar Autodesk Docs. U kunt het nu gebruiken om uw Forma-gegevens te koppelen aan uw Revit-project.",
+    "exportSuccessTitle": "Geëxporteerd naar Docs",
+    "exportTimeoutText": "Er is een time-out van het systeem opgetreden tijdens het genereren van een export naar Docs. Dit kan gebeuren als het project zeer groot is en/of zeer complexe geometrie bevat.",
+    "exportTimeoutTitle": "Exporteren naar Docs mislukt",
+    "exportTooLargeError": "Exporteren mislukt. Dit kan zijn omdat het voorstel te groot is voor wat momenteel wordt ondersteund om te exporteren.",
+    "ifcExportFailed": "Exporteren mislukt. De fout wordt gerapporteerd.",
+    "ifcExportStarted": "Het exporteren van uw IFC-bestand is gestart. Wanneer dit is voltooid, wordt het bestand automatisch gedownload.",
+    "proposalRenamedWarning": "De naam van het voorstel bestaat al, hernoemd naar {name}",
+    "revitSendFailed": "Kan het voorstel niet naar Revit verzenden.",
+    "revitSendSuccess": "Voorstel is naar Revit verzonden",
+    "sessionExpired": "De sessie is verlopen. Herlaad de pagina."
+  }
+}

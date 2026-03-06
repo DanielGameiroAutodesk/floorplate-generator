@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "比较",
+    "headerText": "选择方案",
+    "maxProposalsWarning": "您一次最多只能比较 {max} 个方案",
+    "minProposalsWarning": "选择 {min} 个或更多以进行比较"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "是否确实要删除此方案？"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "删除",
+    "duplicateMenuItem": "重复",
+    "exportAsIfcBetaMenuItem": "导出为 IFC (Beta 版)",
+    "exportAsIfcToDocs": "作为 IFC 导出到 Docs (Beta 版)",
+    "exportAsObjMenuItem": "导出为 OBJ",
+    "exportSubmenu": "导出...",
+    "renameMenuItem": "重命名",
+    "revitDownloadAddinMenuItem": "下载 Revit 附加模块",
+    "revitSendToBetaMenuItem": "发送到 Revit 附加模块(Beta 版)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "显示方案历史记录"
+  },
+  "createProposal": {
+    "buttonTooltip": "添加新方案"
+  },
+  "error": {
+    "couldNotLoadProposals": "无法加载方案。请重试。",
+    "retryButton": "重试"
+  },
+  "exportModal": {
+    "exportingMessage": "正在导出...",
+    "exportPrimaryButtonTitle": "导出",
+    "title": "将 Forma 方案导出到 Docs"
+  },
+  "filter": {
+    "buttonTooltip": "过滤器",
+    "closeButtonTooltip": "关闭",
+    "emptyBasesMessage": "该项目没有任何底层。转到“图层”部分以创建一个图层。",
+    "sortByHeader": "排序依据",
+    "title": "过滤器"
+  },
+  "proposalItem": {
+    "baseTooltip": "底层 {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "创建另一个方案以进行比较",
+    "headerText": "方案",
+    "selectProposalsToCompare": "选择要比较的方案"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A-Z",
+    "alphabeticalDescending": "Z-A",
+    "lastEdited": "上次编辑时间"
+  },
+  "toast": {
+    "exportAccessDeniedText": "您无权访问此文件夹或文件。请联系您的管理员寻求帮助。",
+    "exportAccessDeniedTitle": "访问被拒绝",
+    "exportDownloaded": "导出已下载",
+    "exportErrorText": "我们无法导出该方案。请重试。如果问题仍然存在，请联系支持人员以获取帮助。",
+    "exportErrorTitle": "无法导出到 Docs",
+    "exportGenericError": "无法导出方案",
+    "exportInProgress": "正在导出方案...",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "您的项目方案已导出到 Autodesk Docs。现在，可以使用它将 Forma 数据链接到 Revit 项目。",
+    "exportSuccessTitle": "已成功导出到 Docs",
+    "exportTimeoutText": "系统在生成到 Docs 的导出时超时。如果项目非常大和/或包含非常复杂的几何体，则可能会发生这种情况。",
+    "exportTimeoutTitle": "无法导出到 Docs",
+    "exportTooLargeError": "导出失败。这可能是因为方案太大，无法导出当前支持的内容。",
+    "ifcExportFailed": "导出失败。报告错误。",
+    "ifcExportStarted": "您的 IFC 文件导出已开始 - 完成后将自动下载。",
+    "proposalRenamedWarning": "方案名称已存在，已重命名为 {name}",
+    "revitSendFailed": "无法将方案发送到 Revit。",
+    "revitSendSuccess": "方案已发送到 Revit",
+    "sessionExpired": "您的会话已过期。请重新加载该页面。"
+  }
+}

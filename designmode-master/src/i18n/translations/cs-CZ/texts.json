@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "Zahájení návrhu",
+    "body": "Když vyberete možnost <bold>Pokračovat</bold>, automaticky provedeme dva kroky nastavení. Vy nemusíte nic dělat. Jakmile budou tyto kroky dokončeny, budete moci začít navrhovat v aplikaci Forma Site Design.",
+    "contextual": {
+      "header": "Načtení kontextu podle pozemku",
+      "body": "Pro váš pozemek automaticky načteme bezplatná kontextová data, například terén a okolní budovy."
+    },
+    "sunAnalysis": {
+      "header": "Pochopení podmínek pozemku",
+      "body": "Na vašem staveništi automaticky spustíme analýzu hodin slunečního svitu, abyste se mohli při návrhu lépe rozhodovat."
+    },
+    "continueButton": "Pokračovat",
+    "sunAnalysisCoachmark": {
+      "header": "Analýza hodin slunečního svitu",
+      "body": "Na vašem pozemku jsme automaticky spustili analýzu hodin slunečního svitu.{br}{br}Jakmile se indikátor rozsvítí zeleně nebo se v horní části kreslicí plochy zobrazí titulek, můžete si prohlédnout výsledky."
+    },
+    "finalModal": {
+      "title": "Váš pozemek je nyní nastaven",
+      "subTitle": "Pokračujte jedním z níže uvedených doporučených kroků:",
+      "suggestedAction1": {
+        "header": "Nakreslení budovy",
+        "body": "Aktivujte jeden z nástrojů stavění na panelu nástrojů."
+      },
+      "suggestedAction2": {
+        "header": "Import modelu",
+        "body": "Klikněte na ikonu importu na panelu nástrojů a postupujte podle navržených kroků."
+      },
+      "suggestedAction3": {
+        "header": "Porovnání analýz",
+        "body": "Spusťte druhou analýzu a v levém horním rohu obrazovky otevřete režim Porovnání."
+      },
+      "showMeHow": "Zobrazit více možností",
+      "finalButton": "OK"
+    },
+    "sunAnalysisTriggerError": "Analýzu oslunění se nepodařilo spustit"
+  },
+  "alignment": {
+    "center": "Zarovnat na střed",
+    "left": "Zarovnat doleva",
+    "right": "Zarovnat doprava"
+  },
+  "analysis": {
+    "alertsLabel": "Upozornění",
+    "analyzeTitle": "Analyzovat",
+    "analysisParameters": "Parametry analýzy",
+    "areaRadius": "Poloměr plochy",
+    "areaTitle": "Plocha analýzy",
+    "customCircle": "Vlastní kružnice",
+    "daylightAnalysisIllustrationAlt": "Ilustrace analýzy denního světla",
+    "failedToOrder": "Analýzu se nepodařilo objednat: {error}",
+    "learnMore": "Další informace",
+    "microclimateAreaRadius": "Poloměr oblasti mikroklimatu",
+    "noisePredictionUnavailable": "Předpověď hluku není k dispozici",
+    "radiusLabel": "Poloměr",
+    "selectAreaToRunAnalysis": "Vyberte možnost Limit pozemku nebo Zóna ke spuštění analýzy",
+    "disabledTooltips": {
+      "addRoadsOrRails": "Přidejte silnice nebo železnice s daty provozu ke spuštění analýzy",
+      "analysisAreaOutsideMap": "Plocha analýzy je mimo oblast mapy",
+      "concurrentQuotaReached": "Bylo dosaženo limitu souběžných analýz větru",
+      "dailyQuotaReached": "Byla dosažena denní kvóta analýzy větru",
+      "geometryAlertsDetected": "Zjištěny problémy s geometrií",
+      "geometryTooComplex": "Geometrie je příliš složitá",
+      "invalidParameters": "Neplatné parametry",
+      "loadingData": "Načítání dat",
+      "notAvailable": "Není k dispozici",
+      "notAbleAsViewer": "Nelze spustit analýzu v roli sledujícího",
+      "pleaseWait": "Čekejte…",
+      "savingInProgress": "Probíhá ukládání…",
+      "selectSiteLimitOrZone": "Vyberte možnost Limit pozemku nebo Zóna ke spuštění analýzy"
+    },
+    "emptyStateZoneExplanation": "Ve výchozím nastavení se analýza spustí pro budovy a další objekty, které jste přidali. Přidáním limitu pozemku nebo zón získáte úplné výsledky analýzy pro konkrétní oblast.",
+    "entireModel": "Celý model",
+    "missingTrafficData": {
+      "description": "Přidejte silnice nebo železnice s daty provozu, aby bylo možné předpovědět reálné hlukové podmínky.",
+      "startGuideButton": "Spustit příručku",
+      "title": "Chybí data provozu"
+    },
+    "noiseAreaRadius": "Poloměr oblasti hluku",
+    "properties": {
+      "radiusLabel": "Poloměr"
+    },
+    "seeResultButton": "Zobrazit výsledek analýzy",
+    "seeResultsButton": "Zobrazit výsledky analýzy",
+    "selectionTitle": "Vybrat oblasti analýzy",
+    "selectAllAreasButton": "Vybrat všechny plochy",
+    "deselectAllAreasButton": "Odebrat všechny plochy",
+    "skyComponent": {
+      "potentialDescription": "Naše <strong>analýza potenciálu denního světla</strong> identifikuje části fasády s omezeným přístupem k dennímu světlu pomocí skóre vertikální komponenty oblohy. Vyberte plochy, které chcete analyzovat."
+    },
+    "sun": {
+      "removeDateButton": "Odebrat datum"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "Budovy s plnou podporou",
+      "buildingsPartialSupport": "Budovy/ostatní položky s částečnou podporou",
+      "iconAlt": "Úroveň podpory analýzy",
+      "title": "Podpora analýzy"
+    },
+    "windAreaRadius": "Poloměr oblasti větru",
+    "windRoseUnavailable": {
+      "description": "Náš zprostředkovatel dat větrné růžice má potíže. Stále můžete analyzovat vzorce mikroklimatu, nelze však použít historická data k prozkoumání pravděpodobnosti větrných podmínek. Pracujeme na obnovení přístupu k datům.",
+      "title": "Větrná růžice momentálně není k dispozici",
+      "windDescription": "Náš zprostředkovatel dat větrné růžice má potíže. Stále můžete analyzovat obecné vzorce větru a ručně upravit rychlosti větru. Rychlé funkce větru nejsou k dispozici. Pracujeme na obnovení přístupu k datům."
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "Analýza s touto konfigurací již existuje. ",
+    "concurrentAnalysesReached": "Byl dosažen limit souběžných analýz",
+    "concurrentNoiseAnalysesReached": "Byl dosažen limit souběžných analýz hluku",
+    "dailyNoiseQuotaReached": "Byl dosažen maximální počet analýz hluku za 24 hodin",
+    "dailyQuotaReached": "Byla dosažena denní kvóta analýz",
+    "nothingToAnalyze": "Nic k analyzování",
+    "somethingWentWrong": "Došlo k chybě"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "Podrobná analýza větru není k dispozici. Zkuste analýzu spustit později.",
+      "rapidWindUnavailable": "Rychlá analýza větru není k dispozici. Zkuste analýzu spustit později.",
+      "rapidWindUnavailableToast": "Rychlá analýza větru není k dispozici. Náš tým byl informován. Zkuste analýzu spustit později."
+    },
+    "types": {
+      "microclimate": {
+        "description": "Naše analýza mikroklimatu vypočítá pocitovou teplotu na vašem pozemku s ohledem na slunce, vítr a podmínky denního světla. Chcete-li získat přesnější výsledky, doporučujeme počkat na dokončení analýzy větru.",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "Mikroklima",
+        "text": "Analýza mikroklimatu"
+      },
+      "noise": {
+        "description": "Zjistěte, jak váš návrh ovlivní podmínky okolního hluku pomocí předpovědi hluku v reálném čase v rámci rychlé analýzy hluku. Spuštěním podrobné analýzy hluku získáte přesnější simulaci hlukových podmínek a analýzu podmínek na fasádách budov.",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "Hluk",
+        "text": "Analýza hluku"
+      },
+      "sky-component": {
+        "description": "Posuďte, které části fasád budovy mají minimální přístup k dennímu světlu, pomocí skóre vertikální komponenty oblohy. Chcete-li spustit analýzu, je třeba přidat limit pozemku.",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "Potenciál denního světla",
+        "text": "Analýza potenciálu denního světla"
+      },
+      "solar-panel": {
+        "name": "Solární energie"
+      },
+      "sun": {
+        "description": "Posuďte, jak dlouho bude slunce svítit na váš pozemek a budovy. Chcete-li spustit analýzu, je nutné přidat limit pozemku a vybrat datum.",
+        "link": "https://help.autodeskforma.com/cs/articles/6951253",
+        "name": "Hodiny slunečního svitu",
+        "text": "Analýza hodin slunečního svitu"
+      },
+      "wind": {
+        "description": "Pomocí předpovědi větru v reálném čase v rychlé analýze větru zjistěte, jak změny v návrhu ovlivňují podmínky větru. Spusťte podrobnou analýzu proudění větru a větrného komfortu, abyste získali přesnější simulaci různých směrů a rychlostí větru.",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "Vítr",
+        "text": "Analýza větru"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "Přidat uzel",
+      "buildingWidth": "Šířka budovy",
+      "cityBlocks": "Městské bloky",
+      "editGridOrientationButton": "Upravit orientaci osnovy",
+      "explanation": "Neustále se vyvíjí vývojářské nástroje, které vám pomohou prozkoumat objemový potenciál vašeho pozemku. Sledujte vývoj v našem fóru.",
+      "floors": "Podlaží",
+      "headerTitle": "Prozkoumat",
+      "iterativeExplanation": "Nástroj automatizace návrhů, který umožňuje rychle generovat a zkoumat rozvržení pozemků a budov.",
+      "layoutTitle": "Rozvržení",
+      "layouts": "Rozvržení",
+      "linearBuildings": "Lineární budovy",
+      "mixed": "Smíšený",
+      "name": "Prozkoumat",
+      "siteAutomation": "Automatizace pozemku",
+      "storyHeight": "Výška podlaží",
+      "towerBuildings": "Věžové budovy",
+      "towerWidth": "Šířka věže"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "Přidat novou základnu",
+    "changeIndicatorLabel": "Ukazatel změny",
+    "editBaseButton": "Upravit základnu",
+    "editBaseDoneButton": "Hotovo",
+    "editBaseRightMenuMessage": "Chcete-li provést změny, upravte základnu",
+    "editBaseRightMenuMixedSelectionMessage": "Výběr zahrnuje objekty základny. Nelze provádět změny, pokud je výběr smíšený.",
+    "editing": {
+      "changesWillAffect": "Změny ovlivní",
+      "proposals": "návrhy",
+      "title": "Úpravy"
+    },
+    "errors": {
+      "deleteFailed": "Nepodařilo se odstranit základnu.",
+      "duplicateFailed": "Nepodařilo se duplikovat základnu.",
+      "fetchFailed": "Nepodařilo se získat základny.",
+      "renameIndicatorFailed": "Nepodařilo se přejmenovat ukazatel základny.",
+      "renameFailed": "Nepodařilo se přejmenovat základnu.",
+      "switchFailed": "Nepodařilo se přepnout základnu."
+    },
+    "noBaseLayersText": "Prvky, které byste chtěli opakovaně používat ve všech návrzích, lze přidat do základny.",
+    "strategy": {
+      "description": "Návrh používá základnu, která je neaktuální. Je nutné vybrat, zda chcete provést aktualizaci na nejnovější verzi základny, nebo duplikovat starší verzi základny.",
+      "duplicateOld": "Duplikovat starou verzi základny",
+      "header": "Vaše základna je neaktuální",
+      "useLatest": "Použít poslední verzi základny"
+    },
+    "swapBaseButton": "Zaměnit základnu",
+    "swapButton": "Zaměnit",
+    "untitledBaseLabel": "Základna bez názvu"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "Nakreslit obecnou čáru",
+        "name": "Čára",
+        "tooltip": "Vytvořte obecné čáry ke sdělení záměru návrhu. Tyto čáry nebudou zohledněny v analýzách."
+      },
+      "surface": {
+        "draw": "Nakreslit obecný povrch",
+        "name": "Povrch",
+        "tooltip": "Vytvořte obecný povrch ke sdělení záměru návrhu. Tyto povrchy nebudou zohledněny v analýzách."
+      },
+      "title": "Obecné",
+      "volume": {
+        "draw": "Nakreslit obecný objem",
+        "name": "Objem",
+        "tooltip": "Zatímco obecné objemy budou analyzovány, jejich plocha nebude zohledněna v části Metriky oblasti."
+      }
+    }
+  },
+  "building": {
+    "addFloor": "Přidat podlaží",
+    "addFloorsAction": "Přidání podlaží",
+    "buildingColorsLabel": "Barvy budovy",
+    "buildingDesignButton": "Otevřít v aplikaci Building Design",
+    "buildingDesignDescription": "Tato budova je navržena v aplikaci Building Design, chcete-li ji upravit, otevřete ji v aplikaci Návrh budovy.",
+    "buildingDesignGeometry": "Geometrie aplikace Building Design",
+    "buildingsTitle": "Budovy",
+    "buildingWidthLabel": "Šířka budovy",
+    "divisionWidth": "Šířka oddělení",
+    "roadWidthLabel": "Šířka silnice",
+    "towerBlockWidthLabel": "Šířka věžového bloku",
+    "typesTitle": "Typy",
+    "upgradingFor3DSketchBuilding": "Upgrade budovy s 3D náčrtem ohledně zabudovaného uhlíku",
+    "variationsTitle": "Variace",
+    "errors": {
+      "failedToLoadFunctions": "Nepodařilo se načíst uživatelské funkce budovy",
+      "failedToLoadSettings": "Nepodařilo se načíst nastavení"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "Přidat do knihovny",
+      "addToLibraryTooltip": "Přidat do knihovny",
+      "emptyFloors": "Prázdná podlaží",
+      "parking": "Parkování",
+      "popupTitle": "Půdorysy podlaží",
+      "title": "Půdorysy podlaží",
+      "cannotDrawCornerDescription": "Zatím nemůžete kreslit rohové půdorysy",
+      "cannotDrawSplitDescription": "Zatím nemůžete kreslit půdorysy rozdělení",
+      "finishDrawingTooltip": "Dokončit výkres a přidat půdorysy podlaží",
+      "mixedSelectionDescription": "Vybrány různé druhy půdorysů",
+      "noLibraryDescription": "V knihovně nejsou žádné půdorysy podlaží s tímto vnějším tvarem",
+      "noSelectionDescription": "Ve výběru není žádný půdorys",
+      "rightClickToAddDescription": "Klikněte pravým tlačítkem na podlaží v jednom z vašich návrhů a přidejte je do knihovny",
+      "selectSectionsDescription": "Vyberte úseky, které jsou prázdné nebo mají půdorysy"
+    },
+    "floors": {
+      "seeAllButton": "Zobrazit všechna podlaží"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "Přidat nové",
+      "addSectionCutButton": "Přidat řez",
+      "apartmentBuildingStories": "Podlaží bytového domu",
+      "apartmentBuildingStoryHeight": "Výška podlaží bytového domu",
+      "apartmentBuildingWidth": "Šířka bytového domu",
+      "circulationTitle": "Průchody",
+      "headerTitle": "Liniová budova",
+      "outdatedLabel": "neaktuální",
+      "targetSectionLength": "Cílová délka úseku",
+      "circulation": {
+        "sectionCountText": "Počet úseků: {count}",
+        "widthLabel": "Šířka chodby",
+        "widthText": "Šířka: {width}"
+      },
+      "divisionWidthLabel": "Šířka oddělení",
+      "releaseToBasicAnimationAlt": "Uvolnění do základní animace",
+      "releaseToBasicExplanation": "Uvolněním automatizace linií se vytvoří základní budova, pomocí které můžete přidat funkce nebo parkování do jednotlivých podlaží. Po uvolnění nelze automatizaci linií znovu získat.",
+      "releaseToFloorPlanAction": "Uvolnění do půdorysu podlaží",
+      "releaseToFloorPlanAnimationAlt": "Uvolnění do animace půdorysu podlaží",
+      "releaseToFloorPlanExplanation": "Uvolněním automatizace průchodů se vytvoří půdorys podlaží, který vám umožní ručně navrhnout rozvržení. Po uvolnění nelze automatizaci oběhu znovu získat.",
+      "towerWidthLabel": "Šířka věžového bloku"
+    },
+    "properties": {
+      "lengthLabel": "Délka",
+      "numberOfFloorsLabel": "Počet podlaží",
+      "numberOfStoriesLabel": "SiteStudy: počet podlaží",
+      "stories": "Patra",
+      "storyHeight": "Výška podlaží",
+      "storyHeightLabel": "Výška podlaží",
+      "widthLabel": "Šířka"
+    },
+    "toolbar": {
+      "title": "Budovy"
+    },
+    "tooltips": {
+      "addBuildingsButton": "Přidat budovy",
+      "clampToTerrainButton": "Přichytit budovy k terénu",
+      "numberOfFloorsLabel": "Počet podlaží",
+      "parkingEditDescription": "Úpravy parkovišť se nyní provádí v editoru půdorysu podlaží",
+      "releaseToBasicButton": "Uvolnit do základní budovy",
+      "releaseToZonesButton": "Uvolnit do zón",
+      "removeBuildingsButton": "Odebrat budovy",
+      "storyHeightLabel": "Výška podlaží",
+      "swapFloorPlansButton": "Zaměnit půdorysy podlaží",
+      "targetSectionLengthLabel": "Cílová délka úseku",
+      "towerWidthLabel": "Šířka věže",
+      "widthLabel": "Šířka budovy"
+    },
+    "types": {
+      "basic": {
+        "draw": "Nakreslit základní budovu",
+        "name": "Základní budova",
+        "tooltip": "Kontrolovaně a přesně nakreslete budovy s podlažími libovolného tvaru. Zobrazte statistiky budovy v části Metriky oblasti."
+      },
+      "line": {
+        "draw": "Nakreslit liniovou budovu",
+        "name": "Liniová budova",
+        "tooltip": "Nakreslete konstrukci budovy podél čáry. Upravte parametry, například úseky a podlaží. Zobrazte statistiky budovy v části Metriky oblasti."
+      }
+    }
+  },
+  "camera": {
+    "compass": "Zobrazit sever nahoře",
+    "lookAt": {
+      "title": "Dívat se na",
+      "tooltip": "Přesunutím kurzoru myši nad plochou zarovnáte kameru. Kliknutím přizpůsobíte přiblížení ploše, případně přetažením upravíte oblast přiblížení."
+    },
+    "lookFrom": {
+      "title": "Pohled z bodu",
+      "tooltip": "Klikněte na bod na fasádě, odkud se chcete dívat. Případně kliknutím a přetažením vyberte bod a směr pohledu."
+    },
+    "optionsLabel": "Možnosti kamery",
+    "optionsTitle": "Možnosti kamery",
+    "switchCameraMode": "Přepnout režim kamery",
+    "vectorExport": {
+      "exportSuccessful": "Export byl úspěšný",
+      "title": "Export vektorů"
+    },
+    "switchTo2d": "Přepnout do režimu 2D (ortografický)",
+    "switchTo3d": "Přepnout do režimu 3D",
+    "zoom": {
+      "toFitProposal": "Návrh přizpůsobení oknu",
+      "toFitSelection": "Výběr přizpůsobení oknu"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "Hrana"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "Více prvků na linii",
+      "placeSinglesButton": "Umístit jednotlivé budovy"
+    }
+  },
+  "contextualData": {
+    "description": "Zobrazte a spravujte kontextová data dostupná pro váš projekt. Také si zde můžete objednat další data.",
+    "title": "Kontextová data"
+  },
+  "contextMenu": {
+    "copy": "Kopírovat",
+    "cut": "Vyjmout",
+    "delete": "Odstranit",
+    "exportTerrainAsObj": "Exportovat terén jako obj",
+    "moveToBack": "Přesunout dozadu",
+    "moveToBase": "Přesunout do základny",
+    "moveToFront": "Přesunout dopředu",
+    "moveToProposal": "Přesunout k návrhu",
+    "paste": "Vložit",
+    "pasteInPlace": "Vložit na místo",
+    "terrainPad": {
+      "moveToBack": "Přesunout rovný terén dozadu",
+      "moveToFront": "Přesunout rovný terén dopředu"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "Kopírování prvků mezi projekty nebo centry není možné.",
+    "failedToCopyElementMessage": "Kopírování prvku se nezdařilo."
+  },
+  "dataOrders": {
+    "completed": "Následující objednávka dat je dokončena: {name}. Přidá se do vašeho návrhu a za několik sekund ji uvidíte v části Vrstvy.",
+    "completedAll": "Položky {names} byly načteny a přidány do vaší základny návrhu. Další data můžete procházet a objednávat v části Kontextová data.",
+    "failed": "Přidání položky {name} se nezdařilo",
+    "failedToAdd": "Nepodařilo se přidat položku „{name}“ do návrhu, data jsou však stále k dispozici v knihovně.",
+    "processing": "Zpracovává se následující objednávka dat: {name}. Po dokončení bude přidána do vašeho návrhu.",
+    "statusTitle": "Stav objednávky dat"
+  },
+  "demoSite": {
+    "badge": "ukázka",
+    "flyout": {
+      "content": "Tento web jsme vytvořili, abychom demonstrovali možnosti aplikace Forma. Spusťte níže uvedeného průvodce, ve kterém budete postupovat podle kroků jednoduchého pracovního postupu. Až budete připraveni, vytvořte si vlastní pracoviště.",
+      "createSiteButton": "Vytvořit nový pozemek",
+      "createSiteTooltip": "Je nutné mít aktivní licenci a oprávnění k tvorbě pozemků v tomto projektu",
+      "header": "Toto je vzorový pozemek",
+      "startGuideButton": "Spustit příručku"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "ZAČÍNÁME S",
+    "titleFormaSiteDesign": "Stránka s ukázkou",
+    "description": "Jedná se o předem navržený vzorový web, který vám umožňuje prozkoumat Forma Staveniště Design. Nebojte se, že něco rozbijete – vnímejte to jako bezpečný prostor pro experimentování bez jakéhokoli dopadu na vaše skutečné projekty.",
+    "callToAction": "Kliknutím na tlačítko {bold} prozkoumejte Ukázka web.",
+    "callToActionBold": "Pokračovat",
+    "buttonContinue": "Pokračovat",
+    "buttonGoToHome": "Přejít na domovskou stránku aplikace Forma",
+    "imageAlt": "Forma Staveniště vizualizace návrhu"
+  },
+  "drawing": {
+    "traceShape": "Sledovat existující tvar"
+  },
+  "hotkeys": {
+    "addNode": "Přidat uzel",
+    "cancelDrawingPoint": "Zrušit bod výkresu",
+    "clickAndMoveGrip": "Kliknutím a přesunutím uzlu nastavte měřítko v daném směru.",
+    "complete": "Dokončit",
+    "copy": "Kopírovat",
+    "cut": "Vyjmout",
+    "deleteSelected": "Odstranit vybrané",
+    "drawHouse": "Nakreslit dům",
+    "drawHousesWithLine": "Kreslit domy pomocí linie",
+    "drawLine": "Nakreslit čáru",
+    "drawRoad": "Kreslit silnici",
+    "edit": "Upravit",
+    "exitContext": "Ukončit kontext",
+    "exitEditGraph": "Ukončit úpravy grafu",
+    "exitGraphTool": "Ukončit nástroj grafu",
+    "exitHouseTool": "Ukončit nástroj domu",
+    "exitSiteStudyAndApply": "Ukončit nástroj Studie pozemku a použít studii u návrhu",
+    "exitTool": "Ukončit nástroj",
+    "exitTransportationTool": "Ukončit nástroj dopravy",
+    "finishEditing": "Dokončit úpravy",
+    "freeform": "Volný tvar",
+    "measureDistance": "Změřit vzdálenost",
+    "paste": "Vložit",
+    "placeSingleHouses": "Umístit jednotlivé domy",
+    "redo": "Znovu",
+    "remove": "Odebrat",
+    "resetGraph": "Obnovit graf",
+    "selectAll": "Vybrat vše",
+    "selectSomethingToModify": "Vyberte něco, co chcete upravit pomocí nástroje {toolName}",
+    "switchHouseCorner": "Přepnout roh domu",
+    "switchHousePlacementSide": "Přepnout stranu umístění domu",
+    "toggleSidebar": "Přepnout boční panel",
+    "undo": "Zpět"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "Přidržením klávesy Shift při přesouvání pozice kompasu zarovnáte osu otáčení s geometrií pod kurzorem.",
+    "editSiteLayout": "Upravte rozvržení pozemku nebo vyberte jednotlivé zóny, pro které chcete nastavit typologii budovy.",
+    "freeMode": "Volný režim. Stisknutím klávesy ↹ Tab přepnete na horizontální režim.",
+    "horizontalMode": "Horizontální režim. Stisknutím klávesy ↹ Tab přepnete na volný režim.",
+    "mode2D": "2D režim. Všechny nástroje jsou zavazbeny k horizontální rovině.",
+    "rotateMoveText": "Pohyb {moveModeText} ({inputModeText}). Stisknutím klávesy ↹ Tab provedete pohyb {nextMoveModeText} ({nextInputModeText}).",
+    "selectAreaToExplore": "Vyberte, pro kterou oblast chcete prozkoumat možnosti rozvržení pozemku.",
+    "snappingAxesHint": " Stisknutím klávesy Alt skryjete přichycující osy. Stisknutím kombinace Alt+C je smažete.",
+    "straightAction": "Přímá akce {action}. Stisknutím klávesy ↹ Tab provedete akci zúžení {action}.",
+    "switchHouseCornerAndRotate": "Stisknutím klávesy Tab přepnete roh domu. Držením a tažením myši otáčejte pohled",
+    "switchHousePlacementSide": "Stisknutím klávesy Tab přepnete stranu umístění domu",
+    "taperAction": "Akce zúžení {action}. Stisknutím klávesy ↹ Tab provedete akci zúžení {action}."
+  },
+  "menus": {
+    "generatorsByExtensions": "Generátory podle rozšíření"
+  },
+  "messages": {
+    "elementAddedTo": "Prvek byl přidán do umístění {location}"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "Probíhá ukládání…"
+    },
+    "camera": {
+      "lookAt": "Dívat se na"
+    },
+    "lineWidth": "Tloušťka čáry",
+    "settings": "Nastavení",
+    "templates": {
+      "updatesAvailable": "Aktualizace jsou k dispozici"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "Nepodařilo se provést akci budovy při kliknutí pravým tlačítkem myši",
+      "failedToConvertVolumes": "Nepodařilo se převést objemy na základní budovu",
+      "failedToDraw": "Nepodařilo se nakreslit základní budovu",
+      "failedToEdit": "Nepodařilo se upravit novou základní budovu",
+      "failedToPushPull": "Nepodařilo se vytlačit/vytáhnout základní budovu"
+    },
+    "failedToLoadContextualData": "Nepodařilo se načíst kontextová data",
+    "import": {
+      "largeScale": "Import obsahuje prvky velkého měřítka ({size}). Import se možná nebude chovat podle očekávání. Stisknutím klávesy ESC akci zrušíte.",
+      "resultingShapeInvalid": "Výsledný tvar není platný."
+    },
+    "modelNotGeolocated": "Model aplikace Site Design není geograficky umístěn. Objednejte si kontextová data, aby bylo možné jej geograficky umístit",
+    "terrain": {
+      "boundingBoxTooLarge": "Ohraničující kvádr geometrie prvku je příliš velký, aby jej bylo možné použít jako terén. Maximální velikost: 4 km². Skutečná velikost: {size} km²"
+    },
+    "library": {
+      "couldNotFindElement": "Nepodařilo se najít prvek knihovny",
+      "elementNotAvailable": "Prvek knihovny není k dispozici",
+      "failedToConvertTerrain": "Převod na prvek terénu se nezdařil",
+      "failedToDownloadFloorPlans": "Nepodařilo se stáhnout půdorysy podlaží",
+      "failedToSaveFloorPlans": "Nepodařilo se uložit půdorysy podlaží projektu. Obnovte stránku",
+      "failedToUpdateLibrary": "Nepodařilo se aktualizovat knihovnu"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "Chyba v nabídce liniové budovy",
+      "failedToDraw": "Nepodařilo se nakreslit liniové budovy",
+      "failedToEdit": "Nepodařilo se upravit liniovou budovu",
+      "failedToolbarAction": "Akce panelu nástrojů liniové budovy se nezdařila"
+    },
+    "siteStudy": {
+      "errorInExplore": "Chyba při prozkoumávání. Zkuste to znovu.",
+      "errorOccurred": "Došlo k chybě, naši technici byli upozorněni.",
+      "failedToLoadPicker": "Nepodařilo se načíst nástroj výběru průzkumu. Zkuste akci provést znovu."
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "Procházet všechny moduly plug-in",
+    "browseDescription": "Procházejte existující rozšíření nebo generátory třetích stran nebo přidejte vaše vlastní – zde se zobrazí.",
+    "downloadButton": "Stáhnout rozšíření",
+    "downloadDescription": "k importu modelů z aplikace Revit nebo Rhino.",
+    "importModelTitle": "Importovat model z rozšíření",
+    "noDescriptionAvailable": "Není k dispozici žádný popis.",
+    "plugins": "Moduly plug-in"
+  },
+  "errorBoundary": {
+    "componentCrashed": "Komponenta selhala",
+    "retryButton": "Opakovat",
+    "unexpectedError": "Došlo k neočekávané chybě. Opakujte akci nebo znovu načtěte stránku a zkuste to znovu"
+  },
+  "guides": {
+    "closeMenu": "Zavřít nabídku vodítek a měření"
+  },
+  "geometryAlerts": {
+    "dismiss": "Zavřít",
+    "header": "Upozornění geometrie",
+    "review": "Kontrola",
+    "title": "Upozornění geometrií ({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "Odeberte nebo upravte prvky ke spuštění analýz.",
+      "title": "Duplicitní geometrie"
+    },
+    "invalidBbox": {
+      "subTitle": "Odeberte nebo upravte prvky ke spuštění analýz.",
+      "title": "Prvky s příliš vzdálenou geometrií"
+    },
+    "outOfBounds": {
+      "subTitle": "Odeberte nebo upravte prvky ke spuštění analýz.",
+      "title": "Prvky mimo terén"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "První podlaží má plochu o velikosti 0. Proveďte opravu horizontálním uchopením dolní plochy.",
+      "title": "Zjištěno první podlaží s nulovou plochou"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "Tato budova má jedno nebo více podlaží s plochou o velikosti 0 a nelze ji převést na platnou budovu.",
+      "title": "Zjištěna podlaží s nulovou plochou"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "Tato budova obsahuje <a>nevodotěsnou geometrii</a> a při ukončení 3D náčrtu se může stát obecným modelem bez podlaží",
+      "title": "Budova není vodotěsná"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "Tento model obsahuje <a>nevodotěsnou geometrii</a>, která může ovlivnit chování nástroje a zobrazení.",
+      "title": "Geometrie není vodotěsná"
+    }
+  },
+  "importToolbar": {
+    "title": "Import modelu"
+  },
+  "labels": {
+    "addLabelButton": "Přidat štítek",
+    "category": "Štítky",
+    "description": "Přidejte štítky k označení konkrétních bodů na 3D kreslicí ploše krátkým textovým popisem. Můžete přidat až {count} řádků textu. ",
+    "label": "Štítek",
+    "placeholder": "Vložit text…"
+  },
+  "layerList": {
+    "buildings": "Budovy",
+    "category": {
+      "contextualDataDuration": "Kontextová data (~1–2,5 min)"
+    },
+    "generic": "Obecné",
+    "images": "Obrázky",
+    "propertyBoundaries": "Hranice pozemku",
+    "roads": "Silnice",
+    "siteLimits": "Limity pozemku",
+    "terrain": "Terén",
+    "vegetation": "Vegetace",
+    "zones": "Zóny"
+  },
+  "layersTitle": "Vrstvy",
+  "library": {
+    "addedToLibrary": "Do knihovny byla přidána položka {name}.",
+    "addToLibraryButton": "Přidat do knihovny"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "Kreslit omezení",
+      "name": "Omezení",
+      "plural": "Omezení",
+      "tooltip": "Vytvořte objem k vizualizaci omezení projektu."
+    },
+    "siteLimit": {
+      "defineAsAction": "Definovat jako limit pozemku",
+      "hotkeyDescription": "Nakreslit limit pozemku",
+      "name": "Limit pozemku",
+      "tooltip": "Vytvořte limit pozemku, pomocí něhož se analyzují metriky vašeho projektu."
+    },
+    "title": "Limity",
+    "zone": {
+      "hotkeyDescription": "Kreslit zónu",
+      "name": "Zóna",
+      "tooltip": "Nakreslete zóny definující oblasti, které chcete na pozemku analyzovat."
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "Ukončit režim kreslení"
+  },
+  "navbar": {
+    "addButton": "Přidat",
+    "quickActionsButton": "Rychlé akce",
+    "settingsButton": "Nastavení"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "Opravdu chcete odstranit položku {name}?",
+      "descriptionParagraph1": "Základna obsahuje objekty, které jsou opakovaně používány v návrzích. Můžete vytvořit několik základen a přepínat mezi nimi.",
+      "descriptionParagraph2": "Chcete-li přidat existující objekt, klikněte pravým tlačítkem na objekt a vyberte možnost Přesunout do základny. Chcete-li nakreslit nový objekt, klikněte na tlačítko Upravit."
+    },
+    "dataOrderProcessing": "Objednávka dat se zpracovává. Po dokončení bude přidána do vašeho návrhu."
+  },
+  "pendingOperation": {
+    "defaultDescription": "Čekání na dokončení automatizace…"
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} geometrií přidáno do vrstvy {layerType}",
+    "geometriesSelectedLabel": "Geometrie vybrány",
+    "updateTerrainAction": "Aktualizace terénu",
+    "updateTerrainDescription": "Nahradí aktuální terén novým terénem z knihovny"
+  },
+  "properties": {
+    "color": "Barva",
+    "elevation": "Výška",
+    "height": "Výška",
+    "length": "Délka",
+    "mixed": "Smíšený",
+    "name": "Název",
+    "position": "Pozice",
+    "radius": "Poloměr",
+    "width": "Šířka"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "Nepodařilo se stáhnout všechny objekty.",
+      "downloadElementsRecovery": "případně to zkuste znovu později. Dokud nebude problém vyřešen, budete v režimu zobrazení",
+      "flatteningGroups": "Vyrovnání skupin v návrhu, protože již nejsou podporovány",
+      "ignoringOldElements": "Ignorování starých prvků",
+      "knownCriticalHeader": "Zpracování prvků se nezdařilo",
+      "knownCriticalMessage": "Obnovte stránku a zkuste to znovu.",
+      "missingGeoLocation": "Chybí geografická pozice projektu k provedení akce.",
+      "notFoundHeader": "Návrh nebyl nalezen",
+      "notFoundMessage": "Nepodařilo se najít návrh, ke kterému se pokoušíte získat přístup.",
+      "terrainNotFoundHeader": "Chybí model terénu",
+      "terrainNotFoundMessage": "V aktuálním návrhu došlo k neočekávané chybě.",
+      "tooManyRequestsHeader": "Někdo byl PŘÍLIŠ aktivní.",
+      "tooManyRequestsMessage": "Obdrželi jsme více požadavků z vaší sítě, než jsme mohli zpracovat. Zkuste tuto stránku načíst později nebo přepněte na jinou síť – například prostřednictvím osobního hotspotu."
+    },
+    "noProposalLayersText": "Zde budou uvedeny prvky, které jsou v rámci návrhu jedinečné."
+  },
+  "proposalHistory": {
+    "branchFailed": "Nepodařilo se vytvořit nový návrh ze staré revize.",
+    "branchRevisionButton": "Vytvořit nový návrh",
+    "branchSuccess": "Z vybrané verze byl vytvořen nový návrh s názvem „{name}“",
+    "contributors": "Přispěvatelé: {count}",
+    "copyLinkButton": "Kopírovat odkaz",
+    "currentVersionLabel": "Aktuální verze",
+    "filter": {
+      "byAnalysis": "Podle analýzy",
+      "byDate": "Podle data",
+      "from": "Od",
+      "onlyYours": "Pouze vaše",
+      "pinned": "Připnuto",
+      "selectDates": "Vybrat data",
+      "title": "Filtr",
+      "to": "Do"
+    },
+    "linkToVersionCopied": "Odkaz na {time} zkopírován",
+    "nameThisVersionAction": "Pojmenovat tuto verzi",
+    "pinVersionAction": "Připnout verzi",
+    "unpinVersionAction": "Odepnout verzi",
+    "untitledVersionLabel": "Verze bez názvu",
+    "viewingVersionLabel": "Prohlížená verze"
+  },
+  "quickAccess": {
+    "actionsLabel": "Akce",
+    "noSuggestions": "Žádné návrhy",
+    "openHotkeyList": "Otevřít seznam klávesových zkratek",
+    "repeatLastTool": "Opakovat poslední nástroj",
+    "search": "Hledat",
+    "title": "Rychlý přístup"
+  },
+  "requestInvite": {
+    "button": "Požádat o pozvání",
+    "homeLink": "Přejít na domovskou stránku",
+    "projectLink": "Přejít do projektu",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "Již jste členem",
+        "message": "Již jste členem tohoto projektu."
+      },
+      "ALREADY_REQUESTED": {
+        "header": "O pozvání jste již požádali",
+        "message": "U tohoto projektu již máte nevyřízenou žádost o pozvání. Pokud správce vaši žádost schválí, dostanete e-mailem pozvánku k tomuto projektu."
+      },
+      "CAN_JOIN": {
+        "header": "Můžete se připojit",
+        "message": "K tomuto projektu se můžete připojit. Přejděte do projektu a klikněte na tlačítko „připojit se k projektu“."
+      },
+      "ERROR": {
+        "header": "Došlo k chybě. Zkuste to znovu."
+      },
+      "NOT_FOUND": {
+        "header": "Chyba, projekt nebyl nalezen",
+        "message": "Zadaná adresa URL neodkazuje na existující projekt."
+      },
+      "REQUEST_LIMIT": {
+        "header": "Příliš mnoho požadavků",
+        "message": "Máte příliš mnoho nevyřízených žádostí o pozvání. Zkuste to znovu později."
+      },
+      "SUCCESS": {
+        "header": "Váš požadavek byl úspěšně odeslán.",
+        "message": "Pokud správce vaši žádost schválí, dostanete e-mailem pozvánku k tomuto projektu."
+      }
+    },
+    "statusFallback": {
+      "header": "K tomuto projektu aplikace Forma nemáte přístup.",
+      "message": "Chcete-li získat přístup k projektu, je nutné, aby vás jeden ze správců pozval. Vyžádejte si pozvání od správců pomocí tlačítka níže."
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "Výchozí složka: Moje složka souborů projektu"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "Zarovnat na střed",
+      "left": "Zarovnat doleva",
+      "right": "Zarovnat doprava"
+    },
+    "buildingLabel": "Budova",
+    "createNew": "Vytvořit nový",
+    "layoutLabel": "Rozvržení",
+    "loading": "Načítání",
+    "name": "Dům",
+    "parcelLabel": "Parcela",
+    "plural": "Domy",
+    "publish": "Publikovat",
+    "tooltip": "Nakreslete jeden dům nebo domy uspořádané podél čáry. Vytvářejte a znovu používejte typy domů pomocí panelu vlastností.",
+    "tooltips": {
+      "buffer": "Vyrovnávací paměť",
+      "flatRoof": "Plochá střecha",
+      "gableRoof": "Sedlová střecha",
+      "length": "Délka",
+      "numberOfFloors": "Počet podlaží",
+      "ridgeDirection": "Směr hřebene",
+      "roofAngle": "Úhel střechy",
+      "shedRoof": "Pultová střecha",
+      "storyHeight": "Výška podlaží",
+      "width": "Šířka"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "Odstranit ořezový kvádr",
+    "enableButton": "Povolit ořezový kvádr",
+    "saveButton": "Uložit ořezový kvádr",
+    "title": "Ořezový kvádr",
+    "toggleButton": "Zobrazit/skrýt obrys kvádru"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "Tento návrh byl změněn v době, kdy jste prováděli úpravy (například na něm mohl pracovat jiný člen týmu). Chcete uložit vaši verzi jako nový návrh?",
+      "discardEdits": "Zrušit úpravy",
+      "saveAsNew": "Uložit jako nový návrh",
+      "title": "Konflikt úprav návrhu"
+    },
+    "error": {
+      "body": "Nepodařilo se uložit vaše poslední úpravy. Chcete-li pokračovat v úpravách, obnovte stránku.",
+      "ok": "OK",
+      "title": "Uložení se nezdařilo"
+    }
+  },
+  "shapes": {
+    "arc": "Oblouk pomocí tří bodů",
+    "circle": "Kružnice",
+    "cube": "Krychle",
+    "cuboid": "Kvádr",
+    "cylinder": "Válec",
+    "dome": "Kupole",
+    "freeform": "Volný tvar",
+    "pyramid": "Jehlan",
+    "rectangle": "Obdélník",
+    "roof": "Střecha",
+    "shapes3d": "3D tvary",
+    "spline": "Křivka spline",
+    "title": "Primitiva"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "Aktivujte vodítka přejetím kurzoru nad hranami, podržením klávesy ⇧ Shift následujte vodítko. Podržením klávesy {key} zabráníte přichycení.",
+      "affineInstructions": "Podržením klávesy {key} zabráníte přichycení. Stisknutím klávesy Tab můžete přepínat mezi horizontálním, vertikálním a terénním režimem.",
+      "clickToAddSubtract": "Kliknutím přidejte bod k čáře nebo body odečtěte.",
+      "editModeStartFinishMac": "Podržením klávesy ⌥ Option přidejte nebo odečtěte body. Stisknutím klávesy ↵ Enter dokončete úpravy.",
+      "editModeStartFinishWindows": "Podržením klávesy Alt přidejte nebo odečtěte body. Stisknutím klávesy ↵ Enter dokončete úpravy.",
+      "finishEditing": "Stisknutím klávesy ↵ Enter dokončete úpravy.",
+      "finishPolygon": "Stisknutím klávesy ↵ Enter dokončete tvorbu polygonu.",
+      "preciseMoveVertical": "Stisknutím klávesy {key} přepnete vertikální režim.",
+      "specifyDistance": "Napište konkrétní vzdálenost. Kliknutím dokončete umístění."
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "Odstraňování, kopírování, vyjmutí a vložení podlaží není u budov vytvořených pomocí 3D náčrtu podporováno. Zkuste místo toho provést úpravy ve 3D náčrtu."
+  },
+  "snapping": {
+    "cursorElevation": "Výška v místě kurzoru",
+    "guidesAndMeasurements": "Vodítka a měření",
+    "snapToGuides": "Přichytit k vodítkům",
+    "snapToObjects": "Přichytit k objektům"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "Zadejte název prostoru, případně ponechte prázdné, čímž se použije výchozí hodnota"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "Připojit ke scénáři",
+      "connectToScenarioDesc": "Scénář je sdílený kontejner návrhu v projektu, který spojuje modely, nástroje a geometrická a další data z několika softwarových aplikací."
+    }
+  },
+  "relativeTime": {
+    "today": "Dnes"
+  },
+  "terrain": {
+    "elevation": "Výška",
+    "errors": {
+      "loadMapImageFailed": "Načtení obrázku mapy se nezdařilo",
+      "loadSatelliteTextureFailed": "Načtení satelitní textury se nezdařilo.",
+      "loadTextureFailed": "Načtení textury terénu se nezdařilo."
+    },
+    "labels": {
+      "numberOfSelectedPads": "Objem podložek",
+      "padVolume": "Objem podložky",
+      "padsVolume": "Objem podložek",
+      "showAsPercentage": "Zobrazit jako procenta",
+      "showAsRatio": "Zobrazit jako poměr",
+      "totalMassBalance": "Celková bilance objemu"
+    },
+    "massBalanceHover": "Čistý objem v rámci změny v celém terénu.",
+    "metricsHeader": "Metriky",
+    "pad": {
+      "header": "Rovný terén",
+      "name": "Rovný terén",
+      "tooltip": "Vyjměte/vyplňte terén, upravte výšku a sklon a vyhodnoťte bilanci objemu."
+    },
+    "padVolumeHover": "Objem přidaný/odečtený od terénu vybranými deskami.",
+    "padsHeader": "Rovné terény",
+    "slope": "Sklon"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "Během načítání automatizace nelze přepínat mezi základní vrstvou/návrhem",
+    "pendingSelectionBlockedMessage": "Během načítání automatizace nelze změnit výběr",
+    "pendingToolSwitchBlockedMessage": "Nástroje nejsou během načítání automatizace k dispozici",
+    "transform": {
+      "redefineReferencePointsButton": "Předefinovat referenční body"
+    }
+  },
+  "transform": {
+    "cover": "Krytí",
+    "fillet": "Zaoblit",
+    "intersect": {
+      "name": "Průnik",
+      "tooltip": "Vytvořte průnik dvou nebo více objektů. Půdorys prvního vybraného objektu se odpovídajícím způsobem změní."
+    },
+    "loft": "Šablonování",
+    "move": {
+      "name": "Přesunout",
+      "tooltip": "Přesuňte objekt definováním referenčního a koncového bodu. "
+    },
+    "offset": {
+      "apply": "Použít odsazení",
+      "name": "Odsazení",
+      "tooltip": "Prodlužte půdorys objektu směrem ven nebo jej zmenšete směrem dovnitř o určitou vzdálenost."
+    },
+    "rotate": {
+      "name": "Otočit",
+      "tooltip": "Otočte objekty ve scéně kolem definovaného referenčního bodu."
+    },
+    "shell": "Skořepina",
+    "split": {
+      "name": "Rozdělit",
+      "tooltip": "Rozdělte jeden nebo více objektů pomocí čáry."
+    },
+    "subtract": {
+      "name": "Rozdíl",
+      "tooltip": "Odečtěte tvar od objektu pomocí jiného objektu. Půdorys prvního vybraného objektu se odpovídajícím způsobem změní."
+    },
+    "sweep": "Tažení",
+    "title": "Transformace",
+    "union": {
+      "name": "Sjednocení",
+      "tooltip": "Slučte dva nebo více objektů. První vybraný objekt definuje kategorii a výšku výsledného objektu."
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "Poloměr rohu je dynamická hodnota, která optimalizuje křivky silnic podle rozvržení.",
+      "tight": "Poloměr rohu je malá pevná hodnota, která se rovná 1/2 šířky silnice."
+    },
+    "railroads": {
+      "hotkeyDescription": "Kreslit železnici",
+      "name": "Železnice",
+      "toolButton": "Železnice",
+      "tooltip": "Vytvořte železnice a upravte šířky pomocí pravého panelu.",
+      "typeLabel": "Typ koleje",
+      "typePlaceholder": "Vyberte typ koleje"
+    },
+    "roads": {
+      "hotkeyDescription": "Kreslit silnici",
+      "name": "Silnice",
+      "toolButton": "Silnice",
+      "tooltip": "Vytvořte silnice a upravte šířky pomocí pravého panelu.",
+      "widthLabel": "Šířka silnice",
+      "withGraphToolButton": "Silnice (s grafem)"
+    },
+    "title": "Doprava",
+    "trafficData": {
+      "addButton": "Přidat data provozu",
+      "adtTooltip": "Průměrný denní provoz",
+      "advancedSettingsLabel": "Rozšířená nastavení",
+      "dailyDistributionLabel": "Denní rozdělení provozu",
+      "dayTimeTooltip": "Den: 06:00–18:00",
+      "eveningTimeTooltip": "Večer: 18:00–22:00",
+      "heavyVehicleLabel": "Silný provoz",
+      "nightTimeTooltip": "Noc: 22:00–06:00",
+      "railRequiredInputsMessage": "K tomu, aby byla železnice zohledněna při analýze hluku, je nutné zadat všechny vstupy",
+      "removeButton": "Odebrat data provozu",
+      "roadRequiredInputsMessage": "K tomu, aby byla silnice zohledněna při analýze hluku, je nutné zadat všechny vstupy",
+      "speedLimitTooltip": "Rychlostní omezení",
+      "title": "Data hluku provozu"
+    }
+  },
+  "ui": {
+    "add": "Přidat",
+    "area": "Plocha",
+    "areaSum": "Plocha (součet)",
+    "automationLabel": "AUTOMATIZACE",
+    "beta": "Beta",
+    "browsePluginsDescription": "Procházejte existující moduly plug-in třetích stran nebo přidejte vaše vlastní – zde se zobrazí.",
+    "cancel": "Storno",
+    "close": "Zavřít",
+    "color": "Barva",
+    "delete": "Odstranit",
+    "detach": "Odpojit",
+    "duplicate": "Duplikovat",
+    "edit": "Upravit",
+    "gridSettings": "Nastavení osnovy",
+    "hide": "Skrýt",
+    "length": "Délka",
+    "lengthSum": "Délka (součet)",
+    "newVersionAvailable": "K dispozici je nová verze.",
+    "redo": "Znovu",
+    "refresh": "Obnovit",
+    "remove": "Odebrat",
+    "rename": "Přejmenovat",
+    "repair": "Opravit",
+    "retry": "Opakovat",
+    "show": "Zobrazit",
+    "siteLabel": "Pozemek",
+    "surroundings": "Okolí",
+    "textAlignment": "Zarovnání textu",
+    "undo": "Zpět",
+    "update": "Aktualizovat",
+    "videoNotSupported": "Váš prohlížeč nepodporuje značku videa.",
+    "xyzAxes": "Osy XYZ"
+  },
+  "performanceStats": {
+    "currentSnapshot": "Aktuální snímek",
+    "remainingFromPastSnapshots": "Zbývající z minulých snímků",
+    "title": "Statistiky výkonu {status}"
+  },
+  "units": {
+    "asl": "asl",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "Zarovnat na střed",
+      "left": "Zarovnat doleva",
+      "right": "Zarovnat doprava",
+      "spacing": "Rozteče"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "Nakreslit oblast se stromy",
+      "name": "Oblast se stromy",
+      "tooltip": "Vytvořte oblast vyplněnou stromy a upravte jejich velikost a hustotu. Všechny stromy ovlivní analýzy."
+    },
+    "header": "Stromy",
+    "landscapingTitle": "Úprava terénu",
+    "properties": {
+      "bufferTooltip": "Vyrovnávací paměť",
+      "gridLengthLabel": "Délka osnovy",
+      "gridWidthLabel": "Šířka osnovy",
+      "heightTooltip": "Výška stromů",
+      "offsetTooltip": "Odsazení"
+    },
+    "title": "Vegetace",
+    "tooltips": {
+      "averageDistanceLabel": "Průměrná vzdálenost mezi korunami stromů",
+      "heightLabel": "Výška každého stromu"
+    },
+    "treeLine": {
+      "hotkeyDescription": "Nakreslit řadu stromů",
+      "name": "Řada stromů",
+      "tooltip": "Vytvořte řadu stromů a upravte jejich velikost a hustotu. Všechny stromy ovlivní analýzy."
+    },
+    "trees": "Stromy"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "Nebyl zadán žádný ID analýzy",
+      "unsupportedAnalysisType": "Nepodporovaný typ analýzy: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "K tomuto pozemku máte přístup pouze k prohlížení."
+  },
+  "windAnalysis": {
+    "analyzing": "Probíhá analýza…",
+    "atCapacity": "V současné době provádíme velké množství podrobných analýz větru. Dokončení analýzy může trvat déle. Děkujeme za vaši trpělivost.",
+    "circleOutsideBoundingBox": "Plocha analýzy je mimo oblast mapy",
+    "concurrentQuotaReached": "Bylo dosaženo limitu souběžných analýz větru",
+    "concurrentQuotaReachedDescription": "Je spuštěno příliš mnoho souběžných analýz větru. Počkejte na dokončení některých z nich.",
+    "concurrentQuotaWarning": "Limit souběžných analýz",
+    "concurrentQuotaWarningDescription": "K dosažení limitu souběžných analýz ({limit}) vám zbývá {remaining} podrobných analýz větru.",
+    "dailyQuotaReached": "Dosažen limit analýz",
+    "dailyQuotaReachedDescription": "Dosáhli jste denního limitu analýz větru.",
+    "dailyQuotaReachedDescriptionRetry": "Dosáhli jste denního limitu analýz větru. Zkuste to znovu v následující čas: {nextAvailableAt}.",
+    "loadingData": "Načítání dat",
+    "loadingDataTooltip": "Načítání…",
+    "runAnalysis": "Analyzovat (~{min}-{max} minut)",
+    "seeAnalysisButton": "Zobrazit podrobnou analýzu",
+    "stoppedOrFailed": "Analýza byla zastavena nebo se nezdařila.",
+    "viewerAccessDisableTooltip": "Nelze spustit analýzu v roli sledujícího"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "Pokročilé nástroje modelování",
+      "editIn": "Upravit ve 3D náčrtu",
+      "howToStartEditingMessage": "Stisknutím klávesy ⏎ nebo dvojitým kliknutím proveďte úpravy ve 3D náčrtu.",
+      "launch": "Nový 3D náčrt",
+      "sketch": "Náčrt",
+      "updateProperties": "Aktualizovat vlastnosti"
+    },
+    "advancedModeling": {
+      "cover": "Krytí",
+      "fillet": "Zaoblit",
+      "intersect": "Průnik",
+      "loft": "Šablonování",
+      "offset": "Odsazení",
+      "shell": "Skořepina",
+      "subtract": "Rozdíl",
+      "sweep": "Tažení",
+      "union": "Sjednocení"
+    },
+    "axes": {
+      "reset": "Obnovit osy",
+      "set": "Nastavit osy XYZ"
+    },
+    "buildingType": {
+      "draw": "Nakreslit budovu z 3D náčrtu",
+      "name": "Budova z 3D náčrtu"
+    },
+    "buttons": {
+      "apply": "Použít",
+      "cancel": "Storno",
+      "ok": "OK"
+    },
+    "convert": {
+      "externalMessage": "Chcete-li upravit vnější plochy, hrany a vrcholy, převeďte objekt na 3D náčrt.\n\nJakmile je prvek převeden, nebude již připojen k prvku v původním zdroji a změny nebudou synchronizovány.",
+      "message": "Chcete-li upravit vnější plochy, hrany a vrcholy, převeďte objekt na 3D náčrt.",
+      "title": "Převést na 3D náčrt"
+    },
+    "dialogs": {
+      "arrayButtonArray": "Pole",
+      "arrayButtonCancel": "Storno",
+      "arrayDistanceBetween2Points": "Délka mezi 2 body",
+      "arrayDistanceTotalLength": "Celková délka",
+      "arraySubtitleDistance": "Vzdálenost",
+      "arraySubtitleQuantity": "Množství",
+      "arraySubtitleType": "Typ",
+      "arrayTitle": "Pole",
+      "arrayTypeLinear": "Lineární pole",
+      "arrayTypeRadial": "Radiální pole",
+      "corruptedElementsDeleted": "Některé prvky se nepodařilo uložit a došlo k jejich poškození. Tyto prvky byly automaticky odstraněny.",
+      "editDimensionTitle": "Upravit kótu",
+      "recoveryClosedWithoutSaving": "3D náčrt byl zavřen bez řádného uložení.",
+      "recoveryQuestion": "Chcete obnovit neuložené změny?",
+      "recoveryTitle": "Byly nalezeny neuložené změny modelu"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "Vyrovnat nejnižší nehorizontální plochy"
+    },
+    "finishSelection": {
+      "back": "Zpět (B)",
+      "cancel": "Storno (Esc)",
+      "confirm": "Dokončit (F)",
+      "next": "Další (N)"
+    },
+    "floors": {
+      "addFloor": "Přidat podlaží",
+      "addFloors": "Přidání podlaží",
+      "floorHeight": "Výška podlaží",
+      "floors": "Podlaží",
+      "floorWithNumberLabel": "{level}. podlaží",
+      "moreOptions": "Další možnosti",
+      "numberOfFloors": "Počet podlaží",
+      "removeFloors": "Odebrat podlaží",
+      "resetFloors": "Obnovit podlaží",
+      "title": "Podrobnosti podlaží"
+    },
+    "groupEditing": {
+      "redo": "Znovu",
+      "undo": "Zpět"
+    },
+    "grouping": {
+      "toolbarTitle": "SKUPINY"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "Změřit úhel",
+      "measureDistance": "Změřit vzdálenost",
+      "menuTitle": "Vodítka a měření",
+      "title": "Vodítka a měření"
+    },
+    "mesh": {
+      "convertHintMessage": "Dvojitým kliknutím povolíte další nástroje úprav převodem sítí na objekty.",
+      "importExceededLimitsMessage": "Váš import překračuje limit trojúhelníků sítě ({limit}) a zůstane nezměněn k zajištění lepšího výkonu.\n\nChcete-li získat přístup k dalším nástrojům úprav, vyberte jednotlivé sítě a dvojitým kliknutím je převeďte na upravitelné objekty.",
+      "importExceededLimitsTitle": "Import překračuje limit trojúhelníků sítě"
+    },
+    "pasteInPlaceAction": "Vložit na místo",
+    "properties": {
+      "mixed": "Smíšený",
+      "objectWithIdLabel": "Objekt {id}"
+    },
+    "scaleTitle": "MĚŘÍTKO",
+    "selection": {
+      "areaSelectionOptions": "Možnosti výběru plochy",
+      "filterEdges": "Hrany",
+      "filterFaces": "Plochy",
+      "filterGroups": "Skupiny",
+      "filterMeshes": "Sítě",
+      "filterSolids": "Tělesa",
+      "filterVertices": "Vrcholy",
+      "selection": "Výběr",
+      "selectionTools": "Nástroje pro výběr"
+    },
+    "tools": {
+      "array": "Pole",
+      "editArcCircle": "Upravit oblouk nebo kružnici",
+      "editSpline": "Upravit křivku spline",
+      "extrudeEdges": "Vysunout hrany",
+      "extrudeFace": "Vytáhnout plochu",
+      "facetFace": "Oploškovat plochu",
+      "flattenFace": "Vyrovnat plochy",
+      "group": "Skupina",
+      "groupDetach": "Odpojit",
+      "meshToObjects": "Převést síť",
+      "mirror": "Zrcadlit",
+      "move": "Přesunout",
+      "offsetEdges": "Odsadit hrany",
+      "offsetFace": "Odsadit plochu",
+      "reverseFace": "Obrátit plochu",
+      "rotate": "Otočit",
+      "scale": "Měřítko",
+      "scaleNonUniform": "Nejednotné měřítko",
+      "smoothEdges": "Vyhladit hrany",
+      "tiltFace": "Naklonit plochu",
+      "ungroup": "Zrušit skupinu"
+    },
+    "tooltips": {
+      "building": "Složité 3D budovy s neomezenými možnostmi jako jsou sedlové střechy, nakloněné stěny a další funkce.",
+      "editIn": "Chcete-li upravit vrcholy, hrany a plochy v 3D náčrtu, převeďte objekty.",
+      "launch": "Pomocí 3D náčrtů můžete modelovat a opakovat koncepce architektonických návrhů v rané fázi."
+    },
+    "zoom": {
+      "fitProposal": "Návrh přizpůsobení oknu",
+      "fitSelection": "Výběr přizpůsobení oknu"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "Struční průvodci",
+    "allTutorialsDescription": "Vyplňte tyto interaktivní průvodce, nastavte svůj pozemek a začněte pracovat na návrhu Staveniště. ",
+    "completionMessage": "Skvělá práce. Dokončili jste příručku {header}.",
+    "completionText": "{percent}% dokončeno",
+    "completedTitle": "Dokončeno",
+    "continueButton": "Pokračovat",
+    "stepsTotal": "Celkový počet kroků: {count}",
+    "timeLabel": "{time} min",
+    "stepProgress": "{current} z {total}",
+    "nextButton": "Další",
+    "doneButton": "Hotovo",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "Struční průvodci",
+    "upNextTitle": "Další na řadě"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "Nastavení webu",
+      "description": "Přidejte kontextová data před zahájením modelování nebo analýzy pozemku a budov.",
+      "reviewHeader": "Nastavení Staveniště bylo dokončeno",
+      "reviewText": "Úspěšně jste přidali kontextová data a limit staveniště.{ 0}{br}Skvělá práce! Nyní můžete prozkoumat naše nástroje pro modelování a možnosti importu nebo pokračovat dalším průvodcem.",
+      "steps": {
+        "openContextualTab": {
+          "header": "Otevřít kartu kontextová data",
+          "text": "Začněte otevřením karty <bold>Kontextová data</bold>."
+        },
+        "browseAndOrder": {
+          "header": "Procházet data pro umístění pozemku",
+          "text": "Klikněte na <bold>možnost Procházet kontextová data</bold> a zjistěte, které datové balíčky jsou k dispozici pro vaše umístění na webu.{ 0}{br}Data mohou zahrnovat okolní budovy, silnice a terén. "
+        },
+        "orderStarterPackage": {
+          "header": "Objednat startovací datový balíček",
+          "text": "Kliknutím na <bold>tlačítko Přidat</bold> zkontrolujte, co je součástí tohoto balíčku dat. Tato data jsou zdarma. "
+        },
+        "orderData": {
+          "header": "Objednat datový balíček",
+          "text": "Chcete-li zahájit stahování 3D kontextová data na svůj web, vyberte pořadí."
+        },
+        "drawSiteLimit": {
+          "header": "Nakreslit limit pozemku",
+          "text": "Aktivací tohoto nástroje výkresu definujte limit staveniště. Jakmile budou aktivní, nakreslete body kolem pozemku a uzavřete tvar.{br}{br}Definování limit staveniště je nezbytným předpokladem pro spouštění analýz v aplikaci Forma Staveniště Design."
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "Přidat budovy",
+      "description": "Vytvářejte budovy pomocí našich modelovacích nástrojů nebo importujte existující modely. ",
+      "reviewHeader": "Budovy přidané na pozemek",
+      "reviewText": "Úspěšně jste nakreslili budovy a importovali komponenty na svůj pozemek. Skvělá práce! Nyní můžete posoudit podmínky prostředí spuštěním analýz nebo pokračovat jiným průvodcem.",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "Nakreslení základní budovy",
+          "text": "Kliknutím na <bold>položku Základní budova</bold> aktivujte nástroj budovy. Jakmile je aktivní, nakreslete tvar budovy a výběrem posledního bodu dokončete kreslení půdorysného tvaru."
+        },
+        "exploreParametricOptions": {
+          "header": "Prozkoumání parametrických možností",
+          "text": "Prozkoumejte dostupné parametrické možnosti úprav modelu budovy."
+        },
+        "importModel": {
+          "header": "Import modelu nebo souboru",
+          "text": "Kliknutím na <bold>tlačítko Importovat</bold> odešlete model nebo rastrový obrázek z místního zařízení."
+        },
+        "placeInScene": {
+          "header": "Umístit do scény",
+          "text": "Klikněte na položku, kterou jste právě importovali z knihovny. Po výběru ji kliknutím a přetažením umístěte na pozemek. Po umístění prvku bude cvičení automaticky pokračovat."
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "Posuzování podmínek prostředí",
+      "description": "Spusťte analýzu doby hodin slunečního svitu a informovaně se rozhodujte v rané fázi návrhu.",
+      "reviewHeader": "Analýza hodin slunce je hotova!",
+      "reviewText": "Úspěšně jste na svém webu provedli analýzu hodin slunečního svitu.{ 0}{br}Nyní můžete pokračovat ve vytváření nových návrhů, porovnáváním analýz nebo prozkoumáváním dalších funkcí Staveniště Design.",
+      "steps": {
+        "selectAnalysis": {
+          "header": "Vyberte analýzu",
+          "text": "Kliknutím na zvýrazněnou ikonu vyberte analýzu hodin slunečního svitu."
+        },
+        "selectDate": {
+          "header": "Zobrazit datum",
+          "text": "Pomocí rozevíracího seznamu nastavte datum, pro které chcete analyzovat hodiny slunečního svitu na vašem pozemku."
+        },
+        "runAnalysis": {
+          "header": "Spustit analýzu",
+          "text": "Kliknutím na tlačítko zahájíte analýzu. Dokončení bude trvat jen několik sekund.{br}{br}Příručka bude automaticky pokračovat po dokončení analýzy."
+        },
+        "openAnalysisResults": {
+          "header": "Otevřít výsledky",
+          "text": "Po dokončení se výsledky analýzy zobrazí v tomto seznamu. Chcete-li si je podrobně prohlédnout, klikněte na nejnovější výsledky. Otevře se nové okno.",
+          "altText": "Okno výsledků analýzy"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "Jak opravit chybu „WebGL není podporováno“?",
+      "text": "Váš počítač pravděpodobně nepodporuje rozhraní WebGL, což je požadavkem používání aplikace Forma",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

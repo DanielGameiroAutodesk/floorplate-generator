@@ -1,0 +1,38 @@
+.LabelColoursContainer {
+  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.LabelColorChoice {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  display: inline-flex;
+  overflow: hidden;
+  align-items: center;
+  margin: 2px;
+  justify-content: center;
+  cursor: pointer;
+
+  &::after {
+    content: "";
+    display: inline-block;
+    border-radius: 2px;
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
+    background-color: currentColor;
+    border: 1px solid var(--border-color-divider-heavy);
+  }
+
+  &[data-active="true"] {
+    background: var(--background-color-neutral-high-default);
+    border: 1px solid var(--border-color-accent-default);
+    margin: 1px;
+  }
+
+  & input {
+    display: none;
+  }
+}

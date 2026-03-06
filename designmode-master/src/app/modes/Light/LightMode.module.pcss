@@ -1,0 +1,31 @@
+:root {
+  --panel-padding: 1.6rem;
+  --right-panel-width: 260px;
+}
+
+.LeftPanel {
+  position: fixed;
+  top: var(--panel-padding);
+  left: var(--panel-padding);
+  background-color: var(--background-color-surface-100);
+  width: var(--right-panel-width);
+  border-radius: 4px;
+  box-shadow: var(--effect-shadow-high);
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 2 * var(--panel-padding));
+}
+
+.BottomContainer {
+  right: var(--panel-padding);
+  bottom: var(--panel-padding);
+  position: fixed;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+  & > * {
+    pointer-events: auto;
+  }
+}

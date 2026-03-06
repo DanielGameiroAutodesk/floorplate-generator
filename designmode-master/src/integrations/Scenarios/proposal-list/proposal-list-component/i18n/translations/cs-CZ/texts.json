@@ -1,0 +1,77 @@
+{
+  "compareMode": {
+    "buttonLabel": "Porovnání",
+    "headerText": "Vybrat návrhy",
+    "maxProposalsWarning": "Můžete porovnávat maximálně určitý počet návrhů ({max})",
+    "minProposalsWarning": "Vyberte k porovnání alespoň {min} nebo více"
+  },
+  "confirmDialog": {
+    "deleteProposalMessage": "Opravdu chcete odstranit tento návrh?"
+  },
+  "contextMenu": {
+    "deleteMenuItem": "Odstranit",
+    "duplicateMenuItem": "Duplikovat",
+    "exportAsIfcBetaMenuItem": "Export do formátu IFC (Beta)",
+    "exportAsIfcToDocs": "Export ve formátu IFC do služby Docs (Beta)",
+    "exportAsObjMenuItem": "Export ve formátu OBJ",
+    "exportSubmenu": "Export…",
+    "renameMenuItem": "Přejmenovat",
+    "revitDownloadAddinMenuItem": "Stáhnout doplněk aplikace Revit",
+    "revitSendToBetaMenuItem": "Odeslat do doplňku aplikace Revit (Beta)",
+    "revitSubmenu": "Revit",
+    "showProposalHistoryMenuItem": "Zobrazit historii návrhu"
+  },
+  "createProposal": {
+    "buttonTooltip": "Přidat nový návrh"
+  },
+  "error": {
+    "couldNotLoadProposals": "Návrhy nebylo možné načíst. Zkuste to znovu.",
+    "retryButton": "Opakovat"
+  },
+  "exportModal": {
+    "exportingMessage": "Probíhá export…",
+    "exportPrimaryButtonTitle": "Export",
+    "title": "Exportovat návrh aplikace Forma do služby Docs"
+  },
+  "filter": {
+    "buttonTooltip": "Filtr",
+    "closeButtonTooltip": "Zavřít",
+    "emptyBasesMessage": "Projekt nemá žádné základny. Chcete-li nějakou vytvořit, přejděte do části Vrstvy.",
+    "sortByHeader": "Seřadit podle",
+    "title": "Filtr"
+  },
+  "proposalItem": {
+    "baseTooltip": "Základna {indicator}: {name}"
+  },
+  "proposalList": {
+    "createAnotherToCompare": "Vytvořit další návrh k porovnání",
+    "headerText": "Návrhy",
+    "selectProposalsToCompare": "Vybrat návrhy k porovnání"
+  },
+  "sortOptions": {
+    "alphabeticalAscending": "A–Z",
+    "alphabeticalDescending": "Z–A",
+    "lastEdited": "Poslední úprava"
+  },
+  "toast": {
+    "exportAccessDeniedText": "Nemáte oprávnění přístupu k této složce nebo souboru. Kontaktujte vašeho správce.",
+    "exportAccessDeniedTitle": "Přístup odepřen",
+    "exportDownloaded": "Exportovat stažené",
+    "exportErrorText": "Nepodařilo se nám exportovat návrh. Zkuste to znovu. Pokud problém přetrvává, kontaktujte podporu.",
+    "exportErrorTitle": "Export do služby Docs se nezdařil",
+    "exportGenericError": "Export návrhu se nezdařil",
+    "exportInProgress": "Exportování návrhu…",
+    "exportSuccessLinkText": "acc.autodesk.com/home",
+    "exportSuccessText": "Váš návrh projektu byl exportován do služby Autodesk Docs. Nyní pomocí něj můžete propojit data aplikace Forma s projektem aplikace Revit.",
+    "exportSuccessTitle": "Úspěšně exportováno do služby Docs",
+    "exportTimeoutText": "Při generování exportu do služby Docs vypršel časový limit systému. K tomu může dojít, pokud je projekt příliš velký nebo obsahuje velmi složitou geometrii.",
+    "exportTimeoutTitle": "Export do služby Docs se nezdařil",
+    "exportTooLargeError": "Export nebyl úspěšný. To může být způsobeno tím, že je návrh příliš velký pro export, který je aktuálně podporován.",
+    "ifcExportFailed": "Export se nezdařil. Chyba byla nahlášena.",
+    "ifcExportStarted": "Byl spuštěn export vašeho souboru IFC – po dokončení bude automaticky stažen.",
+    "proposalRenamedWarning": "Název návrhu již existuje, návrh byl přejmenován na {name}",
+    "revitSendFailed": "Nepodařilo se odeslat návrh do aplikace Revit.",
+    "revitSendSuccess": "Návrh byl odeslán do aplikace Revit",
+    "sessionExpired": "Platnost vaší relace vypršela. Načtěte stránku znovu."
+  }
+}

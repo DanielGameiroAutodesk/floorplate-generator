@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "A tervezés előkészítése",
+    "body": "Ha a <bold>Folytatás</bold> lehetőséget választja, automatikusan lefuttatunk két előkészítési lépést. Önnek nincs teendője. Ha a lépések befejeződtek, elkezdheti a tervezést a Forma Site Designban.",
+    "contextual": {
+      "header": "Helyszínspecifikus környezet betöltése",
+      "body": "Betöltjük a helyszín ingyenes környezetfüggő adatait, például a terepet és a környező épületeket."
+    },
+    "sunAnalysis": {
+      "header": "Információk beszerzése a helyszíni körülményekről",
+      "body": "Lefuttatunk egy napsütéses órák számára vonatkozó elemzést a helyszínen és annak környékén a tervezési döntések meghozatalához."
+    },
+    "continueButton": "Folytatás",
+    "sunAnalysisCoachmark": {
+      "header": "Napsütéses órák számának elemzése",
+      "body": "Automatikusan elindítottunk egy napsütéses órák számára vonatkozó elemzést a helyszínén.{br}{br}Ha a jelölő zöldre vált vagy megjelenik egy fejléc a vászon tetején, megtekintheti az eredményeket."
+    },
+    "finalModal": {
+      "title": "A helyszín beállítása kész",
+      "subTitle": "Folytassa az alábbi javasolt lépések egyikével:",
+      "suggestedAction1": {
+        "header": "Épület rajzolása",
+        "body": "Aktiválja az eszköztár egyik épületeszközét."
+      },
+      "suggestedAction2": {
+        "header": "Modell importálása",
+        "body": "Kattintson az importálás ikonra az eszköztáron, és kövesse a javasolt lépeseket."
+      },
+      "suggestedAction3": {
+        "header": "Elemzések összehasonlítása",
+        "body": "Futtasson egy második elemzést, és nyissa meg az Összehasonlítás módot a képernyő bal felső sarkában."
+      },
+      "showMeHow": "További beállítások",
+      "finalButton": "Rendben"
+    },
+    "sunAnalysisTriggerError": "Nem sikerült elindítani a napfényelemzést"
+  },
+  "alignment": {
+    "center": "Igazítás középre",
+    "left": "Igazítás balra",
+    "right": "Igazítás jobbra"
+  },
+  "analysis": {
+    "alertsLabel": "Riasztások",
+    "analyzeTitle": "Elemzés",
+    "analysisParameters": "Elemzési paraméterek",
+    "areaRadius": "Terület sugara",
+    "areaTitle": "Elemzési terület",
+    "customCircle": "Egyéni kör",
+    "daylightAnalysisIllustrationAlt": "Napfényelemzés illusztrációja",
+    "failedToOrder": "Nem sikerült megrendelni az elemzést: {error}",
+    "learnMore": "További információ",
+    "microclimateAreaRadius": "Mikroklíma területének sugara",
+    "noisePredictionUnavailable": "Nem érhető el zajelőrejelzés",
+    "radiusLabel": "Sugár",
+    "selectAreaToRunAnalysis": "Válasszon ki egy helyszínkorlátot vagy zónát az elemzés futtatásához",
+    "disabledTooltips": {
+      "addRoadsOrRails": "Utak és/vagy sínek hozzáadása forgalmi adatokkal elemzés futtatásához",
+      "analysisAreaOutsideMap": "Az elemzési terület kívül esik a térkép területén",
+      "concurrentQuotaReached": "Elérte az egyidejű szélelemzések korlátját",
+      "dailyQuotaReached": "Elérte a napi szélelemzési kvótát",
+      "geometryAlertsDetected": "Észlelt geometriai hibák",
+      "geometryTooComplex": "A geometria túl összetett",
+      "invalidParameters": "Érvénytelen paraméterek",
+      "loadingData": "Adatok betöltése",
+      "notAvailable": "Nem érhető el",
+      "notAbleAsViewer": "Megtekintőként nem futtathat elemzéseket",
+      "pleaseWait": "Kérjük, várjon...",
+      "savingInProgress": "Mentés folyamatban...",
+      "selectSiteLimitOrZone": "Válasszon ki egy helyszínkorlátot vagy zónát az elemzés futtatásához"
+    },
+    "emptyStateZoneExplanation": "Alapértelmezés szerint az elemzés az Ön által hozzáadott épületeken és egyéb objektumokon fut. Helyszínkorlát vagy zónák hozzáadásával egy adott terület teljes elemzési eredményét érheti el.",
+    "entireModel": "Teljes modell",
+    "missingTrafficData": {
+      "description": "Utak vagy vasúti sínpályák forgalmi adatokkal való hozzáadása a valós zajviszonyok előrejelzéséhez.",
+      "startGuideButton": "Útmutató elindítása",
+      "title": "Hiányzó forgalomadatok"
+    },
+    "noiseAreaRadius": "Zajelemzési terület sugara",
+    "properties": {
+      "radiusLabel": "Sugár"
+    },
+    "seeResultButton": "Elemzés eredményének megtekintése",
+    "seeResultsButton": "Elemzés eredményeinek megtekintése",
+    "selectionTitle": "Válassza ki az elemzési területeket",
+    "selectAllAreasButton": "Az összes terület kijelölése",
+    "deselectAllAreasButton": "Minden terület kiválasztásának megszüntetése",
+    "skyComponent": {
+      "potentialDescription": "A <strong>napfénypotenciál-elemzésünk</strong> a függőleges égkomponens segítségével azonosítja a homlokzat azon részeit, amelyek kevés napfényhez jutnak. Válassza ki az elemezni kívánt területeket."
+    },
+    "sun": {
+      "removeDateButton": "Dátum eltávolítása"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "Teljesen támogatott épületek",
+      "buildingsPartialSupport": "Részben támogatott épületek/egyéb elemek",
+      "iconAlt": "Elemzés támogatási szintje",
+      "title": "Elemzési támogatás"
+    },
+    "windAreaRadius": "Szélelemzési terület sugara",
+    "windRoseUnavailable": {
+      "description": "Szélrózsa-adatszolgáltatónk problémákat tapasztal. Továbbra is elemezheti a mikroklíma-mintázatokat, de a szélviszonyok valószínűségének vizsgálatához szükséges előzményadatok nélkül. Dolgozunk az adatok visszaállításán.",
+      "title": "A szélrózsa jelenleg nem érhető el",
+      "windDescription": "A szélrózsa-adatszolgáltatónk problémákat tapasztal. Továbbra is elemezheti az általános szélmintákat, és manuálisan beállíthatja a szélsebességet. A gyors szélelemzés nem érhető el. Dolgozunk az adatok visszaállításán."
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "Már létezik ilyen konfigurációjú elemzés. ",
+    "concurrentAnalysesReached": "Elérte az egyidejű elemzések korlátját",
+    "concurrentNoiseAnalysesReached": "Elérte az egyidejű zajelemzések korlátját",
+    "dailyNoiseQuotaReached": "Elérte a 24 órán belül futtatható zajelemzések maximális számát",
+    "dailyQuotaReached": "Elérte a napi elemzési kvótát",
+    "nothingToAnalyze": "Nincs mit elemezni",
+    "somethingWentWrong": "Hiba történt"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "A részletes szélelemzés nem áll rendelkezésre. Próbálja meg később futtatni az elemzést.",
+      "rapidWindUnavailable": "A gyors szélelemzés nem áll rendelkezésre. Próbálja meg később futtatni az elemzést.",
+      "rapidWindUnavailableToast": "A gyors szélelemzés nem áll rendelkezésre. Csapatunkat értesítettük. Próbálja meg később futtatni az elemzést."
+    },
+    "types": {
+      "microclimate": {
+        "description": "Mikroklíma-elemzésünk kiszámítja az adott helyszínen érzékelt hőmérsékletet, figyelembe véve a nap-, szél- és napfényviszonyokat. Javasoljuk, hogy a pontosabb eredmények érdekében várja meg, amíg a szélelemzés befejeződik.",
+        "link": "https://help.autodeskforma.com/hu/articles/6932531",
+        "name": "Mikroklíma",
+        "text": "Mikroklíma-elemzés"
+      },
+      "noise": {
+        "description": "A gyors zajelemzés valós idejű előrejelzésével megtudhatja, hogyan befolyásolja a terv a környezeti zajviszonyokat. Részletes zajelemzést futtathat a zajviszonyok pontosabb szimulációjához, valamint az épülethomlokzatok állapotának elemzéséhez.",
+        "link": "https://help.autodeskforma.com/hu/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "Zaj",
+        "text": "Zajelemzés"
+      },
+      "sky-component": {
+        "description": "A függőleges égkomponens segítségével felmérheti, hogy az épület homlokzatának mely részeit éri kevés napfény. Az elemzés futtatásához hozzá kell adnia egy helyszínkorlátot.",
+        "link": "https://help.autodeskforma.com/hu/articles/6951302",
+        "name": "Napfénypotenciál",
+        "text": "Napfénypotenciál-elemzés"
+      },
+      "solar-panel": {
+        "name": "Napenergia"
+      },
+      "sun": {
+        "description": "Felmérheti, hogy hány órányi napfényt kap a helyszín és az épületek. Az elemzés futtatásához hozzá kell adnia egy helyszínkorlátot, és ki kell választania egy dátumot.",
+        "link": "https://help.autodeskforma.com/en/articles/6951253",
+        "name": "Napsütéses órák száma",
+        "text": "Napsütéses órák számának elemzése"
+      },
+      "wind": {
+        "description": "A gyors szélelemzés valós idejű előrejelzésével megtudhatja, hogy a tervezési módosítások hogyan befolyásolják a szélviszonyokat. Részletes széláramlási és szélkomfortelemzést futtathat, hogy pontosabb szimulációt kapjon a különböző szélirányokról és -sebességekről.",
+        "link": "https://help.autodeskforma.com/hu/articles/6981020",
+        "name": "Szél",
+        "text": "Szélelemzés"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "Csomópont hozzáadása",
+      "buildingWidth": "Épület szélessége",
+      "cityBlocks": "Városi háztömbök",
+      "editGridOrientationButton": "Háló tájolásának szerkesztése",
+      "explanation": "Folyamatosan törekszünk olyan eszközök kifejlesztésére, amelyek segíthetnek felfedezni a helyszín tömegpotenciálját. Kövesse a fejleményeket fórumunkban.",
+      "floors": "Emeletek",
+      "headerTitle": "Felfedezés",
+      "iterativeExplanation": "Tervezésautomatizálási eszköz, amellyel gyorsan hozhat létre és fedezhet fel helyszín- és épületelrendezéseket.",
+      "layoutTitle": "Elrendezés",
+      "layouts": "Elrendezések",
+      "linearBuildings": "Vonalas épületek",
+      "mixed": "Vegyes",
+      "name": "Felfedezés",
+      "siteAutomation": "Helyszín-automatizálás",
+      "storyHeight": "Szintek magassága",
+      "towerBuildings": "Toronyépületek",
+      "towerWidth": "Toronyszélesség"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "Új bázis hozzáadása",
+    "changeIndicatorLabel": "Változásjelölő",
+    "editBaseButton": "Bázis szerkesztése",
+    "editBaseDoneButton": "Kész",
+    "editBaseRightMenuMessage": "A változtatáshoz szerkessze a bázist",
+    "editBaseRightMenuMixedSelectionMessage": "A kijelölés bázisobjektumokat tartalmaz. Vegyes kiválasztás esetén nem végezhet szerkesztést.",
+    "editing": {
+      "changesWillAffect": "A módosítások hatással lesznek az",
+      "proposals": "ajánlatokra",
+      "title": "Szerkesztés"
+    },
+    "errors": {
+      "deleteFailed": "A bázis törlése nem sikerült.",
+      "duplicateFailed": "A bázis másolása nem sikerült.",
+      "fetchFailed": "A bázisok lekérése nem sikerült.",
+      "renameIndicatorFailed": "A bázisjelölő átnevezése nem sikerült.",
+      "renameFailed": "A bázis átnevezése nem sikerült.",
+      "switchFailed": "A bázis átváltása nem sikerült."
+    },
+    "noBaseLayersText": "Ha egyes elemeket többször fel szeretne használni az ajánlatokban, hozzáadhatja őket egy bázishoz.",
+    "strategy": {
+      "description": "Az ajánlat elavult bázist használ. Választania kell, hogy frissít-e a bázis legújabb verziójára, vagy másolja a bázis régebbi verzióját.",
+      "duplicateOld": "A bázis régi verziójának másolása",
+      "header": "A bázis elavult",
+      "useLatest": "A bázis legújabb verziójának használata"
+    },
+    "swapBaseButton": "Bázis cseréje",
+    "swapButton": "Csere",
+    "untitledBaseLabel": "Névtelen bázis"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "Általános vonal rajzolása",
+        "name": "Vonal",
+        "tooltip": "Általános vonalakat hozhat létre a tervezői szándék kommunikálása érdekében. Ezeket a vonalakat az elemzések nem veszik figyelembe."
+      },
+      "surface": {
+        "draw": "Általános felület rajzolása",
+        "name": "Felület",
+        "tooltip": "Általános felületeket hozhat létre a tervezői szándék kommunikálása érdekében. Ezeket a felületeket az elemzések nem veszik figyelembe."
+      },
+      "title": "Általános",
+      "volume": {
+        "draw": "Általános térfogat rajzolása",
+        "name": "Térfogat",
+        "tooltip": "Bár a rendszer elemzi az általános térfogatokat, a területük számít bele a Területi mérőszámokba."
+      }
+    }
+  },
+  "building": {
+    "addFloor": "Emelet hozzáadása",
+    "addFloorsAction": "Emeletek hozzáadása",
+    "buildingColorsLabel": "Épület színei",
+    "buildingDesignButton": "Megnyitás a Building Designban",
+    "buildingDesignDescription": "Ezt az épületet a Building Designban tervezték. A szerkesztéséhez nyissa meg a Building Designt.",
+    "buildingDesignGeometry": "Building Design-geometria",
+    "buildingsTitle": "Épületek",
+    "buildingWidthLabel": "Épület szélessége",
+    "divisionWidth": "Osztás szélessége",
+    "roadWidthLabel": "Út szélessége",
+    "towerBlockWidthLabel": "Toronyblokk szélessége",
+    "typesTitle": "Típusok",
+    "upgradingFor3DSketchBuilding": "3D vázlatépület adatainak bővítése a megtestesült szén kiszámításához",
+    "variationsTitle": "Változatok",
+    "errors": {
+      "failedToLoadFunctions": "Az egyéni épületfunkciók betöltése nem sikerült",
+      "failedToLoadSettings": "A beállítások betöltése nem sikerült"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "Hozzáadás könyvtárhoz",
+      "addToLibraryTooltip": "Hozzáadás könyvtárhoz",
+      "emptyFloors": "Üres emeletek",
+      "parking": "Parkoló",
+      "popupTitle": "Alaprajzok",
+      "title": "Alaprajzok",
+      "cannotDrawCornerDescription": "Még nem rajzolhat sarokterveket",
+      "cannotDrawSplitDescription": "Még nem rajzolhat osztott terveket",
+      "finishDrawingTooltip": "Alaprajzok hozzáadásához fejezze be a rajzolást",
+      "mixedSelectionDescription": "Vegyes alaprajzok vannak kiválasztva",
+      "noLibraryDescription": "Nincsenek ilyen külső alakkal rendelkező alaprajzok a könyvtárban",
+      "noSelectionDescription": "Nincs alaprajz a kijelölésben",
+      "rightClickToAddDescription": "Kattintson a jobb gombbal az egyik ajánlatra, hogy hozzáadja a könyvtárhoz",
+      "selectSectionsDescription": "Olyan keresztszelvényeket válasszon, amelyek üresek vagy alaprajzzal rendelkeznek"
+    },
+    "floors": {
+      "seeAllButton": "Az összes emelet megtekintése"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "Új hozzáadása",
+      "addSectionCutButton": "Metszetkivágás hozzáadása",
+      "apartmentBuildingStories": "Lakóépület szintjei",
+      "apartmentBuildingStoryHeight": "Lakóépület szintjeinek magassága",
+      "apartmentBuildingWidth": "Lakóépület szélessége",
+      "circulationTitle": "Közlekedés",
+      "headerTitle": "Vonalas épület",
+      "outdatedLabel": "elavult",
+      "targetSectionLength": "Célszakasz hossza",
+      "circulation": {
+        "sectionCountText": "Szakaszok száma: {count}",
+        "widthLabel": "Nyomterv szélessége",
+        "widthText": "Szélesség: {width}"
+      },
+      "divisionWidthLabel": "Osztás szélessége",
+      "releaseToBasicAnimationAlt": "Kiadás alapvetővé animáció",
+      "releaseToBasicExplanation": "A lineáris automatizálás egy alapszintű épületet hoz létre, ahol funkciókat vagy parkolót adhat hozzá az egyes szintekhez. A kiadás után nem térhet vissza a lineáris automatizáláshoz.",
+      "releaseToFloorPlanAction": "Kiadás alaprajzzá",
+      "releaseToFloorPlanAnimationAlt": "Kiadás alaprajzzá animáció",
+      "releaseToFloorPlanExplanation": "A körkörös automatizálás olyan alaprajzot hoz létre, amely lehetővé teszi az elrendezések manuális megtervezését. A kiadás után nem térhet vissza a körkörös automatizáláshoz.",
+      "towerWidthLabel": "Toronyblokk szélessége"
+    },
+    "properties": {
+      "lengthLabel": "Hossz",
+      "numberOfFloorsLabel": "Emeletek száma",
+      "numberOfStoriesLabel": "Szintek száma a helyszínelemzésben",
+      "stories": "Szintek",
+      "storyHeight": "Szintek magassága",
+      "storyHeightLabel": "Szintek magassága",
+      "widthLabel": "Szélesség"
+    },
+    "toolbar": {
+      "title": "Épületek"
+    },
+    "tooltips": {
+      "addBuildingsButton": "Épületek hozzáadása",
+      "clampToTerrainButton": "Épületek rögzítése terephez",
+      "numberOfFloorsLabel": "Emeletek száma",
+      "parkingEditDescription": "A parkoló szerkesztése mostantól az alaprajzszerkesztőben történik",
+      "releaseToBasicButton": "Kiadás alapszintű épületté",
+      "releaseToZonesButton": "Kiadás a zónákhoz",
+      "removeBuildingsButton": "Épületek eltávolítása",
+      "storyHeightLabel": "Szintek magassága",
+      "swapFloorPlansButton": "Alaprajzok cseréje",
+      "targetSectionLengthLabel": "Célszakasz hossza",
+      "towerWidthLabel": "Toronyszélesség",
+      "widthLabel": "Épület szélessége"
+    },
+    "types": {
+      "basic": {
+        "draw": "Alapszintű épület rajzolása",
+        "name": "Alapszintű épület",
+        "tooltip": "Bármilyen formájú szintekkel rendelkező épületeket jól vezérelhetően, pontosan rajzolhat meg. Az épületstatisztikákat a Területi mérőszámok részben tekintheti meg."
+      },
+      "line": {
+        "draw": "Vonalas épület rajzolása",
+        "name": "Vonalas épület",
+        "tooltip": "Az épületszerkezetet egy vonal köré szervezve rajzolhatja meg. Beállíthatja a paramétereket, például a szakaszokat és a szinteket. Az épületstatisztikákat a Területi mérőszámok részben tekintheti meg."
+      }
+    }
+  },
+  "camera": {
+    "compass": "Északi irány felfelé",
+    "lookAt": {
+      "title": "Ránézés",
+      "tooltip": "Mozgassa az egeret egy felület fölé a kamera igazításához. Kattintson a felületre a nagyításhoz, vagy húzással állítsa be a nagyítási területet."
+    },
+    "lookFrom": {
+      "title": "Ránézés egy pontból",
+      "tooltip": "Kattintson egy homlokzat valamelyik pontjára, ahonnan nézni szeretne, vagy kattintson és húzza a mutatót a pont és a nézet irányának kijelöléséhez."
+    },
+    "optionsLabel": "Kamerabeállítások",
+    "optionsTitle": "Kamerabeállítások",
+    "switchCameraMode": "Kameramód váltása",
+    "vectorExport": {
+      "exportSuccessful": "Sikeres exportálás",
+      "title": "Vektoros exportálás"
+    },
+    "switchTo2d": "Váltás 2D (ortografikus) módra",
+    "switchTo3d": "Váltás 3D módra",
+    "zoom": {
+      "toFitProposal": "Nagyítás az ajánlatra",
+      "toFitSelection": "Nagyítás a kiválasztásra"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "Él"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "Több egy sorban",
+      "placeSinglesButton": "Különállók elhelyezése"
+    }
+  },
+  "contextualData": {
+    "description": "Megtekintheti és kezelheti a projekthez elérhető környezetfüggő adatokat, és további adatokat is rendelhet.",
+    "title": "Környezetfüggő adatok"
+  },
+  "contextMenu": {
+    "copy": "Másolás",
+    "cut": "Kivágás",
+    "delete": "Törlés",
+    "exportTerrainAsObj": "Terep exportálása obj formátumba",
+    "moveToBack": "Áthelyezés hátra",
+    "moveToBase": "Áthelyezés a bázisra",
+    "moveToFront": "Áthelyezés előre",
+    "moveToProposal": "Áthelyezés az ajánlatba",
+    "paste": "Beillesztés",
+    "pasteInPlace": "Beillesztés adott helyre",
+    "terrainPad": {
+      "moveToBack": "Tereptöltés áthelyezése hátra",
+      "moveToFront": "Tereptöltés áthelyezése előre"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "Nem lehet elemeket másolni a projektek vagy hubok között.",
+    "failedToCopyElementMessage": "Az elem másolása nem sikerült."
+  },
+  "dataOrders": {
+    "completed": "A következő adatmegrendelés befejeződött: {name}. A program hozzáadja az ajánlathoz, és néhány másodperc múlva megjelenik a Fóliák területen.",
+    "completedAll": "A(z) {names} elemek be lettek töltve és hozzá lettek adva az ajánlatbázishoz. A Környezetfüggő adatok területen megnézheti a további adatokat, és továbbiakat is rendelhet.",
+    "failed": "Nem sikerült: {name}",
+    "failedToAdd": "Nem sikerült hozzáadni a(z) „{name}” elemet az ajánlathoz, de az adatok továbbra is elérhetők a könyvtárban.",
+    "processing": "A következő adatrendelés feldolgozás alatt áll: {name}. A befejezés után a program hozzáadja az adatokat az ajánlathoz.",
+    "statusTitle": "Adatrendelés állapota"
+  },
+  "demoSite": {
+    "badge": "bemutató",
+    "flyout": {
+      "content": "Azért hoztuk létre ezt a webhelyet, hogy bemutassuk Forma képességeit. Kezdje el az alábbi útmutatót, hogy kövesse egy egyszerű munkafolyamat lépéseit, és hozza létre saját webhelyeit, ha készen áll.",
+      "createSiteButton": "Új helyszín létrehozása",
+      "createSiteTooltip": "Aktív licenccel és jogosultsággal kell rendelkeznie a helyszínek létrehozásához ebben a projektben",
+      "header": "Ez egy bemutató helyszín",
+      "startGuideButton": "Útmutató elindítása"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "BEVEZETÉS",
+    "titleFormaSiteDesign": "Egy bemutató webhely",
+    "description": "Ez egy előre megtervezett mintawebhely, ahol felfedezheti Forma Helyszín Design alkalmazást. Ne aggódjon amiatt, hogy eltör semmit – tekintse biztonságos helynek a kísérletezéshez anélkül, hogy bármilyen hatással lenne valódi projektjeire.",
+    "callToAction": "Kattintson a {bold} elemre a bemutató helyszín felfedezéséhez.",
+    "callToActionBold": "Folytatás",
+    "buttonContinue": "Folytatás",
+    "buttonGoToHome": "Ugrás a Forma kezdőlapjára",
+    "imageAlt": "Forma Helyszín látványtervezés"
+  },
+  "drawing": {
+    "traceShape": "Meglévő alakzat körberajzolása"
+  },
+  "hotkeys": {
+    "addNode": "Csomópont hozzáadása",
+    "cancelDrawingPoint": "Pontrajzolás visszavonása",
+    "clickAndMoveGrip": "Kattintson és mozgasson egy fogót az adott irányba való méretezéshez.",
+    "complete": "Befejezés",
+    "copy": "Másolás",
+    "cut": "Kivágás",
+    "deleteSelected": "Kiválasztott elem törlése",
+    "drawHouse": "Ház rajzolása",
+    "drawHousesWithLine": "Házak rajzolása vonallal",
+    "drawLine": "Vonal rajzolása",
+    "drawRoad": "Út rajzolása",
+    "edit": "Szerkesztés",
+    "exitContext": "Kilépés a környezetből",
+    "exitEditGraph": "Kilépés a grafikonszerkesztéséből",
+    "exitGraphTool": "Kilépés a Grafikon eszközből",
+    "exitHouseTool": "Kilépés a Ház eszközből",
+    "exitSiteStudyAndApply": "Kilépés a Helyszín tanulmányozása eszközből, és a tanulmány alkalmazása az ajánlatra",
+    "exitTool": "Kilépés az eszközből",
+    "exitTransportationTool": "Kilépés a Szállítás eszközből",
+    "finishEditing": "Szerkesztés befejezése",
+    "freeform": "Szabadformájú",
+    "measureDistance": "Távolságmérés",
+    "paste": "Beillesztés",
+    "placeSingleHouses": "Különálló házak elhelyezése",
+    "redo": "Ismét",
+    "remove": "Eltávolítás",
+    "resetGraph": "Grafikon visszaállítása",
+    "selectAll": "Az összes kiválasztása",
+    "selectSomethingToModify": "Válassza ki az elemet, amelyet módosítani szeretne a(z) {toolName} eszközzel",
+    "switchHouseCorner": "Váltás házsarokra",
+    "switchHousePlacementSide": "Váltás a házelhelyezési oldalra",
+    "toggleSidebar": "Oldalsáv átkapcsolása",
+    "undo": "Vissza"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "Az iránytű pozíciójának mozgatása közben tartsa lenyomva a Shift billentyűt, hogy a forgástengelyt a mutató alatti geometriához igazítsa.",
+    "editSiteLayout": "Szerkessze a helyszínelrendezést, vagy válassza ki az egyes zónákat az épülettopológia beállításához.",
+    "freeMode": "Szabad mód. Nyomja meg a ↹ Tab billentyűt a vízszintes módhoz.",
+    "horizontalMode": "Vízszintes mód. Nyomja meg a ↹ Tab billentyűt a szabad módhoz.",
+    "mode2D": "2D mód. Minden eszköz egy vízszintes síkra korlátozva működik.",
+    "rotateMoveText": "{moveModeText} Mozgatás ({inputModeText}). Nyomja meg a ↹ Tab billentyűt az {nextMoveModeText} áthelyezéshez ({nextInputModeText}).",
+    "selectAreaToExplore": "Válassza ki, hogy mely területhez kívánja felfedezni a helyszínelrendezési lehetőségeket.",
+    "snappingAxesHint": " Nyomja le az Alt billentyűt az igazító tengelyek elrejtéséhez. Alt + C a törléshez.",
+    "straightAction": "Egyenes {action}. Nyomja meg a ↹ Tab billentyűt a(z) {action} szűkítéséhez.",
+    "switchHouseCornerAndRotate": "Nyomja meg a Tab billentyűt a házsarokra váltásához. Tartsa lenyomva és húzza az egeret az elforgatáshoz",
+    "switchHousePlacementSide": "Nyomja le a Tab billentyűt a házelhelyezési oldalra váltásához",
+    "taperAction": "Szűkülő {action}. Nyomja meg a ↹ Tab billentyűt a(z) {action} szűkítéséhez."
+  },
+  "menus": {
+    "generatorsByExtensions": "Generátorok bővítmények alapján"
+  },
+  "messages": {
+    "elementAddedTo": "Elem hozzáadva a(z) {location} helyhez"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "Mentés folyamatban..."
+    },
+    "camera": {
+      "lookAt": "Ránézés"
+    },
+    "lineWidth": "Vonalvastagság",
+    "settings": "Beállítások",
+    "templates": {
+      "updatesAvailable": "Frissítések érhetők el"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "Az épület jobb kattintással elérhető beállításainak végrehajtása nem sikerült",
+      "failedToConvertVolumes": "Nem sikerült alapszintű épületté konvertálni a térfogatokat",
+      "failedToDraw": "Nem sikerült alapszintű épületet rajzolni",
+      "failedToEdit": "Nem sikerült szerkeszteni az új alapszintű épületet",
+      "failedToPushPull": "Nem sikerült alapszintű épületet leküldeni/lekérni"
+    },
+    "failedToLoadContextualData": "A környezetfüggő adatok betöltése nem sikerült",
+    "import": {
+      "largeScale": "Az importálás nagy léptékű eleme(ke)t tartalmaz ({size}). Előfordulhat, hogy az importálás nem a várt módon viselkedik. Nyomja meg az ESC billentyűt a megszakításhoz.",
+      "resultingShapeInvalid": "Az eredményül kapott alakzat érvénytelen."
+    },
+    "modelNotGeolocated": "A Site Design modellje nincs földrajzi helyhez kötve. Rendeljen környezetfüggő adatokat a földrajzi hely meghatározásához",
+    "terrain": {
+      "boundingBoxTooLarge": "Az elemgeometria befoglaló téglatestje túl nagy ahhoz, hogy terepként lehessen használni. Maximális méret: 4km². Jelenlegi méret: {size}km²"
+    },
+    "library": {
+      "couldNotFindElement": "Nem található a könyvtárelem",
+      "elementNotAvailable": "Nem érhető el a könyvtárelem",
+      "failedToConvertTerrain": "Nem sikerült terepelemmé konvertálni",
+      "failedToDownloadFloorPlans": "Nem sikerült letölteni az alaprajzokat",
+      "failedToSaveFloorPlans": "Nem sikerült menteni a projektszintű alaprajzokat. Frissítse az oldalt",
+      "failedToUpdateLibrary": "Nem sikerült frissíteni a könyvtárat"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "Hiba a Vonalas épületek menüben",
+      "failedToDraw": "Nem sikerült vonalas épületeket rajzolni",
+      "failedToEdit": "Nem sikerült a vonalas épület szerkesztése",
+      "failedToolbarAction": "Nem sikerült a vonalas épület eszköztárművelete"
+    },
+    "siteStudy": {
+      "errorInExplore": "Hiba törtért a Felfedezés során. Próbálja újra!",
+      "errorOccurred": "Hiba történt, értesítettük a mérnökeinket.",
+      "failedToLoadPicker": "Nem sikerült betölteni a felfedezésválasztót. Próbálkozzon újra."
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "Tallózás az összes bővítmény között",
+    "browseDescription": "Tallózzon a meglévő bővítmények vagy a külső szolgáltatóktól származó generátorok között, vagy adja hozzá sajátját – ezek itt jelennek meg.",
+    "downloadButton": "Bővítmények letöltése",
+    "downloadDescription": "a Revit- vagy Rhino-modellek importálásához.",
+    "importModelTitle": "Modell importálása bővítményből",
+    "noDescriptionAvailable": "Nem érhető el leírás.",
+    "plugins": "Bővítmények"
+  },
+  "errorBoundary": {
+    "componentCrashed": "A komponens összeomlott",
+    "retryButton": "Újra",
+    "unexpectedError": "Váratlan hiba történt. Próbálja meg újra a műveletet, vagy töltse be újra az oldalt, és próbálkozzon újra"
+  },
+  "guides": {
+    "closeMenu": "Vezérgörbék és méretek menü bezárása"
+  },
+  "geometryAlerts": {
+    "dismiss": "Bezárás",
+    "header": "Geometriariasztások",
+    "review": "Áttekintés",
+    "title": "Geometriariasztások ({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "Távolítsa el vagy módosítsa ezeket az elemeket az elemzések futtatásához.",
+      "title": "Kettőzött geometriák"
+    },
+    "invalidBbox": {
+      "subTitle": "Távolítsa el vagy módosítsa ezeket az elemeket az elemzések futtatásához.",
+      "title": "Túl távoli geometriával rendelkező elemek"
+    },
+    "outOfBounds": {
+      "subTitle": "Távolítsa el vagy módosítsa ezeket az elemeket az elemzések futtatásához.",
+      "title": "Terepen kívüli elemek"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "Az első emelet 0 területtel rendelkezik. A javításhoz illessze vízszintesen az alsó felületet.",
+      "title": "Nulla területű első emelet észlelhető"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "Az épület egy vagy több emelete 0 területű, és nem alakítható át érvényes épületté.",
+      "title": "Nulla területű emelet(ek) észlelve"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "Ez az épület <a>nem folytonos geometriát</a> tartalmaz, és a 3D vázlatból való kilépéskor emelet nélküli általános modellé válhat",
+      "title": "Az épület nem folytonos"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "Ez a modell <a>nem folytonos geometriát</a> tartalmaz, és ez befolyásolhatja az eszköz és a megjelenítés viselkedését.",
+      "title": "A geometria nem folytonos"
+    }
+  },
+  "importToolbar": {
+    "title": "Modell importálása"
+  },
+  "labels": {
+    "addLabelButton": "Címke hozzáadása",
+    "category": "Címkék",
+    "description": "Címkékkel jelölheti meg az egyes pontokat a 3D vásznon, és egy rövid szöveges leírást adhat hozzájuk. Legfeljebb {count} sornyi szöveget adhat hozzá. ",
+    "label": "Címke",
+    "placeholder": "Szöveg beszúrása..."
+  },
+  "layerList": {
+    "buildings": "Épületek",
+    "category": {
+      "contextualDataDuration": "Környezetfüggő adatok (~1–2,5 perc)"
+    },
+    "generic": "Általános",
+    "images": "Képek",
+    "propertyBoundaries": "Telekhatárvonalak",
+    "roads": "Utak",
+    "siteLimits": "Helyszínkorlátok",
+    "terrain": "Terep",
+    "vegetation": "Növényzet",
+    "zones": "Zónák"
+  },
+  "layersTitle": "Fóliák",
+  "library": {
+    "addedToLibrary": "{name} hozzáadva a könyvtárhoz.",
+    "addToLibraryButton": "Hozzáadás könyvtárhoz"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "Kényszerek rajzolása",
+      "name": "Kényszer",
+      "plural": "Kényszerek",
+      "tooltip": "A projekt kényszereit megjelenítő térfogat létrehozása."
+    },
+    "siteLimit": {
+      "defineAsAction": "Megadás helyszínkorlátként",
+      "hotkeyDescription": "Helyszínkorlát rajzolása",
+      "name": "Helyszínkorlát",
+      "tooltip": "A helyszínkorlátok létrehozásával elvégezheti a projekt mérőszámainak elemzését."
+    },
+    "title": "Határok",
+    "zone": {
+      "hotkeyDescription": "Zóna rajzolása",
+      "name": "Zóna",
+      "tooltip": "Zónák rajzolásával határozhatja meg a helyszínen elemezni kívánt területeket."
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "Kilépés a rajzolási módból"
+  },
+  "navbar": {
+    "addButton": "Hozzáadás",
+    "quickActionsButton": "Gyorsműveletek",
+    "settingsButton": "Beállítások"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "Biztosan törölni szeretné a következőt: {name}?",
+      "descriptionParagraph1": "A bázis olyan objektumokat tartalmaz, amelyek újrahasználhatók az ajánlatokban. Több bázist is létrehozhat, és válthat közöttük.",
+      "descriptionParagraph2": "Meglévő objektum hozzáadásához kattintson rá a jobb gombbal, és válassza az Áthelyezés a bázisra lehetőséget. Új objektum rajzolásához kattintson a Szerkesztés gombra."
+    },
+    "dataOrderProcessing": "Az adatrendelés feldolgozás alatt áll. A befejezés után a program hozzáadja az adatokat ajánlathoz."
+  },
+  "pendingOperation": {
+    "defaultDescription": "Várakozás az automatizálás befejezésére..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} geometria hozzáadva a(z) {layerType} fóliához",
+    "geometriesSelectedLabel": "Kiválasztott geometriák",
+    "updateTerrainAction": "Terep frissítése",
+    "updateTerrainDescription": "Lecseréli az aktuális terepet a könyvtárból származó új terepre"
+  },
+  "properties": {
+    "color": "Szín",
+    "elevation": "Szintmagasság",
+    "height": "Magasság",
+    "length": "Hossz",
+    "mixed": "Vegyes",
+    "name": "Név",
+    "position": "Pozíció",
+    "radius": "Sugár",
+    "width": "Szélesség"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "Nem sikerült letölteni az összes objektumot.",
+      "downloadElementsRecovery": "vagy próbálkozzon újra később. A probléma elhárításáig megtekintési módban marad",
+      "flatteningGroups": "Az ajánlat csoportjait a program síkba vetíti, mivel már nem támogatottak",
+      "ignoringOldElements": "Régi elemek figyelmen kívül hagyása",
+      "knownCriticalHeader": "Az elemek feldolgozása nem sikerült",
+      "knownCriticalMessage": "Frissítse az oldalt, és próbálkozzon ismét.",
+      "missingGeoLocation": "Hiányzik a projekt földrajzi helye a művelet végrehajtásához.",
+      "notFoundHeader": "Az ajánlat nem található",
+      "notFoundMessage": "Nem találjuk az elérni kívánt ajánlatot.",
+      "terrainNotFoundHeader": "A terepmodell hiányzik",
+      "terrainNotFoundMessage": "Váratlan hiba lépett fel az aktuális ajánlattal kapcsolatban.",
+      "tooManyRequestsHeader": "Valaki TÚL aktív volt!",
+      "tooManyRequestsMessage": "Több kérést kaptunk az Ön által használt hálózatról, mint amennyit kezelni tudtunk. Kérjük, próbálja meg később betölteni ezt az oldalt, vagy váltson másik hálózatra – például személyes hotspoton keresztül."
+    },
+    "noProposalLayersText": "Az ajánlat egyedi elemei itt szerepelnek."
+  },
+  "proposalHistory": {
+    "branchFailed": "Nem sikerült új ajánlatot létrehozni a régi változatból.",
+    "branchRevisionButton": "Új ajánlat létrehozása",
+    "branchSuccess": "Új ajánlat jött létre a kiválasztott verzióból, „{name}” néven",
+    "contributors": "Közreműködők: {count}",
+    "copyLinkButton": "Hivatkozás másolása",
+    "currentVersionLabel": "Jelenlegi verzió",
+    "filter": {
+      "byAnalysis": "Elemzés szerint",
+      "byDate": "Dátum szerint",
+      "from": "Ettől:",
+      "onlyYours": "Csak az Öné",
+      "pinned": "Kitűzött",
+      "selectDates": "Válasszon dátumokat",
+      "title": "Szűrő",
+      "to": "Eddig:"
+    },
+    "linkToVersionCopied": "{time} hivatkozása másolva",
+    "nameThisVersionAction": "Ezen verzió elnevezése",
+    "pinVersionAction": "Verzió rögzítése",
+    "unpinVersionAction": "Verzió rögzítésének feloldása",
+    "untitledVersionLabel": "Névtelen verzió",
+    "viewingVersionLabel": "Verzió megtekintése"
+  },
+  "quickAccess": {
+    "actionsLabel": "Műveletek",
+    "noSuggestions": "Nincsenek javaslatok",
+    "openHotkeyList": "Gyorsbillentyűk listájának megnyitása",
+    "repeatLastTool": "Legutóbbi eszköz megismétlése",
+    "search": "Keresés",
+    "title": "Gyorselérés"
+  },
+  "requestInvite": {
+    "button": "Meghívó kérése",
+    "homeLink": "Ugrás a Kezdőlapra",
+    "projectLink": "Ugrás a projektre",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "Már tag",
+        "message": "Ön már a projekt tagja."
+      },
+      "ALREADY_REQUESTED": {
+        "header": "Már kért meghívót",
+        "message": "Ehhez a projekthez már van függőben lévő meghívási kérelme. Ha a rendszergazda jóváhagyja a kérését, e-mailben meghívót kap a projekthez."
+      },
+      "CAN_JOIN": {
+        "header": "Csatlakozhat",
+        "message": "Csatlakozhat ehhez a projekthez. Lépjen a projektre, és kattintson a „Csatlakozás a projekthez” gombra."
+      },
+      "ERROR": {
+        "header": "Hiba történt, próbálja meg újra"
+      },
+      "NOT_FOUND": {
+        "header": "Hiba: nem találjuk a projektet",
+        "message": "A megadott URL nem mutat létező projektre."
+      },
+      "REQUEST_LIMIT": {
+        "header": "Túl sok kérelem",
+        "message": "Túl sok függőben lévő meghívási kérelme van. Kérjük, később próbálja meg újra."
+      },
+      "SUCCESS": {
+        "header": "A kérés elküldése sikerült!",
+        "message": "Ha a rendszergazda jóváhagyja a kérését, e-mailben meghívót kap a projekthez."
+      }
+    },
+    "statusFallback": {
+      "header": "Nincs hozzáférése ehhez a Forma-projekthez",
+      "message": "A projekthez való hozzáféréshez az egyik rendszergazdának meg kell hívnia. Kérjen meghívót a rendszergazdáktól az alábbi gombbal."
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "Mappa alapértelmezése: Saját projektfájlok mappa"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "Igazítás középre",
+      "left": "Igazítás balra",
+      "right": "Igazítás jobbra"
+    },
+    "buildingLabel": "Épület",
+    "createNew": "Új létrehozása",
+    "layoutLabel": "Elrendezés",
+    "loading": "Betöltés",
+    "name": "Ház",
+    "parcelLabel": "Telek",
+    "plural": "Házak",
+    "publish": "Közzététel",
+    "tooltip": "Vonal mentén elhelyezett különálló ház vagy házsor rajzolása. A tulajdonságok panelen hozhatja létre és használhatja újra a háztípusokat.",
+    "tooltips": {
+      "buffer": "Puffer",
+      "flatRoof": "Lapos tető",
+      "gableRoof": "Nyeregtető",
+      "length": "Hossz",
+      "numberOfFloors": "Emeletek száma",
+      "ridgeDirection": "Gerinc iránya",
+      "roofAngle": "Tető hajlásszöge",
+      "shedRoof": "Zsindelytető",
+      "storyHeight": "Szintek magassága",
+      "width": "Szélesség"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "Metszetdoboz törlése",
+    "enableButton": "Metszetdoboz engedélyezése",
+    "saveButton": "Metszetdoboz mentése",
+    "title": "Metszetdoboz",
+    "toggleButton": "Doboz közvonalának megjelenítése/elrejtése"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "Ezt az ajánlatot módosították, miközben Ön szerkesztette (előfordulhat, hogy egy másik csapattag dolgozik rajta). Szeretné új ajánlatként menteni a saját verzióját?",
+      "discardEdits": "Szerkesztések elvetése",
+      "saveAsNew": "Mentés új ajánlatként",
+      "title": "Ajánlatszerkesztési ütközés"
+    },
+    "error": {
+      "body": "Az utolsó szerkesztés mentése nem sikerült. A szerkesztés folytatásához frissítse a lapot.",
+      "ok": "OK",
+      "title": "A mentés nem sikerült"
+    }
+  },
+  "shapes": {
+    "arc": "Ív három pontból",
+    "circle": "Kör",
+    "cube": "Kocka",
+    "cuboid": "Téglatest",
+    "cylinder": "Henger",
+    "dome": "Kupola",
+    "freeform": "Szabadformájú",
+    "pyramid": "Gúla",
+    "rectangle": "Téglalap",
+    "roof": "Tető",
+    "shapes3d": "3D alakzatok",
+    "spline": "Spline",
+    "title": "Primitívek"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "A vezérgörbéket úgy aktiválhatja, hogy az egérmutatót az élek fölé húzza. Tartsa lenyomva a ⇧ Shift billentyűt a segédvonalak követéséhez. Tartsa nyomva az {key} billentyűt az illesztés kikapcsolásához.",
+      "affineInstructions": "Tartsa lenyomva az {key} billentyűt az illesztés kikapcsolásához. A Tab billentyű segítségével válthat a vízszintes, a függőleges és a terep mód között.",
+      "clickToAddSubtract": "Kattintással adhat hozzá vagy távolíthat el pontokat egy vonalból.",
+      "editModeStartFinishMac": "Tartsa lenyomva az ⌥ Option billentyűt a pontok hozzáadásához/eltávolításához. Nyomja meg az ↵ Enter billentyűt a szerkesztés befejezéséhez.",
+      "editModeStartFinishWindows": "Tartsa lenyomva az Alt billentyűt a pontok hozzáadásához/eltávolításához. Nyomja meg az ↵ Enter billentyűt a szerkesztés befejezéséhez.",
+      "finishEditing": "Nyomja meg az ↵ Enter billentyűt a szerkesztés befejezéséhez.",
+      "finishPolygon": "Nyomja meg az ↵ Enter billentyűt a poligon létrehozásának befejezéséhez.",
+      "preciseMoveVertical": "A {key} billentyűvel válthat függőleges módra.",
+      "specifyDistance": "Gépeljen adott távolság beállításához. Kattintson az elhelyezéshez."
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "Az emeletek törlése, másolása, kivágása és beillesztése nem támogatott a 3D vázlatépületek esetében. Próbálja meg 3D vázlatban szerkeszteni."
+  },
+  "snapping": {
+    "cursorElevation": "Szintmagasság a mutatónál",
+    "guidesAndMeasurements": "Vezérgörbék és méretek",
+    "snapToGuides": "Illesztés a vezérgörbékhez",
+    "snapToObjects": "Illesztés objektumokhoz"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "Adja meg a tér nevét, vagy hagyja üresen az alapértelmezés szerinti névhez"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "Csatlakoztatás a környezethez",
+      "connectToScenarioDesc": "A környezet egy megosztott tervtároló a projektben, amely összeköti a különböző szoftver alkalmazásokból származó modelleket, eszközöket, geometriai és egyéb adatokat."
+    }
+  },
+  "relativeTime": {
+    "today": "Ma"
+  },
+  "terrain": {
+    "elevation": "Szintmagasság",
+    "errors": {
+      "loadMapImageFailed": "Nem sikerült betölteni a térkép képét",
+      "loadSatelliteTextureFailed": "Nem sikerült betölteni a műholdas textúrát.",
+      "loadTextureFailed": "Nem sikerült betölteni a tereptextúrát."
+    },
+    "labels": {
+      "numberOfSelectedPads": "Töltések térfogata",
+      "padVolume": "Töltés térfogata",
+      "padsVolume": "Töltések térfogata",
+      "showAsPercentage": "Megjelenítés százalékként",
+      "showAsRatio": "Megjelenítés arányként",
+      "totalMassBalance": "Teljes tömegegyenleg"
+    },
+    "massBalanceHover": "A tömegváltozás nettó térfogata az egész terepen.",
+    "metricsHeader": "Mérőszámok",
+    "pad": {
+      "header": "Tereptöltés",
+      "name": "Tereptöltés",
+      "tooltip": "Terep bevágása/töltése, szintmagasság és lejtés beállítása, valamint tömegegyensúly kiértékelése."
+    },
+    "padVolumeHover": "A kiválasztott töltésekkel a terephez adott/abból kivont térfogat.",
+    "padsHeader": "Tereptöltések",
+    "slope": "Esés"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "Az automatizálás betöltése közben nem lehet váltani a bázisfólia/ajánlat között",
+    "pendingSelectionBlockedMessage": "Az automatizálás betöltése közben a kiválasztás nem módosítható",
+    "pendingToolSwitchBlockedMessage": "Az eszközök nem érhetők el az automatizálás betöltése közben",
+    "transform": {
+      "redefineReferencePointsButton": "Referenciapontok újradefiniálása"
+    }
+  },
+  "transform": {
+    "cover": "Fedél",
+    "fillet": "Lekerekítés",
+    "intersect": {
+      "name": "Metszetképzés",
+      "tooltip": "Két vagy több objektum metszetét hozza létre. Az elsőként kiválasztott objektum alapkontúrja ennek megfelelően változik."
+    },
+    "loft": "Pásztázás",
+    "move": {
+      "name": "Áthelyezés",
+      "tooltip": "Objektum áthelyezése referencia- és végpont meghatározásával. "
+    },
+    "offset": {
+      "apply": "Eltolás alkalmazása",
+      "name": "Eltolás",
+      "tooltip": "Egy bizonyos távolsággal növeli az objektum alapkontúrját kifelé, vagy csökkenti befelé."
+    },
+    "rotate": {
+      "name": "Elforgatás",
+      "tooltip": "Elforgatja a jelenet objektumait egy megadott referenciapont körül."
+    },
+    "shell": "Héj",
+    "split": {
+      "name": "Felosztás",
+      "tooltip": "Feloszt egy vagy több objektumot egy vonallal."
+    },
+    "subtract": {
+      "name": "Kivonás",
+      "tooltip": "Kivon egy alakzatot egy objektumból egy másik objektum használatával. Az elsőként kiválasztott objektum alapkontúrja ennek megfelelően változik."
+    },
+    "sweep": "Söprés",
+    "title": "Transzformálás",
+    "union": {
+      "name": "Egyesítés",
+      "tooltip": "Egyesít két vagy több objektumot. Az elsőként kiválasztott objektum határozza meg az eredményül kapott objektum kategóriáját és magasságát."
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "A saroklekerekítési sugár egy dinamikus érték, amely az elrendezés alapján optimalizálja az útíveket.",
+      "tight": "A saroklekerekítési sugár egy kicsi, rögzített érték, amely az út szélességének 1/2-ével egyenlő."
+    },
+    "railroads": {
+      "hotkeyDescription": "Sínek rajzolása",
+      "name": "Vasutak",
+      "toolButton": "Vasutak",
+      "tooltip": "Vasutakat hoz létre. A szélességek a jobb oldali panelen állíthatók be.",
+      "typeLabel": "Vasút típusa",
+      "typePlaceholder": "Válassza ki a vasút típusát"
+    },
+    "roads": {
+      "hotkeyDescription": "Út rajzolása",
+      "name": "Utak",
+      "toolButton": "Utak",
+      "tooltip": "Utakat hoz létre. A szélességek a jobb oldali panelen állíthatók be.",
+      "widthLabel": "Út szélessége",
+      "withGraphToolButton": "Utak (grafikonnal)"
+    },
+    "title": "Szállítás",
+    "trafficData": {
+      "addButton": "Forgalomadatok hozzáadása",
+      "adtTooltip": "Átlagos napi forgalom",
+      "advancedSettingsLabel": "Speciális beállítások",
+      "dailyDistributionLabel": "Napi forgalom eloszlása",
+      "dayTimeTooltip": "Nappal: 06:00–18:00",
+      "eveningTimeTooltip": "Este: 18:00–22:00",
+      "heavyVehicleLabel": "Erős forgalom",
+      "nightTimeTooltip": "Éjszaka: 22:00–06:00",
+      "railRequiredInputsMessage": "Minden bemenetre szükség van ahhoz, hogy a zajelemzés figyelembe vegye a vasutat",
+      "removeButton": "Forgalomadatok eltávolítása",
+      "roadRequiredInputsMessage": "Minden bemenetre szükség van ahhoz, hogy a zajelemzés figyelembe vegye az utat",
+      "speedLimitTooltip": "Sebességkorlátozás",
+      "title": "Forgalmi zaj adatai"
+    }
+  },
+  "ui": {
+    "add": "Hozzáadás",
+    "area": "Terület",
+    "areaSum": "Terület (összeg)",
+    "automationLabel": "AUTOMATIZÁLÁS",
+    "beta": "Béta",
+    "browsePluginsDescription": "Tallózzon a külső szolgáltatóktól származó meglévő bővítmények között, vagy adja hozzá sajátját – mindegyik itt jelenik meg.",
+    "cancel": "Mégse",
+    "close": "Bezárás",
+    "color": "Szín",
+    "delete": "Törlés",
+    "detach": "Leválasztás",
+    "duplicate": "Megkettőzés",
+    "edit": "Szerkesztés",
+    "gridSettings": "Háló beállításai",
+    "hide": "Elrejtés",
+    "length": "Hossz",
+    "lengthSum": "Hossz (összeg)",
+    "newVersionAvailable": "Új verzió érhető el.",
+    "redo": "Ismét",
+    "refresh": "Frissítés",
+    "remove": "Eltávolítás",
+    "rename": "Átnevezés",
+    "repair": "Javítás",
+    "retry": "Újra",
+    "show": "Megjelenítés",
+    "siteLabel": "Helyszín",
+    "surroundings": "Környezet",
+    "textAlignment": "Szöveg illesztése",
+    "undo": "Vissza",
+    "update": "Frissítés",
+    "videoNotSupported": "A böngésző nem támogatja a videócímkéket.",
+    "xyzAxes": "XYZ-tengelyek"
+  },
+  "performanceStats": {
+    "currentSnapshot": "Aktuális pillanatfelvétel",
+    "remainingFromPastSnapshots": "Megmaradt a korábbi pillanatfelvételekből",
+    "title": "Teljesítménystatisztika: {status}"
+  },
+  "units": {
+    "asl": "asl",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "Igazítás középre",
+      "left": "Igazítás balra",
+      "right": "Igazítás jobbra",
+      "spacing": "Térköz"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "Fás terület rajzolása",
+      "name": "Terület fákkal",
+      "tooltip": "Hozzon létre egy fákkal benépesített területet, és módosítsa a méretüket és sűrűségüket. Minden fa hatással lesz az elemzésekre."
+    },
+    "header": "Fák",
+    "landscapingTitle": "Tereprendezés",
+    "properties": {
+      "bufferTooltip": "Puffer",
+      "gridLengthLabel": "Háló hossza",
+      "gridWidthLabel": "Háló szélessége",
+      "heightTooltip": "Fák magassága",
+      "offsetTooltip": "Eltolás"
+    },
+    "title": "Növényzet",
+    "tooltips": {
+      "averageDistanceLabel": "A fakoronák közötti átlagos távolság",
+      "heightLabel": "Egyes fák magassága"
+    },
+    "treeLine": {
+      "hotkeyDescription": "Fasor rajzolása",
+      "name": "Fasor",
+      "tooltip": "Hozzon létre egy fákkal benépesített sort, és módosítsa a méretüket és sűrűségüket. Minden fa hatással lesz az elemzésekre."
+    },
+    "trees": "Fák"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "Nincs megadva elemzésazonosító",
+      "unsupportedAnalysisType": "Nem támogatott elemzéstípus: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "Csak megtekintési hozzáféréssel rendelkezik ehhez a helyszínhez"
+  },
+  "windAnalysis": {
+    "analyzing": "Elemzés...",
+    "atCapacity": "Jelenleg nagyszámú részletes szélelemzést végzünk. Az elemzés elkészítése hosszabb időt vehet igénybe. Köszönjük türelmét!",
+    "circleOutsideBoundingBox": "Az elemzési terület kívül esik a térkép területén",
+    "concurrentQuotaReached": "Elérte a párhuzamosan végezhető szélelemzések korlátját",
+    "concurrentQuotaReachedDescription": "Túl sok párhuzamos szélelemzés fut. Várjon, amíg néhány befejeződik.",
+    "concurrentQuotaWarning": "Párhuzamos elemzések korlátja",
+    "concurrentQuotaWarningDescription": "Még {remaining} részletes szélelemzést indíthat, utána eléri a párhuzamos elemzések korlátját ({limit}).",
+    "dailyQuotaReached": "Elérte az elemzések korlátját",
+    "dailyQuotaReachedDescription": "Elérte a szélelemzések napi korlátját.",
+    "dailyQuotaReachedDescriptionRetry": "Elérte a szélelemzések napi korlátját. Próbálkozzon újra később ({nextAvailableAt}).",
+    "loadingData": "Adatok betöltése",
+    "loadingDataTooltip": "Betöltés...",
+    "runAnalysis": "Elemzés (~{min}-{max} perc)",
+    "seeAnalysisButton": "A részletes elemzés megtekintése",
+    "stoppedOrFailed": "Az elemzés leállt vagy nem sikerült!",
+    "viewerAccessDisableTooltip": "Megtekintőként nem futtathat elemzéseket"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "Speciális modellezési eszközök",
+      "editIn": "Szerkesztés a 3D vázlatban",
+      "howToStartEditingMessage": "Nyomja le az ⏎ billentyűt, vagy kattintson duplán 3D vázlatban való szerkesztéshez.",
+      "launch": "Új 3D vázlat",
+      "sketch": "Vázlat",
+      "updateProperties": "Tulajdonságok frissítése"
+    },
+    "advancedModeling": {
+      "cover": "Fedél",
+      "fillet": "Lekerekítés",
+      "intersect": "Metszetképzés",
+      "loft": "Pásztázás",
+      "offset": "Eltolás",
+      "shell": "Héj",
+      "subtract": "Kivonás",
+      "sweep": "Söprés",
+      "union": "Egyesítés"
+    },
+    "axes": {
+      "reset": "Tengelyek visszaállítása",
+      "set": "XYZ-tengelyek beállítása"
+    },
+    "buildingType": {
+      "draw": "3D vázlatépület rajzolása",
+      "name": "3D vázlatépület"
+    },
+    "buttons": {
+      "apply": "Alkalmaz",
+      "cancel": "Mégse",
+      "ok": "OK"
+    },
+    "convert": {
+      "externalMessage": "Az objektumokat 3D vázlattá alakíthatja a külső felületek, élek és csúcspontok módosításához.\n\nAz elem konvertálása után az többé nem lesz összekapcsolva az eredeti forrásban lévő elemmel, és a módosítások szinkronizálása sem történik meg.",
+      "message": "Az objektumokat 3D vázlattá alakíthatja külső felületek, élek és csúcspontok módosításához.",
+      "title": "Konvertálás 3D vázlattá"
+    },
+    "dialogs": {
+      "arrayButtonArray": "Kiosztás",
+      "arrayButtonCancel": "Mégse",
+      "arrayDistanceBetween2Points": "2 pont közötti hossz",
+      "arrayDistanceTotalLength": "Teljes hossz",
+      "arraySubtitleDistance": "Távolság",
+      "arraySubtitleQuantity": "Mennyiség",
+      "arraySubtitleType": "Típus",
+      "arrayTitle": "Kiosztás",
+      "arrayTypeLinear": "Lineáris kiosztás",
+      "arrayTypeRadial": "Radiális kiosztás",
+      "corruptedElementsDeleted": "Egyes elemeket nem sikerült menteni, és sérültek az adataik. Ezek az elemek automatikusan törölve lesznek.",
+      "editDimensionTitle": "Méret szerkesztése",
+      "recoveryClosedWithoutSaving": "A 3D vázlatot megfelelő mentés nélkül zárta be.",
+      "recoveryQuestion": "Szeretné helyreállítani a nem mentett módosításokat?",
+      "recoveryTitle": "Nem mentett modellmódosítások találhatók"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "A legalacsonyabban lévő nem vízszintes felületek síkba vetítése"
+    },
+    "finishSelection": {
+      "back": "Vissza (B)",
+      "cancel": "Mégse (Esc)",
+      "confirm": "Befejezés (F)",
+      "next": "Következő (N)"
+    },
+    "floors": {
+      "addFloor": "Emelet hozzáadása",
+      "addFloors": "Emeletek hozzáadása",
+      "floorHeight": "Födém magassága",
+      "floors": "Emeletek",
+      "floorWithNumberLabel": "{level}. emelet",
+      "moreOptions": "Több",
+      "numberOfFloors": "Emeletek száma",
+      "removeFloors": "Emeletek eltávolítása",
+      "resetFloors": "Emeletek visszaállítása",
+      "title": "Emelet részletei"
+    },
+    "groupEditing": {
+      "redo": "Ismét",
+      "undo": "Vissza"
+    },
+    "grouping": {
+      "toolbarTitle": "CSOPORTOK"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "Szögmérés",
+      "measureDistance": "Távolságmérés",
+      "menuTitle": "Vezérgörbék és méretek",
+      "title": "Vezérgörbék és méretek"
+    },
+    "mesh": {
+      "convertHintMessage": "Dupla kattintással további szerkesztőeszközöket érhet el a hálók objektumokká konvertálásával.",
+      "importExceededLimitsMessage": "Az importált adatokban a korlátnál ({limit}) több hálóháromszög található, ezért a jobb teljesítmény érdekében változatlan marad.\n\nTovábbi szerkesztőeszközök eléréséhez jelöljön ki egyenként hálókat, és dupla kattintással alakítsa őket szerkeszthető objektummá.",
+      "importExceededLimitsTitle": "Az importált adatokban a korlátnál több hálóháromszög található"
+    },
+    "pasteInPlaceAction": "Beillesztés adott helyre",
+    "properties": {
+      "mixed": "Vegyes",
+      "objectWithIdLabel": "{id} objektum"
+    },
+    "scaleTitle": "LÉPTÉK",
+    "selection": {
+      "areaSelectionOptions": "Területkiválasztás beállításai",
+      "filterEdges": "Élek",
+      "filterFaces": "Felületek",
+      "filterGroups": "Csoportok",
+      "filterMeshes": "Hálók",
+      "filterSolids": "Szilárdtestek",
+      "filterVertices": "Csúcspontok",
+      "selection": "Kiválasztás",
+      "selectionTools": "Kiválasztási eszközök"
+    },
+    "tools": {
+      "array": "Kiosztás",
+      "editArcCircle": "Ív vagy kör szerkesztése",
+      "editSpline": "Spline szerkesztése",
+      "extrudeEdges": "Élek kihúzása",
+      "extrudeFace": "Felület kihúzása",
+      "facetFace": "Felület lapokra bontása",
+      "flattenFace": "Felületek síkba vetése",
+      "group": "Csoport",
+      "groupDetach": "Leválasztás",
+      "meshToObjects": "Háló konvertálása",
+      "mirror": "Tükrözés",
+      "move": "Áthelyezés",
+      "offsetEdges": "Élek eltolása",
+      "offsetFace": "Felület eltolása",
+      "reverseFace": "Felület átfordítása",
+      "rotate": "Elforgatás",
+      "scale": "Lépték",
+      "scaleNonUniform": "Nem egyenletes léptékezés",
+      "smoothEdges": "Élek simítása",
+      "tiltFace": "Felület döntése",
+      "ungroup": "Csoport megszüntetése"
+    },
+    "tooltips": {
+      "building": "Összetett 3D épületek végtelen lehetőségekkel, például nyeregtetőkkel, ferde falakkal stb.",
+      "editIn": "Konvertálja az objektumokat a csúcspontok, élek és felületek 3D vázlatban történő módosításához.",
+      "launch": "3D vázlatkészítéssel modellezheti és iterálhatja a korai szakaszban lévő építészeti tervkoncepciókat."
+    },
+    "zoom": {
+      "fitProposal": "Nagyítás az ajánlatra",
+      "fitSelection": "Nagyítás a kiválasztásra"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "Gyors üzembe helyezési útmutatók",
+    "allTutorialsDescription": "Végezze el ezeket az interaktív útmutatókat a webhely beállításához és a Helyszín Design használatának megkezdéséhez. ",
+    "completionMessage": "Szép munka! Elvégezte {header} című útmutatónkat!",
+    "completionText": "{percent}% kész",
+    "completedTitle": "Kész",
+    "continueButton": "Folytatás",
+    "stepsTotal": "Összesen {count} lépés",
+    "timeLabel": "{time} perc",
+    "stepProgress": "{current}/{total}",
+    "nextButton": "Következő",
+    "doneButton": "Kész",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "Gyors üzembe helyezési útmutatók",
+    "upNextTitle": "Következő"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "A webhely beállítása",
+      "description": "A helyszínek és épületek modellezése és elemzése előtt adjon hozzá környezetfüggő adatok.",
+      "reviewHeader": "Helyszín beállítás befejeződött",
+      "reviewText": "Sikeresen hozzáadott környezetfüggő adatok és egy helyszínkorlát.{ 0}{br}Nagyszerű munka! Most már megismerheti modellezési eszközeinket és importálási képességeinket, vagy folytathatja egy másik útmutatóval.",
+      "steps": {
+        "openContextualTab": {
+          "header": "Nyissa meg környezetfüggő adatok lapot",
+          "text": "Először nyissa meg a <bold>Környezetfüggő adatok</bold> lapot."
+        },
+        "browseAndOrder": {
+          "header": "Adatok tallózása a webhely helyének megadásához",
+          "text": "Kattintson <bold>a Tallózás környezetfüggő adatok</bold> gombra, hogy megnézze, milyen adatcsomagok érhetők el az Ön webhelyének helyéhez.{ 0}{br}Az adatok közé tartozhatnak a környező épületek, utak és terep. "
+        },
+        "orderStarterPackage": {
+          "header": "Rendeléskezdő adatcsomag",
+          "text": "Kattintson a <bold>Hozzáadás</bold> gombra az adatcsomag tartalmának áttekintéséhez. Ezek az adatok ingyenesek. "
+        },
+        "orderData": {
+          "header": "Adatcsomag megrendelése",
+          "text": "Válassza a Megrendelés lehetőséget 3D környezetfüggő adatok webhelyére való letöltésének kezdeményezéséhez."
+        },
+        "drawSiteLimit": {
+          "header": "Helyszínkorlát rajzolása",
+          "text": "Aktiválja ezt a rajzeszközt a helyszínkorlát meghatározásához. Ha aktívvá vált, rajzoljon pontokat a helyszínen, és zárja körbe az alakzatot.{br}{br}A helyszínkorlát definiálása előfeltétele annak, hogy elemzéseket lehessen futtatni a Forma Helyszín Design programban."
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "Épületek hozzáadása",
+      "description": "Modelleket hozhat létre modellezési eszközeinkkel, vagy importálhat meglévő modelleket. ",
+      "reviewHeader": "Épületek hozzáadva a webhelyhez",
+      "reviewText": "Sikeresen rajzolt épületeket és importált kellékeket a webhelyre. Nagyszerű munka! Most elemzésekkel értékelheti a környezeti feltételeket, vagy folytathatja egy másik útmutatóval.",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "Rajzoljon egy alapszintű épület",
+          "text": "Kattintson az <bold>Alap építés</bold> lehetőségre az építőeszköz aktiválásához. Ha aktív, rajzolja meg az épület alakját, és válassza ki az utolsó pontot az alapkontúr megrajzolásának befejezéséhez."
+        },
+        "exploreParametricOptions": {
+          "header": "Parametrikus beállítások megismerése",
+          "text": "Fedezze fel az épületmodell módosítására rendelkezésre álló parametrikus lehetőségeket."
+        },
+        "importModel": {
+          "header": "Modell vagy fájl importálása",
+          "text": "Kattintson az <bold>Importálás</bold> gombra, ha modellt vagy raszterképet szeretne feltölteni a helyi eszközről."
+        },
+        "placeInScene": {
+          "header": "Elhelyezés jelenetben",
+          "text": "Kattintson a könyvtárból az imént importált elemre. Miután kiválasztotta, kattintással és húzással helyezze el a helyszínen. Az elem elhelyezése után az oktatóanyag automatikusan továbblép."
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "Értékelje a környezeti feltételeket",
+      "description": "Futtasson napsütéses órák száma elemzést a korai tervezési döntések meghozatalához.",
+      "reviewHeader": "A napsütéses órák elemzése megtörtént!",
+      "reviewText": "Sikeresen lefuttatott egy napsütéses órák száma elemzést a webhelyen.{ 0}{br}Mostantól folytathatja az új javaslatok létrehozását, az elemzések összehasonlítását, illetve a Helyszín Design további részeinek megismerését.",
+      "steps": {
+        "selectAnalysis": {
+          "header": "Válassza ki az elemzést",
+          "text": "Kattintson a kiemelt ikonra a napsütéses órák száma elemzésének kiválasztásához."
+        },
+        "selectDate": {
+          "header": "Válasszon egy dátumot",
+          "text": "A legördülő menüben beállíthat egy dátumot, amelyre vonatkozóan elemezni szeretné a helyszín napsütéses óráinak számát."
+        },
+        "runAnalysis": {
+          "header": "Elemzés futtatása",
+          "text": "Kattintson a gombra az elemzés elindításához. A művelet befejezése csak néhány másodpercet vesz igénybe.{br}{br}Az útmutató az elemzés befejezése után automatikusan folytatódik."
+        },
+        "openAnalysisResults": {
+          "header": "Eredmények megnyitása",
+          "text": "A befejezést követően az elemzés eredményei megjelennek az itt található listában. Kattintson a legfrissebb eredményekre a részletes áttekintéshez. Új ablak nyílik meg.",
+          "altText": "Elemzés eredménye ablak"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "Hogyan javítható a „WebGL nem támogatott” hiba?",
+      "text": "Úgy tűnik, hogy számítógépe nem támogatja a WebGL protokollt, ami a Forma használatának feltétele",
+      "url": "https://help.autodeskforma.com/autodeskforma/hu/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

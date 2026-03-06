@@ -1,0 +1,49 @@
+:root {
+  --scenario-purple: #b37bfc;
+}
+
+.ModeScenario,
+.ModeAdd {
+  position: relative;
+  z-index: calc(var(--z-notification) + 1);
+}
+
+.ModeScenario {
+  --color: var(--scenario-purple);
+}
+
+.ModeAdd {
+  --color: var(--weave-border);
+}
+
+.Border {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  border: 5px solid var(--color);
+  pointer-events: none;
+}
+
+.TopBanner {
+  position: fixed;
+  top: 0;
+  background: var(--color);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 8px 8px 16px;
+  color: white;
+
+  box-shadow: 0px 0px 16px var(--shadow-color-high);
+  border-radius: 0px 0px 4px 4px;
+  font: var(--12-regular);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.NavbarOffset {
+  top: 50px; /* Navbar height is 50 px */
+}

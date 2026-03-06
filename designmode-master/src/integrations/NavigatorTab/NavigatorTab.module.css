@@ -1,0 +1,13 @@
+.Wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.NotPointerEventsOverlayWrapper {
+  pointer-events: none;
+  opacity: 0.6;
+  background-color: white;
+  z-index: 1;
+}

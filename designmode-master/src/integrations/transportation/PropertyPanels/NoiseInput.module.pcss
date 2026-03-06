@@ -1,0 +1,35 @@
+.NoiseInput {
+  position: relative;
+
+  & input {
+    width: 100%;
+    padding: 2px 5px;
+    box-sizing: border-box;
+    font-size: 11px;
+    line-height: 18px;
+    appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    border: 1px solid var(--border-color-medium-default);
+
+    &:focus {
+      border: 1px solid var(--border-color-selected);
+    }
+
+    &:read-only {
+      background-color: #f3f3f3;
+    }
+  }
+}
+
+.Alerts {
+  margin: 10px 0px;
+  width: 100%;
+  min-height: 16px;
+  border-left: 3px solid var(--status-color-error);
+  padding-left: 8px;
+}

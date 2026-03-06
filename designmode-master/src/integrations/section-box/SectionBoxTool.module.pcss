@@ -1,0 +1,74 @@
+.Row {
+  display: flex;
+  flex: 1 1 0;
+  outline: inherit;
+  border: none;
+  font: var(--11-regular);
+  color: var(--text-color-medium-default);
+  padding: 0.2rem 1.6rem;
+  background: none;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.RowButton {
+  composes: Row;
+  gap: 1rem;
+  padding: 0.8rem 1.6rem;
+  &:hover {
+    cursor: pointer;
+    background-color: var(--background-color-ghost-high-hover);
+  }
+  &[disabled] {
+    opacity: var(--disabled);
+    cursor: not-allowed;
+  }
+}
+
+.ScrollItems {
+  max-height: 15.5rem;
+  overflow-y: auto;
+}
+
+.SaveRowButton {
+  composes: RowButton;
+  font: var(--11-medium);
+  color: #006eaf;
+  &[disabled] {
+    color: var(--text-color-medium-default);
+    opacity: var(--disabled);
+    cursor: not-allowed;
+  }
+}
+
+.RowItemIcon {
+  display: flex;
+}
+
+.RowItemName {
+  display: flex;
+  flex-grow: 1;
+}
+
+.MenuTitle {
+  margin: 0;
+  display: flex;
+  flex-grow: 1;
+  font: var(--12-medium);
+  color: var(--text-color-medium-default);
+}
+
+.Button {
+  border: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.25rem;
+  background: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.NoSectionBoxes {
+  padding: 1.2rem;
+}

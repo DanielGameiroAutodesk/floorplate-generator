@@ -1,0 +1,147 @@
+.ModalBackdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-modal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Modal {
+  position: absolute;
+  margin: 60px;
+  padding: 30px 0;
+  background-color: var(--background-color-surface-100);
+  border-radius: 4px;
+  max-width: 1280px;
+  width: 98%;
+  box-sizing: border-box;
+  height: calc(100% - 10%);
+  max-height: 910px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color-divider-light);
+  margin: 0 40px 0 40px;
+}
+
+.HeaderSingle {
+  border-bottom: 1px solid transparent;
+}
+
+.Header > h1 {
+  font: var(--12-bold);
+}
+
+.TabContainer {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+.Tab {
+  cursor: pointer;
+  font: var(--12-medium);
+  padding: 5px 0px 20px 0px;
+}
+
+.TabActive {
+  font-weight: 700;
+  border-bottom: 1px solid black;
+  margin-bottom: -1px;
+}
+
+.TabSingle {
+  font: var(--12-medium);
+  font-weight: 700;
+  border-bottom: transparent;
+  margin-left: -20px;
+}
+
+.Tab:hover,
+.Tab:focus,
+.Tab.active {
+  border-bottom: 1px solid black;
+  margin-bottom: -1px;
+}
+
+.Content {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.Content forma-file-import,
+.Content order-sidebar {
+  flex: 1;
+}
+
+.HeaderDivider {
+  border: 1px solid #3c3c3c1a;
+}
+
+/* Import modal */
+
+.Separator {
+  position: relative;
+  margin: 24px;
+  text-align: center;
+  border-top: 1px solid #3c3c3c1a;
+  height: 1px;
+}
+
+.SeparatorText {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 0 12px;
+  font-size: 11px;
+  color: #3c3c3cb2;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ImportExtensionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  height: 112px;
+  justify-content: center;
+  margin: 24px;
+}
+
+.ImportExtensionTitle {
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #141b22;
+  font-weight: 700;
+}
+
+.ImportExtensionDescription {
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  color: #3c3c3cb2;
+  font-weight: 400;
+  display: flex;
+}
+
+.ImportExtensionLink {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #0696d7;
+}

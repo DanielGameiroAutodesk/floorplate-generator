@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "做好准备，开始设计",
+    "body": "当您选择<bold>继续</bold>时，我们将自动为您运行两个设置步骤。您无需操作。在这些步骤完成后，您就做好了准备，可以在 Forma Site Design 中开始设计了。",
+    "contextual": {
+      "header": "加载特定于场地的周边环境",
+      "body": "我们将为您的场地加载免费的周边环境数据，包括地形和周围建筑物。"
+    },
+    "sunAnalysis": {
+      "header": "获得对场地状况的见解",
+      "body": "我们将对您的场地和周围建筑物自动运行日照时长分析，以通知您设计决策。"
+    },
+    "continueButton": "继续",
+    "sunAnalysisCoachmark": {
+      "header": "日照时长分析",
+      "body": "我们已在您的站点上自动开始日照时长分析。{br}{br}当指示器为绿色或在画布顶部显示横幅时，您可以查看结果。"
+    },
+    "finalModal": {
+      "title": "您的场地现已设置",
+      "subTitle": "继续执行以下建议的步骤之一:",
+      "suggestedAction1": {
+        "header": "绘制建筑",
+        "body": "激活工具栏中的某个建筑工具。"
+      },
+      "suggestedAction2": {
+        "header": "导入模型",
+        "body": "单击工具栏中的导入图标，然后按照建议的步骤操作。"
+      },
+      "suggestedAction3": {
+        "header": "比较分析",
+        "body": "运行第二个分析并从屏幕左上角打开“比较”模式。"
+      },
+      "showMeHow": "显示更多选项",
+      "finalButton": "知道了"
+    },
+    "sunAnalysisTriggerError": "无法触发日光分析"
+  },
+  "alignment": {
+    "center": "中心对齐",
+    "left": "左对齐",
+    "right": "右对齐"
+  },
+  "analysis": {
+    "alertsLabel": "警告",
+    "analyzeTitle": "分析",
+    "analysisParameters": "分析参数",
+    "areaRadius": "区域半径",
+    "areaTitle": "分析区域",
+    "customCircle": "自定义圆",
+    "daylightAnalysisIllustrationAlt": "日光分析图示",
+    "failedToOrder": "无法获取分析: {error}",
+    "learnMore": "了解详细信息",
+    "microclimateAreaRadius": "微气候区域半径",
+    "noisePredictionUnavailable": "噪声预测不可用",
+    "radiusLabel": "半径",
+    "selectAreaToRunAnalysis": "选择场地限制或分区以运行分析",
+    "disabledTooltips": {
+      "addRoadsOrRails": "添加带有流量数据的公路和/或铁路以运行分析",
+      "analysisAreaOutsideMap": "分析区域超出地图区域",
+      "concurrentQuotaReached": "已达到并发风分析的限制",
+      "dailyQuotaReached": "已达到每日风分析定额",
+      "geometryAlertsDetected": "检测到几何体问题",
+      "geometryTooComplex": "几何体太复杂",
+      "invalidParameters": "参数无效",
+      "loadingData": "正在加载数据",
+      "notAvailable": "不可用",
+      "notAbleAsViewer": "无法以查看者身份运行分析",
+      "pleaseWait": "请稍候...",
+      "savingInProgress": "正在保存...",
+      "selectSiteLimitOrZone": "选择场地限制或分区以运行分析"
+    },
+    "emptyStateZoneExplanation": "默认情况下，分析针对建筑物和您添加的其他对象运行。添加场地限制或分区，以获得特定区域的完整分析结果。",
+    "entireModel": "整个模型",
+    "missingTrafficData": {
+      "description": "添加带有流量数据的公路或铁路轨道，以预测真实世界的噪声状况。",
+      "startGuideButton": "开始指南",
+      "title": "缺少流量数据"
+    },
+    "noiseAreaRadius": "噪声区域半径",
+    "properties": {
+      "radiusLabel": "半径"
+    },
+    "seeResultButton": "查看分析结果",
+    "seeResultsButton": "查看分析结果",
+    "selectionTitle": "选择分析区域",
+    "selectAllAreasButton": "选择所有区域",
+    "deselectAllAreasButton": "取消选择所有区域",
+    "skyComponent": {
+      "potentialDescription": "我们的<strong>日光潜力分析</strong>借助垂直天空组件分数确定几乎无法获得日光的立面部分。选择要分析的区域。"
+    },
+    "sun": {
+      "removeDateButton": "删除日期"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "具有完全支持的建筑物",
+      "buildingsPartialSupport": "具有部分支持的建筑物/其他",
+      "iconAlt": "分析支持级别",
+      "title": "分析支持"
+    },
+    "windAreaRadius": "风区域半径",
+    "windRoseUnavailable": {
+      "description": "我们的风向图数据提供程序遇到问题。您仍然可以分析微气候模式，但没有历史数据来检查风况的可能性。我们正在努力恢复数据。",
+      "title": "风向图当前不可用",
+      "windDescription": "我们的风向图数据提供程序遇到问题。您仍然可以分析常规风型并手动调整风速。快速风不可用。我们正在努力恢复数据。"
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "已存在具有此配置的分析。",
+    "concurrentAnalysesReached": "已达到并行分析的限制",
+    "concurrentNoiseAnalysesReached": "已达到并发噪声分析的限制",
+    "dailyNoiseQuotaReached": "满足 24 小时内的最大噪声分析次数",
+    "dailyQuotaReached": "已达到每日分析配额",
+    "nothingToAnalyze": "没有要分析的内容",
+    "somethingWentWrong": "出现错误"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "详细风分析不可用。请稍后尝试运行分析。",
+      "rapidWindUnavailable": "快速风分析不可用。请稍后尝试运行分析。",
+      "rapidWindUnavailableToast": "快速风分析不可用。我们的团队已收到通知。请稍后尝试运行分析。"
+    },
+    "types": {
+      "microclimate": {
+        "description": "我们的微气候分析计算您场地的感知温度，同时考虑阳光、风和日光条件。我们建议等到风分析完成，以获得更准确的结果。",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "微气候",
+        "text": "微气候分析"
+      },
+      "noise": {
+        "description": "通过快速噪声分析中的实时预测，了解您的设计如何影响环境噪声条件。运行详细的噪声分析，以获得更精确的噪声条件模拟，以及对建筑外墙条件的分析。",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "噪声",
+        "text": "噪声分析"
+      },
+      "sky-component": {
+        "description": "借助垂直天空组件分数评估建筑外墙的哪些部分几乎无法获得日光。若要运行分析，需要添加场地限制。",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "日光潜力",
+        "text": "日光潜力分析"
+      },
+      "solar-panel": {
+        "name": "太阳能"
+      },
+      "sun": {
+        "description": "评估您的场地和建筑物将获得多少小时的日照时间。要运行分析，您需要添加场地限制并选择日期。",
+        "link": "https://help.autodeskforma.com/zh/articles/6951253",
+        "name": "日照时长",
+        "text": "日照时长分析"
+      },
+      "wind": {
+        "description": "通过在快速风分析中进行实时预测，了解您的设计更改如何影响风况。运行详细的风流和风舒适度分析，以更准确地模拟不同的风向和风速。",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "风",
+        "text": "风分析"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "添加节点",
+      "buildingWidth": "建筑宽度",
+      "cityBlocks": "城市街区",
+      "editGridOrientationButton": "编辑网格方向",
+      "explanation": "不断努力开发可以帮助您探索场地体量潜能的工具。在我们的论坛中关注事态发展。",
+      "floors": "楼层",
+      "headerTitle": "浏览",
+      "iterativeExplanation": "设计自动化工具，使您可以快速生成和浏览场地和建筑布局。",
+      "layoutTitle": "布局",
+      "layouts": "布局",
+      "linearBuildings": "线性建筑物",
+      "mixed": "混合",
+      "name": "浏览",
+      "siteAutomation": "场地自动化",
+      "storyHeight": "楼层高度",
+      "towerBuildings": "塔楼建筑物",
+      "towerWidth": "塔楼宽度"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "添加新基础",
+    "changeIndicatorLabel": "更改指标",
+    "editBaseButton": "编辑基础",
+    "editBaseDoneButton": "完成",
+    "editBaseRightMenuMessage": "编辑基础以进行更改",
+    "editBaseRightMenuMixedSelectionMessage": "您的选择包括基础对象。您无法使用混合选择进行更改。",
+    "editing": {
+      "changesWillAffect": "更改将影响",
+      "proposals": "方案",
+      "title": "正在编辑"
+    },
+    "errors": {
+      "deleteFailed": "无法删除基础。",
+      "duplicateFailed": "无法复制基础。",
+      "fetchFailed": "无法取回基础。",
+      "renameIndicatorFailed": "无法重命名基础指标。",
+      "renameFailed": "无法重命名基础。",
+      "switchFailed": "无法切换基础。"
+    },
+    "noBaseLayersText": "要跨方案重用的图元可以添加到基础。",
+    "strategy": {
+      "description": "该方案使用了过时的基础。您必须选择是更新到最新版本的基础，还是复制旧版本的基础。",
+      "duplicateOld": "复制旧版本的基础",
+      "header": "您的基础已过时",
+      "useLatest": "使用最新版本的基础"
+    },
+    "swapBaseButton": "交换基础",
+    "swapButton": "交换",
+    "untitledBaseLabel": "无标题基础"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "绘制常规线",
+        "name": "直线",
+        "tooltip": "创建常规线以传达设计意图。它们在分析中不会被考虑在内。"
+      },
+      "surface": {
+        "draw": "绘制常规曲面",
+        "name": "曲面",
+        "tooltip": "创建常规曲面以传达设计意图。它们在分析中不会被考虑在内。"
+      },
+      "title": "常规",
+      "volume": {
+        "draw": "绘制常规体积",
+        "name": "体积",
+        "tooltip": "虽然将分析常规体积，但在面积指标中不会考虑其面积。"
+      }
+    }
+  },
+  "building": {
+    "addFloor": "添加楼层",
+    "addFloorsAction": "添加楼层",
+    "buildingColorsLabel": "建筑颜色",
+    "buildingDesignButton": "在 Building Design 中打开",
+    "buildingDesignDescription": "此建筑是在 Building Design 中设计的，打开 Building Design 进行编辑。",
+    "buildingDesignGeometry": "Building Design 几何体",
+    "buildingsTitle": "建筑物",
+    "buildingWidthLabel": "建筑宽度",
+    "divisionWidth": "分割宽度",
+    "roadWidthLabel": "公路宽度",
+    "towerBlockWidthLabel": "塔楼宽度",
+    "typesTitle": "类型",
+    "upgradingFor3DSketchBuilding": "正在升级隐含碳的三维草图建筑",
+    "variationsTitle": "变化",
+    "errors": {
+      "failedToLoadFunctions": "无法加载自定义建筑功能",
+      "failedToLoadSettings": "无法加载设置"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "添加到库",
+      "addToLibraryTooltip": "添加到库",
+      "emptyFloors": "空楼层",
+      "parking": "停车场",
+      "popupTitle": "楼层平面",
+      "title": "楼层平面",
+      "cannotDrawCornerDescription": "还不能绘制角平面",
+      "cannotDrawSplitDescription": "还不能绘制拆分平面",
+      "finishDrawingTooltip": "完成绘制以添加楼层平面",
+      "mixedSelectionDescription": "已选择混合楼层平面",
+      "noLibraryDescription": "库中没有具有此外部形状的楼层平面",
+      "noSelectionDescription": "没有选择楼层平面",
+      "rightClickToAddDescription": "在某个方案中的楼层上单击鼠标右键，以将其添加到库中",
+      "selectSectionsDescription": "请选择空的或有楼层平面的部分"
+    },
+    "floors": {
+      "seeAllButton": "查看所有楼层"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "新增",
+      "addSectionCutButton": "添加剖切",
+      "apartmentBuildingStories": "公寓楼楼层",
+      "apartmentBuildingStoryHeight": "公寓楼楼层高度",
+      "apartmentBuildingWidth": "公寓楼宽度",
+      "circulationTitle": "流通",
+      "headerTitle": "线建筑",
+      "outdatedLabel": "过时",
+      "targetSectionLength": "目标截面长度",
+      "circulation": {
+        "sectionCountText": "截面数: {count}",
+        "widthLabel": "走廊宽度",
+        "widthText": "宽度: {width}"
+      },
+      "divisionWidthLabel": "分割宽度",
+      "releaseToBasicAnimationAlt": "发布为基本动画",
+      "releaseToBasicExplanation": "发布线自动化会创建一个基本建筑，允许您向各个楼层添加功能或停车场。发布后，无法恢复线自动化。",
+      "releaseToFloorPlanAction": "发布到楼层平面",
+      "releaseToFloorPlanAnimationAlt": "发布到楼层平面动画",
+      "releaseToFloorPlanExplanation": "发布流通自动化会创建一个平面，允许您手动设计布局。发布后，流通自动化无法恢复。",
+      "towerWidthLabel": "塔楼宽度"
+    },
+    "properties": {
+      "lengthLabel": "长度",
+      "numberOfFloorsLabel": "楼层数",
+      "numberOfStoriesLabel": "SiteStudy 楼层数",
+      "stories": "楼层",
+      "storyHeight": "楼层高度",
+      "storyHeightLabel": "楼层高度",
+      "widthLabel": "宽度"
+    },
+    "toolbar": {
+      "title": "建筑物"
+    },
+    "tooltips": {
+      "addBuildingsButton": "添加建筑物",
+      "clampToTerrainButton": "将建筑物钳制到地形",
+      "numberOfFloorsLabel": "楼层数",
+      "parkingEditDescription": "现在可以在楼层平面编辑器中编辑停车位",
+      "releaseToBasicButton": "发布到基本建筑",
+      "releaseToZonesButton": "发布到分区",
+      "removeBuildingsButton": "删除建筑物",
+      "storyHeightLabel": "楼层高度",
+      "swapFloorPlansButton": "交换楼层平面",
+      "targetSectionLengthLabel": "目标截面长度",
+      "towerWidthLabel": "塔楼宽度",
+      "widthLabel": "建筑宽度"
+    },
+    "types": {
+      "basic": {
+        "draw": "绘制基本建筑",
+        "name": "基本建筑",
+        "tooltip": "可以控制和精确地绘制具有任何形状楼板的建筑物。在面积指标中查看建筑统计信息。"
+      },
+      "line": {
+        "draw": "绘制线建筑",
+        "name": "线建筑",
+        "tooltip": "围绕一条线绘制建筑结构。调整其参数，例如剖面和楼板。在面积指标中查看建筑统计信息。"
+      }
+    }
+  },
+  "camera": {
+    "compass": "显示上北",
+    "lookAt": {
+      "title": "观察方向",
+      "tooltip": "将鼠标移动到面上以对齐摄影机。单击以缩放匹配面，或拖动以调整缩放区域。"
+    },
+    "lookFrom": {
+      "title": "从点看",
+      "tooltip": "单击立面上从其查看的点。或者单击并拖动以拾取点和视图方向。"
+    },
+    "optionsLabel": "摄影机选项",
+    "optionsTitle": "摄影机选项",
+    "switchCameraMode": "切换摄影机模式",
+    "vectorExport": {
+      "exportSuccessful": "导出成功",
+      "title": "矢量导出"
+    },
+    "switchTo2d": "切换到二维(正交)模式",
+    "switchTo3d": "切换到三维模式",
+    "zoom": {
+      "toFitProposal": "缩放以匹配方案",
+      "toFitSelection": "缩放以匹配选择"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "边缘"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "线上有多个",
+      "placeSinglesButton": "放置单个"
+    }
+  },
+  "contextualData": {
+    "description": "查看和管理可用于您的项目的场地环境数据。您也可以在此处获取更多数据。",
+    "title": "场地环境数据"
+  },
+  "contextMenu": {
+    "copy": "复制",
+    "cut": "剪切",
+    "delete": "删除",
+    "exportTerrainAsObj": "将地形导出为对象",
+    "moveToBack": "后移",
+    "moveToBase": "移动到基础",
+    "moveToFront": "前移",
+    "moveToProposal": "移动到方案",
+    "paste": "粘贴",
+    "pasteInPlace": "在位粘贴",
+    "terrainPad": {
+      "moveToBack": "后移地形垫",
+      "moveToFront": "前移地形垫"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "无法在项目或中心之间复制图元。",
+    "failedToCopyElementMessage": "无法复制图元。"
+  },
+  "dataOrders": {
+    "completed": "以下数据顺序已完成: {name}。它正在添加到您的方案中，您可以在几秒钟后在“图层”中看到它。",
+    "completedAll": "{names} 已加载并添加到您的方案库中。您可以在“场地环境数据”下浏览和获取更多数据。",
+    "failed": "{name} 失败",
+    "failedToAdd": "无法向方案添加“{name}”，但库中仍提供数据。",
+    "processing": "正在处理以下数据订单: {name}。完成后，它将添加到您的方案中。",
+    "statusTitle": "数据订单状态"
+  },
+  "demoSite": {
+    "badge": "演示",
+    "flyout": {
+      "content": "我们创建此站点是为了演示 Forma 的功能。启动下面的指南，按照简单工作流的步骤进行作，并在准备就绪后创建自己的 站点。",
+      "createSiteButton": "创建新站点",
+      "createSiteTooltip": "您必须拥有有效的许可，并有权在此项目中创建站点",
+      "header": "这是一个演示站点",
+      "startGuideButton": "开始指南"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "开始使用",
+    "titleFormaSiteDesign": "演示站点",
+    "description": "这是一个预先设计的示例站点，供您探索 Forma 场地 Design。不用担心会破坏任何东西 - 将其视为一个安全的实验空间，而不会对您的实际项目产生任何影响。",
+    "callToAction": "单击 {bold} 以浏览 演示 站点。",
+    "callToActionBold": "继续",
+    "buttonContinue": "继续",
+    "buttonGoToHome": "转到 Forma 主页",
+    "imageAlt": "Forma 场地 设计可视化"
+  },
+  "drawing": {
+    "traceShape": "追踪现有形状"
+  },
+  "hotkeys": {
+    "addNode": "添加节点",
+    "cancelDrawingPoint": "取消绘制点",
+    "clickAndMoveGrip": "单击并移动夹点以沿该方向缩放。",
+    "complete": "完成",
+    "copy": "复制",
+    "cut": "剪切",
+    "deleteSelected": "删除选定项",
+    "drawHouse": "绘制房屋",
+    "drawHousesWithLine": "使用线绘制房屋",
+    "drawLine": "绘制线",
+    "drawRoad": "绘制道路",
+    "edit": "编辑",
+    "exitContext": "退出上下文",
+    "exitEditGraph": "退出编辑图形",
+    "exitGraphTool": "退出图形工具",
+    "exitHouseTool": "退出房屋工具",
+    "exitSiteStudyAndApply": "退出“场地分析”工具并将分析应用于方案",
+    "exitTool": "退出工具",
+    "exitTransportationTool": "退出交通运输工具",
+    "finishEditing": "完成编辑",
+    "freeform": "自由形式",
+    "measureDistance": "测量距离",
+    "paste": "粘贴",
+    "placeSingleHouses": "放置独栋房屋",
+    "redo": "重做",
+    "remove": "删除",
+    "resetGraph": "重置图表",
+    "selectAll": "选择全部",
+    "selectSomethingToModify": "选择要使用 {toolName} 修改的内容",
+    "switchHouseCorner": "切换房屋角",
+    "switchHousePlacementSide": "切换房屋放置侧",
+    "toggleSidebar": "切换侧栏",
+    "undo": "撤消"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "移动指南针位置时，按住 Shift 键可使旋转轴与光标下方的几何体对齐。",
+    "editSiteLayout": "编辑场地布局，或选择要为其设置建筑拓扑的单个分区。",
+    "freeMode": "自由模式。按 ↹ Tab 键可进入水平模式。",
+    "horizontalMode": "水平模式。按 ↹ Tab 键进入自由模式。",
+    "mode2D": "二维模式。所有工具都约束到水平平面。",
+    "rotateMoveText": "{moveModeText} 移动 ({inputModeText})。按 ↹ Tab 键 {nextMoveModeText} 移动 ({nextInputModeText})。",
+    "selectAreaToExplore": "选择要浏览其场地布局选项的区域。",
+    "snappingAxesHint": " 按 Alt 键隐藏捕捉轴。按 Alt+C 键可清除它们。",
+    "straightAction": "直接 {action}。按 ↹ Tab 键选择锥化 {action}。",
+    "switchHouseCornerAndRotate": "按 Tab 键切换房屋角点。按住并拖动鼠标可旋转",
+    "switchHousePlacementSide": "按 Tab 键切换房屋放置侧",
+    "taperAction": "锥化 {action}。按 ↹ Tab 键选择锥化 {action}。"
+  },
+  "menus": {
+    "generatorsByExtensions": "按扩展的生成器"
+  },
+  "messages": {
+    "elementAddedTo": "图元已添加到 {location}"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "正在保存..."
+    },
+    "camera": {
+      "lookAt": "观察方向"
+    },
+    "lineWidth": "线宽度",
+    "settings": "设置",
+    "templates": {
+      "updatesAvailable": "更新可用"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "无法执行建筑右键单击选项",
+      "failedToConvertVolumes": "无法将体积转换为基本建筑",
+      "failedToDraw": "无法绘制基本建筑",
+      "failedToEdit": "编辑新基本建筑失败",
+      "failedToPushPull": "无法推/拉基本建筑"
+    },
+    "failedToLoadContextualData": "无法加载场地环境数据",
+    "import": {
+      "largeScale": "导入包含比例较大({size})的图元。导入可能未按预期方式运行。点击 Esc 键取消。",
+      "resultingShapeInvalid": "生成的形状无效。"
+    },
+    "modelNotGeolocated": "“站点设计”模型未进行地理定位。请获取场地环境数据以便对其进行地理定位",
+    "terrain": {
+      "boundingBoxTooLarge": "图元几何体边界框太大，无法用作地形。最大面积: 4 km²。实际面积: {size} km²"
+    },
+    "library": {
+      "couldNotFindElement": "找不到库元素",
+      "elementNotAvailable": "库元素不可用",
+      "failedToConvertTerrain": "无法转换为地形元素",
+      "failedToDownloadFloorPlans": "无法下载楼层平面图",
+      "failedToSaveFloorPlans": "无法保存项目级别楼层平面图。请刷新页面",
+      "failedToUpdateLibrary": "无法更新库"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "线建筑菜单中出错",
+      "failedToDraw": "无法绘制线建筑",
+      "failedToEdit": "编辑线建筑失败",
+      "failedToolbarAction": "线建筑工具栏操作失败"
+    },
+    "siteStudy": {
+      "errorInExplore": "浏览中的错误。请重试！",
+      "errorOccurred": "发生错误，我们的工程师会得到通知。",
+      "failedToLoadPicker": "无法加载浏览拾取器。请重试操作。"
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "浏览所有插件",
+    "browseDescription": "浏览第三方提供商提供的现有扩展或生成器或添加您自己的扩展或生成器 - 它们将显示在此处。",
+    "downloadButton": "下载扩展",
+    "downloadDescription": "以从 Revit 或 Rhino 导入模型。",
+    "importModelTitle": "从扩展导入模型",
+    "noDescriptionAvailable": "无可用说明。",
+    "plugins": "插件"
+  },
+  "errorBoundary": {
+    "componentCrashed": "组件崩溃",
+    "retryButton": "重试",
+    "unexpectedError": "发生意外错误。请重试该操作或重新加载页面以重试"
+  },
+  "guides": {
+    "closeMenu": "关闭引导和测量菜单"
+  },
+  "geometryAlerts": {
+    "dismiss": "关闭",
+    "header": "几何体警报",
+    "review": "审阅",
+    "title": "几何体警报({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "删除或修改以运行分析。",
+      "title": "复制的几何体"
+    },
+    "invalidBbox": {
+      "subTitle": "删除或修改以运行分析。",
+      "title": "几何体距离太远的图元"
+    },
+    "outOfBounds": {
+      "subTitle": "删除或修改以运行分析。",
+      "title": "地形外的图元"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "一楼有 0 面积。水平捕捉底面以进行修复。",
+      "title": "检测到零面积的一楼"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "此建筑有一层或多层面积为 0，不能变成有效建筑。",
+      "title": "检测到零面积楼层"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "此建筑包含<a>非防水几何体</a>，退出三维草图时可能会变成没有楼层的常规模型",
+      "title": "建筑不防水"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "此模型包含可能影响工具和显示行为的<a>非防水几何体</a>。",
+      "title": "几何体不防水"
+    }
+  },
+  "importToolbar": {
+    "title": "导入模型"
+  },
+  "labels": {
+    "addLabelButton": "添加标签",
+    "category": "标签",
+    "description": "添加标签以使用简短的文字描述标记三维画布中的特定点。最多可以添加 {count} 行文字。 ",
+    "label": "标签",
+    "placeholder": "插入文字..."
+  },
+  "layerList": {
+    "buildings": "建筑物",
+    "category": {
+      "contextualDataDuration": "场地环境数据(~1-2.5 分钟)"
+    },
+    "generic": "常规",
+    "images": "图像",
+    "propertyBoundaries": "地产边界",
+    "roads": "公路",
+    "siteLimits": "场地限制",
+    "terrain": "地形",
+    "vegetation": "绿化",
+    "zones": "分区"
+  },
+  "layersTitle": "图层",
+  "library": {
+    "addedToLibrary": "向库中添加了 {name}。",
+    "addToLibraryButton": "添加到库"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "绘制约束",
+      "name": "约束",
+      "plural": "约束",
+      "tooltip": "创建一个体积以可视化项目的约束。"
+    },
+    "siteLimit": {
+      "defineAsAction": "定义为场地限制",
+      "hotkeyDescription": "绘制场地限制",
+      "name": "场地限制",
+      "tooltip": "创建用于分析项目指标的场地限制。"
+    },
+    "title": "限制",
+    "zone": {
+      "hotkeyDescription": "绘制分区",
+      "name": "分区",
+      "tooltip": "绘制分区以定义要在场地上分析的区域。"
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "退出绘图模式"
+  },
+  "navbar": {
+    "addButton": "添加",
+    "quickActionsButton": "快速操作",
+    "settingsButton": "设置"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "是否确实要删除 {name}？",
+      "descriptionParagraph1": "基础包括在您的方案中重复使用的对象。您可以创建多个基准并在它们之间切换。",
+      "descriptionParagraph2": "要添加现有对象，请在该对象上单击鼠标右键，然后选择“移动到基础”。要绘制新对象，请单击“编辑”。"
+    },
+    "dataOrderProcessing": "正在处理数据订单。完成后，它将添加到您的方案中。"
+  },
+  "pendingOperation": {
+    "defaultDescription": "正在等待自动化完成..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} 个几何体已添加到 {layerType}",
+    "geometriesSelectedLabel": "已选择的几何体",
+    "updateTerrainAction": "更新地形",
+    "updateTerrainDescription": "用库中的新地形替换当前地形"
+  },
+  "properties": {
+    "color": "颜色",
+    "elevation": "立面",
+    "height": "高度",
+    "length": "长度",
+    "mixed": "混合",
+    "name": "名称",
+    "position": "位置",
+    "radius": "半径",
+    "width": "宽度"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "无法下载所有对象。",
+      "downloadElementsRecovery": "或稍后重试。在问题得到解决之前，您将处于查看模式下",
+      "flatteningGroups": "在方案中展平组，因为它们不再受支持",
+      "ignoringOldElements": "忽略旧图元",
+      "knownCriticalHeader": "无法处理图元",
+      "knownCriticalMessage": "请刷新页面以重试。",
+      "missingGeoLocation": "缺少要执行操作的项目地理位置。",
+      "notFoundHeader": "未找到方案",
+      "notFoundMessage": "我们无法找到您尝试访问的方案。",
+      "terrainNotFoundHeader": "缺少地形模型",
+      "terrainNotFoundMessage": "当前方案发生了意外错误。",
+      "tooManyRequestsHeader": "有人太活跃了！",
+      "tooManyRequestsMessage": "我们从您的网络收到的请求数超出了我们的处理能力。请尝试稍后加载此页面或切换到其他网络 - 例如，通过个人热点。"
+    },
+    "noProposalLayersText": "此处将列出方案独有的图元。"
+  },
+  "proposalHistory": {
+    "branchFailed": "无法从旧修订创建新方案。",
+    "branchRevisionButton": "创建新方案",
+    "branchSuccess": "已从选定版本创建新方案，名称为“{name}”",
+    "contributors": "贡献者: {count}",
+    "copyLinkButton": "复制链接",
+    "currentVersionLabel": "当前版本",
+    "filter": {
+      "byAnalysis": "按分析",
+      "byDate": "按日期",
+      "from": "自",
+      "onlyYours": "只有您的",
+      "pinned": "已固定",
+      "selectDates": "选择日期",
+      "title": "过滤器",
+      "to": "到"
+    },
+    "linkToVersionCopied": "指向 {time} 复制的链接",
+    "nameThisVersionAction": "命名此版本",
+    "pinVersionAction": "固定版本",
+    "unpinVersionAction": "取消固定版本",
+    "untitledVersionLabel": "无标题版本",
+    "viewingVersionLabel": "查看版本"
+  },
+  "quickAccess": {
+    "actionsLabel": "操作",
+    "noSuggestions": "无建议",
+    "openHotkeyList": "打开热键列表",
+    "repeatLastTool": "重复上一个工具",
+    "search": "搜索",
+    "title": "快速访问"
+  },
+  "requestInvite": {
+    "button": "请求邀请",
+    "homeLink": "转到您的主页",
+    "projectLink": "转至项目",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "已是成员",
+        "message": "您已经是此项目的成员。"
+      },
+      "ALREADY_REQUESTED": {
+        "header": "已请求邀请",
+        "message": "您已经有此项目的待定邀请请求。如果管理员批准了您的请求，您将收到加入此项目的电子邮件邀请。"
+      },
+      "CAN_JOIN": {
+        "header": "您可以加入",
+        "message": "您可以加入此项目。转到项目，然后单击“加入项目”按钮。"
+      },
+      "ERROR": {
+        "header": "出现错误，请重试"
+      },
+      "NOT_FOUND": {
+        "header": "错误， 找不到此项目",
+        "message": "您输入的 URL 未指向现有项目。"
+      },
+      "REQUEST_LIMIT": {
+        "header": "请求太多",
+        "message": "您有太多待处理的邀请请求。请稍后重试。"
+      },
+      "SUCCESS": {
+        "header": "您的请求已成功发送！",
+        "message": "如果管理员批准了您的请求，您将收到加入此项目的电子邮件邀请。"
+      }
+    },
+    "statusFallback": {
+      "header": "您无权访问此 Forma 项目",
+      "message": "要获得项目的访问权限，您需要受到某一位管理员的邀请。使用下面的按钮请求管理员的邀请。"
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "默认文件夹: My project files folder"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "中心对齐",
+      "left": "左对齐",
+      "right": "右对齐"
+    },
+    "buildingLabel": "建筑",
+    "createNew": "新建",
+    "layoutLabel": "布局",
+    "loading": "正在加载",
+    "name": "房屋",
+    "parcelLabel": "地块",
+    "plural": "房屋",
+    "publish": "发布",
+    "tooltip": "绘制一个或多个围绕一条线构造的房屋。从属性面板创建和重复使用房屋类型。",
+    "tooltips": {
+      "buffer": "缓冲区",
+      "flatRoof": "平屋顶",
+      "gableRoof": "人字屋面",
+      "length": "长度",
+      "numberOfFloors": "楼层数",
+      "ridgeDirection": "脊方向",
+      "roofAngle": "屋顶角度",
+      "shedRoof": "棚顶",
+      "storyHeight": "楼层高度",
+      "width": "宽度"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "删除剖面框",
+    "enableButton": "启用剖面框",
+    "saveButton": "保存剖面框",
+    "title": "剖面框",
+    "toggleButton": "显示/隐藏框轮廓"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "此方案在您进行编辑时已更改(例如，可能有其他团队成员在处理它)。是否要将您的版本另存为新方案？",
+      "discardEdits": "放弃编辑内容",
+      "saveAsNew": "另存为新方案",
+      "title": "方案编辑冲突"
+    },
+    "error": {
+      "body": "无法保存您的最后一次编辑。请刷新页面以继续编辑。",
+      "ok": "确定",
+      "title": "保存失败"
+    }
+  },
+  "shapes": {
+    "arc": "按 3 个点创建圆弧",
+    "circle": "圆形",
+    "cube": "立方体",
+    "cuboid": "长方体",
+    "cylinder": "圆柱体",
+    "dome": "半球体",
+    "freeform": "自由形式",
+    "pyramid": "棱锥体",
+    "rectangle": "矩形",
+    "roof": "屋顶",
+    "shapes3d": "三维形状",
+    "spline": "样条曲线",
+    "title": "基本体"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "通过将鼠标悬停在边缘上来激活引导线，按住 ⇧ Shift 键以遵循引导线。按住 {key} 可防止折断。",
+      "affineInstructions": "按住 {key} 可防止折断。按 Tab 键在水平、垂直和地形模式之间切换。",
+      "clickToAddSubtract": "通过单击将点添加到线或减去点。",
+      "editModeStartFinishMac": "按住 ⌥ Option 可增加/减少点。按 ↵ Enter 键完成编辑。",
+      "editModeStartFinishWindows": "按住 Alt 键可加/减点。按 ↵ Enter 键完成编辑。",
+      "finishEditing": "按 ↵ Enter 键完成编辑。",
+      "finishPolygon": "按 ↵ Enter 键完成多边形的创建。",
+      "preciseMoveVertical": "按 {key} 键可切换垂直模式。",
+      "specifyDistance": "键入以设置特定距离。单击以放置。"
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "三维草图建筑物不支持删除、复制、剪切和粘贴楼板。请尝试改为在三维草图中编辑。"
+  },
+  "snapping": {
+    "cursorElevation": "光标处立面",
+    "guidesAndMeasurements": "引导和测量",
+    "snapToGuides": "捕捉到引导",
+    "snapToObjects": "捕捉到对象"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "输入空间名称或保留为空作为默认值"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "连接到方案",
+      "connectToScenarioDesc": "方案是项目中的共享设计容器，它将模型、工具以及来自多个软件应用程序的几何数据和其他数据连接起来。"
+    }
+  },
+  "relativeTime": {
+    "today": "今天"
+  },
+  "terrain": {
+    "elevation": "立面",
+    "errors": {
+      "loadMapImageFailed": "加载地图图像失败",
+      "loadSatelliteTextureFailed": "加载卫星纹理失败。",
+      "loadTextureFailed": "加载地形纹理失败。"
+    },
+    "labels": {
+      "numberOfSelectedPads": "衬垫体积",
+      "padVolume": "焊盘体积",
+      "padsVolume": "衬垫体积",
+      "showAsPercentage": "显示为百分比",
+      "showAsRatio": "显示为比率",
+      "totalMassBalance": "总质量平衡"
+    },
+    "massBalanceHover": "整个地形的质量变化净体积。",
+    "metricsHeader": "指标",
+    "pad": {
+      "header": "地形垫",
+      "name": "地形垫",
+      "tooltip": "挖方/填方地形、调整高程和坡度以及评估质量平衡。"
+    },
+    "padVolumeHover": "由选定地坪向地形添加/减去的体积。",
+    "padsHeader": "地形垫",
+    "slope": "坡度"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "加载自动化时，您无法在基础层/方案之间切换",
+    "pendingSelectionBlockedMessage": "加载自动化时无法更改选择",
+    "pendingToolSwitchBlockedMessage": "加载自动化时模具不可用",
+    "transform": {
+      "redefineReferencePointsButton": "重定义参照点"
+    }
+  },
+  "transform": {
+    "cover": "保护层",
+    "fillet": "圆角",
+    "intersect": {
+      "name": "交集",
+      "tooltip": "创建两个或多个对象的交点。第一个选定对象的足迹将相应地更改。"
+    },
+    "loft": "放样",
+    "move": {
+      "name": "移动",
+      "tooltip": "通过定义参照和终点来移动对象。 "
+    },
+    "offset": {
+      "apply": "应用偏移",
+      "name": "偏移",
+      "tooltip": "向外延伸对象的足迹或以一定距离向内缩小。"
+    },
+    "rotate": {
+      "name": "旋转",
+      "tooltip": "围绕定义的参照点旋转场景中的对象。"
+    },
+    "shell": "壳体",
+    "split": {
+      "name": "拆分",
+      "tooltip": "使用线拆分一个或多个对象。"
+    },
+    "subtract": {
+      "name": "差集",
+      "tooltip": "使用一个对象从另一个对象中减去一个形状。第一个选定对象的足迹将相应地更改。"
+    },
+    "sweep": "轻掠",
+    "title": "转换",
+    "union": {
+      "name": "并集",
+      "tooltip": "合并两个或多个对象。第一个选定对象将定义所生成对象的类别和高度。"
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "拐角半径是根据布局优化道路曲线的动态值。",
+      "tight": "拐角半径是一个固定的小值，等于道路宽度的 1/2。"
+    },
+    "railroads": {
+      "hotkeyDescription": "绘制轨道",
+      "name": "铁路",
+      "toolButton": "铁路",
+      "tooltip": "创建铁路并通过右侧面板调整宽度。",
+      "typeLabel": "轨道类型",
+      "typePlaceholder": "选择轨道类型"
+    },
+    "roads": {
+      "hotkeyDescription": "绘制道路",
+      "name": "公路",
+      "toolButton": "公路",
+      "tooltip": "创建道路并通过右侧面板调整宽度。",
+      "widthLabel": "公路宽度",
+      "withGraphToolButton": "公路(带图表)"
+    },
+    "title": "交通运输",
+    "trafficData": {
+      "addButton": "添加流量数据",
+      "adtTooltip": "平均日流量",
+      "advancedSettingsLabel": "高级设置",
+      "dailyDistributionLabel": "每日流量分布",
+      "dayTimeTooltip": "白天: 06.00-18.00",
+      "eveningTimeTooltip": "傍晚: 18.00-22.00",
+      "heavyVehicleLabel": "交通繁忙",
+      "nightTimeTooltip": "晚上: 22.00-06.00",
+      "railRequiredInputsMessage": "噪声分析需要考虑的铁路需要所有输入",
+      "removeButton": "删除流量数据",
+      "roadRequiredInputsMessage": "噪声分析需要考虑的道路需要所有输入",
+      "speedLimitTooltip": "速度限制",
+      "title": "流量噪声数据"
+    }
+  },
+  "ui": {
+    "add": "添加",
+    "area": "面积",
+    "areaSum": "面积(总和)",
+    "automationLabel": "自动化",
+    "beta": "Beta 版",
+    "browsePluginsDescription": "浏览第三方提供商提供的现有插件或添加您自己的插件 - 它们将显示在此处。",
+    "cancel": "取消",
+    "close": "关闭",
+    "color": "颜色",
+    "delete": "删除",
+    "detach": "分离",
+    "duplicate": "复制",
+    "edit": "编辑",
+    "gridSettings": "网格设置",
+    "hide": "隐藏",
+    "length": "长度",
+    "lengthSum": "长度(总和)",
+    "newVersionAvailable": "有新版本可用。",
+    "redo": "重做",
+    "refresh": "刷新",
+    "remove": "删除",
+    "rename": "重命名",
+    "repair": "修复",
+    "retry": "重试",
+    "show": "显示",
+    "siteLabel": "场地",
+    "surroundings": "环境",
+    "textAlignment": "文字对齐",
+    "undo": "撤消",
+    "update": "更新",
+    "videoNotSupported": "您的浏览器不支持视频标签。",
+    "xyzAxes": "XYZ 轴"
+  },
+  "performanceStats": {
+    "currentSnapshot": "当前快照",
+    "remainingFromPastSnapshots": "过去快照的剩余",
+    "title": "性能统计信息 {status}"
+  },
+  "units": {
+    "asl": "asl",
+    "magl": "magl",
+    "masl": "masl"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "中心对齐",
+      "left": "左对齐",
+      "right": "右对齐",
+      "spacing": "间距"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "绘制成片树林",
+      "name": "成片树林",
+      "tooltip": "创建一个由树填充的区域，并编辑其大小和密度。所有树都会影响分析。"
+    },
+    "header": "树",
+    "landscapingTitle": "景观美化",
+    "properties": {
+      "bufferTooltip": "缓冲区",
+      "gridLengthLabel": "网格长度",
+      "gridWidthLabel": "网格宽度",
+      "heightTooltip": "树高",
+      "offsetTooltip": "偏移"
+    },
+    "title": "绿化",
+    "tooltips": {
+      "averageDistanceLabel": "树冠之间的平均距离",
+      "heightLabel": "每棵树的高度"
+    },
+    "treeLine": {
+      "hotkeyDescription": "绘制成排树木",
+      "name": "成排树木",
+      "tooltip": "创建一个填充树的行，并编辑其大小和密度。所有树都会影响分析。"
+    },
+    "trees": "树"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "未提供分析 ID",
+      "unsupportedAnalysisType": "不受支持的分析类型: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "您对此站点具有“仅查看”访问权限"
+  },
+  "windAnalysis": {
+    "analyzing": "正在分析...",
+    "atCapacity": "我们目前正在进行大量详细的风分析。您的分析可能需要更长时间才能完成。感谢您的耐心等待！",
+    "circleOutsideBoundingBox": "分析区域超出地图区域",
+    "concurrentQuotaReached": "已达到并发风分析限制",
+    "concurrentQuotaReachedDescription": "您有太多正在运行的并发风分析。请等待其中一些完成。",
+    "concurrentQuotaWarning": "并发分析限制",
+    "concurrentQuotaWarningDescription": "在达到并发分析的限制 {limit} 之前，您还剩 {remaining} 详细的风分析。",
+    "dailyQuotaReached": "已达到分析限制",
+    "dailyQuotaReachedDescription": "您已达到风分析的每日限制。",
+    "dailyQuotaReachedDescriptionRetry": "您已达到风分析的每日限制。请在 {nextAvailableAt} 重试。",
+    "loadingData": "正在加载数据",
+    "loadingDataTooltip": "正在加载...",
+    "runAnalysis": "分析(~{min}-{max} 分钟)",
+    "seeAnalysisButton": "查看详细分析",
+    "stoppedOrFailed": "分析已停止或失败！",
+    "viewerAccessDisableTooltip": "无法以查看者身份运行分析"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "高级建模工具",
+      "editIn": "在三维草图中编辑",
+      "howToStartEditingMessage": "按 ⏎ 或双击以在三维草图中进行编辑。",
+      "launch": "新建三维草图",
+      "sketch": "草图",
+      "updateProperties": "更新属性"
+    },
+    "advancedModeling": {
+      "cover": "保护层",
+      "fillet": "圆角",
+      "intersect": "交集",
+      "loft": "放样",
+      "offset": "偏移",
+      "shell": "壳体",
+      "subtract": "差集",
+      "sweep": "轻掠",
+      "union": "并集"
+    },
+    "axes": {
+      "reset": "重置轴",
+      "set": "设置 XYZ 轴"
+    },
+    "buildingType": {
+      "draw": "绘制三维草图建筑",
+      "name": "三维草图建筑"
+    },
+    "buttons": {
+      "apply": "应用",
+      "cancel": "取消",
+      "ok": "确定"
+    },
+    "convert": {
+      "externalMessage": "将对象转换为三维草图以修改外部面、边和顶点。\n\n转换图元后，它将不再连接到原始源中的图元，并且更改不会同步。",
+      "message": "将对象转换为三维草图以修改外部面、边和顶点。",
+      "title": "转换为三维草图"
+    },
+    "dialogs": {
+      "arrayButtonArray": "阵列",
+      "arrayButtonCancel": "取消",
+      "arrayDistanceBetween2Points": "两点之间的长度",
+      "arrayDistanceTotalLength": "总长度",
+      "arraySubtitleDistance": "距离",
+      "arraySubtitleQuantity": "数量",
+      "arraySubtitleType": "类型",
+      "arrayTitle": "阵列",
+      "arrayTypeLinear": "线性阵列",
+      "arrayTypeRadial": "径向阵列",
+      "corruptedElementsDeleted": "某些图元未能保存并损坏。这些图元已自动删除。",
+      "editDimensionTitle": "编辑尺寸",
+      "recoveryClosedWithoutSaving": "三维草图在未正确保存的情况下关闭。",
+      "recoveryQuestion": "是否要恢复未保存的更改？",
+      "recoveryTitle": "发现未保存的模型更改"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "展平最低的非水平面"
+    },
+    "finishSelection": {
+      "back": "后退(B)",
+      "cancel": "取消(Esc)",
+      "confirm": "完成(F)",
+      "next": "下一步(N)"
+    },
+    "floors": {
+      "addFloor": "添加楼层",
+      "addFloors": "添加楼层",
+      "floorHeight": "楼层高度",
+      "floors": "楼层",
+      "floorWithNumberLabel": "楼层 {level}",
+      "moreOptions": "更多",
+      "numberOfFloors": "楼层数",
+      "removeFloors": "删除楼层",
+      "resetFloors": "重置楼层",
+      "title": "楼层详情"
+    },
+    "groupEditing": {
+      "redo": "重做",
+      "undo": "撤消"
+    },
+    "grouping": {
+      "toolbarTitle": "组"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "测量角度",
+      "measureDistance": "测量距离",
+      "menuTitle": "引导和测量",
+      "title": "引导和测量"
+    },
+    "mesh": {
+      "convertHintMessage": "双击以通过将网格转换为对象来启用其他编辑工具。",
+      "importExceededLimitsMessage": "导入的网格三角形超过了 {limit} 个，因此将保持不变以获得更好的性能。\n\n要访问更多编辑工具，请选择各个网格，然后双击以将其转换为可编辑对象。",
+      "importExceededLimitsTitle": "导入的网格三角形超出限制"
+    },
+    "pasteInPlaceAction": "在位粘贴",
+    "properties": {
+      "mixed": "混合",
+      "objectWithIdLabel": "对象 {id}"
+    },
+    "scaleTitle": "缩放",
+    "selection": {
+      "areaSelectionOptions": "区域选择选项",
+      "filterEdges": "边",
+      "filterFaces": "面",
+      "filterGroups": "组",
+      "filterMeshes": "网格",
+      "filterSolids": "实体",
+      "filterVertices": "顶点",
+      "selection": "选择",
+      "selectionTools": "选择工具"
+    },
+    "tools": {
+      "array": "阵列",
+      "editArcCircle": "编辑圆弧或圆",
+      "editSpline": "编辑样条曲线",
+      "extrudeEdges": "拉伸边",
+      "extrudeFace": "拉伸面",
+      "facetFace": "镶嵌面",
+      "flattenFace": "展平面",
+      "group": "编组",
+      "groupDetach": "分离",
+      "meshToObjects": "转换网格",
+      "mirror": "镜像",
+      "move": "移动",
+      "offsetEdges": "偏移边",
+      "offsetFace": "偏移面",
+      "reverseFace": "反转面",
+      "rotate": "旋转",
+      "scale": "缩放",
+      "scaleNonUniform": "非均匀缩放",
+      "smoothEdges": "平滑边",
+      "tiltFace": "倾斜面",
+      "ungroup": "解除编组"
+    },
+    "tooltips": {
+      "building": "具有无限可能性的复杂三维建筑物，如斜屋顶、倾斜墙壁等。",
+      "editIn": "转换对象以修改三维草图中的顶点、边和面。",
+      "launch": "使用三维草图绘制来建模和迭代早期阶段的建筑设计概念。"
+    },
+    "zoom": {
+      "fitProposal": "缩放以匹配方案",
+      "fitSelection": "缩放以匹配选择"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "快速入门指南",
+    "allTutorialsDescription": "完成这些交互式手册以设置您的站点并开始在 场地设计中工作。",
+    "completionMessage": "干的好！您已经完成了 {header} 指南！",
+    "completionText": "{percent}% 已完成",
+    "completedTitle": "已完成",
+    "continueButton": "继续",
+    "stepsTotal": "共 {count} 步",
+    "timeLabel": "{time} 分钟",
+    "stepProgress": "{current}/{total}",
+    "nextButton": "下一步",
+    "doneButton": "完成",
+    "tutorialPanelButtonText": "场地设计",
+    "tutorialPanelButtonDescription": "快速入门指南",
+    "upNextTitle": "接下来"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "设置您的网站",
+      "description": "在开始建模和分析场地和建筑物之前添加上下文数据。",
+      "reviewHeader": "场地设置完成",
+      "reviewText": "您已成功添加上下文数据和场地限制。{br}{br}做得好！现在，您可以浏览我们的建模工具和导入功能，或继续使用其他手册。",
+      "steps": {
+        "openContextualTab": {
+          "header": "打开上下文数据选项卡",
+          "text": "首先，打开<bold>“上下文数据”（Contextual Data</bold>）选项卡。"
+        },
+        "browseAndOrder": {
+          "header": "浏览站点位置的数据",
+          "text": "单击<bold>“浏览上下文数据</bold>”以查看哪些数据包可用于您的站点位置。{br}{br}数据可能包括周围的建筑物、道路和地形。"
+        },
+        "orderStarterPackage": {
+          "header": "订购入门数据包",
+          "text": "单击<bold>“添加</bold>”以查看此数据包中包含的内容。此数据是免费的。"
+        },
+        "orderData": {
+          "header": "订单数据包",
+          "text": "选择顺序以开始将三维上下文数据下载到您的 站点。"
+        },
+        "drawSiteLimit": {
+          "header": "绘制场地限制",
+          "text": "激活此绘图工具以定义您的场地限制。激活后，在场地周围绘制点并封闭形状。{br}{br}定义场地限制是在 Forma 场地 Design 中运行分析的前提条件。"
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "添加建筑物",
+      "description": "使用我们的建模工具创建建筑或导入现有模型。",
+      "reviewHeader": "建筑物已添加到场地",
+      "reviewText": "您已成功绘制建筑物并将资产导入 站点。干得好！现在，您可以通过运行分析来评估环境条件，或继续使用其他指南。",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "绘制基本建筑",
+          "text": "单击 <bold>基本建筑</bold> 以激活建筑工具。激活后，绘制建筑物的形状并选择最后一个点以完成绘制示意图。"
+        },
+        "exploreParametricOptions": {
+          "header": "探索参数化选项",
+          "text": "了解可用于修改建筑模型的参数化选项。"
+        },
+        "importModel": {
+          "header": "导入模型或文件",
+          "text": "单击<bold>“导入</bold>”以从本地设备上载模型或光栅图像。"
+        },
+        "placeInScene": {
+          "header": "放置在场景中",
+          "text": "单击您刚从库中导入的项目。选择后，通过单击并拖动将其放置在您的站点上。放置元素后，教程将自动向前推进。"
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "评估环境条件",
+      "description": "运行日日照时长分析，以便及早做出设计决策。",
+      "reviewHeader": "日照时间分析完成！",
+      "reviewText": "您已成功在站点上运行日照时长分析。{br}{br}现在，您可以继续创建新方案、比较分析或探索 场地 Design 的更多内容。",
+      "steps": {
+        "selectAnalysis": {
+          "header": "选择分析",
+          "text": "单击亮显的图标以选择日照时长分析。"
+        },
+        "selectDate": {
+          "header": "选择一个日期",
+          "text": "使用下拉列表设置要分析场地日照时长的日期。"
+        },
+        "runAnalysis": {
+          "header": "运行分析",
+          "text": "单击该按钮以启动分析。只需几秒钟即可完成。{br}{br}分析完成后，该向导将自动恢复。"
+        },
+        "openAnalysisResults": {
+          "header": "打开结果",
+          "text": "完成后，分析结果将显示在此处的列表中。单击最新结果以详细查看它们。将打开一个新窗口。",
+          "altText": "分析结果窗口"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "如何修复“不支持 WebGL”？",
+      "text": "您的计算机似乎不支持 WebGL，而 WebGL 是使用 Forma 的要求",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.SubHeader {
+  font: var(--11-bold);
+  /* Weave design system does not have a --10-bold, so this is a workaround */
+  font-size: 10px;
+  color: var(--text-color-light);
+  height: 28px;
+  display: flex;
+  align-items: center;
+}

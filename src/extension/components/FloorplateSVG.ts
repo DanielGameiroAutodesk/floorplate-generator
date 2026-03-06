@@ -194,14 +194,8 @@ export function renderFloorplateSVG(
     }).corridorGraph;
     const corridorGraphNodes = corridorGraph?.nodes ?? [];
     const corridorGraphEdges = corridorGraph?.edges ?? [];
-    // #region agent log
-    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-polyline-pre',hypothesisId:'H5',location:'FloorplateSVG.ts:renderFloorplateSVG:dimensionSourceChoice',message:'Dimension source selection inputs',data:{isMultiWing,hasCorridorGraph:corridorGraphNodes.length>0&&corridorGraphEdges.length>0,corridorGraphNodeCount:corridorGraphNodes.length,corridorGraphEdgeCount:corridorGraphEdges.length,wingDimensionCount:wingDimensions.length},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     if (isMultiWing && corridorGraphNodes.length > 0 && corridorGraphEdges.length > 0) {
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-debug-postfix',hypothesisId:'H3-FIX',location:'FloorplateSVG.ts:renderFloorplateSVG',message:'Corridor graph dashed dimension source',data:{nodeCount:corridorGraphNodes.length,edgeCount:corridorGraphEdges.length,nodes:corridorGraphNodes,edges:corridorGraphEdges},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       corridorGraphEdges.forEach(([fromIdx, toIdx], idx) => {
         const from = corridorGraphNodes[fromIdx];
         const to = corridorGraphNodes[toIdx];
@@ -244,9 +238,6 @@ export function renderFloorplateSVG(
         `);
       });
     } else if (isMultiWing && wingDimensions.length > 0) {
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-debug-pre',hypothesisId:'H3',location:'FloorplateSVG.ts:renderFloorplateSVG',message:'Multi-wing dashed dimension source',data:{wingCount:wingDimensions.length,wings:wingDimensions.map(w=>({id:w.id,length:w.length,width:w.width,center:w.center,direction:w.direction})),corridorSegmentCount:corridorSegments.length,corridorCenterlinePointCount:((floorplan as { corridorCenterline?: { x: number; y: number }[] }).corridorCenterline ?? []).length},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       wingDimensions.forEach((wing, idx) => {
         const dirX = Math.cos(wing.direction);
         const dirY = Math.sin(wing.direction);
@@ -369,9 +360,6 @@ export function renderFloorplateSVG(
 
   // Corridor — render all segments for multi-wing, or primary corridor for single bar
   if (corridorSegments.length > 0) {
-    // #region agent log
-    fetch('http://127.0.0.1:7244/ingest/18ccda83-81b1-41c7-9078-5d60d07d2981',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'42d54e'},body:JSON.stringify({sessionId:'42d54e',runId:'corridor-polyline-pre',hypothesisId:'H3',location:'FloorplateSVG.ts:renderFloorplateSVG:corridorSegmentRendering',message:'Corridor segments rendered as independent polygons',data:{isMultiWing,segmentCount:corridorSegments.length,segments:corridorSegments.map((s,idx)=>({idx,hasPoly:!!(s.polyPoints&&s.polyPoints.length>=3),polyPointCount:s.polyPoints?.length??0,width:s.width,depth:s.depth}))},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     corridorSegments.forEach((seg, idx) => {
       const showLabelForSegment = !isMultiWing || idx === 0;
       elements.push(renderCorridor(seg, scale, toSVG, showLabelForSegment));
@@ -459,7 +447,7 @@ function renderCorridor(
         <polygon
           points="${pointsString}"
           fill="${SVG_COLORS.Corridor}"
-          stroke="#D9D9D9"
+          stroke="${SVG_COLORS.Corridor}"
           stroke-width="1"
         />
         ${showLabel ? `
@@ -493,7 +481,7 @@ function renderCorridor(
         width="${width}"
         height="${height}"
         fill="${SVG_COLORS.Corridor}"
-        stroke="#D9D9D9"
+        stroke="${SVG_COLORS.Corridor}"
         stroke-width="1"
       />
       ${showLabel ? `

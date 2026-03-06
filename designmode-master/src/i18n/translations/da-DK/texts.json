@@ -1,0 +1,1308 @@
+{
+  "automatedOnboarding": {
+    "title": "Bliv klar til at begynde at designe",
+    "body": "Når du vælger <bold>Fortsæt</bold>, kører vi automatisk to opsætningstrin for dig. Du behøver ikke gøre noget. Når trinnene er gennemført, er du klar til at begynde at designe i Forma Site Design.",
+    "contextual": {
+      "header": "Indlæs byggepladsspecifik kontekst",
+      "body": "Vi indlæser automatisk gratis kontekstuelle data for din byggeplads, inklusive terræn og omgivende bygninger."
+    },
+    "sunAnalysis": {
+      "header": "Få indsigt i byggepladsforhold",
+      "body": "Vi kører automatisk en analyse af solskinstimer på din byggeplads og omgivelser, så du kan træffe informerede designbeslutninger."
+    },
+    "continueButton": "Fortsæt",
+    "sunAnalysisCoachmark": {
+      "header": "Analyse af solskinstimer",
+      "body": "Vi har automatisk startet en analyse af solskinstimer på din byggeplads.{ 0}{br}Når indikatoren er grøn, eller der vises et banner øverst på lærredet, kan du granske resultaterne."
+    },
+    "finalModal": {
+      "title": "Din byggeplads er nu konfigureret",
+      "subTitle": "Fortsæt med et af de anbefalede trin nedenfor:",
+      "suggestedAction1": {
+        "header": "Tegn en bygning",
+        "body": "Aktivér et af byggeværktøjerne på værktøjslinjen."
+      },
+      "suggestedAction2": {
+        "header": "Importér en model",
+        "body": "Klik på importikonet på værktøjslinjen, og følg de foreslåede trin."
+      },
+      "suggestedAction3": {
+        "header": "Sammenlign analyser",
+        "body": "Kør en anden analyse, og åbn tilstanden Sammenlign fra øverste venstre hjørne af skærmen."
+      },
+      "showMeHow": "Vis flere indstillinger",
+      "finalButton": "OK"
+    },
+    "sunAnalysisTriggerError": "Solanalysen kunne ikke udløses"
+  },
+  "alignment": {
+    "center": "Juster center",
+    "left": "Juster til venstre",
+    "right": "Juster til højre"
+  },
+  "analysis": {
+    "alertsLabel": "Alarmer",
+    "analyzeTitle": "Analysere",
+    "analysisParameters": "Analyseparametre",
+    "areaRadius": "Områderadius",
+    "areaTitle": "Analyseområde",
+    "customCircle": "Tilpasset cirkel",
+    "daylightAnalysisIllustrationAlt": "Illustration af dagslysanalyse",
+    "failedToOrder": "Analysen kunne ikke bestilles: {error}",
+    "learnMore": "Få mere at vide",
+    "microclimateAreaRadius": "Områderadius af mikroklima",
+    "noisePredictionUnavailable": "Støjforudsigelse er ikke tilgængelig",
+    "radiusLabel": "Radius",
+    "selectAreaToRunAnalysis": "Vælg en byggepladsgrænse eller zone for at køre en analyse",
+    "disabledTooltips": {
+      "addRoadsOrRails": "Tilføj veje og/eller skinner med trafikdata for at køre en analyse",
+      "analysisAreaOutsideMap": "Analyseområdet er uden for kortområdet",
+      "concurrentQuotaReached": "Grænse for samtidige vindanalyser er nået",
+      "dailyQuotaReached": "Kvoten for daglig vindanalyse er nået",
+      "geometryAlertsDetected": "Der blev registreret geometriproblemer",
+      "geometryTooComplex": "Geometri er for kompleks",
+      "invalidParameters": "Ugyldige parametre",
+      "loadingData": "Indlæser data",
+      "notAvailable": "Ikke tilgængelig",
+      "notAbleAsViewer": "Kan ikke køre analyser som en seer",
+      "pleaseWait": "Vent et øjeblik...",
+      "savingInProgress": "Gemning i gang...",
+      "selectSiteLimitOrZone": "Vælg en byggepladsgrænse eller zone for at køre en analyse"
+    },
+    "emptyStateZoneExplanation": "Som standard køres analysen på bygninger og andre objekter, du har tilføjet. Tilføj en byggepladsgrænse eller zoner for at få komplette analyseresultater for et bestemt område.",
+    "entireModel": "Hele modellen",
+    "missingTrafficData": {
+      "description": "Tilføj veje eller jernbaneskinner med trafikdata for at forudsige støjforhold i den virkelige verden.",
+      "startGuideButton": "Start vejledning",
+      "title": "Manglende trafikdata"
+    },
+    "noiseAreaRadius": "Radius for støjområde",
+    "properties": {
+      "radiusLabel": "Radius"
+    },
+    "seeResultButton": "Se analyseresultat",
+    "seeResultsButton": "Se analyseresultater",
+    "selectionTitle": "Vælg analyseområder",
+    "selectAllAreasButton": "Vælg alle områder",
+    "deselectAllAreasButton": "Fravælg alle områder",
+    "skyComponent": {
+      "potentialDescription": "Vores <strong>analyse af dagslyspotentialet</strong> identificerer dele af facaden med ringe adgang til dagslys ved hjælp af Vertical Sky Component-scoren. Vælg de områder, du vil analysere."
+    },
+    "sun": {
+      "removeDateButton": "Fjern dato"
+    },
+    "supportLevel": {
+      "buildingsFullSupport": "Bygninger med fuld understøttelse",
+      "buildingsPartialSupport": "Bygninger/andet med delvis understøttelse",
+      "iconAlt": "Understøttelsesniveau for analyse",
+      "title": "Understøttelse af analyser"
+    },
+    "windAreaRadius": "Radius for vindområde",
+    "windRoseUnavailable": {
+      "description": "Vores wind rose-dataudbyder oplever problemer. Du kan stadig analysere for mikroklimamønstre, men uden historiske data for at undersøge sandsynligheden for vindforhold. Vi arbejder på at gendanne dataene.",
+      "title": "Wind rose er ikke tilgængelig i øjeblikket",
+      "windDescription": "Vores wind rose-dataudbyder oplever problemer. Du kan stadig analysere for generelle vindmønstre og justere vindhastigheder manuelt. Hurtig vind er ikke tilgængelig. Vi arbejder på at gendanne dataene."
+    }
+  },
+  "analysisErrors": {
+    "analysisAlreadyExists": "Der findes allerede en analyse med denne konfiguration. ",
+    "concurrentAnalysesReached": "Grænsen for samtidige analyser er nået",
+    "concurrentNoiseAnalysesReached": "Grænsen for samtidige støjanalyser er nået",
+    "dailyNoiseQuotaReached": "Det maksimale antal støjanalyser inden for 24 timer er nået",
+    "dailyQuotaReached": "Kvoten for daglig analyse er nået",
+    "nothingToAnalyze": "Intet at analysere",
+    "somethingWentWrong": "Noget gik galt"
+  },
+  "analysisTooltips": {
+    "errors": {
+      "detailedWindUnavailable": "Detaljeret vindanalyse er ikke tilgængelig. Prøv at køre analysen senere.",
+      "rapidWindUnavailable": "Analyse af hurtig vind er ikke tilgængelig. Prøv at køre analysen senere.",
+      "rapidWindUnavailableToast": "Analyse af hurtig vind er ikke tilgængelig. Vores team er blevet underrettet. Prøv at køre analysen senere."
+    },
+    "types": {
+      "microclimate": {
+        "description": "Vores mikroklimaanalyse beregner den opfattede temperatur på din byggeplads under hensyntagen til sol-, vind- og dagslysforhold. Vi anbefaler, at du venter på mere nøjagtige resultater, indtil vindanalysen er gennemført.",
+        "link": "https://help.autodeskforma.com/en/articles/6932531",
+        "name": "Mikroklima",
+        "text": "Analyse af mikroklima"
+      },
+      "noise": {
+        "description": "Se, hvordan dit design påvirker de omgivende støjforhold ved hjælp af en forudsigelse i realtid i analysen af hurtig støj. Kør en detaljeret støjanalyse for at få en mere præcis simulering af støjforhold samt en analyse af forholdene på bygningsfacader.",
+        "link": "https://help.autodeskforma.com/en/articles/7338314-introduction-to-the-noise-analysis",
+        "name": "Støj",
+        "text": "Støjanalyse"
+      },
+      "sky-component": {
+        "description": "Vurder, hvilke dele af bygningsfacaderne der får ringe adgang til dagslys ved hjælp af Vertical Sky Component-scoren. Du skal tilføje en byggepladsgrænse for at køre analysen.",
+        "link": "https://help.autodeskforma.com/en/articles/6951302",
+        "name": "Dagslyspotentiale",
+        "text": "Analyse af dagslyspotentiale"
+      },
+      "solar-panel": {
+        "name": "Solenergi"
+      },
+      "sun": {
+        "description": "Vurder, hvor mange timers sollys din byggeplads og dine bygninger får. For at køre analysen skal du tilføje en byggepladsgrænse og vælge en dato.",
+        "link": "https://help.autodeskforma.com/en/articles/6951253",
+        "name": "Solskinstimer",
+        "text": "Analyse af solskinstimer"
+      },
+      "wind": {
+        "description": "Se, hvordan dine designændringer påvirker vindforholdene ved hjælp af en forudsigelse i realtid i analysen af hurtig vind. Kør en detaljeret analyse af vindstrøm og vindkomfort for at få en mere nøjagtig simulering af forskellige vindretninger og hastigheder.",
+        "link": "https://help.autodeskforma.com/en/articles/6981020",
+        "name": "Vind",
+        "text": "Vindanalyse"
+      }
+    }
+  },
+  "automation": {
+    "explore": {
+      "addNodeButton": "Tilføj node",
+      "buildingWidth": "Bygningens bredde",
+      "cityBlocks": "Byblokke",
+      "editGridOrientationButton": "Rediger netretning",
+      "explanation": "En løbende indsats med at udvikle værktøjer, der kan hjælpe dig med at udforske massingpotentialet på din byggeplads. Følg udviklingen i vores forum.",
+      "floors": "Etager",
+      "headerTitle": "Udforsk",
+      "iterativeExplanation": "Værktøjer til designautomatisering, der gør det muligt hurtigt at generere og udforske layout til byggepladser og bygninger.",
+      "layoutTitle": "Layout",
+      "layouts": "Layout",
+      "linearBuildings": "Lineære bygninger",
+      "mixed": "Blandet",
+      "name": "Udforsk",
+      "siteAutomation": "Automatisering af byggeplads",
+      "storyHeight": "Højde på etage",
+      "towerBuildings": "Tårnbygninger",
+      "towerWidth": "Tårnbredde"
+    }
+  },
+  "base": {
+    "addNewBaseButton": "Tilføj ny base",
+    "changeIndicatorLabel": "Indikator for ændring",
+    "editBaseButton": "Rediger base",
+    "editBaseDoneButton": "Udført",
+    "editBaseRightMenuMessage": "Rediger base for at foretage ændringer",
+    "editBaseRightMenuMixedSelectionMessage": "Dit valg omfatter baseobjekter. Du kan ikke foretage ændringer med et blandet udvalg.",
+    "editing": {
+      "changesWillAffect": "Ændringerne vil påvirke",
+      "proposals": "Forslag",
+      "title": "Redigering"
+    },
+    "errors": {
+      "deleteFailed": "Basen kunne ikke slettes.",
+      "duplicateFailed": "Basen kunne ikke duplikeres.",
+      "fetchFailed": "Baser kunne ikke hentes.",
+      "renameIndicatorFailed": "Baseindikator kunne ikke omdøbes.",
+      "renameFailed": "Basen kunne ikke omdøbes.",
+      "switchFailed": "Basen kunne ikke skiftes."
+    },
+    "noBaseLayersText": "Elementer, som du ønsker at genbruge på tværs af forslag, kan føjes til en base.",
+    "strategy": {
+      "description": "Forslaget bruger en base, der er forældet. Du skal vælge, om du vil opdatere til den nyeste version af basen eller duplikere den ældre version af basen.",
+      "duplicateOld": "Dupliker gammel version af basen",
+      "header": "Din base er forældet",
+      "useLatest": "Brug den nyeste version af basen"
+    },
+    "swapBaseButton": "Skift base",
+    "swapButton": "Skift",
+    "untitledBaseLabel": "Unavngiven base"
+  },
+  "basicElements": {
+    "generic": {
+      "line": {
+        "draw": "Tegn generisk linje",
+        "name": "Linje",
+        "tooltip": "Opret generiske linjer til at kommunikere intentionen bag et design. De vil ikke blive taget i betragtning i Analyser."
+      },
+      "surface": {
+        "draw": "Tegn generisk overflade",
+        "name": "Overflade",
+        "tooltip": "Skab en generisk overflade til at kommunikere intentionen bag et design. De vil ikke blive taget i betragtning i Analyser."
+      },
+      "title": "Generisk",
+      "volume": {
+        "draw": "Tegn generisk volumen",
+        "name": "Volumen",
+        "tooltip": "Mens generiske volumener vil blive analyseret, vil deres areal ikke blive taget i betragtning i områdemålingerne."
+      }
+    }
+  },
+  "building": {
+    "addFloor": "Tilføj etage",
+    "addFloorsAction": "Tilføj etager",
+    "buildingColorsLabel": "Bygningens farver",
+    "buildingDesignButton": "Åben i Building Design",
+    "buildingDesignDescription": "Denne bygning er designet i Building Design. Åbn Building Design for at redigere den.",
+    "buildingDesignGeometry": "Building Design-geometri",
+    "buildingsTitle": "Bygninger",
+    "buildingWidthLabel": "Bygningens bredde",
+    "divisionWidth": "Opdelingens bredde",
+    "roadWidthLabel": "Vejbredde",
+    "towerBlockWidthLabel": "Tårnblokkens bredde",
+    "typesTitle": "Typer",
+    "upgradingFor3DSketchBuilding": "Opgradering af 3D-skitsebygning til indlejret karbon",
+    "variationsTitle": "Variationer",
+    "errors": {
+      "failedToLoadFunctions": "Brugerdefinerede bygningsfunktioner kunne ikke indlæses",
+      "failedToLoadSettings": "Indstillinger kunne ikke indlæses"
+    },
+    "floorPlans": {
+      "addToLibraryButton": "Føj til bibliotek",
+      "addToLibraryTooltip": "Føj til bibliotek",
+      "emptyFloors": "Tomme etager",
+      "parking": "Parkering",
+      "popupTitle": "Plantegninger",
+      "title": "Plantegninger",
+      "cannotDrawCornerDescription": "Du kan endnu ikke tegne hjørneplaner",
+      "cannotDrawSplitDescription": "Du kan endnu ikke tegne opdelte planer",
+      "finishDrawingTooltip": "Afslut tegningen for at tilføje plantegninger",
+      "mixedSelectionDescription": "Blandede plantegninger valgt",
+      "noLibraryDescription": "Der er ingen plantegninger i biblioteket med denne udvendige form",
+      "noSelectionDescription": "Ingen plantegning i det valgte",
+      "rightClickToAddDescription": "Højreklik på en etage i et af dine forslag for at føje det til biblioteket",
+      "selectSectionsDescription": "Vælg sektioner, der er tomme eller har plantegninger"
+    },
+    "floors": {
+      "seeAllButton": "Se alle etager"
+    },
+    "lineBuilding": {
+      "addNewFloorPlan": "Tilføj ny",
+      "addSectionCutButton": "Tilføj sektionsklip",
+      "apartmentBuildingStories": "Etager i lejlighedsbyggeri",
+      "apartmentBuildingStoryHeight": "Højde på etage lejlighedsbygning",
+      "apartmentBuildingWidth": "Bredde på lejlighedsbygning",
+      "circulationTitle": "Cirkulation",
+      "headerTitle": "Linjebygning",
+      "outdatedLabel": "forældede",
+      "targetSectionLength": "Længde på målsektion",
+      "circulation": {
+        "sectionCountText": "Antal sektioner: {count}",
+        "widthLabel": "Bredde på korridor",
+        "widthText": "Bredde: {width}"
+      },
+      "divisionWidthLabel": "Opdelingens bredde",
+      "releaseToBasicAnimationAlt": "Frigiv til grundlæggende animation",
+      "releaseToBasicExplanation": "Når du frigiver linjeautomatiseringen, oprettes der en basisbygning, der giver dig mulighed for at tilføje funktioner eller parkering til enkelte etager. Efter frigivelse kan linjeautomatiseringen ikke genvindes.",
+      "releaseToFloorPlanAction": "Frigiv til plantegning",
+      "releaseToFloorPlanAnimationAlt": "Animation af frigivelse til plantegning",
+      "releaseToFloorPlanExplanation": "Når cirkulationsautomatiseringen frigives, oprettes der en plantegning, så du kan designe layouts manuelt. Efter frigivelse kan cirkulationsautomatiseringen ikke genvindes.",
+      "towerWidthLabel": "Tårnblokkens bredde"
+    },
+    "properties": {
+      "lengthLabel": "Længde",
+      "numberOfFloorsLabel": "Antal etager",
+      "numberOfStoriesLabel": "Site Study – antal etager",
+      "stories": "Etager",
+      "storyHeight": "Højde på etage",
+      "storyHeightLabel": "Højde på etage",
+      "widthLabel": "Bredde"
+    },
+    "toolbar": {
+      "title": "Bygninger"
+    },
+    "tooltips": {
+      "addBuildingsButton": "Tilføj bygninger",
+      "clampToTerrainButton": "Fastspænd bygninger til terrænet",
+      "numberOfFloorsLabel": "Antal etager",
+      "parkingEditDescription": "Redigering af parkering foretages nu i etageplaneditoren",
+      "releaseToBasicButton": "Frigiv til basisbygning",
+      "releaseToZonesButton": "Frigiv til zoner",
+      "removeBuildingsButton": "Fjern bygninger",
+      "storyHeightLabel": "Højde på etage",
+      "swapFloorPlansButton": "Skift plantegninger",
+      "targetSectionLengthLabel": "Længde på målsektion",
+      "towerWidthLabel": "Tårnbredde",
+      "widthLabel": "Bygningens bredde"
+    },
+    "types": {
+      "basic": {
+        "draw": "Tegn basisbygning",
+        "name": "Basisbygning",
+        "tooltip": "Tegn bygninger med etager af enhver form med kontrol og præcision. Se bygningsstatistik i Områdemålinger."
+      },
+      "line": {
+        "draw": "Tegn linjebygninger",
+        "name": "Linjebygning",
+        "tooltip": "Tegn en bygningsstruktur omkring en linje. Tilpas parametrene, f.eks. sektioner og etager. Se bygningsstatistik i Områdemålinger."
+      }
+    }
+  },
+  "camera": {
+    "compass": "Vis nord op",
+    "lookAt": {
+      "title": "Se på",
+      "tooltip": "Flyt musen hen over en flade for at justere kameraet. Klik for at zoome overfladen, eller træk for at justere zoomområdet."
+    },
+    "lookFrom": {
+      "title": "Se fra punkt",
+      "tooltip": "Klik på et punkt på en facade, hvis du vil se fra. Eller klik og træk for at vælge punktet og visningsretningen."
+    },
+    "optionsLabel": "Kamera valgmuligheder",
+    "optionsTitle": "Kamera valgmuligheder",
+    "switchCameraMode": "Skift kameratilstand",
+    "vectorExport": {
+      "exportSuccessful": "Eksport gennemført",
+      "title": "Vektoreksport"
+    },
+    "switchTo2d": "Skift til 2D-tilstand (ortografisk)",
+    "switchTo3d": "Skift til 3D-tilstand",
+    "zoom": {
+      "toFitProposal": "Zoom, så den passer til forslag",
+      "toFitSelection": "Zoom, så den passer til det valgte"
+    }
+  },
+  "composition": {
+    "graph": {
+      "edgeButton": "Kant"
+    },
+    "rowhouse": {
+      "multipleOnLineButton": "Flere på linje",
+      "placeSinglesButton": "Placer individuelle"
+    }
+  },
+  "contextualData": {
+    "description": "Se og administrer de kontekstuelle data, der er tilgængelige for dit projekt. Du kan også bestille flere data her.",
+    "title": "Kontekstuelle data"
+  },
+  "contextMenu": {
+    "copy": "Kopiér",
+    "cut": "Klip",
+    "delete": "Slet",
+    "exportTerrainAsObj": "Eksportér terræn som obj",
+    "moveToBack": "Flyt til baggrund",
+    "moveToBase": "Flyt til base",
+    "moveToFront": "Flyt til forgrund",
+    "moveToProposal": "Flyt til forslag",
+    "paste": "Sæt ind",
+    "pasteInPlace": "Indsæt på plads",
+    "terrainPad": {
+      "moveToBack": "Flyt terrænpladen til baggrund",
+      "moveToFront": "Flyt terrænpladen til forgrund"
+    }
+  },
+  "copyPaste": {
+    "cannotCopyAcrossAuthContextsMessage": "Det er ikke muligt at kopiere elementer mellem projekter eller hubs.",
+    "failedToCopyElementMessage": "Elementet blev ikke kopieret."
+  },
+  "dataOrders": {
+    "completed": "Følgende dataordre er gennemført: {name}. Den føjes til dit forslag, og du kan se den i Lag om et par sekunder.",
+    "completedAll": "{names} er blevet indlæst og føjet til din forslagsbase. Du kan gennemse og bestille flere data under Kontekstuelle data.",
+    "failed": "{name} mislykkedes",
+    "failedToAdd": "\"{name}\" blev ikke føjet til forslaget, men der er stadig data tilgængelige i biblioteket.",
+    "processing": "Følgende dataordre behandles: {name}. Den føjes til dit forslag, når den er færdigbehandlet.",
+    "statusTitle": "Status for dataordre"
+  },
+  "demoSite": {
+    "badge": "demo",
+    "flyout": {
+      "content": "Vi har oprettet dette websted for at demonstrere funktioner i Forma. Start en vejledning nedenfor for at følge trinnene i en simpel arbejdsgang, og opret dine egne websteder, når du er klar.",
+      "createSiteButton": "Opret ny byggeplads",
+      "createSiteTooltip": "Du skal have en aktiv licens og have tilladelse til at oprette byggepladser i dette projekt",
+      "header": "Dette er en demo-byggeplads",
+      "startGuideButton": "Start vejledning"
+    }
+  },
+  "profilingModal": {
+    "headerGetStartedWith": "KOM GODT I GANG MED",
+    "titleFormaSiteDesign": "Et websted med demo",
+    "description": "Dette er et foruddesignet eksempelwebsted, hvor du kan udforske Forma Byggeplads Design. Du skal ikke bekymre dig om at ødelægge noget – du kan se det som et sikkert sted, hvor du kan eksperimentere uden indflydelse på dine virkelige projekter.",
+    "callToAction": "Klik på {bold} for at udforske det demo websted.",
+    "callToActionBold": "Fortsæt",
+    "buttonContinue": "Fortsæt",
+    "buttonGoToHome": "Gå til startsiden for Forma",
+    "imageAlt": "Forma Byggeplads designvisualisering"
+  },
+  "drawing": {
+    "traceShape": "Spor eksisterende figur"
+  },
+  "hotkeys": {
+    "addNode": "Tilføj node",
+    "cancelDrawingPoint": "Annuller tegnepunkt",
+    "clickAndMoveGrip": "Klik og flyt et håndtag for at skalere i den retning.",
+    "complete": "Udført",
+    "copy": "Kopiér",
+    "cut": "Klip",
+    "deleteSelected": "Slet valgte",
+    "drawHouse": "Tegn hus",
+    "drawHousesWithLine": "Tegn huse med linje",
+    "drawLine": "Tegn linje",
+    "drawRoad": "Tegn vej",
+    "edit": "Rediger",
+    "exitContext": "Afslut kontekst",
+    "exitEditGraph": "Afslut redigering af graf",
+    "exitGraphTool": "Afslut grafværktøj",
+    "exitHouseTool": "Afslut værktøjet til huse",
+    "exitSiteStudyAndApply": "Afslut Site Study-værktøjet, og anvend undersøgelse på forslag",
+    "exitTool": "Afslut værktøj",
+    "exitTransportationTool": "Afslut transportværktøj",
+    "finishEditing": "Afslut redigering",
+    "freeform": "Frihånd",
+    "measureDistance": "Mål afstand",
+    "paste": "Sæt ind",
+    "placeSingleHouses": "Placer enkelthuse",
+    "redo": "Gentag",
+    "remove": "Fjern",
+    "resetGraph": "Nulstil graf",
+    "selectAll": "Vælg alle",
+    "selectSomethingToModify": "Vælg noget, der skal ændres med {toolName}",
+    "switchHouseCorner": "Skift hushjørne",
+    "switchHousePlacementSide": "Skift husplaceringsside",
+    "toggleSidebar": "Skift sidepanel",
+    "undo": "Fortryd"
+  },
+  "guideText": {
+    "alignRotationAxisWithGeometry": "Mens du flytter kompaspositionen, skal du holde Skift nede for at justere rotationsaksen med geometrien under markøren.",
+    "editSiteLayout": "Rediger byggepladslayoutet, eller vælg individuelle zoner, som der skal angives bygningstypologi for.",
+    "freeMode": "Fri tilstand. Tryk på ↹ tabulatortasten for vandret tilstand.",
+    "horizontalMode": "Vandret tilstand. Tryk på ↹ tabulatortasten for fri tilstand.",
+    "mode2D": "2D-tilstand. Alle værktøjer begrænset til vandret plan.",
+    "rotateMoveText": "{moveModeText} Flyt ({inputModeText}). Tryk på ↹ tabulatortasten for {nextMoveModeText} Flyt ({nextInputModeText}).",
+    "selectAreaToExplore": "Vælg, hvilket område der skal undersøges muligheder for byggepladslayout for.",
+    "snappingAxesHint": " Tryk på Alt for at skjule fastgørelsesakserne. Alt + C for at rydde dem.",
+    "straightAction": "Lige {action}. Tryk på ↹ tabulatortasten for at tilspidse {action}.",
+    "switchHouseCornerAndRotate": "Tryk på Tab for at skifte hushjørne. Hold og træk musen for at rotere",
+    "switchHousePlacementSide": "Tryk på tabulatortasten for at skifte side af husets placering",
+    "taperAction": "Tilspids {action}. Tryk på ↹ tabulatortasten for at tilspidse {action}."
+  },
+  "menus": {
+    "generatorsByExtensions": "Generatorer efter udvidelser"
+  },
+  "messages": {
+    "elementAddedTo": "Element føjet til {location}"
+  },
+  "tooltips": {
+    "analyses": {
+      "savingInProgress": "Gemning i gang..."
+    },
+    "camera": {
+      "lookAt": "Se på"
+    },
+    "lineWidth": "Linjebredde",
+    "settings": "Indstillinger",
+    "templates": {
+      "updatesAvailable": "Opdateringer er tilgængelige"
+    }
+  },
+  "errors": {
+    "building": {
+      "failedRightClickOption": "Højrekliksindstillingen for bygningen kunne ikke udføres",
+      "failedToConvertVolumes": "Volumener kunne ikke konverteres til basisbygning",
+      "failedToDraw": "Basisbygningen kunne ikke tegnes",
+      "failedToEdit": "Den nye basisbygning kunne ikke redigeres",
+      "failedToPushPull": "Basisbygningen kunne ikke skubbes/trækkes"
+    },
+    "failedToLoadContextualData": "Kontekstuelle data kunne ikke indlæses",
+    "import": {
+      "largeScale": "Importen indeholder et eller flere elementer, der er store ({size}). Importen vil muligvis ikke fungere som forventet. Tryk på ESC for at annullere.",
+      "resultingShapeInvalid": "Den resulterende form er ugyldig."
+    },
+    "modelNotGeolocated": "Byggepladsdesignmodellen er ikke geolokaliseret. Bestil kontekstuelle data for at geolokalisere den",
+    "terrain": {
+      "boundingBoxTooLarge": "Afgrænsningsfeltet for elementgeometri er for stort til, at det kan bruges som terræn. Maks. størrelse: 4 km². Faktisk størrelse: {size} km²"
+    },
+    "library": {
+      "couldNotFindElement": "Bibliotekselementet kunne ikke findes",
+      "elementNotAvailable": "Bibliotekselement er ikke tilgængeligt",
+      "failedToConvertTerrain": "Der blev ikke konverteret til terrænelement",
+      "failedToDownloadFloorPlans": "Plantegningerne kunne ikke downloades",
+      "failedToSaveFloorPlans": "Plantegninger på projektniveau blev ikke gemt. Opdater siden",
+      "failedToUpdateLibrary": "Biblioteket blev ikke opdateret"
+    },
+    "lineBuilding": {
+      "failedMenuAction": "Fejl i linjebygningsmenu",
+      "failedToDraw": "Linjebygninger blev ikke tegnet",
+      "failedToEdit": "Linjebygning blev ikke redigeret",
+      "failedToolbarAction": "Handling til linjebygning på værktøjslinjen mislykkedes"
+    },
+    "siteStudy": {
+      "errorInExplore": "Fejl i Explore. Prøv igen!",
+      "errorOccurred": "Der opstod en fejl, og vores teknikere blev underrettet.",
+      "failedToLoadPicker": "Explore-vælgeren kunne ikke indlæses. Prøv at udføre handlingen igen."
+    }
+  },
+  "extensions": {
+    "browseAllPlugins": "Gennemse alle plugins",
+    "browseDescription": "Gennemse eksisterende udvidelser eller generatorer fra tredjepartsudbydere, eller tilføj dine egne – de vises her.",
+    "downloadButton": "Hent udvidelser",
+    "downloadDescription": "for at importere modeller fra Revit eller Rhino.",
+    "importModelTitle": "Importér model fra udvidelse",
+    "noDescriptionAvailable": "Ingen beskrivelse tilgængelig.",
+    "plugins": "Plugins"
+  },
+  "errorBoundary": {
+    "componentCrashed": "Komponent gik ned",
+    "retryButton": "Prøv igen",
+    "unexpectedError": "Der opstod en uventet fejl. Prøv handlingen igen, eller genindlæs siden for at prøve igen"
+  },
+  "guides": {
+    "closeMenu": "Luk menuen for guider og måleenheder"
+  },
+  "geometryAlerts": {
+    "dismiss": "Afvis",
+    "header": "Advarsler om geometri",
+    "review": "Gennemse",
+    "title": "Geometriske advarsler ({count})"
+  },
+  "geometryValidation": {
+    "duplicateElement": {
+      "subTitle": "Fjern eller rediger for at køre analyser.",
+      "title": "Duplikerede geometrier"
+    },
+    "invalidBbox": {
+      "subTitle": "Fjern eller rediger for at køre analyser.",
+      "title": "Elementer, hvor geometrien er for langt væk"
+    },
+    "outOfBounds": {
+      "subTitle": "Fjern eller rediger for at køre analyser.",
+      "title": "Elementer uden for terrænet"
+    },
+    "wsmBottomFloorNoArea": {
+      "subTitle": "Første etage har 0-område. Fastgør underfladen vandret for at reparere.",
+      "title": "Første etage med 0-område registreret"
+    },
+    "wsmFloorNoArea": {
+      "subTitle": "Denne bygning har en eller flere etager med 0-område og kan ikke laves om til en gyldig bygning.",
+      "title": "Etage(r) med 0-område registreret"
+    },
+    "wsmNonManifoldBuilding": {
+      "subTitle": "Denne bygning indeholder <a>geometri, der ikke er vandtæt</a>, og kan blive en generisk model uden etager, når 3D-skitsen afsluttes",
+      "title": "Bygningen er ikke vandtæt"
+    },
+    "wsmNonManifoldVolume": {
+      "subTitle": "Denne model indeholder <a>geometri, der ikke er vandtæt</a>, og det kan påvirke funktionsmåden for værktøjet og visningen.",
+      "title": "Geometri er ikke vandtæt"
+    }
+  },
+  "importToolbar": {
+    "title": "Importér model"
+  },
+  "labels": {
+    "addLabelButton": "Tilføj etiket",
+    "category": "Etiketter",
+    "description": "Tilføj etiketter for at markere bestemte punkter på 3D-lærredet med en kort tekstbeskrivelse. Du kan tilføje op til {count} tekstlinjer. ",
+    "label": "Etiket",
+    "placeholder": "Indsæt tekst..."
+  },
+  "layerList": {
+    "buildings": "Bygninger",
+    "category": {
+      "contextualDataDuration": "Kontekstuelle data (~1-2,5 min.)"
+    },
+    "generic": "Generisk",
+    "images": "Billeder",
+    "propertyBoundaries": "Ejendomsgrænser",
+    "roads": "Veje",
+    "siteLimits": "Byggepladsgrænser",
+    "terrain": "Terræn",
+    "vegetation": "Vegetation",
+    "zones": "Zoner"
+  },
+  "layersTitle": "Lag",
+  "library": {
+    "addedToLibrary": "Tilføjede {name} til biblioteket.",
+    "addToLibraryButton": "Føj til bibliotek"
+  },
+  "limits": {
+    "constraint": {
+      "hotkeyDescription": "Tegn begrænsninger",
+      "name": "Begrænsning",
+      "plural": "Begrænsninger",
+      "tooltip": "Opret en volumen for at visualisere projektets begrænsninger."
+    },
+    "siteLimit": {
+      "defineAsAction": "Definer som byggepladsgrænse",
+      "hotkeyDescription": "Tegn byggepladsgrænse",
+      "name": "Byggepladsgrænse",
+      "tooltip": "Opret en byggepladsgrænse, der bruges til at analysere målingerne i dit projekt."
+    },
+    "title": "Grænser",
+    "zone": {
+      "hotkeyDescription": "Tegn zone",
+      "name": "Zone",
+      "tooltip": "Tegn zoner for at definere områder, der skal analyseres på din byggeplads."
+    }
+  },
+  "modes": {
+    "exitDrawingModeAction": "Afslut tegnetilstand"
+  },
+  "navbar": {
+    "addButton": "Tilføj",
+    "quickActionsButton": "Hurtige handlinger",
+    "settingsButton": "Indstillinger"
+  },
+  "navigator": {
+    "base": {
+      "deleteConfirmation": "Er du sikker på, at du vil slette {name}?",
+      "descriptionParagraph1": "En base indeholder objekter, der genbruges i alle dine forslag. Du kan oprette flere baser og skifte mellem dem.",
+      "descriptionParagraph2": "Hvis du vil tilføje et eksisterende objekt, skal du højreklikke på det og vælge Flyt til base. Klik på Rediger for at tegne et nyt objekt."
+    },
+    "dataOrderProcessing": "En dataordre behandles. Den føjes til dit forslag, når den er færdigt."
+  },
+  "pendingOperation": {
+    "defaultDescription": "Venter på, at automatiseringen udføres..."
+  },
+  "placeMode": {
+    "geometriesAdded": "{count} geometrier, der er føjet til dit {layerType}",
+    "geometriesSelectedLabel": "Valgte geometrier",
+    "updateTerrainAction": "Opdater terræn",
+    "updateTerrainDescription": "Erstatter aktuelt terræn med nyt terræn fra biblioteket"
+  },
+  "properties": {
+    "color": "Farve",
+    "elevation": "Højde",
+    "height": "Højde",
+    "length": "Længde",
+    "mixed": "Blandet",
+    "name": "Navn",
+    "position": "Position",
+    "radius": "Radius",
+    "width": "Bredde"
+  },
+  "proposal": {
+    "errors": {
+      "downloadElementsFailed": "Kunne ikke downloade alle objekter.",
+      "downloadElementsRecovery": "eller prøv igen senere. Du er i visningstilstand, indtil problemet er løst",
+      "flatteningGroups": "Affladning af grupper på forslag, da de ikke længere understøttes",
+      "ignoringOldElements": "Ignorerer gamle elementer",
+      "knownCriticalHeader": "Elementer kunne ikke behandles",
+      "knownCriticalMessage": "Opdater siden for at prøve igen.",
+      "missingGeoLocation": "Der mangler en geografisk placering for projektet til at udføre en handling.",
+      "notFoundHeader": "Forslaget blev ikke fundet",
+      "notFoundMessage": "Vi kan ikke finde det forslag, du forsøger at få adgang til.",
+      "terrainNotFoundHeader": "Terrænmodel mangler",
+      "terrainNotFoundMessage": "Der er opstået en uventet fejl med det aktuelle forslag.",
+      "tooManyRequestsHeader": "Nogen har været FOR aktiv!",
+      "tooManyRequestsMessage": "Vi modtog flere anmodninger fra dit netværk, end vi kunne håndtere. Prøv at indlæse denne side senere eller skift til et andet netværk – for eksempel via et personligt hotspot."
+    },
+    "noProposalLayersText": "Elementer, der er unikke for et forslag, vil blive anført her."
+  },
+  "proposalHistory": {
+    "branchFailed": "Nyt forslag kunne ikke oprettes fra gammel revision.",
+    "branchRevisionButton": "Opret nyt forslag",
+    "branchSuccess": "Der er oprettet et nyt forslag fra den valgte version med navnet \"{name}\"",
+    "contributors": "Bidragydere: {count}",
+    "copyLinkButton": "Kopiér link",
+    "currentVersionLabel": "Aktuel version",
+    "filter": {
+      "byAnalysis": "Efter analyse",
+      "byDate": "Efter dato",
+      "from": "Fra",
+      "onlyYours": "Kun din",
+      "pinned": "Fastgjort",
+      "selectDates": "Vælg datoer",
+      "title": "Filter",
+      "to": "Til"
+    },
+    "linkToVersionCopied": "Link til {time} kopieret",
+    "nameThisVersionAction": "Navngiv denne version",
+    "pinVersionAction": "Fastgør version",
+    "unpinVersionAction": "Frigør version",
+    "untitledVersionLabel": "Version uden titel",
+    "viewingVersionLabel": "Viser version"
+  },
+  "quickAccess": {
+    "actionsLabel": "Handlinger",
+    "noSuggestions": "Ingen forslag",
+    "openHotkeyList": "Åbn genvejsliste",
+    "repeatLastTool": "Gentag sidste værktøj",
+    "search": "Søg",
+    "title": "Hurtig adgang"
+  },
+  "requestInvite": {
+    "button": "Anmod om invitation",
+    "homeLink": "Gå til din startside",
+    "projectLink": "Gå til projekt",
+    "status": {
+      "ALREADY_MEMBER": {
+        "header": "Allerede medlem",
+        "message": "Du er allerede medlem af dette projekt."
+      },
+      "ALREADY_REQUESTED": {
+        "header": "Invitationen er allerede anmodet om",
+        "message": "Du har allerede en ventende invitationsanmodning til dette projekt. Hvis din administrator godkender din anmodning, modtager du en invitation til dette projekt i din e-mail."
+      },
+      "CAN_JOIN": {
+        "header": "Du kan deltage",
+        "message": "Du kan deltage i dette projekt. Gå til projekt, og klik på knappen 'Deltag i projekt'."
+      },
+      "ERROR": {
+        "header": "Der gik noget galt, prøv igen"
+      },
+      "NOT_FOUND": {
+        "header": "Fejl, kan ikke finde projektet",
+        "message": "Den angivne URL-adresse peger ikke på et eksisterende projekt."
+      },
+      "REQUEST_LIMIT": {
+        "header": "For mange anmodninger",
+        "message": "Du har for mange ventende invitationsanmodninger. Prøv igen på et senere tidspunkt."
+      },
+      "SUCCESS": {
+        "header": "Din anmodning er blevet sendt!",
+        "message": "Hvis din administrator godkender din anmodning, modtager du en invitation til dette projekt i din e-mail."
+      }
+    },
+    "statusFallback": {
+      "header": "Du har ikke adgang til dette Forma-projekt",
+      "message": "For at få adgang til projektet skal du være inviteret af en af administratorerne. Anmod om en invitation fra administratorer ved hjælp af knappen nedenfor."
+    }
+  },
+  "resources": {
+    "defaultFolderDescription": "Standard til mappe: Mappen Mine projektfiler"
+  },
+  "rowhouse": {
+    "alignment": {
+      "center": "Juster center",
+      "left": "Juster til venstre",
+      "right": "Juster til højre"
+    },
+    "buildingLabel": "Bygning",
+    "createNew": "Opret ny",
+    "layoutLabel": "Layout",
+    "loading": "Indlæser",
+    "name": "Hus",
+    "parcelLabel": "Pakke",
+    "plural": "Huse",
+    "publish": "Udgiv",
+    "tooltip": "Tegn et enkelt hus eller huse, der er struktureret omkring en linje. Opret og genbrug hustyper fra panelet med egenskaber.",
+    "tooltips": {
+      "buffer": "Buffer",
+      "flatRoof": "Fladt tag",
+      "gableRoof": "Gavltag",
+      "length": "Længde",
+      "numberOfFloors": "Antal etager",
+      "ridgeDirection": "Rygretning",
+      "roofAngle": "Tagvinkel",
+      "shedRoof": "Shedtag",
+      "storyHeight": "Højde på etage",
+      "width": "Bredde"
+    }
+  },
+  "sectionBox": {
+    "deleteButton": "Feltet Slet sektion",
+    "enableButton": "Feltet Aktivér sektion",
+    "saveButton": "Feltet Gem sektion",
+    "title": "Feltet Sektion",
+    "toggleButton": "Omrids af feltet Vis/skjul"
+  },
+  "savingModal": {
+    "conflict": {
+      "body": "Dette forslag blev ændret, mens du foretog redigeringer (der kan f.eks. være et andet teammedlem, der arbejder på det). Vil du gemme din version som et nyt forslag?",
+      "discardEdits": "Slet ændringer",
+      "saveAsNew": "Gem som nyt forslag",
+      "title": "Konflikt under redigering af forslag"
+    },
+    "error": {
+      "body": "Den seneste redigering blev ikke gemt. Opdater siden for at fortsætte redigeringen.",
+      "ok": "OK",
+      "title": "Gemning mislykkedes"
+    }
+  },
+  "shapes": {
+    "arc": "Cirkelbue efter tre punkter",
+    "circle": "Cirkel",
+    "cube": "Terning",
+    "cuboid": "Kube",
+    "cylinder": "Cylinder",
+    "dome": "Kuppel",
+    "freeform": "Frihånd",
+    "pyramid": "Pyramide",
+    "rectangle": "Rektangel",
+    "roof": "Tag",
+    "shapes3d": "3D-figurer",
+    "spline": "Sløjfe",
+    "title": "Primitiver"
+  },
+  "shapeTool": {
+    "instructions": {
+      "activateGuideLines": "Aktivér retningslinjer ved at holde markøren over kanter. Hold ⇧ Skift nede for at følge retningslinjen. Hold {key} for at forhindre, at de klikker fast.",
+      "affineInstructions": "Hold {key} for at forhindre, at de klikker fast. Tryk på Tab for at skifte mellem vandret, lodret og terræntilstand.",
+      "clickToAddSubtract": "Tilføj et punkt til en linje, eller subtraher punkter med klik.",
+      "editModeStartFinishMac": "Hold ⌥ Indstilling nede for at tilføje/subtrahere punkter. Tryk på ↵ Enter for at afslutte redigeringen.",
+      "editModeStartFinishWindows": "Hold Alt nede for at tilføje/subtrahere punkter. Tryk på ↵ Enter for at afslutte redigeringen.",
+      "finishEditing": "Tryk på ↵ Enter for at afslutte redigeringen.",
+      "finishPolygon": "Tryk på ↵ Enter for at afslutte oprettelsen af polygonen.",
+      "preciseMoveVertical": "Tryk på {key} for at skifte til den lodrette tilstand.",
+      "specifyDistance": "Skriv for at indstille en bestemt afstand. Klik for at placere."
+    }
+  },
+  "sketch3D": {
+    "invalidOperationToast": "Sletning, kopiering, klipning og indsættelse af etager understøttes ikke i 3D-skitsebygninger. Prøv at redigere i 3D-skitse i stedet for."
+  },
+  "snapping": {
+    "cursorElevation": "Højde ved markøren",
+    "guidesAndMeasurements": "Guider og måleenheder",
+    "snapToGuides": "Fastgør til hjælpelinjer",
+    "snapToObjects": "Fastgør til objekter"
+  },
+  "spaces": {
+    "nameInputPlaceholder": "Angiv områdenavn, eller lad feltet stå tomt som standard"
+  },
+  "scenarios": {
+    "proposals": {
+      "connectToScenario": "Opret forbindelse til scenarie",
+      "connectToScenarioDesc": "Et scenarie er en delt designbeholder i dit projekt, som forbinder modeller, værktøjer og geometriske og andre data fra flere software-programmer."
+    }
+  },
+  "relativeTime": {
+    "today": "I dag"
+  },
+  "terrain": {
+    "elevation": "Højde",
+    "errors": {
+      "loadMapImageFailed": "Kortbilledet kunne ikke indlæses",
+      "loadSatelliteTextureFailed": "Indlæsning af satellitstruktur mislykkedes.",
+      "loadTextureFailed": "Indlæsning af terræntekstur mislykkedes."
+    },
+    "labels": {
+      "numberOfSelectedPads": "Volumen af puder",
+      "padVolume": "Volumen af pude",
+      "padsVolume": "Volumen af puder",
+      "showAsPercentage": "Vis som procentdel",
+      "showAsRatio": "Vis som forhold",
+      "totalMassBalance": "Samlet massebalance"
+    },
+    "massBalanceHover": "Nettovolumen af masseændring i hele terrænet.",
+    "metricsHeader": "Målepunkter",
+    "pad": {
+      "header": "Terrænplade",
+      "name": "Terrænplade",
+      "tooltip": "Klip/udfyld terræn, juster højde og hældning, og vurder massebalancen."
+    },
+    "padVolumeHover": "Volumen tilføjet/trukket fra terrænet med de valgte puder.",
+    "padsHeader": "Terrænplader",
+    "slope": "Hældning"
+  },
+  "tools": {
+    "pendingBaseProposalSwitchBlockedMessage": "Du kan ikke skifte mellem baselag/forslag, mens automatiseringen indlæses",
+    "pendingSelectionBlockedMessage": "Du kan ikke ændre det valgte, mens automatiseringen indlæses",
+    "pendingToolSwitchBlockedMessage": "Værktøjer er ikke tilgængelige, mens automatisering indlæses",
+    "transform": {
+      "redefineReferencePointsButton": "Omdefinering af referencepunkter"
+    }
+  },
+  "transform": {
+    "cover": "Forside",
+    "fillet": "Bånd",
+    "intersect": {
+      "name": "Skæringspunkt",
+      "tooltip": "Opret et skæringspunkt mellem to eller flere objekter. Fodaftrykket for det først valgte objekt ændres tilsvarende."
+    },
+    "loft": "Loft",
+    "move": {
+      "name": "Flyt",
+      "tooltip": "Flyt et objekt ved at definere et reference- og slutpunkt. "
+    },
+    "offset": {
+      "apply": "Anvend forskydning",
+      "name": "Forskydning",
+      "tooltip": "Forlæng et objekts fodaftryk udad eller formindsk det indad med en bestemt afstand."
+    },
+    "rotate": {
+      "name": "Drej",
+      "tooltip": "Drej objekter i scenen omkring et defineret referencepunkt."
+    },
+    "shell": "Skal",
+    "split": {
+      "name": "Opdel",
+      "tooltip": "Opdel et eller flere objekter ved hjælp af en linje."
+    },
+    "subtract": {
+      "name": "Subtraher",
+      "tooltip": "Træk en form fra et objekt ved hjælp af et andet objekt. Fodaftrykket for det først valgte objekt ændres tilsvarende."
+    },
+    "sweep": "Sweep",
+    "title": "Transformér",
+    "union": {
+      "name": "Sammenføjning",
+      "tooltip": "Du kan flette to eller flere objekter. Det først valgte objekt definerer det resulterende objekts kategori og højde."
+    }
+  },
+  "transportation": {
+    "cornerRadius": {
+      "smooth": "Hjørneradius er en dynamisk værdi, der optimerer vejkurver baseret på layout.",
+      "tight": "Hjørneradius er en lille fast værdi lig med 1/2 af vejbredden."
+    },
+    "railroads": {
+      "hotkeyDescription": "Tegn skinner",
+      "name": "Jernbaner",
+      "toolButton": "Jernbaner",
+      "tooltip": "Opret jernbaner, og tilpas bredderne via det højre panel.",
+      "typeLabel": "Jernbanetype",
+      "typePlaceholder": "Vælg skinnetype"
+    },
+    "roads": {
+      "hotkeyDescription": "Tegn vej",
+      "name": "Veje",
+      "toolButton": "Veje",
+      "tooltip": "Opret veje, og tilpas bredderne via det højre panel.",
+      "widthLabel": "Vejbredde",
+      "withGraphToolButton": "Veje (med graf)"
+    },
+    "title": "Transport",
+    "trafficData": {
+      "addButton": "Tilføj trafikdata",
+      "adtTooltip": "Hverdagsdøgntrafik",
+      "advancedSettingsLabel": "Avancerede indstillinger",
+      "dailyDistributionLabel": "Fordeling af daglig trafik",
+      "dayTimeTooltip": "Dag: 06.00-18.00",
+      "eveningTimeTooltip": "Aften : 18.00-22.00",
+      "heavyVehicleLabel": "Tæt trafik",
+      "nightTimeTooltip": "Nat : 22.00-06.00",
+      "railRequiredInputsMessage": "Alle input er nødvendige, for at jernbanen kan tages i betragtning i støjanalysen",
+      "removeButton": "Fjern trafikdata",
+      "roadRequiredInputsMessage": "Alle input er nødvendige, for at vejen kan tages i betragtning i støjanalysen",
+      "speedLimitTooltip": "Hastighedsgrænse",
+      "title": "Data om trafikstøj"
+    }
+  },
+  "ui": {
+    "add": "Tilføj",
+    "area": "Område",
+    "areaSum": "Areal (sum)",
+    "automationLabel": "AUTOMATISERING",
+    "beta": "Beta",
+    "browsePluginsDescription": "Gennemse eksisterende plugins fra tredjepartsudbydere, eller tilføj dine egne – de vil blive vist her.",
+    "cancel": "Annuller",
+    "close": "Luk",
+    "color": "Farve",
+    "delete": "Slet",
+    "detach": "Fjern",
+    "duplicate": "Dupliker",
+    "edit": "Rediger",
+    "gridSettings": "Gitterindstillinger",
+    "hide": "Skjul",
+    "length": "Længde",
+    "lengthSum": "Længde (sum)",
+    "newVersionAvailable": "Ny version er tilgængelig.",
+    "redo": "Gentag",
+    "refresh": "Opdater",
+    "remove": "Fjern",
+    "rename": "Omdøb",
+    "repair": "Reparere",
+    "retry": "Prøv igen",
+    "show": "Vis",
+    "siteLabel": "Byggeplads",
+    "surroundings": "Omgivelser",
+    "textAlignment": "Tekstjustering",
+    "undo": "Fortryd",
+    "update": "Opdater",
+    "videoNotSupported": "Din browser understøtter ikke videoetiketten.",
+    "xyzAxes": "XYZ-akser"
+  },
+  "performanceStats": {
+    "currentSnapshot": "Aktuelt øjebliksbillede",
+    "remainingFromPastSnapshots": "Tilbage fra tidligere øjebliksbilleder",
+    "title": "Effektivitetsstatistikker {status}"
+  },
+  "units": {
+    "asl": "ASL",
+    "magl": "MAGL",
+    "masl": "MASL"
+  },
+  "vegetation": {
+    "alignment": {
+      "center": "Juster center",
+      "left": "Juster til venstre",
+      "right": "Juster til højre",
+      "spacing": "Afstand"
+    },
+    "areaWithTrees": {
+      "hotkeyDescription": "Tegn område med træer",
+      "name": "Område med træer",
+      "tooltip": "Opret et område fyldt med træer, og rediger deres størrelse og tæthed. Alle træer vil påvirke analyserne."
+    },
+    "header": "Træer",
+    "landscapingTitle": "Landskabsudformning",
+    "properties": {
+      "bufferTooltip": "Buffer",
+      "gridLengthLabel": "Gitterlængde",
+      "gridWidthLabel": "Gitterbredde",
+      "heightTooltip": "Træhøjde",
+      "offsetTooltip": "Forskydning"
+    },
+    "title": "Vegetation",
+    "tooltips": {
+      "averageDistanceLabel": "Gennemsnitlig afstand mellem trækroner",
+      "heightLabel": "Højden på hvert træ"
+    },
+    "treeLine": {
+      "hotkeyDescription": "Tegn en linje af træer",
+      "name": "Trælinje",
+      "tooltip": "Opret en linje fyldt med træer, og rediger deres størrelse og tæthed. Alle træer vil påvirke analyserne."
+    },
+    "trees": "Træer"
+  },
+  "viewAnalysis": {
+    "errors": {
+      "noAnalysisId": "Der er ikke angivet noget analysisId",
+      "unsupportedAnalysisType": "Ikke en understøttet analysetype: {type}"
+    }
+  },
+  "viewOnlyBanner": {
+    "accessMessage": "Du har skrivebeskyttet adgang til denne byggeplads"
+  },
+  "windAnalysis": {
+    "analyzing": "Analyserer ...",
+    "atCapacity": "Vi kører i øjeblikket et stort antal detaljerede vindanalyser. Det kan tage længere tid at fuldføre analysen. Tak for din tålmodighed!",
+    "circleOutsideBoundingBox": "Analyseområdet er uden for kortområdet",
+    "concurrentQuotaReached": "Grænsen for samtidige vindanalyser er nået",
+    "concurrentQuotaReachedDescription": "Du har for mange samtidige vindanalyser kørende. Vent på, at nogle af dem bliver færdige.",
+    "concurrentQuotaWarning": "Grænse for samtidige analyser",
+    "concurrentQuotaWarningDescription": "Du har {remaining} detaljerede vindanalyser tilbage, før du når grænsen for {limit} samtidige analyser.",
+    "dailyQuotaReached": "Grænsen for analyse er nået",
+    "dailyQuotaReachedDescription": "Du har nået den daglige grænse for vindanalyser.",
+    "dailyQuotaReachedDescriptionRetry": "Du har nået den daglige grænse for vindanalyser. Prøv igen på {nextAvailableAt}.",
+    "loadingData": "Indlæser data",
+    "loadingDataTooltip": "Indlæser...",
+    "runAnalysis": "Analysér (~{min}-{max} min.)",
+    "seeAnalysisButton": "Se detaljeret analyse",
+    "stoppedOrFailed": "Analysen blev stoppet eller mislykkedes!",
+    "viewerAccessDisableTooltip": "Kan ikke køre analyser som en seer"
+  },
+  "wsm": {
+    "actions": {
+      "advancedModelingTools": "Avancerede modelleringsværktøjer",
+      "editIn": "Rediger i 3D-skitse",
+      "howToStartEditingMessage": "Tryk på ⏎, eller dobbeltklik for at redigere i 3D-skitse.",
+      "launch": "Ny 3D-skitse",
+      "sketch": "Skitse",
+      "updateProperties": "Opdater egenskaber"
+    },
+    "advancedModeling": {
+      "cover": "Forside",
+      "fillet": "Bånd",
+      "intersect": "Skæringspunkt",
+      "loft": "Loft",
+      "offset": "Forskydning",
+      "shell": "Skal",
+      "subtract": "Subtraher",
+      "sweep": "Sweep",
+      "union": "Sammenføjning"
+    },
+    "axes": {
+      "reset": "Nulstil akser",
+      "set": "Indstilling af XYZ-akser"
+    },
+    "buildingType": {
+      "draw": "Tegn 3D-skitsebygning",
+      "name": "3D-skitsebygning"
+    },
+    "buttons": {
+      "apply": "Anvend",
+      "cancel": "Annuller",
+      "ok": "OK"
+    },
+    "convert": {
+      "externalMessage": "Konvertering af et objekt til 3D-skitse for at ændre ydre flader, kanter og hjørner.\n\nNår først elementet er konverteret, vil det ikke længere være forbundet til elementet i den oprindelige kilde, og ændringerne vil ikke blive synkroniseret.",
+      "message": "Konvertering af et objekt til 3D-skitse for at ændre ydre flader, kanter og hjørner.",
+      "title": "Konverter til 3D-skitse"
+    },
+    "dialogs": {
+      "arrayButtonArray": "Mønsterkopi",
+      "arrayButtonCancel": "Annuller",
+      "arrayDistanceBetween2Points": "Længde mellem 2 punkter",
+      "arrayDistanceTotalLength": "Samlet længde",
+      "arraySubtitleDistance": "Afstand",
+      "arraySubtitleQuantity": "Mængde",
+      "arraySubtitleType": "Type",
+      "arrayTitle": "Mønsterkopi",
+      "arrayTypeLinear": "Lineær mønsterkopi",
+      "arrayTypeRadial": "Radial mønsterkopi",
+      "corruptedElementsDeleted": "Nogle elementer blev ikke gemt og blev ødelagt. Disse elementer blev automatisk slettet.",
+      "editDimensionTitle": "Rediger dimension",
+      "recoveryClosedWithoutSaving": "3D-skitse blev lukket uden at blive gemt korrekt.",
+      "recoveryQuestion": "Vil du gendanne de ændringer, der ikke er gemt?",
+      "recoveryTitle": "Ikke-gemte modelændringer fundet"
+    },
+    "undoStates": {
+      "flattenLowestNonHorizontalFaces": "Udjævning af de laveste flader, der ikke er vandrette"
+    },
+    "finishSelection": {
+      "back": "Tilbage (B)",
+      "cancel": "Annuller (Esc)",
+      "confirm": "Afslut (F)",
+      "next": "Næste (N)"
+    },
+    "floors": {
+      "addFloor": "Tilføj etage",
+      "addFloors": "Tilføj etager",
+      "floorHeight": "Etagehøjde",
+      "floors": "Etager",
+      "floorWithNumberLabel": "Etage {level}",
+      "moreOptions": "Flere",
+      "numberOfFloors": "Antal etager",
+      "removeFloors": "Fjern etager",
+      "resetFloors": "Nulstil etager",
+      "title": "Oplysninger om etage"
+    },
+    "groupEditing": {
+      "redo": "Gentag",
+      "undo": "Fortryd"
+    },
+    "grouping": {
+      "toolbarTitle": "GRUPPER"
+    },
+    "guidesAndMeasurements": {
+      "measureAngle": "Mål vinkel",
+      "measureDistance": "Mål afstand",
+      "menuTitle": "Guider og måleenheder",
+      "title": "Guider og måleenheder"
+    },
+    "mesh": {
+      "convertHintMessage": "Dobbeltklik for at aktivere yderligere redigeringsværktøjer ved at konvertere net til objekter.",
+      "importExceededLimitsMessage": "Din import overstiger {limit} nettrekanter og forbliver uændret, hvilket giver bedre ydeevne.\n\nDu kan få flere redigeringsværktøjer ved at markere individuelle net og dobbeltklikke for at konvertere dem til redigerbare objekter.",
+      "importExceededLimitsTitle": "Importen overskrider grænsen for nettrekanter"
+    },
+    "pasteInPlaceAction": "Indsæt på plads",
+    "properties": {
+      "mixed": "Blandet",
+      "objectWithIdLabel": "Objekt {id}"
+    },
+    "scaleTitle": "SKALA",
+    "selection": {
+      "areaSelectionOptions": "Valgmuligheder til valg af område",
+      "filterEdges": "Kanter",
+      "filterFaces": "Ansigter",
+      "filterGroups": "Grupper",
+      "filterMeshes": "Net",
+      "filterSolids": "Faste stoffer",
+      "filterVertices": "Hjørner",
+      "selection": "Valg",
+      "selectionTools": "Markeringsværktøjer"
+    },
+    "tools": {
+      "array": "Mønsterkopi",
+      "editArcCircle": "Rediger bue eller cirkel",
+      "editSpline": "Rediger sløjfe",
+      "extrudeEdges": "Ekstruder kanter",
+      "extrudeFace": "Ekstruder flade",
+      "facetFace": "Facetflade",
+      "flattenFace": "Affladning af flader",
+      "group": "Gruppe",
+      "groupDetach": "Fjern",
+      "meshToObjects": "Konverter net",
+      "mirror": "Spejl",
+      "move": "Flyt",
+      "offsetEdges": "Forskudte kanter",
+      "offsetFace": "Forskudt flade",
+      "reverseFace": "Bagside",
+      "rotate": "Drej",
+      "scale": "Skala",
+      "scaleNonUniform": "Uensartet skala",
+      "smoothEdges": "Bløde kanter",
+      "tiltFace": "Vip flade",
+      "ungroup": "Ophæv gruppering"
+    },
+    "tooltips": {
+      "building": "Komplekse 3D-bygninger med ubegrænsede muligheder såsom skrå tage, skrå vægge og meget andet.",
+      "editIn": "Konverter objekter for at ændre hjørner, kanter og flader i 3D-skitse.",
+      "launch": "Brug 3D-skitsering til at modellere og gentage arkitektdesignkoncepter i en tidlig fase."
+    },
+    "zoom": {
+      "fitProposal": "Zoom, så den passer til forslag",
+      "fitSelection": "Zoom, så den passer til det valgte"
+    }
+  },
+  "tutorialWidget": {
+    "allTutorialsTitle": "Hurtige startvejledninger",
+    "allTutorialsDescription": "Udfyld disse interaktive vejledninger for at konfigurere dit websted og begynde at arbejde med Byggeplads. ",
+    "completionMessage": "Godt gået! Du har fuldført vejledningen {header}!",
+    "completionText": "{percent}% fuldført",
+    "completedTitle": "Fuldført",
+    "continueButton": "Fortsæt",
+    "stepsTotal": "{count} trin i alt",
+    "timeLabel": "{time} min",
+    "stepProgress": "{current} af {total}",
+    "nextButton": "Næste",
+    "doneButton": "Udført",
+    "tutorialPanelButtonText": "Site Design",
+    "tutorialPanelButtonDescription": "Hurtige startvejledninger",
+    "upNextTitle": "Næste skridt"
+  },
+  "tutorials": {
+    "setUpYourSite": {
+      "title": "Konfigurer dit websted",
+      "description": "Tilføj kontekstuelle data, inden du begynder at modellere og analysere byggepladser og bygninger.",
+      "reviewHeader": "Byggeplads opsætning fuldført",
+      "reviewText": "Du har tilføjet kontekstuelle data og en byggepladsgrænse.{ 0}{br}Godt arbejde! Du kan nu udforske vores modelleringsværktøjer og importfunktioner eller fortsætte med en anden vejledning.",
+      "steps": {
+        "openContextualTab": {
+          "header": "Åbn fane med kontekstuelle data",
+          "text": "Start med at åbne fanen <bold>Kontekstafhængige data</bold>."
+        },
+        "browseAndOrder": {
+          "header": "Gennemse data for placering af websted",
+          "text": "Klik på <bold>Gennemse kontekstuelle data</bold> for at se, hvilke datapakker der er tilgængelige for din placering.{ 0}{br}Data kan omfatte omgivende bygninger, veje og terræn. "
+        },
+        "orderStarterPackage": {
+          "header": "Bestil startdatapakke",
+          "text": "Klik på <bold>Tilføj</bold> for at gennemgå, hvad der er inkluderet i denne datapakke. Disse data er gratis. "
+        },
+        "orderData": {
+          "header": "Bestil datapakke",
+          "text": "Vælg ordre for at starte hentningen af kontekstuelle data i 3D til dit websted."
+        },
+        "drawSiteLimit": {
+          "header": "Tegn byggepladsgrænse",
+          "text": "Aktivér dette tegneværktøj for at definere byggepladsgrænsen. Når den er aktiv, skal du tegne punkter rundt om stedet og omslutte figuren.{br}{br}Det er en forudsætning, at byggepladsgrænse er defineret, før du kan køre analyser i Forma Byggeplads Design."
+        }
+      }
+    },
+    "addBuildings": {
+      "title": "Tilføj bygninger",
+      "description": "Opret bygninger med vores modelleringsværktøjer, eller importér eksisterende modeller. ",
+      "reviewHeader": "Bygninger føjet til websted",
+      "reviewText": "Du har tegnet bygninger og importeret aktiver til din byggeplads. Godt arbejde! Du kan nu vurdere miljøforholdene ved at køre analyser eller fortsætte med en anden vejledning.",
+      "steps": {
+        "selectBuildingsTool": {
+          "header": "Tegn en basisbygning",
+          "text": "Klik på <bold>Grundlæggende bygning</bold> for at aktivere byggeværktøjet. Når den er aktiv, skal du tegne bygningens form og vælge det sidste punkt for at færdiggøre tegningen af fodaftrykket."
+        },
+        "exploreParametricOptions": {
+          "header": "Udforsk parametriske muligheder",
+          "text": "Udforsk de parametriske muligheder, der er tilgængelige for at ændre din bygningsmodel."
+        },
+        "importModel": {
+          "header": "Importér en model eller fil",
+          "text": "Klik på <bold>Importér</bold> for at overføre en model eller et rasterbillede fra din lokale enhed."
+        },
+        "placeInScene": {
+          "header": "Placer i scenarie",
+          "text": "Klik på det element, du lige har importeret fra biblioteket. Når det er valgt, skal du placere det på din byggeplads ved at klikke og trække. Selvstudiet går automatisk videre, når elementet er placeret."
+        }
+      }
+    },
+    "assessEnvironmentalConditions": {
+      "title": "Vurder miljøforhold",
+      "description": "Kør analyser af solskinstimer for at træffe dine tidlige designbeslutninger.",
+      "reviewHeader": "Analyse af soltimer udført!",
+      "reviewText": "Du har kørt en analyse af solskinstimer på dit websted.{ 0}{br}Du kan nu fortsætte med at oprette nye forslag, sammenligne, analysere eller udforske mere af Byggeplads Design.",
+      "steps": {
+        "selectAnalysis": {
+          "header": "Vælg analysen",
+          "text": "Klik på det fremhævede ikon for at vælge analysen af solskinstimer."
+        },
+        "selectDate": {
+          "header": "Vælg en dato",
+          "text": "Brug rullemenuen til at angive en dato, for hvilken du vil analysere solskinstimer på din byggeplads."
+        },
+        "runAnalysis": {
+          "header": "Kør analyse",
+          "text": "Klik på knappen for at starte analysen. Det tager kun et par sekunder at fuldføre.{br}{br}Vejledningen genoptages automatisk, når analysen er gennemført."
+        },
+        "openAnalysisResults": {
+          "header": "Åbn resultater",
+          "text": "Når de er færdige, vises analyseresultaterne på listen her. Klik på de seneste resultater for at gennemgå dem i detaljer. Et nyt vindue åbnes.",
+          "altText": "Vindue med analyseresultater"
+        }
+      }
+    }
+  },
+  "webgl": {
+    "notSupported": {
+      "linkText": "Hvordan rettes \"WebGL understøttes ikke\"?",
+      "text": "Din computer understøtter tilsyneladende ikke WebGL, hvilket er et krav for at kunne bruge Forma",
+      "url": "https://help.autodeskforma.com/autodeskforma/en/articles/5649543-webgl-not-supported-what-to-do"
+    }
+  }
+}

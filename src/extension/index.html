@@ -743,6 +743,32 @@
         display: none; /* Hide icons per Forma guidelines */
       }
 
+      /* Mode Buttons */
+      .mode-buttons {
+        display: flex;
+        gap: var(--forma-space-2);
+        width: 100%;
+      }
+
+      .mode-btn {
+        flex: 1;
+      }
+
+      .mode-btn-secondary {
+        background: var(--forma-surface-200);
+        color: var(--forma-text-default);
+        border: 1px solid var(--forma-surface-300);
+      }
+
+      .mode-btn-secondary:hover {
+        background: var(--forma-surface-250);
+      }
+
+      .design-width-section {
+        margin-top: var(--forma-space-3);
+        display: none;
+      }
+
       /* Status Bar */
       .status-bar {
         padding: var(--forma-space-2) var(--forma-space-4);
@@ -1225,9 +1251,21 @@
       <button class="window-toggle-btn" id="show-results-btn" style="display: none;">
         <span class="btn-icon">&#128269;</span> Show Results
       </button>
-      <button class="generate-btn" id="generate-btn">
-        Select building
-      </button>
+      <div class="mode-buttons">
+        <button class="generate-btn mode-btn" id="select-btn">
+          Select building
+        </button>
+        <button class="generate-btn mode-btn mode-btn-secondary" id="design-btn">
+          Design
+        </button>
+      </div>
+      <div class="design-width-section" id="design-width-section" style="display: none;">
+        <label class="form-label" style="margin-bottom: 4px;">Building Width</label>
+        <div class="input-with-unit">
+          <input type="number" id="design-width" value="65" min="20" max="200" step="1">
+          <span class="input-unit">ft</span>
+        </div>
+      </div>
     </div>
 
     <!-- Saved Floorplates Section -->

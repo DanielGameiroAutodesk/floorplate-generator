@@ -1404,10 +1404,6 @@ export function generateFloorplate(
   customColors?: UnitColorMap,
   wingOptions?: WingGenerationOptions
 ): FloorPlanData {
-  Logger.info('GENERATOR v2025.01.13.G - DEBUGGING POINT 4 (TINY APARTMENTS / UNIT MIX CORRUPTION)');
-
-  fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',location:'generator-core.ts:generateFloorplate',message:'Entering generateFloorplate',data:{wingOptions, length: footprint.width},hypothesisId:'H2_UNIT_MIX_CORRUPTION',timestamp:Date.now()})}).catch(()=>{});
-
   const cores: CoreBlock[] = [];
   const length = footprint.width;
   const buildingDepth = footprint.depth;
@@ -1458,7 +1454,7 @@ export function generateFloorplate(
   const worstCaseGap2Cores = length - (2 * minFeasibleCorner) - (2 * coreWidth);
   const worstCaseTravel2Cores = worstCaseGap2Cores / 2;
 
-  const needsMidCore = worstCaseTravel2Cores > limit;
+  const needsMidCore = wingOptions?.skipEgress ? false : worstCaseTravel2Cores > limit;
   const hasMidCore = needsMidCore;
 
   const numCores = hasMidCore ? 3 : 2;
@@ -1509,21 +1505,36 @@ export function generateFloorplate(
   // The orchestrator pre-allocates exact counts per wing.
   if (wingOptions?.unitInventory) {
     const inv = wingOptions.unitInventory;
-    const half = (t: UnitType) => Math.round(inv[t] / 2);
-    const northInv: Record<UnitType, number> = {
-      [UnitType.Studio]: half(UnitType.Studio),
-      [UnitType.OneBed]: half(UnitType.OneBed),
-      [UnitType.TwoBed]: half(UnitType.TwoBed),
-      [UnitType.ThreeBed]: half(UnitType.ThreeBed)
+    const totalLen = availableRentableLengthCoreSide + availableRentableLengthClearSide;
+    const coreRatio = totalLen > 0 ? availableRentableLengthCoreSide / totalLen : 0.5;
+    
+    const coreInv: Record<UnitType, number> = {
+      [UnitType.Studio]: 0, [UnitType.OneBed]: 0, [UnitType.TwoBed]: 0, [UnitType.ThreeBed]: 0
     };
-    earlyBuildingCounts = {
-      north: northInv,
-      south: {
-        [UnitType.Studio]: inv[UnitType.Studio] - northInv[UnitType.Studio],
-        [UnitType.OneBed]: inv[UnitType.OneBed] - northInv[UnitType.OneBed],
-        [UnitType.TwoBed]: inv[UnitType.TwoBed] - northInv[UnitType.TwoBed],
-        [UnitType.ThreeBed]: inv[UnitType.ThreeBed] - northInv[UnitType.ThreeBed]
+    const clearInv: Record<UnitType, number> = {
+      [UnitType.Studio]: 0, [UnitType.OneBed]: 0, [UnitType.TwoBed]: 0, [UnitType.ThreeBed]: 0
+    };
+
+    const allTypes = [UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio] as const;
+    
+    // Distribute corner-eligible units (give at least 1 to each side if possible, or use ratio)
+    for (const type of allTypes) {
+      const total = inv[type];
+      if (total <= 0) continue;
+      
+      if (isCornerEligible(type, config) && total >= 2) {
+        coreInv[type] = Math.floor(total / 2);
+        clearInv[type] = total - coreInv[type];
+      } else {
+        const coreShare = Math.round(total * coreRatio);
+        coreInv[type] = Math.min(coreShare, total);
+        clearInv[type] = total - coreInv[type];
       }
+    }
+    
+    earlyBuildingCounts = {
+      north: coreSide === 'North' ? coreInv : clearInv,
+      south: coreSide === 'South' ? coreInv : clearInv
     };
   }
 
@@ -1751,8 +1762,9 @@ export function generateFloorplate(
     // CRITICAL: Only pull 3BRs from MID segments — never steal from another corner segment,
     // as that would degrade one corner to fix another.
     const stackCorner = (sideA: Record<UnitType, number>[], sideB: Record<UnitType, number>[], cornerIdx: number) => {
-      const segA = sideA[cornerIdx];
-      const segB = sideB[cornerIdx];
+      const segA = sideA && sideA.length > cornerIdx ? sideA[cornerIdx] : null;
+      const segB = sideB && sideB.length > cornerIdx ? sideB[cornerIdx] : null;
+      if (!segA || !segB) return;
       const sideBCornerIndices = new Set([0, sideB.length - 1]);
       
       const has3BR_A = segA[UnitType.ThreeBed] > 0;
@@ -1785,8 +1797,8 @@ export function generateFloorplate(
     stackCorner(southCounts, northCounts, 0); // Try to match North to South
 
     // Stack RIGHT corners
-    const northRightIdx = northCounts.length - 1;
-    const southRightIdx = southCounts.length - 1;
+    const northRightIdx = northCounts.length > 0 ? northCounts.length - 1 : 0;
+    const southRightIdx = southCounts.length > 0 ? southCounts.length - 1 : 0;
     stackCorner(northCounts, southCounts, northRightIdx);
     stackCorner(southCounts, northCounts, southRightIdx);
   }
@@ -1901,17 +1913,14 @@ export function generateFloorplate(
           return expandedUnit!.area >= config[t].area * 0.9;
         }) || UnitType.Studio;
 
-        if (bestType !== expandedUnit.type) {
-          Logger.debug(` STRICT ALIGNMENT: Upgraded expanded unit from ${expandedUnit.type} to ${bestType} (area ${expandedUnit.area.toFixed(0)}sf)`);
-          expandedUnit.type = bestType;
-          expandedUnit.typeId = bestType;
-          expandedUnit.typeName = bestType;
-          expandedUnit.color = getUnitColor(bestType, customColors);
-          
-          upgradedCount++;
-          // Instrumentation
-          fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',location:'generator-core.ts:generateFloorplate',message:'Strict Alignment Type Upgrade',data:{from: expandedUnit.type, to: bestType},hypothesisId:'H2_UNIT_MIX_CORRUPTION',timestamp:Date.now()})}).catch(()=>{});
-        }
+          if (bestType !== expandedUnit.type) {
+            Logger.debug(` STRICT ALIGNMENT: Upgraded expanded unit from ${expandedUnit.type} to ${bestType} (area ${expandedUnit.area.toFixed(0)}sf)`);
+            expandedUnit.type = bestType;
+            expandedUnit.typeId = bestType;
+            expandedUnit.typeName = bestType;
+            expandedUnit.color = getUnitColor(bestType, customColors);
+            
+          }
       }
     });
 
@@ -2068,7 +2077,7 @@ export function generateFloorplate(
   const leftNorthEligible = northFirst && isCornerEligible(northFirst.type, config) && isLShapeEligible(northFirst.type, config);
   const leftSouthEligible = southFirst && isCornerEligible(southFirst.type, config) && isLShapeEligible(southFirst.type, config);
 
-  if (northFirst && southFirst && leftNorthEligible && leftSouthEligible) {
+  if (!wingOptions?.skipLeftEndCore && northFirst && southFirst && leftNorthEligible && leftSouthEligible) {
     const minW = Math.min(northFirst.width, southFirst.width);
     if (minW > END_OVERLAP) {
       leftCorridorVoid = minW - END_OVERLAP;
@@ -2111,7 +2120,7 @@ export function generateFloorplate(
   const rightNorthEligible = northLast && isCornerEligible(northLast.type, config) && isLShapeEligible(northLast.type, config);
   const rightSouthEligible = southLast && isCornerEligible(southLast.type, config) && isLShapeEligible(southLast.type, config);
 
-  if (!suppressRightCorner && northLast && southLast && rightNorthEligible && rightSouthEligible) {
+  if (!wingOptions?.skipRightEndCore && northLast && southLast && rightNorthEligible && rightSouthEligible) {
     const minW = Math.min(northLast.width, southLast.width);
     if (minW > END_OVERLAP) {
       rightCorridorVoid = minW - END_OVERLAP;
@@ -2151,10 +2160,10 @@ export function generateFloorplate(
   }
 
     let actualNorthMix = {
-      [UnitType.Studio]: units.filter(u => u.y === 0 && u.type === UnitType.Studio).length,
-      [UnitType.OneBed]: units.filter(u => u.y === 0 && u.type === UnitType.OneBed).length,
-      [UnitType.TwoBed]: units.filter(u => u.y === 0 && u.type === UnitType.TwoBed).length,
-      [UnitType.ThreeBed]: units.filter(u => u.y === 0 && u.type === UnitType.ThreeBed).length
+      [UnitType.Studio]: units.filter(u => Math.abs(u.y) < 0.1 && u.type === UnitType.Studio).length,
+      [UnitType.OneBed]: units.filter(u => Math.abs(u.y) < 0.1 && u.type === UnitType.OneBed).length,
+      [UnitType.TwoBed]: units.filter(u => Math.abs(u.y) < 0.1 && u.type === UnitType.TwoBed).length,
+      [UnitType.ThreeBed]: units.filter(u => Math.abs(u.y) < 0.1 && u.type === UnitType.ThreeBed).length
     };
     let actualSouthMix = {
       [UnitType.Studio]: units.filter(u => u.y > 0.1 && u.type === UnitType.Studio).length,
@@ -2162,10 +2171,6 @@ export function generateFloorplate(
       [UnitType.TwoBed]: units.filter(u => u.y > 0.1 && u.type === UnitType.TwoBed).length,
       [UnitType.ThreeBed]: units.filter(u => u.y > 0.1 && u.type === UnitType.ThreeBed).length
     };
-
-    // #region agent log
-    fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',runId:'run2',hypothesisId:'H1',location:'generator-core.ts:end',message:'Final Wing Mix',data:{wingLength:length,hasMidCore,snapToCore:strictAlignment,coreSide,targetNorthMix:earlyBuildingCounts.north,targetSouthMix:earlyBuildingCounts.south,actualNorthMix,actualSouthMix},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
   // --- 11b. Detect and create fillers for leftover space ---
   // IMPORTANT: This MUST happen AFTER all unit modifications (alignment, core wrapping,
@@ -2441,18 +2446,24 @@ export function generateFloorplateVariants(
   const strategies: OptimizationStrategy[] = ['balanced', 'mixOptimized', 'efficiencyOptimized'];
 
   return strategies.map((strategy, idx) => {
-    const floorplan = generateFloorplate(
-      footprint,
-      config,
-      egressConfig,
-      corridorWidth,
-      coreWidth,
-      coreDepth,
-      coreSide,
-      alignment,
-      strategy,
-      customColors
-    );
+    let floorplan;
+    try {
+      floorplan = generateFloorplate(
+        footprint,
+        config,
+        egressConfig,
+        corridorWidth,
+        coreWidth,
+        coreDepth,
+        coreSide,
+        alignment,
+        strategy,
+        customColors
+      );
+    } catch (err: any) {
+      console.error(`[CRITICAL CRASH] generateFloorplate failed for strategy ${strategy}`, err?.message, err?.stack);
+      throw err;
+    }
 
     return {
       id: `option-${idx + 1}`,

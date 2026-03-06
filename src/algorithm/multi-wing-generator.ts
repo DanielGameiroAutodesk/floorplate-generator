@@ -34,6 +34,8 @@ import { distance, rotateAroundOrigin } from '../geometry/point';
 import { lineIntersection } from '../geometry/line';
 import { buildCorridorGraph, shortestPathToCore } from '../geometry/graph';
 import { Logger } from './utils/logger';
+import { calculateGlobalUnitCounts } from './unit-counts';
+import { isCornerEligible } from './flexibility-model';
 
 // ============================================================================
 // Section 1: Types & Interfaces
@@ -428,9 +430,6 @@ function generateWingBar(
     maxY: task.wing.width
   };
 
-  // Log before calling generator-core
-  fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',location:'multi-wing-generator.ts:generateWingBar',message:'Calling generateWingBar',data:{wingId: task.wingId, length: task.effectiveLength, skipLeft: task.wingOptions.skipLeftEndCore, skipRight: task.wingOptions.skipRightEndCore},hypothesisId:'H2_UNIT_MIX_CORRUPTION',timestamp:Date.now()})}).catch(()=>{});
-
   return generateFloorplate(
     footprint, config, egressConfig,
     corridorWidth, coreWidth, coreDepth,
@@ -576,9 +575,6 @@ function createCornerUnit(
   const availB = distance(sOuter, bOuterFacadeWorld);
   Logger.debug(`[MW] createCornerUnit availA=${availA.toFixed(2)}, availB=${availB.toFixed(2)}`);
   
-  // Instrumentation for Point 4
-  fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',location:'multi-wing-generator.ts:createCornerUnit',message:'Corner Unit gaps',data:{availA, availB, targetArea},hypothesisId:'H1_CORNER_UNIT_FILLER',timestamp:Date.now()})}).catch(()=>{});
-
   // Walls should be perpendicular to the corridor centerline, not the outer facade
   const pA = perpCCW(dirA);
   const pB = perpCCW(dirB);
@@ -619,7 +615,7 @@ function createCornerUnit(
     const p2A = addPt(p1A, scalePt(nA_corr, rdA));
     const p2B = addPt(p1B, scalePt(nB_corr, rdB));
     const poly = [sOuter, p1A, p2A, p3A, sCorrOuter, p3B, p2B, p1B];
-    const area = polygonArea(poly);
+    const area = polygonArea({ vertices: poly });
     const diff = Math.abs(area - targetArea);
     if (diff < bestAreaDiff) {
       bestAreaDiff = diff;
@@ -669,7 +665,7 @@ function createCornerUnit(
   const p2A_c = addPt(p1A_c, scalePt(nA_corr, rdA));
   const p2B_c = addPt(p1B_c, scalePt(nB_corr, rdB));
   const expandedPoly = [sOuter, p1A_c, p2A_c, p3A, sCorrOuter, p3B, p2B_c, p1B_c];
-  const finalArea = polygonArea(expandedPoly);
+  const finalArea = polygonArea({ vertices: expandedPoly });
   
   // Calculate bounding box and center
   const xs = expandedPoly.map(p => p.x);
@@ -687,6 +683,35 @@ function createCornerUnit(
     polyCenterY = expandedPoly.reduce((sum, p) => sum + p.y, 0) / expandedPoly.length;
   }
 
+  const getUnitColor = (type: UnitType): string => {
+    if (customColors && customColors[type]) return customColors[type];
+    const DEFAULT_COLORS: Record<string, string> = {
+      [UnitType.Studio]: '#A3D2CA',
+      [UnitType.OneBed]: '#5EAAA8',
+      [UnitType.TwoBed]: '#056676',
+      [UnitType.ThreeBed]: '#004A55',
+    };
+    return DEFAULT_COLORS[type] || '#CCCCCC';
+  };
+
+  const getBestTypeForArea = (area: number): UnitType => {
+    let bestType = UnitType.Studio;
+    let minDiff = Infinity;
+    const types = [UnitType.Studio, UnitType.OneBed, UnitType.TwoBed, UnitType.ThreeBed] as UnitType[];
+    for (const t of types) {
+      if (config[t].percentage > 0 || t === UnitType.Studio) {
+        const diff = Math.abs(config[t].area - area);
+        if (diff < minDiff) {
+          minDiff = diff;
+          bestType = t;
+        }
+      }
+    }
+    return bestType;
+  };
+
+  const bestCornerType = getBestTypeForArea(finalArea);
+
   // Create corner unit
   const cornerUnit: UnitBlock = {
     id: `corner-${wingA.id}-${wingB.id}`,
@@ -695,68 +720,85 @@ function createCornerUnit(
     width: maxX - minX,
     depth: maxY - minY,
     area: finalArea,
-    type: targetUnitType,
+    type: bestCornerType,
+    typeId: bestCornerType,
+    typeName: bestCornerType,
+    color: getUnitColor(bestCornerType),
     polyPoints: expandedPoly,
     centerX: polyCenterX,
     centerY: polyCenterY
   };
   
   if (fillerLengthA > 0) {
-    const p1A_end = aOuterFacadeWorld;
-    const p1A_start = addPt(sOuter, scalePt(awayA, expandD_A));
-    const p2A_start = addPt(p1A_start, scalePt(nA_corr, rdA));
-    const p2A_end = addPt(p1A_end, scalePt(nA_corr, rdA));
-    const fillerPolyA = [p1A_start, p1A_end, p2A_end, p2A_start];
-    const areaA = polygonArea(fillerPolyA);
-
-    // Instrumentation for tiny filler A
-    fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',location:'multi-wing-generator.ts:createCornerUnit',message:'Valid Filler A generated',data:{area: areaA, wingId: wingA.id, availA, expandD_A},hypothesisId:'H1_CORNER_UNIT_FILLER',timestamp:Date.now()})}).catch(()=>{});
+    const numSlicesA = Math.max(1, Math.round(fillerLengthA / 6.5)); // aim for ~6.5m wide units (1BR/Studio)
+    const sliceLenA = fillerLengthA / numSlicesA;
     
-    const fXs = fillerPolyA.map(p => p.x);
-    const fYs = fillerPolyA.map(p => p.y);
-    const fMinX = Math.min(...fXs);
-    const fMaxX = Math.max(...fXs);
-    const fMinY = Math.min(...fYs);
-    const fMaxY = Math.max(...fYs);
+    for (let i = 0; i < numSlicesA; i++) {
+      const p1_start = addPt(sOuter, scalePt(awayA, expandD_A + i * sliceLenA));
+      const p1_end = addPt(sOuter, scalePt(awayA, expandD_A + (i + 1) * sliceLenA));
+      const p2_start = addPt(p1_start, scalePt(nA_corr, rdA));
+      const p2_end = addPt(p1_end, scalePt(nA_corr, rdA));
+      const fillerPolyA = [p1_start, p1_end, p2_end, p2_start];
+      
+      const areaA = polygonArea({ vertices: fillerPolyA });
+      
+      const fXs = fillerPolyA.map(p => p.x);
+      const fYs = fillerPolyA.map(p => p.y);
+      const fMinX = Math.min(...fXs);
+      const fMaxX = Math.max(...fXs);
+      const fMinY = Math.min(...fYs);
+      const fMaxY = Math.max(...fYs);
 
-    fillers.push({
-      id: `filler-corner-A-${wingA.id}`,
-      x: fMinX, y: fMinY, width: fMaxX - fMinX, depth: fMaxY - fMinY,
-      area: polygonArea(fillerPolyA),
-      type: 'Filler',
-      polyPoints: fillerPolyA,
-      centerX: fillerPolyA.reduce((sum, p) => sum + p.x, 0) / fillerPolyA.length,
-      centerY: fillerPolyA.reduce((sum, p) => sum + p.y, 0) / fillerPolyA.length
-    });
+      const bestTypeA = getBestTypeForArea(areaA);
+      fillers.push({
+        id: `filler-corner-A-${wingA.id}-${i}`,
+        x: fMinX, y: fMinY, width: fMaxX - fMinX, depth: fMaxY - fMinY,
+        area: areaA,
+        type: bestTypeA,
+        typeId: bestTypeA,
+        typeName: bestTypeA,
+        color: getUnitColor(bestTypeA),
+        polyPoints: fillerPolyA,
+        centerX: fillerPolyA.reduce((sum, p) => sum + p.x, 0) / fillerPolyA.length,
+        centerY: fillerPolyA.reduce((sum, p) => sum + p.y, 0) / fillerPolyA.length
+      });
+    }
   }
 
   if (fillerLengthB > 0) {
-    const p1B_end = bOuterFacadeWorld;
-    const p1B_start = addPt(sOuter, scalePt(awayB, expandD_B));
-    const p2B_start = addPt(p1B_start, scalePt(nB_corr, rdB));
-    const p2B_end = addPt(p1B_end, scalePt(nB_corr, rdB));
-    const fillerPolyB = [p1B_start, p1B_end, p2B_end, p2B_start];
-    const areaB = polygonArea(fillerPolyB);
-
-    // Instrumentation for tiny filler B
-    fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',location:'multi-wing-generator.ts:createCornerUnit',message:'Valid Filler B generated',data:{area: areaB, wingId: wingB.id, availB, expandD_B},hypothesisId:'H1_CORNER_UNIT_FILLER',timestamp:Date.now()})}).catch(()=>{});
+    const numSlicesB = Math.max(1, Math.round(fillerLengthB / 6.5)); // aim for ~6.5m wide units (1BR/Studio)
+    const sliceLenB = fillerLengthB / numSlicesB;
     
-    const fXs = fillerPolyB.map(p => p.x);
-    const fYs = fillerPolyB.map(p => p.y);
-    const fMinX = Math.min(...fXs);
-    const fMaxX = Math.max(...fXs);
-    const fMinY = Math.min(...fYs);
-    const fMaxY = Math.max(...fYs);
+    for (let i = 0; i < numSlicesB; i++) {
+      const p1_start = addPt(sOuter, scalePt(awayB, expandD_B + i * sliceLenB));
+      const p1_end = addPt(sOuter, scalePt(awayB, expandD_B + (i + 1) * sliceLenB));
+      const p2_start = addPt(p1_start, scalePt(nB_corr, rdB));
+      const p2_end = addPt(p1_end, scalePt(nB_corr, rdB));
+      const fillerPolyB = [p1_start, p1_end, p2_end, p2_start];
+      
+      const areaB = polygonArea({ vertices: fillerPolyB });
 
-    fillers.push({
-      id: `filler-corner-B-${wingB.id}`,
-      x: fMinX, y: fMinY, width: fMaxX - fMinX, depth: fMaxY - fMinY,
-      area: polygonArea(fillerPolyB),
-      type: 'Filler',
-      polyPoints: fillerPolyB,
-      centerX: fillerPolyB.reduce((sum, p) => sum + p.x, 0) / fillerPolyB.length,
-      centerY: fillerPolyB.reduce((sum, p) => sum + p.y, 0) / fillerPolyB.length
-    });
+      const fXs = fillerPolyB.map(p => p.x);
+      const fYs = fillerPolyB.map(p => p.y);
+      const fMinX = Math.min(...fXs);
+      const fMaxX = Math.max(...fXs);
+      const fMinY = Math.min(...fYs);
+      const fMaxY = Math.max(...fYs);
+
+      const bestTypeB = getBestTypeForArea(areaB);
+      fillers.push({
+        id: `filler-corner-B-${wingB.id}-${i}`,
+        x: fMinX, y: fMinY, width: fMaxX - fMinX, depth: fMaxY - fMinY,
+        area: areaB,
+        type: bestTypeB,
+        typeId: bestTypeB,
+        typeName: bestTypeB,
+        color: getUnitColor(bestTypeB),
+        polyPoints: fillerPolyB,
+        centerX: fillerPolyB.reduce((sum, p) => sum + p.x, 0) / fillerPolyB.length,
+        centerY: fillerPolyB.reduce((sum, p) => sum + p.y, 0) / fillerPolyB.length
+      });
+    }
   }
 
   return { cornerUnit, fillers };
@@ -881,7 +923,9 @@ function computeIntersectionJoinGeometry(
   transformB: WingTransform,
   taskA: WingTask,
   taskB: WingTask,
-  corridorWidth: number
+  corridorWidth: number,
+  fpdA?: import('./types').FloorPlanData,
+  fpdB?: import('./types').FloorPlanData
 ): IntersectionJoinGeometry | null {
   const interPt: Pt = { x: intersection.point.x, y: intersection.point.y };
 
@@ -991,9 +1035,55 @@ function computeIntersectionJoinGeometry(
 
   Logger.debug(`[MW] Far outer: A=(${aFarOuterFacade.x.toFixed(2)},${aFarOuterFacade.y.toFixed(2)}), B=(${bFarOuterFacade.x.toFixed(2)},${bFarOuterFacade.y.toFixed(2)})`);
 
+  // Helper to calculate actual available space up to the nearest outer block
+  const calcAvail = (
+    sOut: Pt, awayD: Pt, outFac: Pt, inFac: Pt, width: number, fpd?: import('./types').FloorPlanData
+  ) => {
+    let baseDist = distance(sOut, outFac);
+    if (!fpd || (!fpd.units.length && !fpd.cores.length)) return baseDist + 5; // Fallback
+    
+    const crossDir = normalize(subPt(inFac, outFac));
+    let minD = Infinity;
+    
+    const checkBlock = (b: {x:number, y:number, width:number, depth:number, polyPoints?: Pt[]}) => {
+      // Create poly if missing
+      const poly = b.polyPoints && b.polyPoints.length > 2 
+        ? b.polyPoints 
+        : [
+            { x: b.x, y: b.y },
+            { x: b.x + b.width, y: b.y },
+            { x: b.x + b.width, y: b.y + b.depth },
+            { x: b.x, y: b.y + b.depth }
+          ];
+          
+      // Centroid
+      const centroid = {
+        x: poly.reduce((s, p) => s + p.x, 0) / poly.length,
+        y: poly.reduce((s, p) => s + p.y, 0) / poly.length
+      };
+      
+      const distToOut = dot(subPt(centroid, outFac), crossDir);
+      if (distToOut < width * 0.6) {
+        // It is on the outer side
+        for (const v of poly) {
+          const d = dot(subPt(v, sOut), awayD);
+          if (d > 0 && d < minD) {
+            minD = d;
+          }
+        }
+      }
+    };
+    
+    fpd.units.forEach(checkBlock);
+    fpd.cores.forEach(checkBlock);
+    
+    // Add a tiny tolerance to prevent floating point issues or literal zero gaps
+    return minD === Infinity ? baseDist + 5 : Math.max(baseDist, minD - 0.05);
+  };
+
   // Provide available space on outer sides (this helps generator-core know how much space it can expand units into)
-  const availA = distance(sOuter, aOuterFacadeWorld);
-  const availB = distance(sOuter, bOuterFacadeWorld);
+  const availA = calcAvail(sOuter, awayA, aOuterFacadeWorld, aInnerFacadeWorld, wingA.width, fpdA);
+  const availB = calcAvail(sOuter, awayB, bOuterFacadeWorld, bInnerFacadeWorld, wingB.width, fpdB);
 
   // Return join geom
   return {
@@ -1240,8 +1330,6 @@ function assembleFloorPlan(
       else if (u.type === UnitType.TwoBed) tb++;
       else if (u.type === UnitType.ThreeBed) thb++;
     }
-    fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',location:'multi-wing-generator.ts:assembleFloorPlan',message:'Wing results merge unit counts',data:{wingId: task.wingId, counts: {st, ob, tb, thb}},hypothesisId:'H2_UNIT_MIX_CORRUPTION',timestamp:Date.now()})}).catch(()=>{});
-
     for (const u of fpd.units) {
       allUnits.push({ ...u, id: `unit-${++unitId}` });
     }
@@ -1371,7 +1459,7 @@ function assembleFloorPlan(
 
   // GSF via Shoelace
   const ccwPoly = ensureCounterClockwise({ vertices: polygon });
-  const gsf = polygonArea(ccwPoly);
+  const gsf = polygonArea({ vertices: ccwPoly });
   const totalUnitCount = allUnits.length;
   const efficiency = gsf > 0 ? nrsf / gsf : 0;
 
@@ -1542,8 +1630,6 @@ function assembleFloorPlan(
     tb: (tb/totalRes*100).toFixed(1),
     thb: (thb/totalRes*100).toFixed(1)
   } : {};
-  fetch('http://127.0.0.1:7318/ingest/e8a87796-65b1-41f2-a655-6a4986609b6e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4b0bab'},body:JSON.stringify({sessionId:'4b0bab',location:'multi-wing-generator.ts:assembleFloorPlan',message:'Final unit mix',data:{counts: {st, ob, tb, thb}, mix, totalRes, fillersCount: allFillers.length},hypothesisId:'H2_UNIT_MIX_CORRUPTION',timestamp:Date.now()})}).catch(()=>{});
-
   return {
     units: allUnits,
     cores: allCores,
@@ -1573,15 +1659,15 @@ function assembleFloorPlan(
       edges: corridorGraphEdges
     },
     wingInfo: {
-      shape: analysis.shape,
-      wingCount: analysis.wings.length,
-      wings: analysis.wings.map(w => ({
+      shape: analysis.shape || 'Unknown',
+      wingCount: analysis.wings ? analysis.wings.length : 0,
+      wings: analysis.wings ? analysis.wings.map(w => ({
         id: w.id,
         length: w.length,
         width: w.width,
         center: wingCenter(w),
         direction: w.direction
-      }))
+      })) : []
     }
   };
 }
@@ -1615,7 +1701,11 @@ export function generateMultiWingFloorplate(
 
   const { wings, intersections } = wingAnalysis;
 
-  Logger.debug(`[MW] Starting graph-based generation for ${wings.length} wings, ${intersections.length} intersections`);
+  Logger.debug(`[MW] Starting graph-based generation for ${wings?.length} wings, ${intersections?.length} intersections`);
+
+  if (!wings || wings.length === 0) {
+    throw new Error("Invalid analysis object: wings array is missing or empty.");
+  }
 
   // Step 1: Build wing connectivity graph
   const graph = buildWingGraph(wingAnalysis);
@@ -1630,81 +1720,136 @@ export function generateMultiWingFloorplate(
 
   Logger.debug(`[MW] BFS produced ${tasks.length} tasks, root wing=${rootId}`);
 
-  // --- 1. Compute Outer Gaps ---
-  // Process intersections first to gather outer gap info
-  for (const edge of graph.edgeList) {
-    const inter = edge.intersection;
-    const wingA = analysis.wings.find(w => w.id === edge.wingIdA);
-    const wingB = analysis.wings.find(w => w.id === edge.wingIdB);
-    const taskA = taskList.find(t => t.wingId === edge.wingIdA);
-    const taskB = taskList.find(t => t.wingId === edge.wingIdB);
+  // --------------------------------------------------------------------------
+  // GLOBAL UNIT MIX ALLOCATION FOR MULTI-WING
+  // --------------------------------------------------------------------------
+  // To avoid over-generating large units, we calculate the global unit mix
+  // for the entire building first, subtract the units forced into intersections,
+  // and distribute the remainder to the individual wings.
+  const totalEffectiveLength = tasks.reduce((sum, t) => sum + t.effectiveLength, 0);
+  
+  // Calculate EXACT total length by accounting for cores that take up space
+  let actualTotalLength = 0;
+  tasks.forEach(t => {
+    let coresToSubtract = 0;
+    if (!t.wingOptions.skipLeftEndCore) coresToSubtract += coreWidth;
+    if (!t.wingOptions.skipRightEndCore) coresToSubtract += coreWidth;
     
-    // We compute temporary transforms based on current geoOffsets
-    const transA = taskA ? computeWingTransform(taskA.wing, taskA.geoOffsetLeft, taskA.geoOffsetRight) : undefined;
-    const transB = taskB ? computeWingTransform(taskB.wing, taskB.geoOffsetLeft, taskB.geoOffsetRight) : undefined;
+    actualTotalLength += t.effectiveLength; // clear side
+    actualTotalLength += Math.max(0, t.effectiveLength - coresToSubtract); // core side
+  });
 
-    if (wingA && wingB && taskA && taskB && transA && transB) {
-      const joinGeom = computeIntersectionJoinGeometry(inter, wingA, wingB, transA, transB, taskA, taskB, corridorWidth);
-      if (joinGeom) {
-        // We will just use the availA and availB from joinGeom
-        const availA = joinGeom.availA || 0;
-        const availB = joinGeom.availB || 0;
+  const minSegmentsForMix = tasks.length * 2;
+  
+  // Approximate rentableDepth
+  const approxRentableDepth = (wings[0]?.width || 18.28) / 2 - corridorWidth / 2;
+
+  const globalCounts = calculateGlobalUnitCounts(
+    actualTotalLength,
+    config,
+    approxRentableDepth,
+    minSegmentsForMix,
+    0, // totalBonusArea approximation
+    strategy
+  );
+
+  // Sort active types by largest area first
+  const activeTypes = [UnitType.ThreeBed, UnitType.TwoBed, UnitType.OneBed, UnitType.Studio]
+    .filter(t => config[t].percentage > 0)
+    .sort((a, b) => config[b].area - config[a].area);
+    
+  const targetUnitType = activeTypes.length > 0 ? activeTypes[0] : UnitType.ThreeBed;
+
+  if (includeIntersectionCustomUnits) {
+    const numIntersections = intersections.filter(i => i.type === 'inner').length;
+    
+    // We want the intersections to "consume" the allocation of the largest typology.
+    // But we must preserve the total physical width of the units assigned to the wings,
+    // otherwise the wings will have white spaces.
+    let unitsToRemove = Math.min(globalCounts[targetUnitType], numIntersections);
+    
+    if (unitsToRemove > 0) {
+      globalCounts[targetUnitType] -= unitsToRemove;
+      
+      const removedWidth = unitsToRemove * (config[targetUnitType].area / approxRentableDepth);
+      const otherTypes = activeTypes.filter(t => t !== targetUnitType);
+      
+      if (otherTypes.length > 0) {
+        let remainingWidthToFill = removedWidth;
         
-        if (availA > 0) {
-          if (joinGeom.edgeA === 'left') {
-            taskA.wingOptions.outerGapLeft = availA;
-          } else {
-            taskA.wingOptions.outerGapRight = availA;
-          }
+        // Distribute the missing width to other active types
+        for (const type of otherTypes) {
+           const w = config[type].area / approxRentableDepth;
+           // Give a proportional share, or just greedy fill
+           // Let's do greedy fill starting from second largest to avoid too many tiny units
+           const countToAdd = Math.floor(remainingWidthToFill / w);
+           globalCounts[type] += countToAdd;
+           remainingWidthToFill -= countToAdd * w;
         }
-        if (availB > 0) {
-          if (joinGeom.edgeB === 'left') {
-            taskB.wingOptions.outerGapLeft = availB;
-          } else {
-            taskB.wingOptions.outerGapRight = availB;
-          }
+        
+        // If there's still a significant gap (>2m), add one more of the smallest type to ensure no white space
+        if (remainingWidthToFill > 2) {
+           const smallest = otherTypes[otherTypes.length - 1];
+           globalCounts[smallest]++;
+        }
+      }
+    }
+    
+    Logger.debug(`[MW] Global mix: Swapped ${unitsToRemove}x ${targetUnitType} for smaller units to accommodate intersections.`);
+  }
+
+  // Initialize unitInventory for each task and count exposed ends
+  const taskExposedCorners = tasks.map(t => {
+    t.wingOptions = t.wingOptions || {};
+    t.wingOptions.unitInventory = {
+      [UnitType.Studio]: 0,
+      [UnitType.OneBed]: 0,
+      [UnitType.TwoBed]: 0,
+      [UnitType.ThreeBed]: 0
+    };
+    const hasLeft = t.wingOptions.intersectionEnds?.includes('left') || t.wingOptions.skipLeftEndCore;
+    const hasRight = t.wingOptions.intersectionEnds?.includes('right') || t.wingOptions.skipRightEndCore;
+    // Each exposed end has 2 corner segments (North and South)
+    return ((hasLeft ? 0 : 1) + (hasRight ? 0 : 1)) * 2;
+  });
+
+  // PASS 1: Distribute corner-eligible units to exposed corners
+  for (const type of activeTypes) {
+    if (globalCounts[type] > 0 && isCornerEligible(type, config)) {
+      // Find tasks with remaining exposed corner capacity
+      for (let i = 0; i < tasks.length; i++) {
+        while (taskExposedCorners[i] > 0 && globalCounts[type] > 0) {
+          tasks[i].wingOptions.unitInventory![type]++;
+          globalCounts[type]--;
+          taskExposedCorners[i]--;
         }
       }
     }
   }
 
-  // --- 1. Compute Outer Gaps ---
-  // Process intersections first to gather outer gap info
-  for (const edge of graph.edgeList) {
-    const inter = edge.intersection;
-    const wingA = analysis.wings.find(w => w.id === edge.wingIdA);
-    const wingB = analysis.wings.find(w => w.id === edge.wingIdB);
-    const taskA = tasks.find(t => t.wingId === edge.wingIdA);
-    const taskB = tasks.find(t => t.wingId === edge.wingIdB);
-    
-    // We compute temporary transforms based on current geoOffsets
-    const transA = taskA ? computeWingTransform(taskA.wing, taskA.geoOffsetLeft, taskA.geoOffsetRight) : undefined;
-    const transB = taskB ? computeWingTransform(taskB.wing, taskB.geoOffsetLeft, taskB.geoOffsetRight) : undefined;
+  // PASS 2: Distribute remaining global counts to wings proportionally by length
+  for (const type of activeTypes) {
+    const totalForType = globalCounts[type];
+    if (totalForType <= 0) continue;
 
-    if (wingA && wingB && taskA && taskB && transA && transB) {
-      const joinGeom = computeIntersectionJoinGeometry(inter, wingA, wingB, transA, transB, taskA, taskB, corridorWidth);
-      if (joinGeom) {
-        // We will just use the availA and availB from joinGeom
-        const availA = joinGeom.availA || 0;
-        const availB = joinGeom.availB || 0;
-        
-        if (availA > 0) {
-          if (joinGeom.edgeA === 'left') {
-            taskA.wingOptions.outerGapLeft = availA;
-          } else {
-            taskA.wingOptions.outerGapRight = availA;
-          }
-        }
-        if (availB > 0) {
-          if (joinGeom.edgeB === 'left') {
-            taskB.wingOptions.outerGapLeft = availB;
-          } else {
-            taskB.wingOptions.outerGapRight = availB;
-          }
-        }
-      }
+    const remainders: { taskIndex: number; value: number }[] = [];
+    let currentSum = 0;
+
+    tasks.forEach((t, index) => {
+      const rawCount = totalForType * (t.effectiveLength / totalEffectiveLength);
+      const intCount = Math.floor(rawCount);
+      t.wingOptions.unitInventory![type] += intCount;
+      currentSum += intCount;
+      remainders.push({ taskIndex: index, value: rawCount - intCount });
+    });
+
+    const deficit = totalForType - currentSum;
+    remainders.sort((a, b) => b.value - a.value);
+    for (let i = 0; i < deficit; i++) {
+      tasks[remainders[i].taskIndex].wingOptions.unitInventory![type]++;
     }
   }
+  // --------------------------------------------------------------------------
 
   // Step 3: Generate each wing as an independent bar
   const wingResults: Array<{ fpd: FloorPlanData; task: WingTask; transform: WingTransform }> = [];
@@ -1751,8 +1896,11 @@ export function generateMultiWingFloorplate(
     if (!taskA || !taskB || !transformA || !transformB) continue;
 
     // Compute join geometry once for all intersection pieces
+    const wA_fpd = wingResults.find(r => r.task.wingId === widA)?.fpd;
+    const wB_fpd = wingResults.find(r => r.task.wingId === widB)?.fpd;
+
     const joinGeom = computeIntersectionJoinGeometry(
-      inter, wA, wB, transformA, transformB, taskA, taskB, corridorWidth
+      inter, wA, wB, transformA, transformB, taskA, taskB, corridorWidth, wA_fpd, wB_fpd
     );
     if (!joinGeom) continue;
 
@@ -1771,8 +1919,8 @@ export function generateMultiWingFloorplate(
         cu.id = `corner-unit-${widA}-${widB}`;
         cornerUnits.push(cu);
         for (const f of cuFillers) {
-          f.id = `corner-filler-${widA}-${widB}-${Math.random().toString(36).slice(2, 7)}`;
-          if (f) allFillers.push(f);
+          f.id = `corner-unit-extra-${widA}-${widB}-${Math.random().toString(36).slice(2, 7)}`;
+          if (f) cornerUnits.push(f);
         }
       }
     }
@@ -1805,27 +1953,82 @@ export function generateMultiWingFloorplateVariants(
   config: UnitConfiguration,
   egressConfig: EgressConfig,
   options: MultiWingGeneratorOptions = {},
-  topology?: import('./types').FootprintTopology
+  topology?: import('./types').FootprintTopology,
+  precomputedAnalysis?: MultiWingAnalysis
 ): LayoutOption[] {
-  const strategies: OptimizationStrategy[] = ['balanced', 'mixOptimized', 'efficiencyOptimized'];
+  try {
+    const strategies: OptimizationStrategy[] = ['balanced', 'mixOptimized', 'efficiencyOptimized'];
 
-  return strategies.map((strat, idx) => {
-    // Deep clone polygon so analyzeFootprint doesn't mutate the outer array's vertices
-    const freshPolygon = polygon.map(p => ({x: p.x, y: p.y}));
-    const freshWingAnalysis = analyzeFootprint(freshPolygon, topology);
-    
-    const floorplan = generateMultiWingFloorplate(
-      freshPolygon, freshWingAnalysis, config, egressConfig, { ...options, strategy: strat }
-    );
+    return strategies.map((strat, idx) => {
+      const freshPolygon = polygon.map(p => ({x: p.x, y: p.y}));
+      const freshWingAnalysis = precomputedAnalysis || analyzeFootprint(freshPolygon, topology);
+      
+      // If analyzeFootprint returns empty wings because topology wasn't available or we couldn't properly detect it,
+      // fallback to treating it as a simple bar using the polygon's bounding box to avoid crashing.
+      if (!freshWingAnalysis.wings || freshWingAnalysis.wings.length === 0) {
+        Logger.warn('[MW] analyzeFootprint failed to find wings. Falling back to simple bar generation using bounding box.');
+        
+        const minX = Math.min(...freshPolygon.map(p => p.x));
+        const maxX = Math.max(...freshPolygon.map(p => p.x));
+        const minY = Math.min(...freshPolygon.map(p => p.y));
+        const maxY = Math.max(...freshPolygon.map(p => p.y));
+        const width = maxX - minX;
+        const depth = maxY - minY;
+        const centerX = minX + width / 2;
+        const centerY = minY + depth / 2;
+        
+        const fallbackFootprint: BuildingFootprint = {
+          width: width > 0 ? width : 10, 
+          depth: depth > 0 ? depth : 10, 
+          height: 3.2, 
+          centerX, 
+          centerY, 
+          rotation: 0,
+          minX, maxX, minY, maxY,
+          floorZ: 0
+        };
+        
+        const floorplan = generateFloorplate(fallbackFootprint, config, egressConfig, options.corridorWidth || DEFAULT_CORRIDOR_WIDTH, options.coreWidth || DEFAULT_CORE_WIDTH, options.coreDepth || DEFAULT_CORE_DEPTH, options.coreSide || 'North', options.alignment || 0.5, strat, options.customColors as any);
+        return {
+          id: `option-${idx + 1}`,
+          strategy: strat,
+          floorplan,
+          label: STRATEGY_LABELS[strat],
+          description: STRATEGY_DESCRIPTIONS[strat]
+        };
+      }
+      
+      let floorplan;
+      try {
+        floorplan = generateMultiWingFloorplate(
+          freshPolygon, freshWingAnalysis, config, egressConfig, { ...options, strategy: strat }
+        );
+      } catch (err: any) {
+        // Detailed error logging
+        const simplifiedAnalysis = {
+          wings: freshWingAnalysis?.wings?.map(w => ({ id: w.id, dir: w.dir, polyPts: w.polygon?.length, isOuterGapNull: w.outerGap == null })),
+          intersections: freshWingAnalysis?.intersections?.map(i => ({ id: i.id, edges: i.edges?.length }))
+        };
+        const msg = String(err?.message || err);
+        const stck = String(err?.stack || '');
+        console.error(`[CRITICAL CRASH] Strategy ${strat} failed!`, msg, stck);
+        throw err;
+      }
 
-    return {
-      id: `option-${idx + 1}`,
-      strategy: strat,
-      floorplan,
-      label: STRATEGY_LABELS[strat],
-      description: STRATEGY_DESCRIPTIONS[strat]
-    };
-  });
+      return {
+        id: `option-${idx + 1}`,
+        strategy: strat,
+        floorplan,
+        label: STRATEGY_LABELS[strat],
+        description: STRATEGY_DESCRIPTIONS[strat]
+      };
+    });
+  } catch (error: any) {
+    const msg = String(error?.message || error);
+    const stck = String(error?.stack || '');
+    console.error(`[CRITICAL CRASH] generateMultiWingFloorplateVariants failed entirely!`, msg, stck);
+    throw error;
+  }
 }
 
 // ============================================================================

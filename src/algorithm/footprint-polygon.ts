@@ -357,10 +357,15 @@ export function extractFootprintPolygon(triangles: Float32Array): {
 } {
   // Find bounding Z for ground detection
   let minZ = Infinity, maxZ = -Infinity;
-  for (let i = 2; i < triangles.length; i += 3) {
-    const z = triangles[i];
-    if (z < minZ) minZ = z;
-    if (z > maxZ) maxZ = z;
+  if (triangles && triangles.length > 0) {
+    for (let i = 2; i < triangles.length; i += 3) {
+      const z = triangles[i];
+      if (z < minZ) minZ = z;
+      if (z > maxZ) maxZ = z;
+    }
+  } else {
+    minZ = 0;
+    maxZ = 0;
   }
   const floorZ = minZ;
   const height = maxZ - minZ;
@@ -368,8 +373,10 @@ export function extractFootprintPolygon(triangles: Float32Array): {
 
   // Collect all vertex positions (one per triangle vertex)
   const allPoints: { x: number; y: number }[] = [];
-  for (let i = 0; i < triangles.length; i += 3) {
-    allPoints.push({ x: triangles[i], y: triangles[i + 1] });
+  if (triangles && triangles.length > 0) {
+    for (let i = 0; i < triangles.length; i += 3) {
+      allPoints.push({ x: triangles[i], y: triangles[i + 1] });
+    }
   }
 
   // Weld vertices: epsilon = 1mm

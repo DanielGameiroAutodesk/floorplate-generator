@@ -59,6 +59,8 @@ export interface UIState {
   deadEnd: number;
   // Auto-generate
   autoGenerate: boolean;
+  // Design Mode
+  designWidth: number;
 }
 
 /**
@@ -169,7 +171,8 @@ export const INITIAL_STATE: UIState = {
   commonPath: 125,
   travelDistance: 250,
   deadEnd: 50,
-  autoGenerate: false
+  autoGenerate: false,
+  designWidth: 65
 };
 
 // ============================================================================

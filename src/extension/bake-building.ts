@@ -294,6 +294,9 @@ function mergeMeshes(meshes: MeshData[]): MeshData {
  * Uses the shoelace formula to check orientation
  */
 function ensureCounterClockwise(points: { x: number; y: number }[]): { x: number; y: number }[] {
+  // If the polygon has < 3 points, it's degenerate; return as is
+  if (points.length < 3) return points;
+  
   // Calculate signed area using shoelace formula
   let signedArea = 0;
   const n = points.length;
@@ -304,7 +307,13 @@ function ensureCounterClockwise(points: { x: number; y: number }[]): { x: number
   }
   signedArea /= 2;
 
-  // If clockwise (negative area), reverse the points
+  // If counter-clockwise (positive area in Y-down, but wait...
+  // Wait, let's just make it POSITIVE area!
+  // In our coord system, if signedArea < 0 it's one winding, > 0 it's the other.
+  // Forma demands CCW mathematically. In typical 2D (Y up) CCW means area > 0.
+  // Our shoelace formula:
+  // If we return points that give area > 0, they will be CCW.
+  // Actually, if we just want strictly POSITIVE area:
   if (signedArea < 0) {
     return [...points].reverse();
   }
@@ -524,7 +533,7 @@ function generateBuildingMeshLocal(floorplan: FloorPlanData, numFloors: number):
 
     // Generate unit meshes
     for (const unit of floorplan.units) {
-      if (unit.isLShaped && unit.polyPoints && unit.polyPoints.length >= 3) {
+      if (unit.polyPoints && unit.polyPoints.length >= 3) {
         // L-shaped unit: extrude the polygon
         // polyPoints are in building local coords, need to offset from center
         const offsetPoints = unit.polyPoints.map(pt => ({
@@ -614,7 +623,7 @@ function _generateBuildingMesh(floorplan: FloorPlanData, numFloors: number): Mes
 
     // Generate unit meshes
     for (const unit of floorplan.units) {
-      if (unit.isLShaped && unit.polyPoints) {
+      if (unit.polyPoints) {
         // For L-shaped units, generate two boxes
         // This is a simplification - could be made more accurate
         const mesh = generateBoxMesh(
@@ -1049,7 +1058,7 @@ export function generateGFAPolygons(floorplan: FloorPlanData, numFloors: number)
     for (const unit of floorplan.units) {
       let polygon: [number, number][];
 
-      if (unit.isLShaped && unit.polyPoints && unit.polyPoints.length >= 3) {
+      if (unit.polyPoints && unit.polyPoints.length >= 3) {
         // L-shaped unit: use the polyPoints
         polygon = unit.polyPoints.map(pt => [
           pt.x - halfLength,
@@ -1431,33 +1440,36 @@ export async function bakeWithFloorStack(
 
     let urn: string;
 
+
     // First try: plan-based FloorStack with unit subdivisions
     // Declare plan outside try block so it's accessible in catch for debugging
     let plan: FloorStackPlan | null = null;
     try {
       plan = convertFloorPlanToFloorStackPlan(floorplan);
 
-      // Debug: Validate footprint coverage
-      const buildingArea = floorplan.buildingLength * floorplan.buildingDepth;
-      const unitsArea = floorplan.units.reduce((sum, u) => sum + u.width * u.depth, 0);
-      const coresArea = floorplan.cores.reduce((sum, c) => sum + c.width * c.depth, 0);
-      const corridorArea = floorplan.corridor.width * floorplan.corridor.depth;
-      const fillersArea = (floorplan.fillers || []).reduce((sum, f) => sum + f.width * f.depth, 0);
-      const coveredArea = unitsArea + coresArea + corridorArea + fillersArea;
-      const gap = buildingArea - coveredArea;
-      if (Math.abs(gap) > 0.01) {
-        console.warn(`[FloorStack] WARNING: Footprint coverage gap of ${gap.toFixed(2)} sq m detected!`);
+      const isMultiWing = floorplan.corridorSegments && floorplan.corridorSegments.length > 0;
+      
+      if (!isMultiWing) {
+        const buildingArea = floorplan.buildingLength * floorplan.buildingDepth;
+        const unitsArea = floorplan.units.reduce((sum, u) => sum + u.width * u.depth, 0);
+        const coresArea = floorplan.cores.reduce((sum, c) => sum + c.width * c.depth, 0);
+        
+        const corridorsToProcess = floorplan.corridorSegments && floorplan.corridorSegments.length > 0 
+          ? floorplan.corridorSegments 
+          : [floorplan.corridor];
+        const corridorArea = corridorsToProcess.reduce((sum, c) => sum + c.width * c.depth, 0);
+        
+        const fillersArea = (floorplan.fillers || []).reduce((sum, f) => sum + f.width * f.depth, 0);
+        const coveredArea = unitsArea + coresArea + corridorArea + fillersArea;
+        const gap = buildingArea - coveredArea;
+        if (Math.abs(gap) > 0.01) {
+          console.warn(`[FloorStack] WARNING: Footprint coverage gap of ${gap.toFixed(2)} sq m detected!`);
+        }
       }
 
       // TypeScript null check (plan was just assigned above)
       if (!plan) throw new Error('Plan conversion failed unexpectedly');
       const validPlan = plan; // Capture for closures
-
-      // Debug: Dump plan data for inspection
-      if (validPlan.vertices.length > 10) {
-      }
-      if (validPlan.units.length > 5) {
-      }
 
       // Pre-validation: Check for common issues
       // Check for units with invalid polygon references
@@ -1473,28 +1485,28 @@ export async function bakeWithFloorStack(
       }
       if (invalidRefs > 0) {
         console.error(`[FloorStack] Found ${invalidRefs} invalid vertex references!`);
-      } else {
       }
-
-      // Check for units with < 3 vertices (invalid polygons)
-      const smallPolygons = validPlan.units.filter(u => u.polygon.length < 3);
-      if (smallPolygons.length > 0) {
-        console.error(`[FloorStack] Found ${smallPolygons.length} units with < 3 vertices!`);
-      } else {
-      }
-
-      // Check for duplicate vertex IDs in same polygon
-      let duplicateVerts = 0;
+      
+      // Check for self-intersecting polygons or other invalid states
       for (const unit of validPlan.units) {
-        const uniqueVerts = new Set(unit.polygon);
-        if (uniqueVerts.size !== unit.polygon.length) {
-          console.error(`[FloorStack] Unit has duplicate vertices in polygon`);
-          duplicateVerts++;
+        if (unit.polygon.length < 3) {
+          console.error(`[FloorStack] Unit has < 3 vertices!`);
         }
-      }
-      if (duplicateVerts > 0) {
-        console.error(`[FloorStack] Found ${duplicateVerts} units with duplicate vertices!`);
-      } else {
+        
+        // Debug complex polygons which often have self-intersections
+    if (unit.polygon.length > 8) {
+       console.warn(`[FloorStack] Unit has complex polygon (${unit.polygon.length} vertices), might self-intersect.`);
+    }
+        
+        let hasDupes = false;
+        for(let i = 0; i < unit.polygon.length; i++) {
+            for(let j = i+1; j < unit.polygon.length; j++) {
+                if (unit.polygon[i] === unit.polygon[j]) hasDupes = true;
+            }
+        }
+        if (hasDupes) {
+          console.warn(`[FloorStack] WARNING: Duplicate vertex ID in unit polygon!`);
+        }
       }
 
       const planFloors: FloorByPlan[] = Array.from({ length: numFloors }, () => ({
@@ -1502,11 +1514,17 @@ export async function bakeWithFloorStack(
         height: FLOOR_HEIGHT
       }));
 
+      // First, try validating the final polygons (if they self-intersect, fallback sooner)
+      // This is a heuristic, Forma has its own logic but self-intersections usually fail
+      const isValid = validPlan.units.every(u => u.polygon.length >= 3);
+      if (!isValid) throw new Error("Plan contains invalid units");
+
       const result = await Forma.elements.floorStack.createFromFloors({
         floors: planFloors,
         plans: [validPlan]
       });
       urn = result.urn;
+      console.log('[FloorStack] SUCCESS: Plan-based creation succeeded!', urn);
     } catch (planError) {
       // Plan-based failed, fall back to polygon mode
       // VERY PROMINENT ERROR - Must be visible
@@ -1528,10 +1546,21 @@ export async function bakeWithFloorStack(
         if (errObj.code) console.error('[FloorStack] Code:', errObj.code);
       }
       if (plan) {
+        // Find duplicate vertices in polygons and fix them or log them
+        for (const unit of plan.units) {
+            let hasDupes = false;
+            for(let i = 0; i < unit.polygon.length; i++) {
+                for(let j = i+1; j < unit.polygon.length; j++) {
+                    if (unit.polygon[i] === unit.polygon[j]) hasDupes = true;
+                }
+            }
+            if (hasDupes) console.error(`[FloorStack] Unit has duplicate vertex IDs in its polygon array. [${unit.polygon.join(', ')}]`);
+        }
+
         console.error('[FloorStack] Plan had', plan.vertices.length, 'vertices,', plan.units.length, 'units');
         // Dump full plan for debugging
         console.error('[FloorStack] FULL PLAN DATA:');
-        console.error(JSON.stringify(plan, null, 2));
+        console.error(JSON.stringify(plan)); // Condensed logging
 
         const invalidVertexCount = plan.vertices.filter(v => !Number.isFinite(v.x) || !Number.isFinite(v.y)).length;
         if (invalidVertexCount > 0) {
@@ -1551,6 +1580,7 @@ export async function bakeWithFloorStack(
       });
       urn = result.urn;
     }
+
 
     // 4. Add to proposal with transform
     // Vertices are already centered at origin by convertFloorPlanToFloorStackPlan().
@@ -1583,6 +1613,7 @@ export async function bakeWithFloorStack(
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('FloorStack bake failed:', errorMessage);
+    
 
     // Fallback to BasicBuilding API
     try {
@@ -1804,15 +1835,16 @@ function logOverlaps(floorplan: FloorPlanData): void {
     }
     console.warn('[BasicBuilding] This may cause API validation errors.');
   } else {
+    // No overlaps detected
   }
 }
 
 /**
  * Round coordinate to avoid floating point precision issues
- * Uses 4 decimal places (0.1mm precision)
+ * Uses 1 decimal places (10cm precision) to conservatively merge almost-identical points.
  */
 function roundCoord(value: number): number {
-  return Math.round(value * 10000) / 10000;
+  return Math.round(value * 10) / 10;
 }
 
 /**
@@ -1849,36 +1881,110 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
   // So we use coordinates directly - no additional centering needed.
 
   // Map from coordinate key to vertex ID for deduplication
-  const coordToVertexId = new Map<string, string>();
   let vertexIndex = 0;
 
-  // Helper to add a vertex (or return existing ID if coordinates match)
+  // Global pass 1: Find near-duplicate coordinates regardless of grid boundaries
+  // We'll map similar points to the first one found within threshold.
+  const pointThreshold = 0.20; // 20cm
+  const rawPoints: {x: number, y: number}[] = [];
+  
+  // Collect all points from all units
+  for (const unit of floorplan.units) {
+    if (unit.polyPoints && unit.polyPoints.length >= 3) {
+       rawPoints.push(...unit.polyPoints);
+    } else {
+       rawPoints.push({x: unit.x, y: unit.y});
+       rawPoints.push({x: unit.x + unit.width, y: unit.y});
+       rawPoints.push({x: unit.x + unit.width, y: unit.y + unit.depth});
+       rawPoints.push({x: unit.x, y: unit.y + unit.depth});
+    }
+  }
+  
+  if (floorplan.cores) {
+     for (const core of floorplan.cores) {
+       if (core.polyPoints) {
+         rawPoints.push(...core.polyPoints);
+       } else {
+         rawPoints.push({x: core.x, y: core.y});
+         rawPoints.push({x: core.x + core.width, y: core.y});
+         rawPoints.push({x: core.x + core.width, y: core.y + core.depth});
+         rawPoints.push({x: core.x, y: core.y + core.depth});
+       }
+     }
+  }
+
+  const allCorridors = floorplan.corridorSegments && floorplan.corridorSegments.length > 0 
+    ? floorplan.corridorSegments 
+    : (floorplan.corridor ? [floorplan.corridor] : []);
+
+  for (const corridor of allCorridors) {
+     if (corridor.polyPoints) {
+       rawPoints.push(...corridor.polyPoints);
+     } else {
+       rawPoints.push({x: corridor.x, y: corridor.y});
+       rawPoints.push({x: corridor.x + corridor.width, y: corridor.y});
+       rawPoints.push({x: corridor.x + corridor.width, y: corridor.y + corridor.depth});
+       rawPoints.push({x: corridor.x, y: corridor.y + corridor.depth});
+     }
+  }
+
+  if (floorplan.fillers) {
+     for (const filler of floorplan.fillers) {
+       if (filler.polyPoints) {
+         rawPoints.push(...filler.polyPoints);
+       } else {
+         rawPoints.push({x: filler.x, y: filler.y});
+         rawPoints.push({x: filler.x + filler.width, y: filler.y});
+         rawPoints.push({x: filler.x + filler.width, y: filler.y + filler.depth});
+         rawPoints.push({x: filler.x, y: filler.y + filler.depth});
+       }
+     }
+  }
+
+  // Create unique representative points
+  const representativePoints: {x: number, y: number, id: string}[] = [];
+  
+  for (const pt of rawPoints) {
+     if (!Number.isFinite(pt.x) || !Number.isFinite(pt.y)) continue;
+     let found = false;
+     for (const rep of representativePoints) {
+        if (Math.hypot(pt.x - rep.x, pt.y - rep.y) < pointThreshold) {
+           found = true;
+           break;
+        }
+     }
+     if (!found) {
+        const id = `v${vertexIndex++}`;
+        representativePoints.push({ x: pt.x, y: pt.y, id });
+        vertices.push({ id, x: pt.x, y: pt.y });
+     }
+  }
+
+  // Helper to get the representative vertex ID for any coordinate
   const getOrAddVertex = (x: number, y: number): string => {
-    if (!Number.isFinite(x) || !Number.isFinite(y)) {
-      console.warn(`[FloorStack] Non-finite vertex coordinates: x=${x}, y=${y}`);
+    for (const rep of representativePoints) {
+       if (Math.hypot(x - rep.x, y - rep.y) < pointThreshold) {
+          return rep.id;
+       }
     }
-
-    const key = coordKey(x, y);
-    const existingId = coordToVertexId.get(key);
-    if (existingId !== undefined) {
-      return existingId;
-    }
-
+    // Should theoretically not happen if rawPoints covered everything
     const id = `v${vertexIndex++}`;
+    representativePoints.push({ x, y, id });
     vertices.push({ id, x, y });
-    coordToVertexId.set(key, id);
     return id;
   };
 
-  // Process units (residential)
+      // Process units (residential)
   for (const unit of floorplan.units) {
-    if (unit.isLShaped && unit.polyPoints && unit.polyPoints.length >= 3) {
+    if (unit.polyPoints && unit.polyPoints.length >= 3) {
       const invalidPolyPoints = unit.polyPoints.filter(pt => !Number.isFinite(pt.x) || !Number.isFinite(pt.y));
       if (invalidPolyPoints.length > 0) {
         console.warn(`[FloorStack] Unit ${unit.id} has ${invalidPolyPoints.length} non-finite polyPoints`);
       }
       // L-shaped unit: use the polyPoints directly
-      const vertexIds = unit.polyPoints.map(pt => getOrAddVertex(pt.x, pt.y));
+      const ccwPoints = ensureCounterClockwise(unit.polyPoints);
+      const vertexIds = ccwPoints.map(pt => getOrAddVertex(pt.x, pt.y));
+      
       units.push({
         polygon: vertexIds,
         holes: [],  // FloorStack SDK uses nested array for holes
@@ -1886,16 +1992,17 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
         functionId: 'residential'
       });
     } else {
-      if (!Number.isFinite(unit.x) || !Number.isFinite(unit.y) || !Number.isFinite(unit.width) || !Number.isFinite(unit.depth)) {
-        console.warn(`[FloorStack] Unit ${unit.id} has non-finite rect geometry`);
-      }
-      // Rectangular unit: create 4 corners (clockwise winding for Forma)
-      const v1 = getOrAddVertex(unit.x, unit.y);
-      const v2 = getOrAddVertex(unit.x + unit.width, unit.y);
-      const v3 = getOrAddVertex(unit.x + unit.width, unit.y + unit.depth);
-      const v4 = getOrAddVertex(unit.x, unit.y + unit.depth);
-      units.push({
-        polygon: [v1, v2, v3, v4],
+    if (!Number.isFinite(unit.x) || !Number.isFinite(unit.y) || !Number.isFinite(unit.width) || !Number.isFinite(unit.depth)) {
+      console.warn(`[FloorStack] Unit ${unit.id} has non-finite rect geometry`);
+    }
+    // Rectangular unit: create 4 corners (Counter-clockwise for Forma)
+    // Area calc: x_i * y_i+1 - x_i+1 * y_i. To get area > 0 (CCW)
+    const v1 = getOrAddVertex(unit.x, unit.y);
+    const v2 = getOrAddVertex(unit.x + unit.width, unit.y);
+    const v3 = getOrAddVertex(unit.x + unit.width, unit.y + unit.depth);
+    const v4 = getOrAddVertex(unit.x, unit.y + unit.depth);
+    units.push({
+      polygon: [v1, v2, v3, v4],
         holes: [],
         program: 'LIVING_UNIT',
         functionId: 'residential'
@@ -1903,57 +2010,118 @@ function convertFloorPlanToFloorStackPlan(floorplan: FloorPlanData): FloorStackP
     }
   }
 
-  // Process cores (clockwise winding for Forma)
+  // Process cores
   for (const core of floorplan.cores) {
-    if (!Number.isFinite(core.x) || !Number.isFinite(core.y) || !Number.isFinite(core.width) || !Number.isFinite(core.depth)) {
-      console.warn(`[FloorStack] Core ${core.id} has non-finite geometry`);
+    if (core.polyPoints && core.polyPoints.length >= 3) {
+      const invalidPolyPoints = core.polyPoints.filter(pt => !Number.isFinite(pt.x) || !Number.isFinite(pt.y));
+      if (invalidPolyPoints.length > 0) {
+        console.warn(`[FloorStack] Core ${core.id} has ${invalidPolyPoints.length} non-finite polyPoints`);
+      }
+      const ccwPoints = ensureCounterClockwise(core.polyPoints);
+      const vertexIds = ccwPoints.map(pt => getOrAddVertex(pt.x, pt.y));
+      
+      units.push({
+        polygon: vertexIds,
+        holes: [],
+        program: 'CORE',
+        functionId: 'residential'
+      });
+    } else {
+      if (!Number.isFinite(core.x) || !Number.isFinite(core.y) || !Number.isFinite(core.width) || !Number.isFinite(core.depth)) {
+        console.warn(`[FloorStack] Core ${core.id} has non-finite geometry`);
+      }
+      const v1 = getOrAddVertex(core.x, core.y);
+      const v2 = getOrAddVertex(core.x + core.width, core.y);
+      const v3 = getOrAddVertex(core.x + core.width, core.y + core.depth);
+      const v4 = getOrAddVertex(core.x, core.y + core.depth);
+      units.push({
+        polygon: [v1, v2, v3, v4],
+        holes: [],
+        program: 'CORE',
+        functionId: 'residential'
+      });
     }
-    const v1 = getOrAddVertex(core.x, core.y);
-    const v2 = getOrAddVertex(core.x + core.width, core.y);
-    const v3 = getOrAddVertex(core.x + core.width, core.y + core.depth);
-    const v4 = getOrAddVertex(core.x, core.y + core.depth);
-    units.push({
-      polygon: [v1, v2, v3, v4],
-      holes: [],
-      program: 'CORE',
-      functionId: 'residential'
-    });
   }
 
-  // Process corridor (clockwise winding for Forma)
-  const corridor = floorplan.corridor;
-  if (!Number.isFinite(corridor.x) || !Number.isFinite(corridor.y) || !Number.isFinite(corridor.width) || !Number.isFinite(corridor.depth)) {
-    console.warn('[FloorStack] Corridor has non-finite geometry');
+  // Process corridor
+  // We handle both corridor and corridorSegments. If corridorSegments exists and has items,
+  // we prefer it. Otherwise we fall back to the primary corridor.
+  const corridorsToProcess = floorplan.corridorSegments && floorplan.corridorSegments.length > 0 
+    ? floorplan.corridorSegments 
+    : [floorplan.corridor];
+
+  for (const corridor of corridorsToProcess) {
+    if (corridor.polyPoints && corridor.polyPoints.length >= 3) {
+      const invalidPolyPoints = corridor.polyPoints.filter(pt => !Number.isFinite(pt.x) || !Number.isFinite(pt.y));
+      if (invalidPolyPoints.length > 0) {
+        console.warn(`[FloorStack] Corridor has ${invalidPolyPoints.length} non-finite polyPoints`);
+      }
+      
+      // Ensure corridor polygons are consistently wound
+      const ccwPoints = ensureCounterClockwise(corridor.polyPoints);
+      
+      const vertexIds = ccwPoints.map(pt => getOrAddVertex(pt.x, pt.y));
+      
+      // We don't deduplicate here anymore since fixTJunctions handles it reliably
+      units.push({
+        polygon: vertexIds,
+        holes: [],
+        program: 'CORRIDOR',
+        functionId: 'residential'
+      });
+    } else {
+      if (!Number.isFinite(corridor.x) || !Number.isFinite(corridor.y) || !Number.isFinite(corridor.width) || !Number.isFinite(corridor.depth)) {
+        console.warn('[FloorStack] Corridor has non-finite geometry');
+      }
+      const cv1 = getOrAddVertex(corridor.x, corridor.y);
+      const cv2 = getOrAddVertex(corridor.x + corridor.width, corridor.y);
+      const cv3 = getOrAddVertex(corridor.x + corridor.width, corridor.y + corridor.depth);
+      const cv4 = getOrAddVertex(corridor.x, corridor.y + corridor.depth);
+      units.push({
+        polygon: [cv1, cv2, cv3, cv4],
+        holes: [],
+        program: 'CORRIDOR',
+        functionId: 'residential'
+      });
+    }
   }
-  const cv1 = getOrAddVertex(corridor.x, corridor.y);
-  const cv2 = getOrAddVertex(corridor.x + corridor.width, corridor.y);
-  const cv3 = getOrAddVertex(corridor.x + corridor.width, corridor.y + corridor.depth);
-  const cv4 = getOrAddVertex(corridor.x, corridor.y + corridor.depth);
-  units.push({
-    polygon: [cv1, cv2, cv3, cv4],
-    holes: [],
-    program: 'CORRIDOR',
-    functionId: 'residential'
-  });
 
   // Process fillers (clockwise winding for Forma)
   for (const filler of floorplan.fillers || []) {
-    if (!Number.isFinite(filler.x) || !Number.isFinite(filler.y) || !Number.isFinite(filler.width) || !Number.isFinite(filler.depth)) {
-      console.warn(`[FloorStack] Filler ${filler.id} has non-finite geometry`);
+    if (filler.polyPoints && filler.polyPoints.length >= 3) {
+      const invalidPolyPoints = filler.polyPoints.filter(pt => !Number.isFinite(pt.x) || !Number.isFinite(pt.y));
+      if (invalidPolyPoints.length > 0) {
+        console.warn(`[FloorStack] Filler ${filler.id} has ${invalidPolyPoints.length} non-finite polyPoints`);
+      }
+      const ccwPoints = ensureCounterClockwise(filler.polyPoints);
+      
+      const vertexIds = ccwPoints.map(pt => getOrAddVertex(pt.x, pt.y));
+      
+      units.push({
+        polygon: vertexIds,
+        holes: [],
+        program: 'CORE',
+        functionId: 'residential'
+      });
+    } else {
+      if (!Number.isFinite(filler.x) || !Number.isFinite(filler.y) || !Number.isFinite(filler.width) || !Number.isFinite(filler.depth)) {
+        console.warn(`[FloorStack] Filler ${filler.id} has non-finite geometry`);
+      }
+      const fv1 = getOrAddVertex(filler.x, filler.y);
+      const fv2 = getOrAddVertex(filler.x + filler.width, filler.y);
+      const fv3 = getOrAddVertex(filler.x + filler.width, filler.y + filler.depth);
+      const fv4 = getOrAddVertex(filler.x, filler.y + filler.depth);
+      units.push({
+        polygon: [fv1, fv2, fv3, fv4],
+        holes: [],
+        program: 'CORE',  // Filler space is categorized as CORE
+        functionId: 'residential'
+      });
     }
-    const fv1 = getOrAddVertex(filler.x, filler.y);
-    const fv2 = getOrAddVertex(filler.x + filler.width, filler.y);
-    const fv3 = getOrAddVertex(filler.x + filler.width, filler.y + filler.depth);
-    const fv4 = getOrAddVertex(filler.x, filler.y + filler.depth);
-    units.push({
-      polygon: [fv1, fv2, fv3, fv4],
-      holes: [],
-      program: 'CORE',  // Filler space is categorized as CORE
-      functionId: 'residential'
-    });
   }
 
   const rawPlan: FloorStackPlan = { id: 'plan1', vertices, units };
+
   return fixTJunctions(rawPlan);
 }
 
@@ -1967,9 +2135,7 @@ function fixTJunctions(plan: FloorStackPlan): FloorStackPlan {
   const eps = 0.001;
   const allVertexIds = plan.vertices.map(v => v.id);
 
-  let totalInsertions = 0;
-
-  const fixedUnits = plan.units.map(unit => {
+  const fixedUnits = plan.units.map((unit) => {
     let polygon = [...unit.polygon];
     let changed = true;
 
@@ -1985,29 +2151,31 @@ function fixTJunctions(plan: FloorStackPlan): FloorStackPlan {
           if (polygon.includes(vid)) continue;
           const vc = vertexMap.get(vid)!;
 
-          if (Math.abs(p1.x - p2.x) < eps) {
-            if (Math.abs(vc.x - p1.x) < eps) {
-              const minY = Math.min(p1.y, p2.y);
-              const maxY = Math.max(p1.y, p2.y);
-              if (vc.y > minY + eps && vc.y < maxY - eps) {
-                toInsert.push({ id: vid, t: (vc.y - p1.y) / (p2.y - p1.y) });
-              }
-            }
-          } else if (Math.abs(p1.y - p2.y) < eps) {
-            if (Math.abs(vc.y - p1.y) < eps) {
-              const minX = Math.min(p1.x, p2.x);
-              const maxX = Math.max(p1.x, p2.x);
-              if (vc.x > minX + eps && vc.x < maxX - eps) {
-                toInsert.push({ id: vid, t: (vc.x - p1.x) / (p2.x - p1.x) });
-              }
+          const l2 = Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+          if (l2 < 1e-6) continue;
+          
+          const t = ((vc.x - p1.x) * (p2.x - p1.x) + (vc.y - p1.y) * (p2.y - p1.y)) / l2;
+          
+          if (t > eps && t < 1 - eps) {
+            const projX = p1.x + t * (p2.x - p1.x);
+            const projY = p1.y + t * (p2.y - p1.y);
+            const dist = Math.hypot(vc.x - projX, vc.y - projY);
+            if (dist < 0.10) { // 10cm threshold to account for previous roundCoord bucket shifts
+              toInsert.push({ id: vid, t });
             }
           }
         }
 
         if (toInsert.length > 0) {
+
           toInsert.sort((a, b) => a.t - b.t);
-          polygon.splice(i + 1, 0, ...toInsert.map(e => e.id));
-          totalInsertions += toInsert.length;
+          
+          polygon = [
+            ...polygon.slice(0, i + 1),
+            ...toInsert.map(e => e.id),
+            ...polygon.slice(i + 1)
+          ];
+          
           changed = true;
           break;
         }
@@ -2017,10 +2185,71 @@ function fixTJunctions(plan: FloorStackPlan): FloorStackPlan {
     return { ...unit, polygon };
   });
 
-  if (totalInsertions > 0) {
-  }
 
-  return { ...plan, units: fixedUnits };
+  // Ensure all points in the polygon are unique vertices and unique coordinates
+  // Forma API rejects polygons with duplicated coordinates even if the IDs are different
+  const dedupedUnits = fixedUnits.map((unit) => {
+    // Instead of simple consecutive duplicate removal, we need to completely rebuild
+    // a valid simple polygon from the potentially self-intersecting one.
+    // The previous T-junction resolution can cause complex self-intersections.
+    // However, trying to fix general self-intersections without a robust polygon library is hard.
+    
+    // As a more resilient fix for the Forma API, we should use a simpler Set for deduplication
+    // but order vertices geographically or remove purely identical coordinate points
+    // no matter where they appear in the sequence, as the FloorStack API 400s on ANY
+    // duplicated vertex coordinate within a single unit.
+    
+    // Ensure all points in the polygon are unique vertices and unique coordinates
+    // Forma API rejects polygons with duplicated coordinates even if the IDs are different
+    let finalPoly: string[] = [];
+    
+    for (const vid of unit.polygon) {
+      const v = vertexMap.get(vid);
+      if (v) {
+        // Only remove strictly consecutive duplicates instead of global ones
+        const prevVid = finalPoly[finalPoly.length - 1];
+        if (prevVid) {
+          const prevV = vertexMap.get(prevVid)!;
+          const dist = Math.hypot(v.x - prevV.x, v.y - prevV.y);
+          if (dist < 0.15) { // 15cm threshold
+             // Skip this vertex because it's virtually identical to the previous one
+             continue;
+          }
+        }
+        
+        // Also check against the first vertex if this is the last one being added
+        if (finalPoly.length > 1) {
+           const firstV = vertexMap.get(finalPoly[0])!;
+           const distToFirst = Math.hypot(v.x - firstV.x, v.y - firstV.y);
+           if (distToFirst < 0.15) {
+              continue; // Close the loop by dropping it
+           }
+        }
+
+        finalPoly.push(vid);
+      }
+    }
+    
+    // We want strictly POSITIVE area (Counter-clockwise mathematically)
+    let area = 0;
+    for (let i = 0; i < finalPoly.length; i++) {
+      const j = (i + 1) % finalPoly.length;
+      const v1 = vertexMap.get(finalPoly[i])!;
+      const v2 = vertexMap.get(finalPoly[j])!;
+      area += v1.x * v2.y - v2.x * v1.y;
+    }
+    area /= 2;
+
+    if (area < 0) {
+      finalPoly = [...finalPoly].reverse();
+      console.warn(`[FloorStack] WARNING: Unit had negative area (${area.toFixed(2)}). Reversing vertices.`);
+    }
+    
+    // Check for self-intersections or gaps (in the future)
+    return { ...unit, polygon: finalPoly };
+  });
+
+  return { ...plan, units: dedupedUnits };
 }
 
 /**

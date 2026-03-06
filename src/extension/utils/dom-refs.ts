@@ -61,7 +61,10 @@ export const deadEndInput = document.getElementById('dead-end') as HTMLInputElem
 // Actions
 // ============================================================================
 
-export const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
+export const selectBtn = document.getElementById('select-btn') as HTMLButtonElement;
+export const designBtn = document.getElementById('design-btn') as HTMLButtonElement;
+export const designWidthSection = document.getElementById('design-width-section') as HTMLDivElement;
+export const designWidthInput = document.getElementById('design-width') as HTMLInputElement;
 export const showResultsBtn = document.getElementById('show-results-btn') as HTMLButtonElement;
 
 // ============================================================================

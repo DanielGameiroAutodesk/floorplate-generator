@@ -5,74 +5,88 @@ This document describes the architecture of the Floorplate Generator extension f
 ## System Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                              Autodesk Forma                                  │
-│  ┌────────────────────────────────────────────────────────────────────────┐  │
-│  │                        Forma Extension Host                            │  │
-│  │                                                                        │  │
-│  │  ┌──────────────────────────┐    ┌──────────────────────────────────┐  │  │
-│  │  │     Main Panel           │    │     Floating Preview Panel        │  │  │
-│  │  │     (index.html)         │◄──►│   (floorplate-panel.html)        │  │  │
-│  │  │                          │    │                                   │  │  │
-│  │  │  ┌────────────────────┐  │    │  ┌───────────────────────────┐   │  │  │
-│  │  │  │     main.ts        │  │    │  │   floorplate-panel.ts     │   │  │  │
-│  │  │  │   (Orchestrator)   │  │    │  │  (Preview Rendering)      │   │  │  │
-│  │  │  └──────┬─────────────┘  │    │  └───────────────────────────┘   │  │  │
-│  │  │         │                │    │                                   │  │  │
-│  │  │  ┌──────┴─────────────────────────────────────────────────────┐  │  │  │
-│  │  │  │                Extension Modules                            │  │  │  │
-│  │  │  │  ┌─────────────┐ ┌─────────────┐ ┌──────────────────────┐ │  │  │  │
-│  │  │  │  │  managers/   │ │   tabs/      │ │   state/             │ │  │  │  │
-│  │  │  │  │ generation   │ │ mix-tab      │ │ ui-state             │ │  │  │  │
-│  │  │  │  │ float-panel  │ │ dim-tab      │ │ unit-config          │ │  │  │  │
-│  │  │  │  │ saved        │ │ egress-tab   │ │                      │ │  │  │  │
-│  │  │  │  └─────────────┘ └─────────────┘ └──────────────────────┘ │  │  │  │
-│  │  │  │  ┌─────────────────────┐  ┌─────────────────────────────┐ │  │  │  │
-│  │  │  │  │  bake-building.ts   │  │  storage-service.ts          │ │  │  │  │
-│  │  │  │  │  (Forma Buildings)  │  │  (Cloud Persistence)         │ │  │  │  │
-│  │  │  │  └─────────────────────┘  └─────────────────────────────┘ │  │  │  │
-│  │  │  └─────────────────────────────────────────────────────────────┘  │  │  │
-│  │  └──────────────────────────┘    └──────────────────────────────────┘  │  │
-│  │              │  MessagePort                                            │  │
-│  │              ▼                                                         │  │
-│  │  ┌──────────────────────────────────────────────────────────────────┐  │  │
-│  │  │                      Algorithm Layer                              │  │  │
-│  │  │  ┌──────────────────┐ ┌──────────────┐ ┌──────────────────────┐ │  │  │
-│  │  │  │generator-core.ts │ │  types.ts     │ │   constants.ts       │ │  │  │
-│  │  │  │ (14-Step Pipeline)│ │ (Dual Types) │ │   (Defaults)         │ │  │  │
-│  │  │  └──────────────────┘ └──────────────┘ └──────────────────────┘ │  │  │
-│  │  │  ┌──────────────────┐ ┌──────────────┐ ┌──────────────────────┐ │  │  │
-│  │  │  │  footprint.ts    │ │ renderer.ts  │ │ flexibility-model.ts │ │  │  │
-│  │  │  │ (Mesh→Footprint) │ │ (→Forma Mesh)│ │  (Unit Sizing)       │ │  │  │
-│  │  │  └──────────────────┘ └──────────────┘ └──────────────────────┘ │  │  │
-│  │  │  ┌──────────────────┐ ┌──────────────┐                         │  │  │
-│  │  │  │  unit-counts.ts  │ │type-compat.ts│                         │  │  │
-│  │  │  │ (Distribution)   │ │(Legacy↔Dyn)  │                         │  │  │
-│  │  │  └──────────────────┘ └──────────────┘                         │  │  │
-│  │  └──────────────────────────────────────────────────────────────────┘  │  │
-│  │              │                                                         │  │
-│  │              ▼                                                         │  │
-│  │  ┌──────────────────────────────────────────────────────────────────┐  │  │
-│  │  │                      Geometry Layer                                │  │  │
-│  │  │  ┌──────────┐ ┌─────────┐ ┌───────────┐ ┌──────────────┐       │  │  │
-│  │  │  │ point.ts │ │ line.ts │ │ polygon.ts│ │ rectangle.ts │       │  │  │
-│  │  │  └──────────┘ └─────────┘ └───────────┘ └──────────────┘       │  │  │
-│  │  └──────────────────────────────────────────────────────────────────┘  │  │
-│  │              │                                                         │  │
-│  └──────────────┼─────────────────────────────────────────────────────────┘  │
-│                 ▼                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐    │
-│  │                  Forma SDK (forma-embedded-view-sdk)                   │    │
-│  │  ┌─────────────┐ ┌────────────┐ ┌──────────┐ ┌─────────────────┐   │    │
-│  │  │   project    │ │  selection  │ │ geometry │ │     render      │   │    │
-│  │  │   .get()     │ │.getSelection│ │.getTri.. │ │   .addMesh()   │   │    │
-│  │  └─────────────┘ └────────────┘ └──────────┘ └─────────────────┘   │    │
-│  │  ┌─────────────────────┐  ┌──────────────────────────────────────┐ │    │
-│  │  │  elements.floorStack │  │  extensions.storage (Cloud Storage)  │ │    │
-│  │  │  .createFromFloors() │  │  .getItem() / .setItem()            │ │    │
-│  │  └─────────────────────┘  └──────────────────────────────────────┘ │    │
-│  └──────────────────────────────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────────────────────────────┘
++------------------------------------------------------------------------------+
+|                              Autodesk Forma                                   |
+|  +------------------------------------------------------------------------+  |
+|  |                        Forma Extension Host                             |  |
+|  |                                                                         |  |
+|  |  +----------------------------+    +--------------------------------+   |  |
+|  |  |     Main Panel             |    |     Floating Preview Panel      |   |  |
+|  |  |     (index.html)           |<-->|   (floorplate-panel.html)       |   |  |
+|  |  |                            |    |                                 |   |  |
+|  |  |  +----------------------+  |    |  +---------------------------+  |   |  |
+|  |  |  |     main.ts          |  |    |  |   floorplate-panel.ts     |  |   |  |
+|  |  |  |   (Orchestrator)     |  |    |  |  (Preview Rendering)      |  |   |  |
+|  |  |  +------+---------------+  |    |  +---------------------------+  |   |  |
+|  |  |         |                  |    |                                 |   |  |
+|  |  |  +------+-------------------------------------------------------+   |  |
+|  |  |  |                Extension Modules                               |  |  |
+|  |  |  |  +-------------+ +-----------+ +----------------------------+  |  |  |
+|  |  |  |  |  managers/   | |   tabs/    | |   state/                   | |  |  |
+|  |  |  |  | generation   | | mix-tab    | | ui-state                   | |  |  |
+|  |  |  |  | float-panel  | | dim-tab    | | unit-config                | |  |  |
+|  |  |  |  | saved        | | egress-tab | |                            | |  |  |
+|  |  |  |  | design       | |            | |                            | |  |  |
+|  |  |  |  +-------------+ +------------+ +----------------------------+  |  |  |
+|  |  |  |  +---------------------+  +-------------------------------+    |  |  |
+|  |  |  |  |  bake-building.ts   |  |  storage-service.ts           |    |  |  |
+|  |  |  |  |  (Forma Buildings)  |  |  (Cloud Persistence)          |    |  |  |
+|  |  |  |  +---------------------+  +-------------------------------+    |  |  |
+|  |  |  |  +---------------------+                                       |  |  |
+|  |  |  |  |  utils/             |                                       |  |  |
+|  |  |  |  | dom-refs            |                                       |  |  |
+|  |  |  |  | line-to-polygon     |                                       |  |  |
+|  |  |  |  +---------------------+                                       |  |  |
+|  |  |  +----------------------------------------------------------------+  |  |
+|  |  +----------------------------+    +--------------------------------+   |  |
+|  |              |  MessagePort                                             |  |
+|  |              v                                                          |  |
+|  |  +----------------------------------------------------------------------+  |
+|  |  |                      Algorithm Layer                                  |  |
+|  |  |  +------------------+ +---------------------+ +-------------------+  |  |
+|  |  |  |generator-core.ts | |multi-wing-generator | | wing-detection.ts |  |  |
+|  |  |  |(14-Step Pipeline) | |(Graph BFS Pipeline) | |(Shape Analysis)  |  |  |
+|  |  |  +------------------+ +---------------------+ +-------------------+  |  |
+|  |  |  +------------------+ +--------------+ +------------------------+   |  |
+|  |  |  |footprint-polygon | | renderer.ts  | | flexibility-model.ts   |   |  |
+|  |  |  |(Concave Extract) | | (->Forma Mesh)| |  (Unit Sizing)        |   |  |
+|  |  |  +------------------+ +--------------+ +------------------------+   |  |
+|  |  |  +------------------+ +--------------+ +------------------------+   |  |
+|  |  |  |  footprint.ts    | |  types.ts    | |   constants.ts         |   |  |
+|  |  |  | (Legacy ConvHull)| | (Dual Types) | |   (Defaults)           |   |  |
+|  |  |  +------------------+ +--------------+ +------------------------+   |  |
+|  |  |  +------------------+ +--------------+                              |  |
+|  |  |  |  unit-counts.ts  | |type-compat.ts|                              |  |
+|  |  |  | (Distribution)   | |(Legacy<>Dyn) |                              |  |
+|  |  |  +------------------+ +--------------+                              |  |
+|  |  +----------------------------------------------------------------------+  |
+|  |              |                                                          |  |
+|  |              v                                                          |  |
+|  |  +----------------------------------------------------------------------+  |
+|  |  |                      Geometry Layer                                   |  |
+|  |  |  +----------+ +---------+ +-----------+ +--------------+ +-------+  |  |
+|  |  |  | point.ts | | line.ts | |polygon.ts | |rectangle.ts  | |graph.ts| |  |
+|  |  |  +----------+ +---------+ +-----------+ +--------------+ +-------+  |  |
+|  |  +----------------------------------------------------------------------+  |
+|  |              |                                                          |  |
+|  +--------------+----------------------------------------------------------+  |
+|                 v                                                              |
+|  +--------------------------------------------------------------------------+ |
+|  |                  Forma SDK (forma-embedded-view-sdk)                       | |
+|  |  +-------------+ +------------+ +----------+ +-----------------+        | |
+|  |  |   project    | |  selection  | | geometry | |     render      |       | |
+|  |  |   .get()     | |.getSelection| |.getTri.. | |   .addMesh()   |       | |
+|  |  +-------------+ +------------+ +----------+ +-----------------+        | |
+|  |  +---------------------+  +------------------------------------------+  | |
+|  |  | elements.floorStack  |  |  extensions.storage (Cloud Storage)      |  | |
+|  |  | .createFromFloors()  |  |  .getItem() / .setItem()                 |  | |
+|  |  +---------------------+  +------------------------------------------+  | |
+|  |  +---------------------+                                                | |
+|  |  |  designTool          |                                                | |
+|  |  |  .getLine()          |                                                | |
+|  |  +---------------------+                                                | |
+|  +--------------------------------------------------------------------------+ |
++-------------------------------------------------------------------------------+
 ```
 
 ## Layer Descriptions
@@ -81,14 +95,15 @@ This document describes the architecture of the Floorplate Generator extension f
 
 The entry point and user interface layer:
 
-- **main.ts**: Orchestrator -- initializes all modules, wires cross-module callbacks, manages the button state machine (select → generate → stop)
+- **main.ts**: Orchestrator -- initializes all modules, wires cross-module callbacks, manages the button state machine (select -> generate -> stop)
 - **floorplate-panel.ts**: Floating panel for 2D SVG visualization of generated layouts
-- **bake-building.ts**: Converts floorplates to native Forma building elements via FloorStack SDK and BasicBuilding API
+- **bake-building.ts**: Converts floorplates to native Forma building elements via FloorStack SDK and BasicBuilding API. Handles multi-floor stacking, L-shaped unit triangulation, and multi-tier fallback (plan-based -> polygon -> BasicBuilding API)
 - **storage-service.ts**: Cloud persistence via Forma `extensions.storage` API (save/load/delete)
 - **managers/**: Core functionality extracted from main.ts for modularity
-  - `generation-manager.ts`: Building selection, footprint extraction, generation orchestration, auto-generate with debouncing
+  - `generation-manager.ts`: Building selection, footprint extraction (polygon-based), wing detection routing (simple bar vs multi-wing), auto-generate with debouncing. Deep-clones geometry before variant generation.
   - `floating-panel-manager.ts`: MessagePort communication with the floating preview panel, panel lifecycle
   - `saved-manager.ts`: Save/load/rename/duplicate/delete saved floorplate designs, building ID grouping
+  - `design-manager.ts`: Design mode lifecycle -- draws polyline via `Forma.designTool.getLine()`, converts to polygon via line-to-polygon utility, routes to single-wing or multi-wing generator, auto-bakes Balanced option
 - **tabs/**: Tab-specific UI initialization and event handlers
   - `mix-tab.ts`: Unit type configuration (add/remove types, percentages, areas, advanced settings)
   - `dim-tab.ts`: Building dimensions (corridor width, core placement, core dimensions)
@@ -98,21 +113,25 @@ The entry point and user interface layer:
   - `unit-config.ts`: Converters from UI state to algorithm-compatible `UnitConfiguration` and `DynamicUnitConfiguration` formats
 - **utils/**: Shared extension utilities
   - `dom-refs.ts`: Cached DOM element references for all UI controls (single source of truth for querySelector calls)
+  - `line-to-polygon.ts`: Converts polylines into closed footprint polygons via miter-joint offset buffering. Handles open lines (rectangle output) and closed lines (courtyard with hole)
 - **components/**: Reusable UI components
-  - `FloorplateSVG.ts`: Renders floorplates as SVG for the floating panel
+  - `FloorplateSVG.ts`: Renders floorplates as SVG for the floating panel. Uses `corridorSegments` for multi-wing.
   - `MetricsPanel.ts`: Displays unit counts, efficiency, and egress compliance metrics
 
 ### 2. Algorithm Layer (`src/algorithm/`)
 
 Core business logic, independent of Forma SDK:
 
-- **generator-core.ts**: Main 14-step generation pipeline with 3 optimization strategies (balanced, mix-optimized, efficiency-optimized)
-- **types.ts**: Dual type system -- legacy `UnitType` enum (Studio/1BR/2BR/3BR) + extensible `DynamicUnitType` system
-- **constants.ts**: All default values, unit colors, flexibility factors, strategy configs, IBC egress limits
-- **renderer.ts**: Transforms `FloorPlanData` into Forma-compatible mesh data (positions, normals, colors)
-- **footprint.ts**: Extracts `BuildingFootprint` from Forma triangle mesh data (convex hull, orientation, dimensions)
+- **generator-core.ts**: Main 14-step generation pipeline with 3 optimization strategies (balanced, mix-optimized, efficiency-optimized). Accepts `WingGenerationOptions` for multi-wing integration (skip end cores, suppress corner segments, pre-allocated unit inventory).
+- **multi-wing-generator.ts**: Graph-based BFS multi-wing pipeline. Builds wing connectivity graph, BFS traversal for ordered task list, per-wing synthetic footprint generation, intersection geometry (corner units, corridor wedges, inner cores), global unit mix allocation, overlap filtering. Handles L, U, V, H, snake, and courtyard shapes.
+- **wing-detection.ts**: Polygon analysis for wing detection. Pipeline: vertex classification (CONVEX/CONCAVE/STRAIGHT) -> dominant directions -> wing building -> intersection detection -> role assignment (host/guest) -> net length calculation. Shape classification: bar, L, U, V, H, snake, courtyard, complex.
+- **footprint-polygon.ts**: Concave-aware footprint extraction from Forma triangle meshes. Replaces convex hull approach for complex shapes. Pipeline: vertex welding (spatial hash, 1mm epsilon) -> ground triangle extraction -> boundary edge detection -> edge chaining -> Douglas-Peucker simplification. Returns topology with outer boundary (CCW) + holes (CW).
+- **types.ts**: Dual type system -- legacy `UnitType` enum (Studio/1BR/2BR/3BR) + extensible `DynamicUnitType` system. Wing detection types (CornerType, Wing, WingIntersection, FootprintVertex).
+- **constants.ts**: All default values, unit colors, flexibility factors, strategy configs, IBC egress limits, wing detection parameters
+- **renderer.ts**: Transforms `FloorPlanData` into Forma-compatible mesh data (positions, normals, colors). Uses ear-clipping triangulation for concave polygons (corridor wedges, L-shaped units).
+- **footprint.ts**: Legacy footprint extraction via convex hull (still used as fallback for simple bars)
 - **flexibility-model.ts**: Unit sizing logic -- expansion/compression weights, smart defaults interpolation, corner/L-shape eligibility rules
-- **unit-counts.ts**: Unit count distribution using Largest Remainder Method, per-side allocation, core-side mix bias
+- **unit-counts.ts**: Unit count distribution using Largest Remainder Method, per-side allocation, core-side mix bias, global multi-wing distribution
 - **type-compat.ts**: Bidirectional conversion between legacy `UnitConfiguration` and dynamic `DynamicUnitConfiguration`
 - **utils/logger.ts**: Configurable logging utility (levels: DEBUG, INFO, WARN, ERROR, NONE)
 
@@ -121,9 +140,10 @@ Core business logic, independent of Forma SDK:
 Pure geometric utilities with no dependencies:
 
 - **point.ts**: 2D point operations -- distance, rotation, translation, interpolation, angle calculation
-- **line.ts**: Line segment operations -- intersection, closest point, parallel offset, extension
-- **polygon.ts**: Polygon operations -- area (signed), perimeter, point-in-polygon, centroid
+- **line.ts**: Line segment operations -- intersection, closest point, parallel offset, extension, distance to segment
+- **polygon.ts**: Polygon operations -- area (signed), perimeter, point-in-polygon, centroid, bounding box, ensure CCW winding
 - **rectangle.ts**: Rectangle operations -- overlap detection, subdivision (horizontal/vertical/by-widths), edge extraction, expansion
+- **graph.ts**: Corridor graph operations -- build adjacency graph from corridor segments, shortest path to core (for egress validation)
 
 ### 4. Forma SDK Layer
 
@@ -135,38 +155,94 @@ The `forma-embedded-view-sdk` (v0.90.0) provides all integration with Autodesk F
 - 3D rendering (`Forma.render.addMesh()`)
 - Building creation (`Forma.elements.floorStack.createFromFloors()`)
 - Cloud storage for saved designs (`Forma.extensions.storage`)
+- Design tool (`Forma.designTool.getLine()`) for drawing polylines
 
 ## Data Flow
 
-### Generation Flow
+### Select Mode (Generation Flow)
 
 ```
-User Selection → Footprint Extraction → Generation → Visualization → Export
-      │                 │                   │              │            │
-      ▼                 ▼                   ▼              ▼            ▼
-  Forma.selection   Forma.geometry    generator-      renderer.ts   bake-building.ts
-  .getSelection()   .getTriangles()   core.ts         creates mesh   creates native
-                    → footprint.ts    generates 3      data           Forma building
-                                      FloorPlanData
+User selects building
+        |
+        v
+Forma.selection.getSelection() -> Forma.geometry.getTriangles()
+        |
+        v
+extractFootprintPolygon() -> polygon + topology + floorZ + height
+        |
+        v
+analyzeFootprint() -> MultiWingAnalysis { wings, intersections, shape }
+        |
+        +--- isSimpleBar? ---+
+        |                    |
+        v                    v
+  polygonToLegacy()    generateMultiWingFloorplateVariants()
+        |                    |
+        v                    |
+  generateFloorplate-        |
+  Variants()                 |
+        |                    |
+        +-------- merge -----+
+        |
+        v
+  3 LayoutOption[] -> renderFloorplate() -> Forma.render.addMesh()
+        |
+        v
+  Floating panel (SVG preview) -> User selects option
+        |
+        v
+  bakeWithFloorStack() -> Forma.elements.floorStack.createFromFloors()
+```
+
+### Design Mode (Line-to-Building Flow)
+
+```
+User clicks "Design" button
+        |
+        v
+Forma.designTool.getLine() -> polyline coordinates
+        |
+        v
+lineToFootprintTopology() -> polygon + topology
+        |
+        v
+createAnalysisFromLine() -> deterministic MultiWingAnalysis
+        |
+        +--- 2-point line? ---+
+        |                     |
+        v                     v
+  Simple bar footprint   generateMultiWingFloorplateVariants()
+        |                     |
+        v                     |
+  generateFloorplate-         |
+  Variants()                  |
+        |                     |
+        +-------- merge ------+
+        |
+        v
+  Take first option (Balanced)
+        |
+        v
+  bakeWithFloorStack() -> auto-bake to Forma
 ```
 
 ### Communication Flow
 
 ```
-┌─────────────────┐     MessagePort      ┌─────────────────┐
-│   Main Panel    │◄────────────────────►│  Floating Panel │
-│   (main.ts)     │                      │(floorplate-panel.ts)
-│                 │                      │                 │
-│  managers/      │   Options, save/     │  SVG rendering  │
-│  tabs/          │   bake callbacks     │  Option select  │
-│  state/         │                      │                 │
-└────────┬────────┘                      └────────┬────────┘
-         │                                        │
-         │ Forma SDK                              │ Forma SDK
-         ▼                                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      Forma Host                              │
-└─────────────────────────────────────────────────────────────┘
++---------------------+     MessagePort      +---------------------+
+|   Main Panel        |<------------------->|  Floating Panel      |
+|   (main.ts)         |                      |(floorplate-panel.ts)|
+|                     |                      |                     |
+|  managers/          |   Options, save/     |  SVG rendering      |
+|  tabs/              |   bake callbacks     |  Option select      |
+|  state/             |                      |                     |
++---------+-----------+                      +---------+-----------+
+          |                                            |
+          | Forma SDK                                  | Forma SDK
+          v                                            v
++-------------------------------------------------------------+
+|                      Forma Host                              |
++-------------------------------------------------------------+
 ```
 
 ## Design Philosophy
@@ -249,7 +325,7 @@ Guiding principles for this extension:
 
 **Why**:
 - `main.ts` acts as a thin orchestrator wiring modules together, not implementing logic itself
-- Each manager handles a single responsibility (generation, panel communication, saved designs)
+- Each manager handles a single responsibility (generation, panel communication, saved designs, design mode)
 - Tab modules encapsulate all UI logic for their respective tabs
 - State is centralized in `ui-state.ts` rather than scattered across files
 - Easier to understand any single module in isolation
@@ -268,49 +344,70 @@ Guiding principles for this extension:
 
 **Trade-off**: Two systems to maintain; conversion overhead; potential for confusion about which to use.
 
+### 8. Deterministic Line-to-Wing Mapping
+
+**What**: Design mode constructs `MultiWingAnalysis` directly from drawn line segments rather than analyzing the buffered polygon.
+
+**Why**:
+- Line-to-polygon buffering (miter-joint offset) produces polygons whose Douglas-Peucker simplification can introduce artifacts
+- Polygon-based wing detection may produce incorrect results for V-shapes or complex angles
+- Direct segment-to-wing mapping guarantees perfect wing detection from drawn geometry
+- Deterministic: same line always produces same wing analysis
+
+**Trade-off**: Two code paths for wing analysis (polygon-based vs. line-based); must be maintained in sync.
+
 ## Module Dependencies
 
 ```
 main.ts (orchestrator)
-  ├── state/
-  │     ├── ui-state.ts (UIState, INITIAL_STATE, smart defaults)
-  │     └── unit-config.ts → ui-state.ts, algorithm/types.ts
-  ├── tabs/
-  │     ├── mix-tab.ts → state/ui-state.ts
-  │     ├── dim-tab.ts → state/ui-state.ts
-  │     └── egress-tab.ts → state/ui-state.ts
-  ├── managers/
-  │     ├── generation-manager.ts → algorithm/generator-core.ts, algorithm/footprint.ts
-  │     ├── floating-panel-manager.ts → (Forma SDK MessagePort)
-  │     └── saved-manager.ts → storage-service.ts, state/ui-state.ts
-  ├── utils/
-  │     └── dom-refs.ts (cached DOM elements)
-  ├── bake-building.ts → algorithm/types.ts, (Forma SDK floorStack)
-  ├── storage-service.ts → algorithm/types.ts, (Forma SDK storage)
-  └── components/
-        ├── FloorplateSVG.ts
-        └── MetricsPanel.ts
+  +-- state/
+  |     +-- ui-state.ts (UIState, INITIAL_STATE, smart defaults, designWidth)
+  |     +-- unit-config.ts -> ui-state.ts, algorithm/types.ts
+  +-- tabs/
+  |     +-- mix-tab.ts -> state/ui-state.ts
+  |     +-- dim-tab.ts -> state/ui-state.ts
+  |     +-- egress-tab.ts -> state/ui-state.ts
+  +-- managers/
+  |     +-- generation-manager.ts -> algorithm/generator-core.ts, algorithm/multi-wing-generator.ts,
+  |     |                            algorithm/footprint-polygon.ts, algorithm/wing-detection.ts
+  |     +-- floating-panel-manager.ts -> (Forma SDK MessagePort)
+  |     +-- saved-manager.ts -> storage-service.ts, state/ui-state.ts
+  |     +-- design-manager.ts -> algorithm/multi-wing-generator.ts, algorithm/types.ts,
+  |                              bake-building.ts, utils/line-to-polygon.ts, state/ui-state.ts
+  +-- utils/
+  |     +-- dom-refs.ts (cached DOM elements)
+  |     +-- line-to-polygon.ts (standalone geometry utility)
+  +-- bake-building.ts -> algorithm/types.ts, (Forma SDK floorStack)
+  +-- storage-service.ts -> algorithm/types.ts, (Forma SDK storage)
+  +-- components/
+        +-- FloorplateSVG.ts
+        +-- MetricsPanel.ts
 
 algorithm/
-  ├── generator-core.ts → types.ts, constants.ts, flexibility-model.ts, unit-counts.ts
-  ├── footprint.ts → types.ts, geometry/
-  ├── renderer.ts → types.ts, constants.ts, geometry/
-  ├── flexibility-model.ts → types.ts, constants.ts
-  ├── unit-counts.ts → types.ts, flexibility-model.ts
-  ├── type-compat.ts → types.ts
-  ├── types.ts (no deps)
-  ├── constants.ts → types.ts
-  └── utils/logger.ts (no deps)
+  +-- generator-core.ts -> types.ts, constants.ts, flexibility-model.ts, unit-counts.ts
+  +-- multi-wing-generator.ts -> generator-core.ts, wing-detection.ts, types.ts,
+  |                              constants.ts, unit-counts.ts, geometry/
+  +-- wing-detection.ts -> types.ts, constants.ts, geometry/
+  +-- footprint-polygon.ts -> types.ts, constants.ts, geometry/
+  +-- footprint.ts -> types.ts, geometry/
+  +-- renderer.ts -> types.ts, constants.ts, geometry/
+  +-- flexibility-model.ts -> types.ts, constants.ts
+  +-- unit-counts.ts -> types.ts, flexibility-model.ts
+  +-- type-compat.ts -> types.ts
+  +-- types.ts (no deps)
+  +-- constants.ts -> types.ts
+  +-- utils/logger.ts (no deps)
 
 geometry/
-  ├── point.ts (no deps)
-  ├── line.ts → point.ts
-  ├── polygon.ts → point.ts
-  └── rectangle.ts → point.ts
+  +-- point.ts (no deps)
+  +-- line.ts -> point.ts
+  +-- polygon.ts -> point.ts
+  +-- rectangle.ts -> point.ts
+  +-- graph.ts -> point.ts
 
 types/
-  ├── geometry.ts (no deps)
-  └── index.ts (re-exports)
+  +-- geometry.ts (no deps)
+  +-- index.ts (re-exports)
 ```
 
 ## State Management
@@ -335,6 +432,8 @@ interface UIState {
   commonPath: number;
   travelDistance: number;
   deadEnd: number;
+  // Design mode
+  designWidth: number;        // Building width in feet (default: 65)
   // Auto-generate
   autoGenerate: boolean;
 }
@@ -363,33 +462,36 @@ Each directory has an `index.ts` that re-exports public APIs:
 
 ```typescript
 // src/algorithm/index.ts
-export { generateFloorplate, generateFloorplateVariants, extractFootprintFromTriangles } from './generator-core';
-export type { FloorPlanData, UnitBlock, CoreBlock, LayoutOption } from './types';
-export { DEFAULT_UNIT_CONFIG, EGRESS_SPRINKLERED, STRATEGY_CONFIGS } from './constants';
+export { generateFloorplate, generateFloorplateVariants } from './generator-core';
+export { extractFootprintPolygon, polygonToLegacyFootprint } from './footprint-polygon';
+export { analyzeFootprint } from './wing-detection';
+export { generateMultiWingFloorplate, generateMultiWingFloorplateVariants } from './multi-wing-generator';
+export type { FloorPlanData, UnitBlock, CoreBlock, LayoutOption, Wing, WingIntersection } from './types';
+export type { MultiWingGeneratorOptions } from './multi-wing-generator';
+export type { WingGenerationOptions } from './generator-core';
 ```
 
 ## Testing Strategy
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    Test Pyramid                      │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│         ┌───────────────────┐                       │
-│         │   E2E (Forma)     │  Manual in Forma      │
-│         └───────────────────┘                       │
-│                                                      │
-│      ┌─────────────────────────┐                    │
-│      │   Integration Tests      │  Algorithm +      │
-│      │                          │  Geometry         │
-│      └─────────────────────────┘                    │
-│                                                      │
-│   ┌────────────────────────────────┐                │
-│   │         Unit Tests              │  170+ tests   │
-│   │    (*.test.ts colocated)        │  across core  │
-│   └────────────────────────────────┘                │
-│                                                      │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|                    Test Pyramid                       |
+|                                                      |
+|         +-------------------+                        |
+|         |   E2E (Forma)     |  Manual in Forma       |
+|         +-------------------+                        |
+|                                                      |
+|      +-------------------------+                     |
+|      |   Integration Tests      |  Algorithm +       |
+|      |                          |  Geometry          |
+|      +-------------------------+                     |
+|                                                      |
+|   +--------------------------------+                 |
+|   |         Unit Tests              |  170+ tests    |
+|   |    (*.test.ts colocated)        |  across core   |
+|   +--------------------------------+                 |
+|                                                      |
++------------------------------------------------------+
 ```
 
 Test files are colocated with their source:
@@ -400,10 +502,11 @@ Test files are colocated with their source:
 
 ## Performance Considerations
 
-1. **Debounced Regeneration**: Auto-generation uses debouncing to avoid excessive recalculation
+1. **Debounced Regeneration**: Auto-generation uses 300ms debouncing to avoid excessive recalculation
 2. **Efficient Mesh Rendering**: Only update 3D mesh when selection changes
 3. **Lazy Panel Loading**: Floating panel only loads when opened
 4. **Minimal Dependencies**: Only one production dependency (Forma SDK)
+5. **Geometry Deep Cloning**: Polygon/topology cloned before each variant generation to prevent algorithm mutation artifacts
 
 ## Security Considerations
 

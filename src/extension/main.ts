@@ -83,7 +83,8 @@ import {
   setSelectedOptionIndex,
   setGeneratedOptions,
   resetAfterBake,
-  getCurrentSelection
+  getCurrentSelection,
+  startDesignMode
 } from './managers';
 
 // Baking
@@ -112,13 +113,13 @@ function updateButtonState(newState: ButtonState): void {
 
   switch (newState) {
     case 'select':
-      dom.generateBtn.innerHTML = '<span class="generate-btn-icon">&#9881;</span> Select Building';
+      dom.selectBtn.innerHTML = '<span class="generate-btn-icon">&#9881;</span> Select Building';
       break;
     case 'generate':
-      dom.generateBtn.innerHTML = '<span class="generate-btn-icon">&#9881;</span> Generate';
+      dom.selectBtn.innerHTML = '<span class="generate-btn-icon">&#9881;</span> Generate';
       break;
     case 'stop':
-      dom.generateBtn.innerHTML = '<span class="generate-btn-icon">&#9632;</span> Stop automatic generation';
+      dom.selectBtn.innerHTML = '<span class="generate-btn-icon">&#9632;</span> Stop automatic generation';
       break;
   }
 }
@@ -309,13 +310,13 @@ async function initForma(): Promise<void> {
   try {
     const projectInfo = await Forma.project.get();
     setStatus('connected', `Connected to ${projectInfo.name || 'Forma'}`);
-    dom.generateBtn.disabled = false;
+    dom.selectBtn.disabled = false;
     Logger.info(`Forma connection established: ${projectInfo.name || 'Forma'}`);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     setStatus('disconnected', `Not connected: ${errorMessage}`);
     Logger.error(`Forma connection failed: ${error}`);
-    dom.generateBtn.disabled = false; // Still enable for testing
+    dom.selectBtn.disabled = false; // Still enable for testing
   }
 }
 
@@ -349,7 +350,19 @@ function init(): void {
   initEgressTab();
 
   // Set up generate button
-  dom.generateBtn.addEventListener('click', handleButtonClick);
+  dom.selectBtn.addEventListener('click', handleButtonClick);
+
+  // Set up design button
+  dom.designBtn.addEventListener('click', async () => {
+    dom.designWidthSection.style.display = 'block';
+    await startDesignMode();
+    dom.designWidthSection.style.display = 'none';
+  });
+
+  // Set up design width input
+  dom.designWidthInput.addEventListener('input', (e) => {
+    state.designWidth = parseInt((e.target as HTMLInputElement).value, 10) || 65;
+  });
 
   // Set up Show Results button (reopen preview panel after user closed it)
   dom.showResultsBtn.addEventListener('click', async () => {

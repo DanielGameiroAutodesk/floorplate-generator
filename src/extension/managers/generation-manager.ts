@@ -253,34 +253,52 @@ export function handleStopAutoGeneration(): void {
  * 5. Updates UI state
  */
 export async function handleGenerate(): Promise<void> {
-  dom.generateBtn.disabled = true;
-  dom.generateBtn.innerHTML = '<span class="generate-btn-icon">&#9881;</span> Generating...';
+  dom.selectBtn.disabled = true;
+  dom.selectBtn.innerHTML = '<span class="generate-btn-icon">&#9881;</span> Generating...';
 
   try {
+    // We need to get the selection BEFORE checking currentSelection, 
+    // as currentSelection might not be initialized if this is the very first click.
     const selection = await Forma.selection.getSelection();
+    
+    // Only update currentSelection if something was actually selected,
+    // otherwise keep the cached selection. This handles the case where the
+    // user deselects the building but we still want to auto-generate.
+    if (selection && selection.length > 0) {
+      currentSelection = selection;
+    }
 
-    if (!selection || selection.length === 0) {
+    // Fetch geometry if using a selection
+    const isUsingSelection = currentSelection && currentSelection.length > 0;
+    if (isUsingSelection) {
+      // If not first run, reuse the cached `buildingTriangles` array from previous handleGenerate call
+      // This assumes autoGenerate relies on the same building context.
+      const isFirstRun = !state.autoGenerate;
+      if (isFirstRun) {
+        const triangles = await Forma.geometry.getTriangles({ path: currentSelection[0] });
+        if (!triangles || triangles.length === 0) {
+          throw new Error('Failed to retrieve building geometry. Triangles array is empty or undefined.');
+        }
+        buildingTriangles = triangles;
+      }
+    } else if (!buildingTriangles) {
+      throw new Error('No valid building geometry selected.');
+    }
+
+    if (!currentSelection || currentSelection.length === 0) {
       // Keep button in "select" state since no building was selected
-      dom.generateBtn.disabled = false;
+      dom.selectBtn.disabled = false;
       if (updateButtonStateCallback) {
         updateButtonStateCallback('select');
       }
       return;
     }
 
-    currentSelection = selection;
-
-    // Get building geometry
-    const triangles = await Forma.geometry.getTriangles({ path: currentSelection[0] });
-
-    if (!triangles || triangles.length === 0) {
-      return;
+    if (!buildingTriangles) {
+      throw new Error('buildingTriangles is null after fetch attempt');
     }
-
-    buildingTriangles = triangles;
-
     // Extract actual polygon (preserves concave corners for L/U/H shapes)
-    const { polygon, topology, floorZ, height } = extractFootprintPolygon(buildingTriangles);
+    const { polygon, topology, floorZ, height } = extractFootprintPolygon(buildingTriangles!);
 
     // Extract legacy footprint for dimension display and bar-building fallback
     const footprint = polygonToLegacyFootprint(polygon, floorZ, height, topology);
@@ -312,13 +330,14 @@ export async function handleGenerate(): Promise<void> {
       alignment: state.alignment / 100,
       includeIntersectionCustomUnits: true
     };
-
+    
     // Multi-wing gate: use topology analysis (not vertex-count heuristic).
     // A simplified bar can have 5+ vertices from Douglas-Peucker artifacts; wing count is authoritative.
     const wingAnalysis = analyzeFootprint(polygon, topology);
     const isMultiWing = !wingAnalysis.isSimpleBar && wingAnalysis.wings.length > 1;
 
-    if (isMultiWing) {
+    try {
+      if (isMultiWing) {
       // DEEP CLONE geometry to prevent mutations across layout option generations
       const freshPoints = polygon.map(p => ({ x: p.x, y: p.y }));
       let freshTopology = undefined;
@@ -329,50 +348,75 @@ export async function handleGenerate(): Promise<void> {
         };
       }
       
-      console.log('[AGENT] generation-manager calling variants', freshPoints.length);
-      generatedOptions = generateMultiWingFloorplateVariants(
-        freshPoints, unitConfig, egressConfig, generatorOptions, freshTopology
-      );
+      try {
+        generatedOptions = generateMultiWingFloorplateVariants(
+          freshPoints, unitConfig, egressConfig, generatorOptions, freshTopology
+        );
+      } catch (innerE: any) {
+         throw innerE;
+      }
     } else {
       // Existing pipeline — identical to original behavior
-      generatedOptions = generateFloorplateVariants(footprint, unitConfig, egressConfig, generatorOptions);
-    }
-
-    // Select the first option (Balanced) by default
-    selectedOptionIndex = 0;
-    const selectedOption = generatedOptions[selectedOptionIndex];
-    if (!selectedOption) {
-      throw new Error('Failed to generate options');
-    }
-
-    currentFloorplan = selectedOption.floorplan;
-
-    // Enable auto-generation and update button state
-    state.autoGenerate = true;
-    if (updateButtonStateCallback) {
-      updateButtonStateCallback('stop');
-    }
-
-    // Render to mesh
-    const meshData = renderFloorplate(selectedOption.floorplan);
-
-    // Add to Forma
-    await Forma.render.addMesh({
-      geometryData: {
-        position: meshData.positions,
-        color: meshData.colors
+      try {
+        generatedOptions = generateFloorplateVariants(footprint, unitConfig, egressConfig, generatorOptions);
+      } catch (innerE: any) {
+         throw innerE;
       }
-    });
+    }
+      // Select the first option (Balanced) by default
+      selectedOptionIndex = 0;
+      const selectedOption = generatedOptions[selectedOptionIndex];
+      if (!selectedOption) {
+        throw new Error('Failed to generate options');
+      }
 
-    // Notify callback
-    if (onGenerationCompleteCallback && currentFloorplan) {
-      onGenerationCompleteCallback(generatedOptions, selectedOptionIndex, currentFloorplan);
+      currentFloorplan = selectedOption.floorplan;
+
+      // Enable auto-generation and update button state
+      state.autoGenerate = true;
+      if (updateButtonStateCallback) {
+        updateButtonStateCallback('stop');
+      }
+
+      // Render to mesh
+      let meshData;
+      try {
+        meshData = renderFloorplate(selectedOption.floorplan);
+      } catch (e: any) {
+        // We will re-throw later to fail the generation cleanly but capture the stack
+        throw e;
+      }
+
+      // Add to Forma
+      await Forma.render.addMesh({
+        geometryData: {
+          position: meshData.positions,
+          color: meshData.colors
+        }
+      });
+
+      // Notify callback
+      if (onGenerationCompleteCallback && currentFloorplan) {
+        try {
+          onGenerationCompleteCallback(generatedOptions, selectedOptionIndex, currentFloorplan);
+        } catch (cbErr: any) {
+           // Don't re-throw here, let the generation technically succeed but log the error
+        }
+      }
+
+    } catch (pipelineError: any) {
+      throw pipelineError; // Rethrow to let the main catch block handle it
     }
 
-  } catch (error) {
-    Logger.error(`Generation failed: ${error}`);
+  } catch (error: any) {
+    const msg = String(error?.message || error);
+    const stck = String(error?.stack || '');
+    console.error(`[CRITICAL CRASH] Generation failed entirely!`, msg, stck);
+    const errorDetails = error instanceof Error ? stck || msg : String(error);
+    Logger.error(`Generation failed: ${errorDetails}`);
     // On error, reset to appropriate state
-    dom.generateBtn.disabled = false;
+    dom.selectBtn.disabled = false;
+    dom.selectBtn.innerHTML = '<span class="generate-btn-icon">&#9881;</span> Generate Layout';
     if (updateButtonStateCallback) {
       if (buildingTriangles) {
         updateButtonStateCallback('generate');
@@ -381,6 +425,6 @@ export async function handleGenerate(): Promise<void> {
       }
     }
   } finally {
-    dom.generateBtn.disabled = false;
+    dom.selectBtn.disabled = false;
   }
 }

@@ -350,24 +350,66 @@ await Forma.proposal.addElement({
 
 ---
 
+## Multi-Floor Stacking
+
+The bake function supports creating multi-floor buildings via the `numFloors` parameter in `BakeOptions`:
+
+```typescript
+const result = await bakeWithFloorStack(floorplan, {
+  numFloors: 8,          // 8 identical floors
+  name: 'Residential Tower'
+});
+```
+
+**How it works:**
+- All floors reference the same `FloorStackPlan` (identical layouts)
+- Default floor height: 3.2m per floor
+- FloorStack SDK stacks floors automatically
+
+```typescript
+// Internally creates:
+const floors = Array(numFloors).fill({ planId: 'plan1', height: 3.2 });
+```
+
+## L-Shaped Unit Baking
+
+L-shaped units (corner wrapping units, intersection corner units) use `polyPoints` instead of rectangular `x/y/width/depth`. The baking pipeline handles these with ear-clipping triangulation:
+
+1. If a `UnitBlock` has `polyPoints`, those polygon vertices are used directly as the FloorStack unit polygon
+2. The ear-clipping algorithm (`triangulatePolygon()`) correctly handles concave L-shaped polygons
+3. This applies to both regular L-shaped corner units and the 8-point L-shaped intersection corner units from multi-wing generation
+
+**Why not fan triangulation?** Fan triangulation (`triangulateConvex`) produces incorrect triangles for concave polygons. An L-shaped unit rendered with fan triangulation would show visual overlap between neighbors.
+
+## Design Mode Auto-Bake
+
+In Design Mode, the baking step is automatic. After the user draws a line and floorplates are generated:
+1. The **Balanced** strategy (first option) is selected automatically
+2. `bakeWithFloorStack()` is called immediately with `numFloors: state.stories`
+3. No user review/selection step -- the building appears directly in Forma
+
 ## Current Status
 
 | Feature | Status | Notes |
 |---------|--------|-------|
 | FloorStack SDK baking | Working | Recommended approach (SDK v0.90.0) |
+| Multi-floor stacking | Working | `numFloors` parameter in BakeOptions |
+| L-shaped unit baking | Working | Ear-clipping triangulation |
+| Multi-wing building baking | Working | All intersection geometry supported |
+| Design mode auto-bake | Working | Line draw -> auto-bake Balanced option |
 | BasicBuilding API baking | Working | Fallback with unit subdivisions |
 | GLB mesh upload | Working | Simple volumes only |
 | Correct position/rotation | Working | Centered coords + direct translate |
-| L-shaped unit triangulation | Working | Ear clipping algorithm |
 | grossFloorAreaPolygons | Not working | API returns 400 |
 | Non-watertight mesh warning | Cosmetic | Does not affect functionality |
 
-### Two Baking Approaches Available
+### Three-Tier Fallback Strategy
 
-| Approach | Function | Output | Use Case |
-|----------|----------|--------|----------|
-| FloorStack SDK | `bakeWithFloorStack()` | graphBuilding + volumeMesh | Recommended: unit subdivisions, area reports |
-| BasicBuilding API | `bakeWithBasicBuildingAPI()` | graphBuilding + volumeMesh | Fallback: when FloorStack unavailable |
+| Tier | Function | Trigger | Output |
+|------|----------|---------|--------|
+| 1. FloorStack Plan | `bakeWithFloorStack()` | Default | graphBuilding with unit subdivisions (CORE, CORRIDOR, LIVING_UNIT programs) |
+| 2. FloorStack Polygon | `bakeWithFloorStack()` (fallback) | Plan conversion fails | graphBuilding without unit subdivisions (solid floor polygon) |
+| 3. BasicBuilding API | `bakeWithBasicBuildingAPI()` | FloorStack unavailable | graphBuilding + volumeMesh via direct API |
 
 ---
 

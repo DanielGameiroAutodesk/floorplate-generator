@@ -1,31 +1,31 @@
 # Floorplate Generation Algorithm
 
-This document provides a deep dive into the floorplate generation algorithm used by this extension.
+This document provides a deep dive into the floorplate generation algorithm used by this extension, covering both single-wing (bar) and multi-wing (L, U, V, H, snake, courtyard) buildings.
 
 ## Overview
 
 The algorithm generates optimized apartment layouts for multi-family residential buildings. It takes a building footprint and configuration parameters, then produces three layout options using different optimization strategies.
 
-## Algorithm Phases
+For **simple bar buildings** (single wing), the 7-phase pipeline runs directly. For **multi-wing buildings**, the system first detects wings from the footprint polygon, builds a connectivity graph, generates each wing independently, and stitches them together with intersection geometry (corner units, corridor wedges, inner cores).
+
+## Single-Wing Pipeline (7 Phases)
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                        Generation Pipeline                                │
-│                                                                          │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐ │
-│  │  Phase 1    │   │  Phase 2    │   │  Phase 3    │   │  Phase 4    │ │
-│  │  Footprint  │──►│  Corridor   │──►│    Core     │──►│   Egress    │ │
-│  │  Analysis   │   │  Placement  │   │  Placement  │   │ Validation  │ │
-│  └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘ │
-│         │                                                     │          │
-│         │                                                     ▼          │
-│         │         ┌─────────────┐   ┌─────────────┐   ┌─────────────┐ │
-│         │         │  Phase 7    │   │  Phase 6    │   │  Phase 5    │ │
-│         └────────►│  Metrics    │◄──│    Wall     │◄──│    Unit     │ │
-│                   │ Calculation │   │  Alignment  │   │  Placement  │ │
-│                   └─────────────┘   └─────────────┘   └─────────────┘ │
-│                                                                          │
-└──────────────────────────────────────────────────────────────────────────┘
++------------------------------------------------------------------------+
+|                        Generation Pipeline                              |
+|                                                                         |
+|  +-----------+   +-----------+   +-----------+   +-----------+         |
+|  |  Phase 1  |   |  Phase 2  |   |  Phase 3  |   |  Phase 4  |        |
+|  | Footprint |-->| Corridor  |-->|   Core    |-->|  Egress   |        |
+|  | Analysis  |   | Placement |   | Placement |   |Validation |        |
+|  +-----------+   +-----------+   +-----------+   +-----------+         |
+|       |                                               |                 |
+|       |           +-----------+   +-----------+   +-----------+        |
+|       |           |  Phase 7  |   |  Phase 6  |   |  Phase 5  |       |
+|       +---------->|  Metrics  |<--|   Wall    |<--|   Unit    |       |
+|                   |Calculation|   | Alignment |   | Placement |       |
+|                   +-----------+   +-----------+   +-----------+       |
++------------------------------------------------------------------------+
 ```
 
 ## Phase 1: Footprint Analysis
@@ -37,32 +37,35 @@ The algorithm generates optimized apartment layouts for multi-family residential
 
 1. Extract all vertices from triangle data
 2. Project to 2D (ignore Z coordinate for footprint)
-3. Calculate convex hull or bounding box
-4. Detect building rotation angle
+3. Calculate convex hull or bounding box (simple bar), or extract polygon (multi-wing)
+4. Detect building rotation angle from longest edge
 5. Calculate building dimensions (width, depth)
 
 ```typescript
 interface BuildingFootprint {
-  width: number;        // Building width in meters
-  depth: number;        // Building depth in meters
+  width: number;        // Building length along long axis (meters)
+  depth: number;        // Building depth perpendicular to corridor (meters)
+  height: number;       // Building height (meters)
   rotation: number;     // Rotation angle in radians
-  center: Point;        // Center point
-  outline: Point[];     // Footprint polygon vertices
+  centerX: number;
+  centerY: number;
+  floorZ: number;       // Ground elevation
+  polygon?: {x: number; y: number}[];  // Actual footprint polygon (multi-wing)
 }
 ```
 
 ### Building Shape Detection
 
-The algorithm detects complex shapes:
+The algorithm detects complex shapes via wing detection (see [Wing Detection](#wing-detection)):
 
 ```
-Rectangular:          L-Shape:             U-Shape:
-┌──────────────┐     ┌───────┐            ┌───────────────┐
-│              │     │       │            │               │
-│              │     │       └────┐       │   ┌───────┐   │
-│              │     │            │       │   │       │   │
-│              │     │            │       │   │       │   │
-└──────────────┘     └────────────┘       └───┘       └───┘
+Rectangular (bar):    L-Shape:             U-Shape:           V-Shape:
++----------------+   +---------+          +---------------+
+|                |   |         |          |               |      \     /
+|                |   |         +------+   |   +-------+   |       \   /
+|                |   |                |   |   |       |   |        \ /
+|                |   |                |   |   |       |   |         +
++----------------+   +----------------+   +---+       +---+
 ```
 
 ## Phase 2: Corridor Placement
@@ -76,17 +79,17 @@ The algorithm uses a central double-loaded corridor:
 
 ```
                     Building Depth
-    ◄─────────────────────────────────────────►
+    <------------------------------------------->
 
-    ┌──────────────────────────────────────────┐  ▲
-    │           North Side Units               │  │
-    │   [Unit]   [Unit]   [Unit]   [Unit]     │  │
-    ├──────────────────────────────────────────┤  │
-    │              C O R R I D O R             │  │ Building
-    ├──────────────────────────────────────────┤  │ Width
-    │           South Side Units               │  │
-    │   [Unit]   [Unit]   [Unit]   [Unit]     │  │
-    └──────────────────────────────────────────┘  ▼
+    +--------------------------------------------+  ^
+    |           North Side Units                 |  |
+    |   [Unit]   [Unit]   [Unit]   [Unit]       |  |
+    |--------------------------------------------+  |
+    |              C O R R I D O R               |  | Building
+    |--------------------------------------------+  | Width
+    |           South Side Units                 |  |
+    |   [Unit]   [Unit]   [Unit]   [Unit]       |  |
+    +--------------------------------------------+  v
 ```
 
 ### Corridor Parameters
@@ -105,13 +108,13 @@ The algorithm uses a central double-loaded corridor:
 
 1. **End Cores**: Placed at building extremities
 2. **Mid Cores**: Added every ~76m (250ft) if needed for egress
-3. **Wing Cores**: Placed at L/U/V building intersections
+3. **Intersection Cores**: At multi-wing intersections (inner core zones)
 
 ```
 Simple Building:                With Mid-Core:
-┌─────┬──────────────┬─────┐   ┌─────┬──────┬──────┬─────┐
-│CORE │              │CORE │   │CORE │      │CORE  │CORE │
-└─────┴──────────────┴─────┘   └─────┴──────┴──────┴─────┘
++-------+----------------+-------+   +-------+--------+--------+-------+
+| CORE  |                | CORE  |   | CORE  |        | CORE   | CORE  |
++-------+----------------+-------+   +-------+--------+--------+-------+
 ```
 
 ### Core Dimensions
@@ -201,7 +204,7 @@ Two systems coexist (see `flexibility-model.ts` and `type-compat.ts`):
 EXPANSION_WEIGHTS = { Studio: 1, 1BR: 5, 2BR: 15, 3BR: 40 }
 
 // Flexibility factors (% tolerance for sizing)
-FLEXIBILITY_FACTORS = { Studio: 0%, 1BR: ±2%, 2BR: ±5%, 3BR: ±10% }
+FLEXIBILITY_FACTORS = { Studio: 0%, 1BR: +/-2%, 2BR: +/-5%, 3BR: +/-10% }
 ```
 
 **Dynamic system** (extensible, used by the UI via smart defaults):
@@ -275,12 +278,12 @@ For corner positions, units can be L-shaped:
 
 ```
 Standard Unit:       L-Shaped Unit:
-┌──────────┐        ┌──────┬────────┐
-│          │        │      │        │
-│          │        │      │        │
-│          │        │      └────────┤
-│          │        │               │
-└──────────┘        └───────────────┘
++-----------+        +------+---------+
+|           |        |      |         |
+|           |        |      |         |
+|           |        |      +---------+
+|           |        |                |
++-----------+        +----------------+
 ```
 
 ### Gap Detection and Filler Creation
@@ -296,27 +299,9 @@ After ALL unit modifications (alignment, core wrapping, corridor void absorption
 **Filler Characteristics:**
 - **Minimum width**: 0.001m (effectively captures all gaps for FloorStack API coverage)
 - **Depth**: Same as rentable depth
-- **Side**: North or South (matching the segment)
-- **Core exclusion**: On the core side, gaps occupied by cores are not filled (cores already cover that space)
 - **Baked as**: `program: 'CORE'` in FloorStack/BasicBuilding APIs
 
-```
-Before Filler Detection:
-┌────────┬────────┐   ┌─────────┐
-│ Unit A │ Unit B │   │  Unit C │
-└────────┴────────┘   └─────────┘
-                  ▲
-               0.8m gap (creates filler)
-
-After Filler Creation:
-┌────────┬────────┬──────┬─────────┐
-│ Unit A │ Unit B │FILLER│  Unit C │
-└────────┴────────┴──────┴─────────┘
-```
-
 **IMPORTANT**: Filler detection must happen AFTER all unit position adjustments (alignment, L-shape wrapping, corridor void absorption) to ensure fillers cover actual gaps in final unit positions. The FloorStack API requires 100% footprint coverage with no gaps or overlaps.
-
-This ensures full building footprint coverage with no white space gaps in the baked building.
 
 ## Phase 6: Wall Alignment
 
@@ -328,14 +313,14 @@ This ensures full building footprint coverage with no white space gaps in the ba
 ```
 Before Alignment:
 North: [  Unit A  ][  Unit B  ][    Unit C    ]
-       ────────────────────────────────────────
+       ============================================
 South: [Unit D][ Unit E ][   Unit F   ][Unit G]
 
 After Alignment:
 North: [  Unit A  ][   Unit B   ][   Unit C   ]
-       ────────────────────────────────────────
+       ============================================
 South: [ Unit D  ][   Unit E   ][   Unit F   ]
-                    ▲            ▲
+                    ^            ^
                  Walls aligned where possible
 ```
 
@@ -346,7 +331,6 @@ User configurable: 0% (no alignment) to 100% (strict alignment)
 ```typescript
 // Only align if within tolerance
 if (Math.abs(northWallX - southWallX) <= tolerance * avgUnitWidth) {
-  // Adjust both units to meet in middle
   const meetPoint = (northWallX + southWallX) / 2;
   adjustUnits(meetPoint);
 }
@@ -377,7 +361,7 @@ interface FloorplanMetrics {
 ### Efficiency Calculation
 
 ```
-Efficiency = Net Rentable SF / Gross SF × 100
+Efficiency = Net Rentable SF / Gross SF x 100
 
 Example:
 - Gross Area: 10,000 SF
@@ -386,35 +370,6 @@ Example:
 - Net Rentable: 8,000 SF
 - Efficiency: 80%
 ```
-
-## Output Structure
-
-```typescript
-interface FloorPlanData {
-  units: UnitBlock[];           // All apartment units
-  cores: CoreBlock[];           // Elevator/stair cores
-  fillers: FillerBlock[];       // Leftover space fillers (baked as CORE)
-  corridor: CorridorBlock;      // Central corridor
-  metrics: FloorplanMetrics;    // Calculated statistics
-  buildingOutline: Point[];     // Original footprint
-}
-
-interface LayoutOption {
-  strategy: OptimizationStrategy;
-  label: string;                // "Balanced", etc.
-  description: string;          // Strategy explanation
-  floorplan: FloorPlanData;
-}
-```
-
-## Performance Characteristics
-
-| Metric | Typical Value |
-|--------|---------------|
-| Generation Time | < 100ms for 3 options |
-| Memory Usage | < 10MB |
-| Unit Calculations | O(n) where n = unit count |
-| Wall Alignment | O(n × m) for n × m units |
 
 ## Internal Pipeline (14 Steps)
 
@@ -438,16 +393,514 @@ The 7 phases above are the conceptual model. Internally, `generator-core.ts` imp
 | 13 | Phase 4 | **Egress Validation** -- verify travel distance and dead-end compliance |
 | 14 | Phase 7 | **Convert to Output Format** -- produce final FloorPlanData |
 
+---
+
+## Footprint Polygon Extraction
+
+**Module**: `src/algorithm/footprint-polygon.ts`
+
+### Why Not Convex Hull?
+
+The legacy `extractFootprintFromTriangles()` uses a convex hull, which works for rectangular buildings but **destroys concave corners**. An L-shaped building's inner corner becomes a straight line in a convex hull, making it impossible to detect wings.
+
+```
+Actual L-Shape:          Convex Hull:
++---------+              +-------------------+
+|         |              |                   |
+|         +------+       |                   |
+|                |  -->  |                   |
+|                |       |                   |
++----------------+       +-------------------+
+                         (inner corner lost!)
+```
+
+### Extraction Pipeline
+
+The new `extractFootprintPolygon()` preserves the true building shape:
+
+```
+Float32Array triangles from Forma
+        |
+        v
+  1. Vertex Welding (spatial hash, epsilon = 1mm)
+     WHY: Float32 meshes have micro-differences (0.000001) at coincident
+     vertices. Without welding, boundary detection silently fails.
+        |
+        v
+  2. Ground Triangle Extraction (z <= floorZ + tolerance)
+     Filters to only floor-level triangles.
+        |
+        v
+  3. Boundary Edge Detection (edges appearing exactly once)
+     Interior edges appear in 2 triangles; boundary edges appear in 1.
+     Edge keys are sorted vertex indices for direction-independent matching.
+        |
+        v
+  4. Edge Chaining into Polygon(s)
+     Adjacency-based traversal chains unordered edges into closed loops.
+     Largest loop by area = outer boundary; smaller loops = holes.
+        |
+        v
+  5. Douglas-Peucker Simplification (epsilon = 5cm)
+     Removes mesh noise while preserving significant corners.
+     Also removes nearly-collinear vertices (within 2 degrees of 180).
+        |
+        v
+  6. Winding Normalization
+     Outer boundary: counter-clockwise (CCW)
+     Holes: clockwise (CW)
+        |
+        v
+  Output: { polygon, topology: { outer, holes }, floorZ, height }
+```
+
+### Topology
+
+The extraction returns a `FootprintTopology` with separate outer and hole boundaries:
+
+```typescript
+// Used inline (not a named export in types.ts)
+{ outer: {x: number, y: number}[], holes: {x: number, y: number}[][] }
+```
+
+This supports courtyard buildings where the outer loop has an interior hole.
+
+### Legacy Conversion
+
+`polygonToLegacyFootprint()` converts the polygon back to a `BuildingFootprint` for compatibility with the single-wing pipeline. It finds the longest edge as the primary axis (rotation), rotates all points to a local frame, and computes the axis-aligned bounding box.
+
+---
+
+## Wing Detection
+
+**Module**: `src/algorithm/wing-detection.ts`
+
+The wing detection algorithm analyzes a footprint polygon to identify rectangular wings, their intersections, and classify the building shape.
+
+### Pipeline
+
+```
+Footprint Polygon
+        |
+        v
+  Step 1: Classify Vertices
+     Cross-product at each vertex determines corner type:
+     - CONVEX (cross > 0): outer corner (e.g., building corner)
+     - CONCAVE (cross < 0): inner corner (e.g., L-shape inner corner)
+     - STRAIGHT (cross ~ 0): collinear, not a real corner
+        |
+        v
+  Step 2: Detect Dominant Directions
+     Group edges by angle (tolerance +/- 5 degrees).
+     Angles normalized to [0, pi) since direction and reverse are equivalent.
+     Groups sorted by total edge length (dominant first).
+        |
+        v
+  Step 3: Build Wings
+     Identify rectangular wing sections by pairing parallel edges.
+     Each wing has: id, direction, length, width, centerline, bounds, center.
+        |
+        v
+  Step 4: Identify Intersections
+     Where two wings meet at a polygon vertex.
+     Classification:
+     - 'inner' (CONCAVE vertex): where cores and corridor wedges go
+     - 'outer' (CONVEX vertex): where premium corner units go
+     Records wingIds, angle between wings, inner/outer zone polygons.
+        |
+        v
+  Step 5: Determine Wing Roles
+     At each intersection, one wing is 'host' (provides the core),
+     the other is 'guest' (its end core is replaced by intersection core).
+     Determines coreSide and intersectionEnd for each role.
+        |
+        v
+  Step 6: Compute Net Lengths
+     netLength = wingLength - overlap zone consumed by intersections.
+     Excludes the geometric offset (geoOffset) at each intersection end.
+        |
+        v
+  Output: MultiWingAnalysis
+```
+
+### Shape Classification
+
+```typescript
+type Shape = 'bar' | 'L' | 'U' | 'V' | 'H' | 'snake' | 'courtyard' | 'complex';
+```
+
+| Shape | Wings | Description |
+|-------|-------|-------------|
+| bar | 1 | Simple rectangular building |
+| L | 2 | Two wings at ~90 degrees |
+| U | 3 | Three wings forming U shape |
+| V | 2 | Two wings at non-90 degree angle |
+| H | 4+ | Wings with crossbar |
+| snake | 3+ | Elongated multi-segment chain |
+| courtyard | 3+ | Enclosed ring (closed polygon) |
+| complex | varies | Anything that doesn't match above |
+
+### Example: L-Shape Detection
+
+```
+Input polygon:
++---------+ v0
+|         |
+|    W0   | v1
+|         +------+ v2
+|                |
+|       W1       |
+|                |
++----------------+ v3
+
+Vertices:
+  v0: CONVEX  (outer corner)
+  v1: CONCAVE (inner corner - the L's inner vertex)
+  v2: CONVEX  (outer corner)
+  v3: CONVEX  (outer corner)
+
+Wings detected:
+  W0: vertical wing (v0-v1 edge direction)
+  W1: horizontal wing (v2-v3 edge direction)
+
+Intersection at v1:
+  type: 'inner'
+  wingIds: [W0, W1]
+  angle: ~90 degrees
+```
+
+### Key Types
+
+```typescript
+enum CornerType {
+  CONVEX = 'CONVEX',     // Interior angle < 180 (outer corner)
+  CONCAVE = 'CONCAVE',   // Interior angle > 180 (inner corner)
+  STRAIGHT = 'STRAIGHT'  // Interior angle ~ 180
+}
+
+interface FootprintVertex {
+  x: number; y: number;
+  interiorAngle: number;
+  cornerType: CornerType;
+  index: number;
+}
+
+interface Wing {
+  id: number;
+  vertices: FootprintVertex[];
+  direction: number;          // Primary axis angle (radians)
+  length: number;             // Along primary axis
+  width: number;              // Perpendicular to primary axis
+  centerline: { start: {x,y}; end: {x,y} };
+  bounds: { minX, maxX, minY, maxY: number };
+  center?: { x: number; y: number };
+}
+
+interface WingIntersection {
+  point: FootprintVertex;
+  type: 'inner' | 'outer';
+  wingIds: [number, number];
+  angle: number;
+  innerZone?: { polygon: {x,y}[]; area: number };
+  outerZone?: { polygon: {x,y}[]; area: number };
+}
+
+interface WingDetectionResult {
+  wings: Wing[];
+  intersections: WingIntersection[];
+  isSimpleBar: boolean;
+  shape: Shape;
+}
+
+// Extended with role assignments and net lengths
+interface MultiWingAnalysis extends WingDetectionResult {
+  wingRoles: WingRole[];
+  netWingLengths: Map<number, number>;
+}
+```
+
+---
+
+## Multi-Wing Pipeline
+
+**Module**: `src/algorithm/multi-wing-generator.ts`
+
+The multi-wing generator treats each wing as an independent bar building, generates floorplates per-wing using the single-wing pipeline, then stitches them together with explicit intersection geometry.
+
+### Architecture Overview
+
+```
+Input: polygon, MultiWingAnalysis, config, egressConfig
+        |
+        v
+  1. Build Wing Connectivity Graph
+     WingNode per wing, IntersectionEdge per inner intersection.
+        |
+        v
+  2. BFS Traversal -> Ordered WingTask List
+     Root = first isolated wing or largest wing.
+     Each task carries: effectiveLength, geoOffsets, WingGenerationOptions.
+        |
+        v
+  3. Global Unit Mix Allocation
+     PASS 1: Allocate corner-eligible units to exposed corners
+     PASS 2: Distribute remaining counts proportionally by wing length
+        |
+        v
+  4. Per-Wing Bar Generation (for each WingTask)
+     a. Create synthetic BuildingFootprint (effectiveLength x depth)
+     b. Call generateFloorplate() with WingGenerationOptions
+     c. Transform result from wing-local to world coordinates
+        |
+        v
+  5. Intersection Geometry (for each inner intersection)
+     a. Compute 20 landmark points (IntersectionJoinGeometry)
+     b. Create corner unit (8-point L-polygon at outer vertex)
+     c. Create corridor wedge (4 miter-joined segments)
+     d. Create inner core (6-point hexagon at inner vertex)
+        |
+        v
+  6. Assembly & Overlap Filtering
+     Merge all wing results + intersection geometry.
+     Remove units/cores whose centroids fall inside reserve polygons.
+        |
+        v
+  7. Global Egress Validation
+     Build corridor graph, validate travel distances across all wings.
+        |
+        v
+  Output: Single FloorPlanData with all wings stitched together
+```
+
+### Wing Connectivity Graph
+
+The generator builds a graph where:
+- **Nodes** (`WingNode`): One per wing, containing the `Wing` data and a map of edges
+- **Edges** (`IntersectionEdge`): One per inner intersection, connecting two wings
+
+```typescript
+interface WingNode {
+  wingId: number;
+  wing: Wing;
+  edges: Map<number, IntersectionEdge>;  // neighborWingId -> edge
+}
+
+interface IntersectionEdge {
+  index: number;                  // Index in intersections array
+  intersection: WingIntersection;
+  wingIdA: number;
+  wingIdB: number;
+  endOfA: 'left' | 'right';      // Which end of wing A faces intersection
+  endOfB: 'left' | 'right';      // Which end of wing B faces intersection
+  geoOffsetA: number;            // Trim from wing A at this end
+  geoOffsetB: number;            // Trim from wing B at this end
+  theta: number;                  // Angle between wings
+}
+```
+
+### GeoOffset Calculation
+
+The geometric offset determines how much to trim from each wing at an intersection to make room for corner geometry:
+
+```
+geoOffset = buildingDepth * tan((pi - theta) / 2)
+
+where theta = angle between the two wings at the intersection
+```
+
+**Clamping**: `geoOffset` is capped at 40% of the wing length to prevent degenerate wings.
+
+```
+Example: 90-degree L-shape, depth = 20m
+  theta = pi/2
+  geoOffset = 20 * tan((pi - pi/2) / 2) = 20 * tan(pi/4) = 20m
+  If wing length = 40m, clamped to 40 * 0.4 = 16m
+```
+
+### Per-Wing Generation
+
+For each `WingTask`, the generator:
+
+1. Creates a **synthetic `BuildingFootprint`** with `width = effectiveLength` (wing length minus geoOffsets at both ends) and `depth = wing width`
+2. Sets `WingGenerationOptions`:
+
+```typescript
+interface WingGenerationOptions {
+  skipLeftEndCore?: boolean;       // Intersection provides left end core
+  skipRightEndCore?: boolean;      // Intersection provides right end core
+  intersectionEnds?: ('left'|'right')[]; // Suppress corner segments at these ends
+  unitInventory?: Record<UnitType, number>; // Pre-allocated unit counts
+  skipEgress?: boolean;            // Skip per-wing validation (global check later)
+}
+```
+
+3. Calls `generateFloorplate()` which runs the full 14-step single-wing pipeline
+4. Transforms the result from wing-local coordinates to world coordinates:
+
+```
+Wing-local: centered at (0, 0), x = -effectiveLength/2 .. +effectiveLength/2
+Transform: rotate by wing.direction, translate by shifted wing center
+Center shift = (geoOffsetLeft - geoOffsetRight) / 2 along wing direction
+```
+
+### Intersection Geometry
+
+At each inner intersection, three geometric pieces are created:
+
+```
+  Wing A (horizontal)
+  +==================+==========+
+  |  units  | corr   | CORRIDOR |
+  |         | wedge  |  WEDGE   |
+  |         +---+====+===+------+
+  |             |  INNER  |
+  |             |  CORE   |
+  |    CORNER   |         |
+  |    UNIT     +---------+
+  |             |  units  |
+  +-------------+---------+
+                  Wing B (vertical)
+```
+
+#### 1. Corner Unit (Outer Vertex)
+
+- **Shape**: 8-point L-polygon with chamfered corners (1.5m offset for door opening)
+- **Location**: At the outer building corner (`sOuter`)
+- **Sizing**: Iterative search for symmetric leg lengths (d) targeting a specific unit area
+- **Type**: Determined by best area fit to configured unit types
+
+#### 2. Corridor Wedge (Miter Join)
+
+- **Shape**: 4 corridor segments forming the miter junction
+- **Segments**: Two quads per intersection (Segment A from wing A's bar end to miter point, Segment B from wing B's bar end to miter point)
+- **Purpose**: Connects the corridors of adjacent wings smoothly
+
+#### 3. Inner Core (Concave Zone)
+
+- **Shape**: 6-point hexagonal polygon on the concave (inner) side
+- **Points**: Bounded by the corridor inner edges of both wings and the inner facade line
+- **Purpose**: Provides the core/utility zone at the intersection, replacing the end cores of guest wings
+
+### Inner Side Detection
+
+To determine which side of each wing faces inward (toward the other wing), the algorithm uses a **cross-product method** (not distance-based):
+
+1. Compute `perpCCW(wingDir)` -- the perpendicular direction (counter-clockwise 90 degrees)
+2. Check the dot product of this perpendicular with the vector from the wing center toward the intersection
+3. If positive, the "North" side faces inward; if negative, "South" faces inward
+
+This method is **rotation-invariant** and works for any wing orientation.
+
+### Global Unit Mix Allocation
+
+The multi-wing generator distributes units across wings in two passes:
+
+1. **PASS 1 -- Corner Allocation**: Count exposed corners (wing ends not consumed by intersections). Allocate corner-eligible unit types (typically larger units) to these positions first.
+2. **PASS 2 -- Proportional Distribution**: Distribute remaining unit counts proportionally by wing rentable area. Each wing receives a `unitInventory` mapping type to count.
+
+This uses `calculateGlobalUnitCounts()` which applies the Largest Remainder Method across the entire building, then partitions the result per wing.
+
+### Overlap Filtering
+
+After all wing floorplates and intersection geometry are generated, the assembler:
+
+1. Creates **reserve polygons** from inner core zones and corner unit footprints
+2. Tests each unit and core from individual wings: if a unit's centroid falls inside a reserve polygon, it is removed
+3. Converts inner core blocks into filler units (rendered with TwoBed coloring)
+
+This ensures no visual overlap between wing-generated units and intersection-generated geometry.
+
+---
+
+## Design Mode: Line-to-Wing Conversion
+
+**Module**: `src/extension/managers/design-manager.ts`
+
+When a user draws a polyline in Design Mode, the system bypasses polygon footprint analysis entirely. Instead, `createAnalysisFromLine()` constructs a deterministic `MultiWingAnalysis` directly from the drawn segments:
+
+- Each line segment becomes a wing (direction, length, width from user input)
+- Each junction between consecutive segments becomes an intersection
+- Intersection angle computed from the vectors of adjacent segments
+
+**Why bypass polygon analysis?** The line-to-polygon buffering (miter-joint offset) can produce polygons whose Douglas-Peucker simplification or wing detection introduces artifacts. Direct line-to-wing mapping guarantees perfect detection for V-shapes, snake buildings, and courtyards.
+
+- **2-point line** = simple bar -> `generateFloorplateVariants()`
+- **3+ point line** = multi-wing -> `generateMultiWingFloorplateVariants()` with precomputed analysis
+- **Closed line** (endpoints within 10cm) = courtyard shape
+
+---
+
+## Output Structure
+
+```typescript
+interface FloorPlanData {
+  units: UnitBlock[];           // All apartment units
+  cores: CoreBlock[];           // Elevator/stair cores
+  fillers: FillerBlock[];       // Leftover space fillers (baked as CORE)
+  corridor: CorridorBlock;      // Primary corridor
+  buildingLength: number;
+  buildingDepth: number;
+  floorElevation: number;
+  transform: {
+    centerX: number;
+    centerY: number;
+    rotation: number;
+  };
+  stats: {
+    gsf: number;                // Gross Square Feet
+    nrsf: number;               // Net Rentable Square Feet
+    efficiency: number;         // NRSF / GSF ratio
+    unitCounts: Record<string, number>;
+    totalUnits: number;
+  };
+  egress: {
+    maxDeadEnd: number;
+    maxTravelDistance: number;
+    deadEndStatus: 'Pass' | 'Fail';
+    travelDistanceStatus: 'Pass' | 'Fail';
+  };
+
+  // Multi-wing fields (present when building has multiple wings)
+  corridorSegments?: CorridorBlock[];        // All corridor segments (replaces single corridor)
+  corridorGraph?: { nodes: any[]; edges: any[] }; // For egress graph validation
+  wingInfo?: {
+    shape: string;
+    wingCount: number;
+    wings?: Array<{ id: number; length: number; width: number; center: {x,y}; direction: number }>;
+  };
+}
+
+interface LayoutOption {
+  id: string;
+  strategy: OptimizationStrategy;
+  floorplan: FloorPlanData;
+  label: string;
+  description: string;
+}
+```
+
+## Performance Characteristics
+
+| Metric | Typical Value |
+|--------|---------------|
+| Generation Time | < 100ms for 3 options (single wing) |
+| Generation Time | < 300ms for 3 options (multi-wing) |
+| Memory Usage | < 10MB |
+| Unit Calculations | O(n) where n = unit count |
+| Wall Alignment | O(n x m) for n x m units |
+
 ## Known Limitations
 
-1. **Rectangular bias**: Algorithm optimized for rectangular buildings (multi-wing support in progress)
-2. **Single-level**: All floors assumed identical
-3. **No interior rooms**: Only demising walls, not bathroom/kitchen layouts
-4. **US codes only**: Egress defaults are US-centric
+1. **All floors identical**: Multi-floor stacks the same layout; no per-floor variation
+2. **No interior rooms**: Only demising walls, not bathroom/kitchen layouts
+3. **US codes only**: Egress defaults are US-centric (IBC)
+4. **Acute angles**: Wing intersections below ~50 degrees can produce large geometric offsets
+5. **Courtyard egress**: Global egress validation for courtyard shapes is approximate
 
 ## Future Improvements
 
-- Multi-wing building support (L, U, V shapes) -- see [MULTI-WING-PROBLEM-SPEC.md](planning/MULTI-WING-PROBLEM-SPEC.md)
-- Multi-floor variations
-- Interior room layouts
+- Per-floor unit variation (different layouts on different floors)
+- Interior room layouts (bathroom/kitchen placement)
 - International building codes
+- Curved wing support
+- Parking level generation

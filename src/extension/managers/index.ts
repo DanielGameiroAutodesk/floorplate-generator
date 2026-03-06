@@ -48,3 +48,5 @@ export {
   setGeneratedOptions,
   resetAfterBake
 } from './generation-manager';
+
+export { startDesignMode } from './design-manager';

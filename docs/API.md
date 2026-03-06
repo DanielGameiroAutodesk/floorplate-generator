@@ -4,15 +4,20 @@ This document provides a comprehensive reference for the Floorplate Generator's 
 
 ## Table of Contents
 
-- [Core Functions](#core-functions)
-- [Types](#types)
-- [Constants](#constants)
+- [Single-Wing Functions](#single-wing-functions)
+- [Multi-Wing Functions](#multi-wing-functions)
+- [Footprint Extraction Functions](#footprint-extraction-functions)
+- [Wing Detection Functions](#wing-detection-functions)
+- [Design Mode Functions](#design-mode-functions)
 - [Renderer Functions](#renderer-functions)
 - [Baking Functions](#baking-functions)
+- [Types](#types)
+- [Constants](#constants)
+- [Usage Examples](#usage-examples)
 
 ---
 
-## Core Functions
+## Single-Wing Functions
 
 ### `generateFloorplate`
 
@@ -27,9 +32,10 @@ function generateFloorplate(
   coreWidth?: number,
   coreDepth?: number,
   coreSide?: 'North' | 'South',
-  strategy?: OptimizationStrategy,
   alignment?: number,
-  customColors?: UnitColorMap
+  strategy?: OptimizationStrategy,
+  customColors?: UnitColorMap,
+  wingOptions?: WingGenerationOptions
 ): FloorPlanData
 ```
 
@@ -44,9 +50,10 @@ function generateFloorplate(
 | `coreWidth` | `number` | `3.66m` | Core width in meters |
 | `coreDepth` | `number` | `9.0m` | Core depth in meters |
 | `coreSide` | `'North' \| 'South'` | `'North'` | Which side cores are placed |
-| `strategy` | `OptimizationStrategy` | `'balanced'` | Optimization strategy |
 | `alignment` | `number` | `0.5` | Wall alignment strength (0-1) |
+| `strategy` | `OptimizationStrategy` | `'balanced'` | Optimization strategy |
 | `customColors` | `UnitColorMap` | `{}` | Custom colors for unit types |
+| `wingOptions` | `WingGenerationOptions` | `undefined` | Multi-wing integration options |
 
 **Returns:** `FloorPlanData` - Complete floor plan with units, cores, corridor, and statistics.
 
@@ -78,12 +85,12 @@ function generateFloorplateVariants(
 
 ```typescript
 interface GeneratorOptions {
-  corridorWidth?: number;    // Corridor width in meters (default: ~1.83m / 6ft)
-  coreWidth?: number;        // Core width in meters (default: ~3.66m / 12ft)
-  coreDepth?: number;        // Core depth in meters (default: ~9m / 29.5ft)
-  coreSide?: 'North' | 'South'; // Which side to place cores (default: 'North')
-  alignment?: number;        // Wall alignment strength 0-1 (default: 1.0)
-  customColors?: UnitColorMap; // Custom colors for unit types
+  corridorWidth?: number;
+  coreWidth?: number;
+  coreDepth?: number;
+  coreSide?: 'North' | 'South';
+  alignment?: number;
+  customColors?: UnitColorMap;
 }
 ```
 
@@ -94,23 +101,376 @@ interface GeneratorOptions {
 
 ---
 
-### `extractFootprintFromTriangles`
+## Multi-Wing Functions
 
-Extracts building footprint from Forma triangle mesh data.
+### `generateMultiWingFloorplate`
+
+Generates a single floorplate for a multi-wing building (L, U, V, H, snake, courtyard).
 
 ```typescript
-function extractFootprintFromTriangles(
-  triangles: Float32Array
-): BuildingFootprint
+function generateMultiWingFloorplate(
+  polygon: {x: number, y: number}[],
+  wingAnalysis: MultiWingAnalysis,
+  config: UnitConfiguration,
+  egressConfig: EgressConfig,
+  options?: MultiWingGeneratorOptions
+): FloorPlanData
 ```
 
 **Parameters:**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `triangles` | `Float32Array` | Triangle vertex data from Forma SDK |
+| `polygon` | `{x,y}[]` | Building footprint polygon (CCW winding) |
+| `wingAnalysis` | `MultiWingAnalysis` | Wing detection result (from `analyzeFootprint` or `createAnalysisFromLine`) |
+| `config` | `UnitConfiguration` | Unit type sizes and percentages |
+| `egressConfig` | `EgressConfig` | Egress requirements |
+| `options` | `MultiWingGeneratorOptions` | Optional generation parameters |
 
-**Returns:** `BuildingFootprint` - Extracted building dimensions and transformation.
+**Returns:** `FloorPlanData` - Complete multi-wing floor plan with all wings stitched together.
+
+---
+
+### `generateMultiWingFloorplateVariants`
+
+Generates three layout options for a multi-wing building.
+
+```typescript
+function generateMultiWingFloorplateVariants(
+  polygon: {x: number, y: number}[],
+  config: UnitConfiguration,
+  egressConfig: EgressConfig,
+  options?: MultiWingGeneratorOptions,
+  topology?: { outer: {x,y}[], holes: {x,y}[][] },
+  precomputedAnalysis?: MultiWingAnalysis
+): LayoutOption[]
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `polygon` | `{x,y}[]` | Building footprint polygon |
+| `config` | `UnitConfiguration` | Unit type sizes and percentages |
+| `egressConfig` | `EgressConfig` | Egress requirements |
+| `options` | `MultiWingGeneratorOptions` | Optional generation parameters |
+| `topology` | `{outer, holes}` | Footprint topology (outer boundary + holes) |
+| `precomputedAnalysis` | `MultiWingAnalysis` | Pre-computed wing analysis (skips re-detection) |
+
+**Note:** Deep-clone the polygon before each call if generating multiple variants, as the algorithm may mutate geometry.
+
+**Returns:** `LayoutOption[]` - Array of 3 options (Balanced, Mix Optimized, Efficiency Optimized).
+
+---
+
+### `MultiWingGeneratorOptions`
+
+```typescript
+interface MultiWingGeneratorOptions {
+  corridorWidth?: number;              // Corridor width in meters (default: ~1.83m)
+  coreWidth?: number;                  // Core width in meters (default: ~3.66m)
+  coreDepth?: number;                  // Core depth in meters (default: ~9m)
+  coreSide?: 'North' | 'South';       // Core placement side (default: 'North')
+  alignment?: number;                  // Wall alignment strength 0-1 (default: 0.5)
+  strategy?: OptimizationStrategy;     // Optimization strategy
+  customColors?: Record<string, string>; // Custom colors for unit types
+  includeIntersectionCustomUnits?: boolean; // Include corner units at intersections
+}
+```
+
+### `WingGenerationOptions`
+
+Per-wing options passed by the multi-wing orchestrator to `generateFloorplate()`:
+
+```typescript
+interface WingGenerationOptions {
+  skipLeftEndCore?: boolean;       // Intersection provides left end core
+  skipRightEndCore?: boolean;      // Intersection provides right end core
+  intersectionEnds?: ('left' | 'right')[]; // Suppress corner segments at these ends
+  unitInventory?: Record<UnitType, number>; // Pre-allocated unit counts for this wing
+  skipEgress?: boolean;            // Skip per-wing egress (validated globally)
+}
+```
+
+---
+
+## Footprint Extraction Functions
+
+### `extractFootprintPolygon`
+
+Extracts the actual building footprint polygon from Forma triangle mesh data, preserving concave corners (L/U/H shapes). This is the recommended extraction method for multi-wing buildings.
+
+```typescript
+function extractFootprintPolygon(triangles: Float32Array): {
+  polygon: {x: number, y: number}[];
+  topology: { outer: {x,y}[], holes: {x,y}[][] };
+  floorZ: number;
+  height: number;
+}
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `triangles` | `Float32Array` | Triangle vertex data from `Forma.geometry.getTriangles()` |
+
+**Returns:**
+- `polygon` -- Simplified outer boundary polygon (CCW winding)
+- `topology` -- Full topology with outer boundary and holes (for courtyard shapes)
+- `floorZ` -- Ground floor elevation
+- `height` -- Building height (max Z - min Z)
+
+**Pipeline:** Vertex welding (1mm epsilon) -> ground triangle extraction -> boundary edge detection -> edge chaining -> Douglas-Peucker simplification (5cm epsilon) -> winding normalization.
+
+---
+
+### `extractFootprintFromTriangles`
+
+Legacy footprint extraction using convex hull approach. Works for rectangular buildings but loses concave corners.
+
+```typescript
+function extractFootprintFromTriangles(triangles: Float32Array): BuildingFootprint
+```
+
+---
+
+### `polygonToLegacyFootprint`
+
+Converts a footprint polygon to the legacy `BuildingFootprint` format. Uses the longest edge as the primary axis to determine rotation.
+
+```typescript
+function polygonToLegacyFootprint(
+  polygon: {x: number, y: number}[],
+  floorZ: number,
+  height: number,
+  topology?: { outer: {x,y}[], holes: {x,y}[][] }
+): BuildingFootprint
+```
+
+**Returns:** `BuildingFootprint` with the `polygon` and `topology` fields populated.
+
+---
+
+### `weldVertices`
+
+Merges vertices within epsilon of each other using a spatial hash grid. Exported utility for handling Float32 mesh precision issues.
+
+```typescript
+function weldVertices(
+  points: {x: number, y: number}[],
+  epsilon: number
+): {
+  uniquePoints: {x: number, y: number}[];
+  indexMap: number[];
+}
+```
+
+---
+
+## Wing Detection Functions
+
+### `analyzeFootprint`
+
+Analyzes a footprint polygon to detect wings, intersections, roles, and net lengths. This is the main entry point for wing detection.
+
+```typescript
+function analyzeFootprint(
+  polygon: {x: number, y: number}[],
+  topology?: { outer: {x,y}[], holes: {x,y}[][] }
+): MultiWingAnalysis
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `polygon` | `{x,y}[]` | Building footprint polygon (CCW winding) |
+| `topology` | `{outer, holes}` | Optional full topology for complex shapes |
+
+**Returns:** `MultiWingAnalysis` -- Contains wings, intersections, shape classification, wing roles, and net wing lengths.
+
+---
+
+### `classifyVertices`
+
+Classifies each polygon vertex as CONVEX, CONCAVE, or STRAIGHT based on cross-product.
+
+```typescript
+function classifyVertices(
+  polygon: {x: number, y: number}[]
+): FootprintVertex[]
+```
+
+**Returns:** Array of `FootprintVertex` with corner type and interior angle for each vertex.
+
+---
+
+## Design Mode Functions
+
+These functions are in the extension layer (`src/extension/`), not the algorithm layer.
+
+### `startDesignMode`
+
+Launches Forma's design tool for the user to draw a polyline, then auto-generates and bakes a building.
+
+```typescript
+// src/extension/managers/design-manager.ts
+async function startDesignMode(): Promise<void>
+```
+
+**Workflow:**
+1. Opens Forma's `designTool.getLine()` for user to draw
+2. Converts drawn line + width to polygon via `lineToFootprintTopology()`
+3. Routes to single-wing or multi-wing generator
+4. Auto-bakes the Balanced option via `bakeWithFloorStack()`
+
+---
+
+### `lineToFootprintTopology`
+
+Converts a polyline into a closed footprint polygon by buffering it with miter joints.
+
+```typescript
+// src/extension/utils/line-to-polygon.ts
+function lineToFootprintTopology(
+  coordinates: Vec3[],
+  width: number
+): { outer: {x: number, y: number}[], holes: {x: number, y: number}[][] }
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `coordinates` | `Vec3[]` | Points from Forma's design tool |
+| `width` | `number` | Total building width in meters |
+
+**Behavior:**
+- **Open line**: Offsets left/right by `width/2`, combines into a single closed polygon. No holes.
+- **Closed line** (endpoints within 10cm): Creates outer loop (larger area) and inner loop (hole) for courtyard shapes.
+
+---
+
+### `lineToFootprintPolygon`
+
+Simplified version that returns only the outer polygon (no holes).
+
+```typescript
+function lineToFootprintPolygon(
+  coordinates: Vec3[],
+  width: number
+): {x: number, y: number}[]
+```
+
+---
+
+## Renderer Functions
+
+### `renderFloorplate`
+
+Converts a FloorPlanData object into Forma-compatible mesh data.
+
+```typescript
+function renderFloorplate(
+  floorplan: FloorPlanData,
+  options?: RenderOptions
+): FormaMeshData
+```
+
+**Returns:** `FormaMeshData` - Mesh data that can be passed to `Forma.render.addMesh()`.
+
+**Note:** For multi-wing buildings, renders `corridorSegments` (all segments) rather than the single `corridor` field. Uses ear-clipping triangulation for concave polygons (corridor wedges, L-shaped units).
+
+### `renderFloorplateLayers`
+
+Renders the floorplate as separate layers (units, cores, corridor).
+
+```typescript
+function renderFloorplateLayers(
+  floorplan: FloorPlanData
+): { units: FormaMeshData; cores: FormaMeshData; corridor: FormaMeshData }
+```
+
+### `getUnitColor`
+
+Gets the display color for a unit type.
+
+```typescript
+function getUnitColor(type: UnitType): string
+```
+
+**Returns:** CSS color string (e.g., `'rgba(59, 130, 246, 0.78)'`).
+
+---
+
+## Baking Functions
+
+These functions convert generated floorplates into native Forma building elements.
+
+### `bakeWithFloorStack` (Recommended)
+
+Creates a native Forma building using the FloorStack SDK API with plan-based floors. Supports multi-floor stacking and L-shaped units.
+
+```typescript
+async function bakeWithFloorStack(
+  floorplan: FloorPlanData,
+  options: BakeOptions
+): Promise<BakeResult>
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `floorplan` | `FloorPlanData` | The generated floor plan to bake |
+| `options` | `BakeOptions` | Baking configuration options |
+
+**Features:**
+- Creates buildings with unit subdivisions (CORE, CORRIDOR, LIVING_UNIT programs)
+- Stacks `numFloors` identical floors with configurable height (default 3.2m)
+- Handles L-shaped units via `polyPoints` and ear-clipping triangulation
+- Falls back to polygon mode (no unit subdivisions) if plan conversion fails
+
+---
+
+### `bakeWithFloorStackBatch`
+
+Creates multiple buildings in a single API call for better performance.
+
+```typescript
+async function bakeWithFloorStackBatch(
+  buildings: Array<{
+    floorplan: FloorPlanData;
+    options: BakeOptions;
+  }>
+): Promise<Array<BakeResult>>
+```
+
+---
+
+### `bakeWithBasicBuildingAPI`
+
+Creates a native Forma building using direct BasicBuilding API calls. Use as a fallback when FloorStack API is unavailable.
+
+```typescript
+async function bakeWithBasicBuildingAPI(
+  floorplan: FloorPlanData,
+  options: BakeOptions
+): Promise<BakeResult>
+```
+
+**Note:** Requires authentication setup. See [BAKING_WORKFLOW.md](./BAKING_WORKFLOW.md).
+
+---
+
+### `canBake`
+
+Checks whether the current user has edit permissions in the Forma project.
+
+```typescript
+async function canBake(): Promise<boolean>
+```
 
 ---
 
@@ -138,11 +498,6 @@ interface UnitConfiguration {
 }
 ```
 
-**Fields:**
-- `percentage`: Target percentage of total units (0-100)
-- `area`: Target unit area in square meters
-- `cornerEligible`: Whether this type can be placed at corners (optional)
-
 ### `EgressConfig`
 
 ```typescript
@@ -169,6 +524,8 @@ interface BuildingFootprint {
   centerY: number;
   floorZ: number;  // Ground level elevation
   rotation: number; // Rotation angle in radians
+  polygon?: {x: number, y: number}[];  // Actual footprint polygon (multi-wing)
+  topology?: { outer: {x,y}[], holes: {x,y}[][] }; // Full topology
 }
 ```
 
@@ -178,7 +535,7 @@ interface BuildingFootprint {
 interface FloorPlanData {
   units: UnitBlock[];
   cores: CoreBlock[];
-  fillers: FillerBlock[];   // Leftover space fillers (baked as CORE)
+  fillers: FillerBlock[];
   corridor: CorridorBlock;
   buildingLength: number;
   buildingDepth: number;
@@ -201,6 +558,16 @@ interface FloorPlanData {
     deadEndStatus: 'Pass' | 'Fail';
     travelDistanceStatus: 'Pass' | 'Fail';
   };
+
+  // Multi-wing fields (present when building has multiple wings)
+  corridorSegments?: CorridorBlock[];        // All corridor segments
+  corridorGraph?: { nodes: any[]; edges: any[] }; // Egress graph
+  wingInfo?: {
+    shape: string;
+    wingCount: number;
+    wings?: Array<{ id: number; length: number; width: number;
+                    center: {x: number, y: number}; direction: number }>;
+  };
 }
 ```
 
@@ -219,7 +586,7 @@ interface UnitBlock {
   area: number;
   color: string;
   side: 'North' | 'South';
-  polyPoints?: { x: number; y: number }[];  // For L-shaped units
+  polyPoints?: {x: number, y: number}[];  // For L-shaped units
   isLShaped?: boolean;
 }
 ```
@@ -240,7 +607,7 @@ interface CoreBlock {
 
 ### `FillerBlock`
 
-Represents leftover space that couldn't be absorbed by adjacent units. These are baked as CORE-type units to ensure full building coverage.
+Represents leftover space that couldn't be absorbed by adjacent units. Baked as CORE-type units to ensure full building coverage.
 
 ```typescript
 interface FillerBlock {
@@ -250,13 +617,9 @@ interface FillerBlock {
   width: number;
   depth: number;
   side: 'North' | 'South';
+  polyPoints?: {x: number, y: number}[];  // For non-rectangular fillers
 }
 ```
-
-**Notes:**
-- Created when gaps > 0.5m (MIN_FILLER_WIDTH) exist after unit placement
-- Baked with `program: 'CORE'` in FloorStack/BasicBuilding APIs
-- Rendered with the same visual style as cores
 
 ### `CorridorBlock`
 
@@ -266,6 +629,7 @@ interface CorridorBlock {
   y: number;
   width: number;
   depth: number;
+  polyPoints?: {x: number, y: number}[];  // For non-rectangular corridor segments
 }
 ```
 
@@ -293,7 +657,92 @@ type OptimizationStrategy = 'balanced' | 'mixOptimized' | 'efficiencyOptimized';
 type UnitColorMap = Partial<Record<UnitType, string>>;
 ```
 
-Custom hex color strings for unit types (e.g., `{ [UnitType.Studio]: '#3b82f6' }`).
+### `BakeOptions`
+
+```typescript
+interface BakeOptions {
+  numFloors: number;           // Number of floors to stack (identical layouts)
+  originalBuildingPath?: string; // Path of building to remove after bake
+  name?: string;               // Name for the new building element
+}
+```
+
+### `BakeResult`
+
+```typescript
+interface BakeResult {
+  success: boolean;
+  urn?: string;     // URN of created element (on success)
+  error?: string;   // Error message (on failure)
+}
+```
+
+### Wing Detection Types
+
+```typescript
+enum CornerType {
+  CONVEX = 'CONVEX',     // Interior angle < 180 (outer corner)
+  CONCAVE = 'CONCAVE',   // Interior angle > 180 (inner corner, reflex)
+  STRAIGHT = 'STRAIGHT'  // Interior angle ~ 180
+}
+
+interface FootprintVertex {
+  x: number;
+  y: number;
+  interiorAngle: number;
+  cornerType: CornerType;
+  index: number;
+}
+
+interface Wing {
+  id: number;
+  vertices: FootprintVertex[];
+  direction: number;          // Primary axis angle (radians)
+  length: number;             // Along primary axis
+  width: number;              // Perpendicular to primary axis
+  centerline: { start: {x: number, y: number}; end: {x: number, y: number} };
+  bounds: { minX: number; maxX: number; minY: number; maxY: number };
+  center?: { x: number; y: number };
+}
+
+interface WingIntersection {
+  point: FootprintVertex;
+  type: 'inner' | 'outer';
+  wingIds: [number, number];
+  angle: number;
+  innerZone?: { polygon: {x: number, y: number}[]; area: number };
+  outerZone?: { polygon: {x: number, y: number}[]; area: number };
+}
+
+interface WingDetectionResult {
+  wings: Wing[];
+  intersections: WingIntersection[];
+  isSimpleBar: boolean;
+  shape: 'bar' | 'L' | 'U' | 'V' | 'H' | 'snake' | 'courtyard' | 'complex';
+}
+
+// Extended with role assignments and net lengths
+interface MultiWingAnalysis extends WingDetectionResult {
+  wingRoles: WingRole[];
+  netWingLengths: Map<number, number>;
+}
+
+interface WingRole {
+  wingId: number;
+  intersectionIndex: number;
+  role: 'host' | 'guest';
+  coreSide: 'North' | 'South';
+  intersectionEnd: 'left' | 'right';
+  explicitPlacement: boolean;
+}
+```
+
+### Design Mode Types
+
+```typescript
+// src/extension/utils/line-to-polygon.ts
+type Vec3 = { x: number; y: number; z: number };
+```
 
 ---
 
@@ -359,55 +808,18 @@ UNIT_COLORS = {
 }
 ```
 
----
-
-## Renderer Functions
-
-### `renderFloorplate`
-
-Converts a FloorPlanData object into Forma-compatible mesh data.
+### Conversion Constants
 
 ```typescript
-function renderFloorplate(
-  floorplan: FloorPlanData,
-  options?: RenderOptions
-): FormaMeshData
+export const FEET_TO_METERS = 0.3048;
+export const SQ_FEET_TO_SQ_METERS = 0.0929;  // FEET_TO_METERS^2
 ```
-
-**Parameters:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `floorplan` | `FloorPlanData` | The generated floor plan |
-| `options` | `RenderOptions` | Optional rendering configuration |
-
-**Returns:** `FormaMeshData` - Mesh data that can be passed to `Forma.render.addMesh()`.
-
-### `renderFloorplateLayers`
-
-Renders the floorplate as separate layers (units, cores, corridor).
-
-```typescript
-function renderFloorplateLayers(
-  floorplan: FloorPlanData
-): { units: FormaMeshData; cores: FormaMeshData; corridor: FormaMeshData }
-```
-
-### `getUnitColor`
-
-Gets the display color for a unit type.
-
-```typescript
-function getUnitColor(type: UnitType): string
-```
-
-**Returns:** CSS color string (e.g., `'rgba(59, 130, 246, 0.78)'`).
 
 ---
 
 ## Usage Examples
 
-### Basic Generation
+### Basic Generation (Single-Wing)
 
 ```typescript
 import {
@@ -436,29 +848,62 @@ console.log(`Efficiency: ${balancedLayout.floorplan.stats.efficiency}%`);
 console.log(`Total Units: ${balancedLayout.floorplan.stats.totalUnits}`);
 ```
 
-### Custom Unit Configuration
+### Multi-Wing Building
 
 ```typescript
-import { UnitType, generateFloorplate } from 'floorplate-generator';
+import {
+  extractFootprintPolygon,
+  analyzeFootprint,
+  generateMultiWingFloorplateVariants,
+  generateFloorplateVariants,
+  polygonToLegacyFootprint,
+  DEFAULT_UNIT_CONFIG,
+  EGRESS_SPRINKLERED
+} from 'floorplate-generator';
 
-const customConfig = {
-  [UnitType.Studio]:   { percentage: 30, area: 50 },   // 30% studios at 50 sq m
-  [UnitType.OneBed]:   { percentage: 40, area: 75 },   // 40% 1BR at 75 sq m
-  [UnitType.TwoBed]:   { percentage: 20, area: 100 },  // 20% 2BR at 100 sq m
-  [UnitType.ThreeBed]: { percentage: 10, area: 130 }   // 10% 3BR at 130 sq m
-};
+const triangles = await Forma.geometry.getTriangles({ path: buildingPath });
 
-const floorplan = generateFloorplate(
-  footprint,
-  customConfig,
-  EGRESS_SPRINKLERED,
-  2.0,             // 2m corridor
-  4.0,             // 4m core width
-  10.0,            // 10m core depth
-  'South',         // Cores on south side
-  0.5,             // Wall alignment strength (0-1)
-  'mixOptimized'   // Prioritize exact percentages
-);
+// Extract polygon (preserves concave corners)
+const { polygon, topology, floorZ, height } = extractFootprintPolygon(triangles);
+
+// Analyze footprint for wings
+const analysis = analyzeFootprint(polygon, topology);
+
+let options;
+if (analysis.isSimpleBar) {
+  // Simple bar -- use single-wing pipeline
+  const footprint = polygonToLegacyFootprint(polygon, floorZ, height, topology);
+  options = generateFloorplateVariants(footprint, DEFAULT_UNIT_CONFIG, EGRESS_SPRINKLERED);
+} else {
+  // Multi-wing -- use multi-wing pipeline
+  options = generateMultiWingFloorplateVariants(
+    polygon, DEFAULT_UNIT_CONFIG, EGRESS_SPRINKLERED,
+    { corridorWidth: 1.83, coreWidth: 3.66, coreDepth: 9.0 },
+    topology
+  );
+}
+
+console.log(`Shape: ${analysis.shape}`);
+console.log(`Wings: ${analysis.wings.length}`);
+console.log(`Intersections: ${analysis.intersections.length}`);
+```
+
+### Design Mode (Line-to-Building)
+
+```typescript
+import { lineToFootprintTopology } from './extension/utils/line-to-polygon';
+
+// User draws a 3-point polyline (V-shape)
+const line = [
+  { x: 0, y: 0, z: 0 },
+  { x: 50, y: 0, z: 0 },
+  { x: 75, y: 40, z: 0 }
+];
+
+// Buffer to building width (20m total)
+const { outer, holes } = lineToFootprintTopology(line, 20);
+// outer: closed polygon with miter-joined corners
+// holes: empty (open line)
 ```
 
 ### Rendering to Forma
@@ -474,30 +919,25 @@ await Forma.render.addMesh({
 });
 ```
 
----
-
-## Conversion Constants
-
-All internal calculations use meters. Use these constants for conversion:
+### Baking with Multi-Floor
 
 ```typescript
-export const FEET_TO_METERS = 0.3048;
-export const SQ_FEET_TO_SQ_METERS = 0.0929;  // FEET_TO_METERS^2
+import { bakeWithFloorStack } from './extension/bake-building';
+
+const result = await bakeWithFloorStack(layoutOption.floorplan, {
+  numFloors: 8,                           // 8 identical floors
+  originalBuildingPath: selectedPath,      // Remove original building
+  name: 'Generated Building - Balanced'
+});
+
+if (result.success) {
+  console.log('Building created:', result.urn);
+}
 ```
 
 ---
 
 ## Utility Exports
-
-### `canBake`
-
-Checks whether the current user has edit permissions in the Forma project.
-
-```typescript
-async function canBake(): Promise<boolean>
-```
-
-**Returns:** `true` if the user can create building elements, `false` otherwise.
 
 ### `Logger`
 
@@ -519,170 +959,46 @@ Package metadata constants.
 ```typescript
 import { VERSION, NAME } from 'floorplate-generator';
 
-console.log(`${NAME} v${VERSION}`);  // "Floorplate Generator v0.2.0"
+console.log(`${NAME} v${VERSION}`);  // "Floorplate Generator v0.3.0"
 ```
 
 ---
 
-## Baking Functions
-
-These functions convert generated floorplates into native Forma building elements.
-
-### `bakeWithFloorStack` (Recommended)
-
-Creates a native Forma building using the FloorStack SDK API (v0.90.0) with plan-based floors.
-This is the recommended method as it:
-- Creates buildings with unit subdivisions (CORE, CORRIDOR, LIVING_UNIT programs)
-- Uses SDK authentication (no manual token management)
-- Supports L-shaped units via polyPoints
-
-```typescript
-async function bakeWithFloorStack(
-  floorplan: FloorPlanData,
-  options: BakeOptions
-): Promise<BakeResult>
-```
-
-**Parameters:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `floorplan` | `FloorPlanData` | The generated floor plan to bake |
-| `options` | `BakeOptions` | Baking configuration options |
-
-**BakeOptions:**
-
-```typescript
-interface BakeOptions {
-  numFloors: number;           // Number of floors to create
-  originalBuildingPath?: string; // Path of building to remove after bake
-  name?: string;               // Name for the new building element
-}
-```
-
-**Returns:** `BakeResult` - Result of the baking operation.
-
-```typescript
-interface BakeResult {
-  success: boolean;
-  urn?: string;     // URN of created element (on success)
-  error?: string;   // Error message (on failure)
-}
-```
-
-**Example:**
-
-```typescript
-import { bakeWithFloorStack } from './extension/bake-building';
-
-const result = await bakeWithFloorStack(layoutOption.floorplan, {
-  numFloors: 5,
-  originalBuildingPath: selectedBuildingPath,
-  name: 'My Generated Building'
-});
-
-if (result.success) {
-  console.log('Building created:', result.urn);
-}
-```
-
----
-
-### `bakeWithFloorStackBatch`
-
-Creates multiple buildings in a single API call for better performance.
-
-```typescript
-async function bakeWithFloorStackBatch(
-  buildings: Array<{
-    floorplan: FloorPlanData;
-    options: BakeOptions;
-  }>
-): Promise<Array<BakeResult>>
-```
-
-**Parameters:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `buildings` | `Array<{floorplan, options}>` | Array of floorplans with their options |
-
-**Returns:** `Array<BakeResult>` - Results for each building in the batch.
-
----
-
-### `bakeWithBasicBuildingAPI`
-
-Creates a native Forma building using direct BasicBuilding API calls.
-Use this as a fallback when FloorStack API is unavailable.
-
-```typescript
-async function bakeWithBasicBuildingAPI(
-  floorplan: FloorPlanData,
-  options: BakeOptions
-): Promise<BakeResult>
-```
-
-**Note:** This method requires authentication setup:
-- **Production:** Uses session cookies via Forma proxy
-- **Localhost:** Requires Bearer token via OAuth flow
-
-See [BAKING_WORKFLOW.md](./BAKING_WORKFLOW.md) for authentication details.
-
----
-
-### FloorStack SDK Types
+## FloorStack SDK Types
 
 The FloorStack API (SDK v0.90.0) uses these types for plan-based building creation:
 
 ```typescript
-// Plan with unit subdivisions
 interface FloorStackPlan {
   id: string;
   vertices: FloorStackVertex[];
   units: FloorStackUnit[];
 }
 
-// Vertex definition
 interface FloorStackVertex {
   id: string;   // Pattern: [a-zA-Z0-9-]{2,20}
-  x: number;    // Local X coordinate
-  y: number;    // Local Y coordinate
+  x: number;    // Local X coordinate (centered at origin)
+  y: number;    // Local Y coordinate (centered at origin)
 }
 
-// Unit with program type
 interface FloorStackUnit {
   polygon: string[];           // Vertex IDs (counterclockwise)
-  holes: string[][];           // Interior holes (each hole is array of vertex IDs)
+  holes: string[][];           // Interior holes
   program?: 'CORE' | 'CORRIDOR' | 'LIVING_UNIT' | 'PARKING';
   functionId?: string;
 }
 
-// Important: Coordinates must be CENTERED at origin (building center at 0,0)
-// Transform handles rotation and translation to world position
-
-// Floor referencing a plan
 interface FloorByPlan {
-  height: number;
-  planId: string;
+  height: number;     // Floor height (default: 3.2m)
+  planId: string;     // References a FloorStackPlan
 }
 ```
 
 **SDK Method:**
 
 ```typescript
-// Create building with unit subdivisions
 const { urn } = await Forma.elements.floorStack.createFromFloors({
-  floors: [
-    { planId: 'plan1', height: 3.2 },
-    { planId: 'plan1', height: 3.2 }
-  ],
+  floors: Array(numFloors).fill({ planId: 'plan1', height: 3.2 }),
   plans: [plan]
 });
-
-// Batch creation
-const { urns } = await Forma.elements.floorStack.createFromFloorsBatch([
-  { floors: [...], plans: [...] },
-  { floors: [...], plans: [...] }
-]);
 ```
